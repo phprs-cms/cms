@@ -1,0 +1,145 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpRS\Core;
+
+/**
+ * Přihlášení do administrace a práva.
+ *
+ * Model práv je převzatý z phpRS 2: typ uživatele (autor / redaktor / admin),
+ * přístup k jednotlivým modulům, "právo vydávat" a vazby nadřízený - podřízený.
+ */
+final class Auth
+{
+    public const int AUTOR = 0;
+    public const int REDAKTOR = 1;
+    public const int ADMIN = 2;
+
+    public const array TYPY = [self::AUTOR => 'autor', self::REDAKTOR => 'redaktor', self::ADMIN => 'admin'];
+
+    /** Po tolika chybných heslech v řadě se účet zablokuje (odblokuje ho admin). */
+    private const int MAX_CHYB = 10;
+
+    /** @var array<string, mixed>|null|false false = ještě nenačteno */
+    private array|null|false $user = false;
+
+    /** @var list<string>|null */
+    private ?array $moduly = null;
+
+    public function __construct(private readonly Db $db, private readonly Session $session)
+    {
+    }
+
+    /** @return string|null text chyby, null = přihlášeno */
+    public function login(string $login, string $password, string $ip): ?string
+    {
+        // Zpomalení hádání hesel: nejvýše 10 pokusů z jedné IP za 15 minut
+        $pokusu = (int) $this->db->value(
+            "SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE",
+            [$ip],
+        );
+        if ($pokusu >= 10) {
+            return 'Příliš mnoho pokusů o přihlášení. Zkuste to znovu za 15 minut.';
+        }
+
+        $user = $this->db->one('SELECT * FROM {user} WHERE user = ?', [$login]);
+        // Hash se ověřuje i pro neexistujícího uživatele, aby se z doby odezvy nedalo poznat, že účet neexistuje
+        $hash = $user['password'] ?? '$2y$10$usesomesillystringforsaltuOoa0UjXp8xQ3o2FTJmj0pZxOTDYcn5m';
+        $ok = password_verify($password, $hash) && $user !== null;
+
+        if (!$ok) {
+            $this->db->insert('kontrola_ip', ['ip_adresa' => $ip, 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+            if ($user !== null) {
+                $chyb = (int) $user['pocet_chyb'] + 1;
+                $this->db->update('user', ['pocet_chyb' => $chyb, 'blokovat' => (int) ($chyb >= self::MAX_CHYB || $user['blokovat'])], ['idu' => $user['idu']]);
+            }
+
+            return 'Chybné jméno nebo heslo.';
+        }
+        if ($user['blokovat']) {
+            return 'Účet je zablokován. Obraťte se na administrátora.';
+        }
+
+        if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
+            $this->db->update('user', ['password' => password_hash($password, PASSWORD_DEFAULT)], ['idu' => $user['idu']]);
+        }
+        $this->db->update('user', ['pocet_chyb' => 0, 'posledni_login' => date('Y-m-d H:i:s')], ['idu' => $user['idu']]);
+
+        $this->session->regenerate();
+        $this->session->set('idu', (int) $user['idu']);
+        $this->user = false;
+
+        return null;
+    }
+
+    public function logout(): void
+    {
+        $this->session->destroy();
+        $this->user = null;
+    }
+
+    /** @return array<string, mixed>|null */
+    public function user(): ?array
+    {
+        if ($this->user === false) {
+            $id = $this->session->get('idu');
+            $this->user = is_int($id)
+                ? $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [$id])
+                : null;
+        }
+
+        return $this->user;
+    }
+
+    public function id(): int
+    {
+        return (int) ($this->user()['idu'] ?? 0);
+    }
+
+    public function isAdmin(): bool
+    {
+        return (int) ($this->user()['admin'] ?? -1) === self::ADMIN;
+    }
+
+    public function smiVydavat(): bool
+    {
+        return $this->isAdmin() || !empty($this->user()['pravo_vydavat']);
+    }
+
+    /** Má přihlášený uživatel přístup k modulu? Admin vždy; ostatní podle rs_user_prava. */
+    public function maModul(string $ident, bool $proVsechny = false): bool
+    {
+        if ($this->user() === null) {
+            return false;
+        }
+        if ($this->isAdmin() || $proVsechny) {
+            return true;
+        }
+        $this->moduly ??= array_column(
+            $this->db->all('SELECT ident_modulu FROM {user_prava} WHERE fk_id_user = ?', [$this->id()]),
+            'ident_modulu',
+        );
+
+        return in_array($ident, $this->moduly, true);
+    }
+
+    /**
+     * ID autorů, jejichž články smí uživatel spravovat: on sám a jeho podřízení.
+     * Admin spravuje vše - pro něj vrací null (bez omezení).
+     *
+     * @return list<int>|null
+     */
+    public function spravovaniAutori(): ?array
+    {
+        if ($this->isAdmin()) {
+            return null;
+        }
+        $podrizeni = array_column(
+            $this->db->all('SELECT fk_id_podrizeny FROM {vazby_prava} WHERE fk_id_nadrizeny = ?', [$this->id()]),
+            'fk_id_podrizeny',
+        );
+
+        return [$this->id(), ...array_map(intval(...), $podrizeni)];
+    }
+}

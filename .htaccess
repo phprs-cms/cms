@@ -1,0 +1,12 @@
+# phpRS 3
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # config.php a skryté soubory nejsou pro návštěvníky
+    RewriteRule ^(config(\.sample)?\.php|\..*)$ - [F,L]
+    # vše, co není existující soubor nebo adresář, obslouží index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>

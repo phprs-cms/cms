@@ -1,0 +1,78 @@
+/* phpRS 3 - layout "default": čistý třísloupcový magazín */
+
+:root {
+	--barva: #0A2FC4;
+	--barva-tmava: #061B78;
+	--text: #1B1B1F;
+	--text-slaby: #5B5F6B;
+	--linka: #DADDE5;
+	--podklad: #F5F6F9;
+	--pismo: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--pismo-titulky: Georgia, "Times New Roman", serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.6 var(--pismo); color: var(--text); background: #FFFFFF; }
+a { color: var(--barva); }
+a:hover { color: var(--barva-tmava); }
+img { max-width: 100%; height: auto; }
+.obal { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+.zahlavi { border-bottom: 3px solid var(--barva); padding: 22px 0 16px; margin-bottom: 26px; }
+.nazev-webu { font: bold 34px/1.1 var(--pismo-titulky); color: var(--text); text-decoration: none; }
+.motto { margin: 4px 0 0; color: var(--text-slaby); }
+
+.sloupce { display: grid; gap: 32px; align-items: start; }
+.sloupce-3 { grid-template-columns: 220px minmax(0, 1fr) 260px; }
+.sloupce-2 { grid-template-columns: minmax(0, 1fr) 260px; }
+.sloupce-2:has(.sloupec-levy) { grid-template-columns: 220px minmax(0, 1fr); }
+
+.blok { margin-bottom: 26px; font-size: 14px; }
+.blok-nadpis { font: bold 13px var(--pismo); text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--text); }
+.blok-typ2 { background: var(--podklad); padding: 14px; }
+.blok-typ3 .blok-nadpis { border-color: var(--barva); color: var(--barva); }
+.blok-typ4 { border: 1px solid var(--linka); padding: 14px; }
+.blok-typ5 .blok-nadpis { display: none; }
+.rubriky, .nejctenejsi { margin: 0; padding: 0; list-style: none; }
+.rubriky li { padding: 5px 0; border-bottom: 1px solid var(--linka); }
+.rubriky .uroven-1 { padding-left: 14px; }
+.rubriky .uroven-2 { padding-left: 28px; }
+.rubriky a { text-decoration: none; font-weight: 600; }
+.rubriky .uroven-1 a, .rubriky .uroven-2 a { font-weight: 400; }
+.nejctenejsi { counter-reset: nej; }
+.nejctenejsi li { counter-increment: nej; padding: 5px 0 5px 26px; position: relative; border-bottom: 1px solid var(--linka); }
+.nejctenejsi li::before { content: counter(nej); position: absolute; left: 0; font: bold 18px var(--pismo-titulky); color: var(--barva); }
+.novinka { padding: 6px 0; border-bottom: 1px solid var(--linka); }
+.novinka time { display: block; font-size: 12px; color: var(--text-slaby); }
+.hledani { display: flex; gap: 6px; }
+.hledani input { flex: 1; min-width: 0; padding: 6px 8px; border: 1px solid var(--text-slaby); font: inherit; }
+.hledani button { padding: 6px 12px; border: 0; background: var(--barva); color: #FFFFFF; font: inherit; cursor: pointer; }
+.hledani button:hover { background: var(--barva-tmava); }
+
+.clanek h1, .clanek h2, .vypis-hlavicka h1 { font-family: var(--pismo-titulky); line-height: 1.2; margin: 4px 0 10px; }
+.clanek h1, .vypis-hlavicka h1 { font-size: 36px; }
+.clanek-nahled h2 { font-size: 26px; }
+.clanek-nahled h2 a { color: var(--text); text-decoration: none; }
+.clanek-nahled h2 a:hover { color: var(--barva); }
+.clanek-nahled { padding-bottom: 22px; margin-bottom: 24px; border-bottom: 1px solid var(--linka); }
+.clanek-dulezity { border-left: 4px solid var(--barva); padding-left: 16px; }
+.clanek-info { margin: 0; font-size: 13px; color: var(--text-slaby); }
+.clanek-rubrika { text-transform: uppercase; letter-spacing: .05em; font-weight: 700; text-decoration: none; margin-right: 8px; }
+.clanek-obrazek { display: block; margin: 12px 0; }
+.perex { color: #33353D; }
+.clanek-cely .perex { font-size: 19px; font-weight: 500; }
+.clanek-text { font-size: 17px; }
+.clanek-text h2 { font-size: 24px; margin-top: 1.6em; }
+.clanek-text blockquote { margin: 1.2em 0; padding: 2px 18px; border-left: 4px solid var(--barva); color: #33353D; font-style: italic; }
+.clanek-vice { margin: 8px 0 0; font-weight: 600; }
+.clanek-paticka { margin-top: 28px; padding-top: 10px; border-top: 1px solid var(--linka); font-size: 13px; color: var(--text-slaby); }
+.souvisejici h2 { font-size: 18px; }
+.vypis-hlavicka { margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--text); }
+.strankovani { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0 30px; font-size: 14px; }
+
+.zapati { margin-top: 40px; padding: 22px 0; background: var(--podklad); border-top: 1px solid var(--linka); font-size: 13px; color: var(--text-slaby); }
+
+@media (max-width: 900px) {
+	.sloupce-3, .sloupce-2, .sloupce-2:has(.sloupec-levy) { grid-template-columns: minmax(0, 1fr); }
+	.sloupec-hlavni { order: -1; }
+	.clanek h1, .vypis-hlavicka h1 { font-size: 28px; }
+}

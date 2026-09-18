@@ -33,6 +33,7 @@ $zona = function (string $klic) use ($bloky, $modul, $csrf): void {
 	</section>
 <?php };
 ?>
+<p class="navigace-radek"><a class="tl" href="<?= e($modul->url('vizualne')) ?>">Otevřít vizuální editor</a></p>
 <form class="rozvrzeni-volba" method="post" action="<?= e($modul->url('rozvrzeni')) ?>">
 	<?= $csrf ?>
 	<span class="popisek">Rozvržení stránky:</span>

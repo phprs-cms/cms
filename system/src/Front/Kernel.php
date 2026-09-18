@@ -334,8 +334,10 @@ final class Kernel
         $seo = new Seo($this->app);
         $clanek = $meta['clanek'] ?? null;
         $meta['rubrika'] ??= null;
+        // vizuální editor bloků: ?upravit=1 pro přihlášeného uživatele s přístupem k blokům
+        $upravit = $this->app->request->get('upravit') === '1' && $this->app->auth()->maModul('bloky');
         unset($meta['clanek']);
-        if ($status === 200 && empty($meta['noindex'])) {
+        if ($status === 200 && empty($meta['noindex']) && !$upravit) {
             Statistika::zaznamenej($this->app, $clanek === null ? null : (int) $clanek['idc']);
         }
 
@@ -344,10 +346,10 @@ final class Kernel
             'titulek' => $titulek,
             'meta' => $meta + ['hlavni' => false, 'popis' => '', 'klicova_slova' => $web->get('klicova_slova'), 'obrazek' => '', 'typ' => 'website', 'noindex' => false],
             'obsah' => $obsah,
-            'zony' => $bloky->zony(!empty($meta['hlavni']), $clanek !== null ? (int) $clanek['tema'] : ($meta['rubrika'] ?? null)),
+            'zony' => $bloky->zony(!empty($meta['hlavni']), $clanek !== null ? (int) $clanek['tema'] : ($meta['rubrika'] ?? null), $upravit),
             'rozvrzeni' => $bloky->rozvrzeni(),
             'hlava' => $seo->hlava($titulek, $meta, $clanek),
-            'pata' => $seo->pata(),
+            'pata' => $upravit ? $this->view->render('vizual', ['app' => $this->app, 'rozvrzeni' => $bloky->rozvrzeni()]) : $seo->pata(),
             'rubriky' => Rubriky::strom($this->app->db(), true),
             'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
             'url' => $this->app->url(...),

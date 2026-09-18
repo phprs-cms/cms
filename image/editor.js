@@ -334,6 +334,8 @@
 		});
 	});
 
+	window.phprsVytvorEditor = vytvorEditor; // vizuální editor bloků si editor vytváří sám nad dynamickým polem
+
 	var editory = Array.prototype.map.call(document.querySelectorAll('textarea[data-editor]'), vytvorEditor);
 	var formKoncept = document.querySelector('form[data-koncept]');
 	if (formKoncept) { autoUkladani(formKoncept, editory); }

@@ -29,27 +29,47 @@ final class Bloky
 
     /**
      * @param int|null $rubrika rubrika právě zobrazené stránky (výpis rubriky nebo článek) - kvůli blokům "jen v rubrice"
+     * @param bool $upravit režim vizuálního editoru: bloky a zóny dostanou značky, ukážou se i skryté bloky a prázdné zóny
      * @return array<string, string> zóna => HTML bloků; vždy všechny klíče, prázdná zóna = ''
      */
-    public function zony(bool $hlavniStranka, ?int $rubrika = null): array
+    public function zony(bool $hlavniStranka, ?int $rubrika = null, bool $upravit = false): array
     {
         $existujici = Nastaveni::ROZVRZENI[$this->rozvrzeni()][2];
         $html = array_fill_keys(array_keys(Nastaveni::ZONY), '');
-        $kde = $hlavniStranka ? 'zobrazit_kde IN (0, 1)' : 'zobrazit_kde IN (0, 2)';
 
-        foreach ($this->app->db()->all("SELECT * FROM {bloky} WHERE zobrazit = 1 AND {$kde} ORDER BY hodnost DESC, idb") as $blok) {
-            if ($blok['jen_rubrika'] !== null && (int) $blok['jen_rubrika'] !== $rubrika) {
+        foreach ($this->app->db()->all('SELECT * FROM {bloky} ORDER BY hodnost DESC, idb') as $blok) {
+            // proč se blok na této stránce čtenáři neukáže (prázdné = ukáže se)
+            $duvod = match (true) {
+                !$blok['zobrazit'] => 'blok je skrytý',
+                (int) $blok['zobrazit_kde'] === 1 && !$hlavniStranka => 'jen na hlavní stránce',
+                (int) $blok['zobrazit_kde'] === 2 && $hlavniStranka => 'všude kromě hlavní stránky',
+                $blok['jen_rubrika'] !== null && (int) $blok['jen_rubrika'] !== $rubrika => 'jen ve vybrané rubrice',
+                default => '',
+            };
+            if ($duvod !== '' && !$upravit) {
                 continue;
             }
-            $obsah = $blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce'], (string) $blok['data_sys'], (string) $blok['obsah']);
-            if (trim($obsah) === '') {
+            $obsah = $duvod !== '' ? '' : ($blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce'], (string) $blok['data_sys'], (string) $blok['obsah']));
+            if (trim($obsah) === '' && !$upravit) {
                 continue;
             }
             // blok ze zóny, kterou zvolené rozvržení nemá, se ukáže pod obsahem
             $zona = in_array($blok['zona'], $existujici, true) ? $blok['zona'] : 'pod';
-            $blokHtml = $this->view->render('blok', ['nadpis' => $blok['nazev'], 'obsah' => $obsah, 'typ' => (int) $blok['typ'], 'sys' => $blok['sys_funkce'], 'zona' => $zona]);
+            $blokHtml = trim($obsah) === ''
+                ? '<div class="rs-duch"><strong>' . e($blok['nazev']) . '</strong><br>' . e($duvod !== '' ? 'Teď se nezobrazuje: ' . $duvod . '.' : 'Zatím nemá co zobrazit.') . '</div>'
+                : $this->view->render('blok', ['nadpis' => $blok['nazev'], 'obsah' => $obsah, 'typ' => (int) $blok['typ'], 'sys' => $blok['sys_funkce'], 'zona' => $zona]);
+            if ($upravit) {
+                $blokHtml = '<div class="rs-blok" data-blok="' . (int) $blok['idb'] . '" data-nazev="' . e($blok['nazev']) . '" draggable="true">' . $blokHtml . '</div>';
+            }
             // "jen na mobilu / jen na počítači" řeší obal s třídou; styl je v hlavičce stránky (Front\Seo), layout ho nemusí znát
-            $html[$zona] .= $blok['zarizeni'] === 'vse' ? $blokHtml : '<div class="jen-' . e($blok['zarizeni']) . '">' . $blokHtml . '</div>';
+            $html[$zona] .= $blok['zarizeni'] === 'vse' || $upravit ? $blokHtml : '<div class="jen-' . e($blok['zarizeni']) . '">' . $blokHtml . '</div>';
+        }
+        if ($upravit) {
+            foreach ($existujici as $zona) {
+                // display: contents - obal nesmí rozbít mřížku, do které layout bloky skládá
+                $html[$zona] = '<div class="rs-zona" data-zona="' . e($zona) . '" data-nazev="' . e(Nastaveni::ZONY[$zona]) . '">' . $html[$zona]
+                    . '<button type="button" class="rs-pridat" data-zona="' . e($zona) . '">+ Přidat blok <small>' . e(Nastaveni::ZONY[$zona]) . '</small></button></div>';
+            }
         }
 
         return $html;

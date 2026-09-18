@@ -40,6 +40,14 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Layouty musí vypsat `<?= $hlava ?>` před `</head>` a `<?= $pata ?>` před `</body>`** - tudy jde SEO,
   strukturovaná data, měřicí kódy a cookie lišta (`Front\Seo`). Měřicí skripty čekající na souhlas mají
   `type="text/plain" data-souhlas="analytika"` (+ `data-cookieconsent` pro Cookiebot).
+- **Bloky se upravují vizuálně přímo ve stránce webu** (`/?upravit=1` → `views/front/vizual.php`, `image/vizual.js|css`):
+  `Front\Bloky::zony(..., $upravit)` obalí zóny `.rs-zona[data-zona]` (display: contents – nesmí rozbít mřížku layoutu) a
+  bloky `.rs-blok[data-blok]`; ukládá se přes JSON akce `Moduly\Bloky` (rychle_pridat, nastaveni_json, uloz_json, poradi).
+  Nový typ bloku = `Bloky::SYSTEMOVE` + `Bloky::KATALOG` (název, popis jednou větou, ikona) + větev ve `Front\Bloky::systemovy()`
+  + případná pole v panelu nastavení ve `vizual.js`. Nastavení bloku má být na pár polí – co jde odvodit, neptej se.
+  Schéma bez JavaScriptu zůstává na `admin.php?modul=bloky&schema=1`.
+- **Nikdy `window.confirm()`** – vestavěné prohlížeče ho potlačují. V administraci atribut `data-potvrdit="text"`
+  na formuláři či tlačítku (řeší `admin.js`), ve vizuálním editoru vlastní dialog.
 - **Cache stránek** (`Front\Cache`): cachuje se jen výstup `Front\Kernel::stranka()` pro nepřihlášené bez osobních
   cookies; cokoli, co se má lišit podle čtenáře, musí buď běžet v JS, nebo mít vlastní cookie `phprs_*`, která
   cache vypíná. Každý POST v administraci i formuláře čtenářů volají `Cache::vymaz()`.

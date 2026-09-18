@@ -57,9 +57,11 @@ kod=$(curl -s -b "$JAR" -c "$JAR" -o /dev/null -w '%{http_code}' -X POST "$B/adm
 curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php" -d "_csrf=$TOKEN" -d user=admin --data-urlencode "password=$HESLO"
 "${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('rozsireni','novinky,komentare,ankety,statistika,presmerovani,reklama') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
 over "přehled" 200 /admin.php "Přehled"
-for m in clanky "clanky&akce=novy" "clanky&akce=kalendar" intergal topic stranky news comment ankety stat reklama bloky users presmerovani; do over "modul $m" 200 "/admin.php?modul=$m"; done
+for m in clanky "clanky&akce=novy" "clanky&akce=kalendar" intergal topic stranky news comment ankety stat reklama "bloky&schema=1" users presmerovani protokol; do over "modul $m" 200 "/admin.php?modul=$m"; done
 for z in zakladni vzhled seo mereni cookies rozsireni zalohy stav; do over "nastavení/$z" 200 "/admin.php?modul=config&zalozka=$z"; done
 over "neznámý modul" 403 "/admin.php?modul=neexistuje"
+over "vizuální editor bloků" 200 "/?upravit=1" "rs-nastaveni"
+kod=$(curl -s -o "$PRACE/odpoved" -w '%{http_code}' "$B/?upravit=1"); grep -q "rs-nastaveni" "$PRACE/odpoved" && { echo "  CHYBA  vizuální editor je vidět bez přihlášení"; CHYB=$((CHYB+1)); } || echo "  ok     vizuální editor jen pro přihlášené"
 
 if [ -s "$PRACE/web/storage/log/chyby.log" ]; then echo "== záznam chyb aplikace:"; cat "$PRACE/web/storage/log/chyby.log"; CHYB=$((CHYB+1)); fi
 echo; [ "$CHYB" -eq 0 ] && echo "VŠE V POŘÁDKU" || { echo "NALEZENO CHYB: $CHYB"; exit 1; }

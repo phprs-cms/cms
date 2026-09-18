@@ -20,7 +20,7 @@ final class Statistika
     {
         $server = $_SERVER;
         $ua = (string) ($server['HTTP_USER_AGENT'] ?? '');
-        if (!$app->settings()->bool('statistika') || $ua === '' || preg_match(self::ROBOTI, $ua) || $app->request->get('nahled') !== '') {
+        if (!\PhpRS\Core\Rozsireni::je($app->settings(), 'statistika') || !$app->settings()->bool('statistika') || $ua === '' || preg_match(self::ROBOTI, $ua) || $app->request->get('nahled') !== '') {
             return;
         }
         $db = $app->db();

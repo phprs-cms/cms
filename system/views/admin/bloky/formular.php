@@ -29,6 +29,16 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	</select>
 </div>
 <div class="radek">
+	<label for="data_sys">Reklamní pozice</label>
+	<div><select id="data_sys" name="data_sys">
+		<option value="">–</option>
+<?php foreach (PhpRS\Admin\Moduly\Reklama::POZICE as $klic => $nazev): if ($klic === 'pod-clankem') { continue; } ?>
+		<option value="<?= e($klic) ?>"<?= ($blok['data_sys'] ?? '') === $klic ? ' selected' : '' ?>><?= e($nazev) ?></option>
+<?php endforeach ?>
+	</select>
+	<span class="napoveda">Jen u bloku Reklama: které reklamy se v něm budou střídat.</span></div>
+</div>
+<div class="radek">
 	<label for="obsah">Vlastní obsah (HTML)</label>
 	<div><textarea class="textbox kod" id="obsah" name="obsah" rows="10"><?= e($blok['obsah']) ?></textarea>
 	<span class="napoveda">Použije se jen u bloku s vlastním obsahem.</span></div>

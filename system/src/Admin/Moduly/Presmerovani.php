@@ -19,6 +19,7 @@ final class Presmerovani extends Modul
     public const string NAZEV_RETRO = 'Přesměrování';
     public const string SKUPINA = 'Správa';
     public const string IKONA = 'presmerovani';
+    public const string ROZSIRENI = 'presmerovani';
     public const bool JEN_ADMIN = true;
 
     public static function pridej(Db $db, string $z, string $na): void

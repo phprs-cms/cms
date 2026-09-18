@@ -18,6 +18,7 @@ final class Komentare extends Modul
     public const string NAZEV_RETRO = 'Komentáře';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'komentare';
+    public const string ROZSIRENI = 'komentare';
 
     private const int NA_STRANKU = 30;
 

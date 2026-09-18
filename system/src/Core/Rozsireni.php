@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpRS\Core;
+
+/**
+ * Rozšíření - volitelné části systému, které administrátor zapíná a vypíná v Nastavení.
+ *
+ * Systém je záměrně uzavřený: všechna rozšíření jsou součástí balíčku a vznikají v projektu phpRS.
+ * Cizí plug-iny se neinstalují. Vypnuté rozšíření zmizí z menu administrace i z webu, data zůstávají.
+ */
+final class Rozsireni
+{
+    /** klíč => [název, popis, zapnuto ve výchozím stavu] */
+    public const array SEZNAM = [
+        'novinky' => ['Novinky', 'Krátké zprávy redakce v bloku Novinky.', true],
+        'komentare' => ['Komentáře a hodnocení', 'Diskuse pod články s moderací a antispamem, hodnocení článků hvězdičkami.', true],
+        'ankety' => ['Ankety', 'Anketa v bloku na webu, jeden hlas na čtenáře.', true],
+        'statistika' => ['Statistika', 'Vlastní měření návštěvnosti bez cookies.', true],
+        'presmerovani' => ['Přesměrování', 'Správa přesměrování 301 ze starých adres.', true],
+        'reklama' => ['Reklamní systém', 'Bannery a reklamní kódy v blocích a pod články, plánování, počítání zobrazení a prokliků, ads.txt.', false],
+    ];
+
+    /** @return list<string> */
+    public static function zapnuta(Settings $settings): array
+    {
+        $ulozeno = $settings->get('rozsireni');
+        if ($ulozeno === '') {
+            return array_keys(array_filter(self::SEZNAM, fn (array $r): bool => $r[2]));
+        }
+
+        return array_values(array_intersect(explode(',', $ulozeno), array_keys(self::SEZNAM)));
+    }
+
+    public static function je(Settings $settings, string $klic): bool
+    {
+        return $klic === '' || in_array($klic, self::zapnuta($settings), true);
+    }
+
+    /** @param list<string> $klice */
+    public static function uloz(Settings $settings, array $klice): void
+    {
+        $klice = array_values(array_intersect($klice, array_keys(self::SEZNAM)));
+        // prázdný řetězec znamená "výchozí stav", proto se prázdný výběr ukládá jako "-"
+        $settings->set('rozsireni', $klice === [] ? '-' : implode(',', $klice));
+    }
+}

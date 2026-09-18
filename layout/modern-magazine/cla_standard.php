@@ -47,6 +47,7 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 		</ul>
 	</aside>
 <?php endif ?>
+	<?= $clanek['reklama_html'] ?? '' ?>
 	<?= $clanek['hodnoceni_html'] ?? '' ?>
 	<?= $clanek['komentare_html'] ?? '' ?>
 </article>

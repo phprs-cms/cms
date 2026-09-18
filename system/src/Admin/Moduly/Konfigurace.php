@@ -7,6 +7,7 @@ namespace PhpRS\Admin\Moduly;
 use PhpRS\Admin\Kernel;
 use PhpRS\Admin\Modul;
 use PhpRS\Core\Response;
+use PhpRS\Core\Rozsireni;
 use PhpRS\Core\Stav;
 use PhpRS\Front\Layouty;
 
@@ -25,7 +26,7 @@ final class Konfigurace extends Modul
 
     public const array ZALOZKY = [
         'zakladni' => 'Základní', 'vzhled' => 'Vzhled', 'seo' => 'SEO a GEO',
-        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'stav' => 'Stav systému',
+        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'rozsireni' => 'Rozšíření', 'stav' => 'Stav systému',
     ];
 
     public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
@@ -50,6 +51,7 @@ final class Konfigurace extends Modul
             'plausible_domena' => 'vzor:/^([a-z0-9.-]{3,100})?$/', 'kod_hlava' => 'kod', 'statistika' => 'ano',
         ],
         'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod', 'cookies_evidence' => 'ano'],
+        'rozsireni' => [],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
 
@@ -68,6 +70,7 @@ final class Konfigurace extends Modul
             'layouty' => Layouty::seznam(),
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
+            'zapnutaRozsireni' => Rozsireni::zapnuta($nastaveni),
             'adresaWebu' => $this->app->request->origin() . $this->app->url(''),
             'souhlasy' => $zalozka === 'cookies' ? $this->db->all("SELECT kategorie, COUNT(*) AS pocet FROM {souhlasy} WHERE cas > NOW() - INTERVAL 30 DAY GROUP BY kategorie ORDER BY pocet DESC") : [],
         ]);
@@ -102,6 +105,9 @@ final class Konfigurace extends Modul
         }
         if ($zalozka === 'seo' && $nastaveni->bool('indexnow') && $nastaveni->get('indexnow_klic') === '') {
             $nastaveni->set('indexnow_klic', bin2hex(random_bytes(16)));
+        }
+        if ($zalozka === 'rozsireni') {
+            Rozsireni::uloz($nastaveni, $this->request->postList('rozsireni'));
         }
         if ($this->request->postBool('novy_token')) {
             $nastaveni->set('stav_token', bin2hex(random_bytes(16)));

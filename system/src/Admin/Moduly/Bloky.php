@@ -43,6 +43,7 @@ final class Bloky extends Modul
         'hle' => 'Vyhledávání',
         'nej' => 'Nejčtenější články',
         'ank' => 'Anketa',
+        'rek' => 'Reklama',
     ];
 
     /** Vzhled bloku; v databázi číslo 1-5 jako v phpRS 2 (rs_bloky.typ). */
@@ -108,7 +109,7 @@ final class Bloky extends Modul
 
         return $this->formular([
             'idb' => 0, 'nazev' => self::SYSTEMOVE[$sys] ?? '', 'obsah' => '', 'typ' => 1,
-            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0,
+            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0, 'data_sys' => $sys === 'rek' ? 'sloupec' : '',
             'zona' => isset(self::ZONY[$zona]) ? $zona : 'prava',
         ]);
     }
@@ -137,6 +138,7 @@ final class Bloky extends Modul
             'zobrazit' => (int) $r->postBool('zobrazit'),
             'zobrazit_kde' => isset(self::KDE[$r->postInt('zobrazit_kde')]) ? $r->postInt('zobrazit_kde') : 0,
             'zona' => in_array($r->post('zona'), $povolene, true) ? $r->post('zona') : end($povolene),
+            'data_sys' => isset(Reklama::POZICE[$r->post('data_sys')]) ? $r->post('data_sys') : '',
         ];
         if ($data['nazev'] === '') {
             return $this->formular(['idb' => $id] + $data, ['nazev' => 'Vyplňte název bloku.']);

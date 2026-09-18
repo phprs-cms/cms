@@ -46,6 +46,7 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 		</ul>
 	</aside>
 <?php endif ?>
+	<?= $clanek['reklama_html'] ?? '' ?>
 	<?= $clanek['hodnoceni_html'] ?? '' ?>
 	<?= $clanek['komentare_html'] ?? '' ?>
 </article>

@@ -18,6 +18,8 @@ $cesty = [
     'komentare' => '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
     'ankety' => '<path d="M5 20V10M12 20V4M19 20v-7"/>',
     'statistika' => '<path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/>',
+    'reklama' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15l2.2-6 2.3 6M7.8 13h3M14 9v6h1.5a3 3 0 0 0 0-6z"/>',
+    'rozsireni' => '<path d="M10 3h4v4h4a1 1 0 0 1 1 1v3h-2a2 2 0 1 0 0 4h2v3a1 1 0 0 1-1 1h-4v-2a2 2 0 1 0-4 0v2H6a1 1 0 0 1-1-1v-4H3v-4h2V8a1 1 0 0 1 1-1h4z"/>',
     'web' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     'odhlasit' => '<path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="m16 17 5-5-5-5M21 12H9"/>',
     'tema' => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',

@@ -32,6 +32,9 @@ abstract class Modul
     /** Ikona v menu (klíč do sady ve views/admin/ikony.php). */
     public const string IKONA = 'clanek';
 
+    /** Klíč rozšíření (Core\Rozsireni), ke kterému modul patří; prázdné = jádro, nejde vypnout. */
+    public const string ROZSIRENI = '';
+
     /** Modul vidí jen admin (autoři, konfigurace...). */
     public const bool JEN_ADMIN = false;
 

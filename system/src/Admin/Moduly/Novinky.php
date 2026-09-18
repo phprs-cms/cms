@@ -17,6 +17,7 @@ final class Novinky extends Modul
     public const string NAZEV_RETRO = 'Editace novinek';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'novinky';
+    public const string ROZSIRENI = 'novinky';
 
     protected function akceVypis(): Response
     {

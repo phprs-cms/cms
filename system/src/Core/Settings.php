@@ -60,6 +60,8 @@ final class Settings
         'kod_marketing' => '',
         'cookies_evidence' => '1',    // zapisovat udělené souhlasy (doklad pro případnou kontrolu)
         'stav_token' => '',
+        'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
+        'ads_txt' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 

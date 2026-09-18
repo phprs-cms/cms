@@ -7,6 +7,7 @@ namespace PhpRS\Admin;
 use PhpRS\Core\App;
 use PhpRS\Core\Migrace;
 use PhpRS\Core\Response;
+use PhpRS\Core\Rozsireni;
 
 /**
  * Administrace. Adresy: admin.php?modul=<ident>&akce=<akce>
@@ -28,6 +29,7 @@ final class Kernel
         Moduly\Komentare::class,
         Moduly\Ankety::class,
         Moduly\Statistika::class,
+        Moduly\Reklama::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,
         Moduly\Presmerovani::class,
@@ -112,6 +114,9 @@ final class Kernel
         $auth = $this->app->auth();
         $moduly = [];
         foreach (self::MODULY as $class) {
+            if (!Rozsireni::je($this->app->settings(), $class::ROZSIRENI)) {
+                continue;
+            }
             $povolen = $class::JEN_ADMIN ? $auth->isAdmin() : $auth->maModul($class::IDENT, $class::PRO_VSECHNY);
             if ($povolen) {
                 $moduly[$class::IDENT] = $class;
@@ -158,7 +163,7 @@ final class Kernel
                 'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
                 'Čekají na vydání' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0{$jen}"),
-                'Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0'),
+                ...(Rozsireni::je($this->app->settings(), 'komentare') ? ['Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0')] : []),
                 'Přečtení celkem' => (int) $db->value("SELECT COALESCE(SUM(visit), 0) FROM {clanky} WHERE 1 = 1{$jen}"),
             ],
             'posledni' => $db->all(

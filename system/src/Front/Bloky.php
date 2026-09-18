@@ -7,6 +7,7 @@ namespace PhpRS\Front;
 use PhpRS\Admin\Moduly\Bloky as Nastaveni;
 use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
+use PhpRS\Core\Rozsireni;
 use PhpRS\Core\View;
 
 /**
@@ -34,7 +35,7 @@ final class Bloky
         $kde = $hlavniStranka ? 'zobrazit_kde IN (0, 1)' : 'zobrazit_kde IN (0, 2)';
 
         foreach ($this->app->db()->all("SELECT * FROM {bloky} WHERE zobrazit = 1 AND {$kde} ORDER BY hodnost DESC, idb") as $blok) {
-            $obsah = $blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce']);
+            $obsah = $blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce'], (string) $blok['data_sys']);
             if (trim($obsah) === '') {
                 continue;
             }
@@ -46,8 +47,12 @@ final class Bloky
         return $html;
     }
 
-    private function systemovy(string $zkratka): string
+    private function systemovy(string $zkratka, string $data): string
     {
+        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama'][$zkratka] ?? '';
+        if (!Rozsireni::je($this->app->settings(), $rozsireni)) {
+            return '';
+        }
         $url = $this->app->url(...);
         $db = $this->app->db();
 
@@ -59,6 +64,7 @@ final class Bloky
             'hle' => $this->view->render('blok_hle', ['url' => $url, 'q' => $this->app->request->get('q')]),
             'nej' => $this->view->render('blok_nej', ['clanky' => (new Clanky($db, $this->app->settings()))->nejctenejsi(5), 'url' => $url]),
             'ank' => (new Interakce($this->app, $this->view))->anketaHtml(),
+            'rek' => (new Reklama($this->app))->html($data !== '' ? $data : 'sloupec'),
             default => '',
         };
     }

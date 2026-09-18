@@ -7,6 +7,7 @@ namespace PhpRS\Front;
 use PhpRS\Core\Antispam;
 use PhpRS\Core\App;
 use PhpRS\Core\Response;
+use PhpRS\Core\Rozsireni;
 use PhpRS\Core\View;
 
 /**
@@ -27,7 +28,7 @@ final class Interakce
     /** @param array<string, mixed> $clanek */
     public function komentareHtml(array $clanek): string
     {
-        if (!$this->app->settings()->bool('povolit_komentare') || !$clanek['povolit_kom']) {
+        if (!Rozsireni::je($this->app->settings(), 'komentare') || !$this->app->settings()->bool('povolit_komentare') || !$clanek['povolit_kom']) {
             return '';
         }
         $vse = $this->app->db()->all('SELECT * FROM {komentare} WHERE clanek = ? AND zobrazit = 1 ORDER BY datum, idk', [$clanek['idc']]);
@@ -109,7 +110,7 @@ final class Interakce
     /** @param array<string, mixed> $clanek */
     public function hodnoceniHtml(array $clanek): string
     {
-        if (!$this->app->settings()->bool('povolit_hodnoceni')) {
+        if (!Rozsireni::je($this->app->settings(), 'komentare') || !$this->app->settings()->bool('povolit_hodnoceni')) {
             return '';
         }
 

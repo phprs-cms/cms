@@ -7,6 +7,7 @@ namespace PhpRS\Front;
 use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
 use PhpRS\Core\Response;
+use PhpRS\Core\Rozsireni;
 use PhpRS\Core\View;
 
 /**
@@ -87,6 +88,12 @@ final class Kernel
             }
 
             return new Response('', 204);
+        }
+        if (preg_match('#^/r/(\d+)$#', $path, $m)) {
+            return (new Reklama($this->app))->proklik((int) $m[1]);
+        }
+        if ($path === '/ads.txt' && trim($this->app->settings()->get('ads_txt')) !== '') {
+            return new Response($this->app->settings()->get('ads_txt') . "\n", 200, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
         if ($request->isPost() && in_array($path, ['/komentar', '/hodnoceni', '/anketa'], true)) {
             $interakce = new Interakce($this->app, $this->view);
@@ -196,6 +203,7 @@ final class Kernel
         $clanek['shrnuti_html'] = $casti->render('shrnuti', ['body' => array_values(array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: [])))]);
         $clanek['faq_html'] = $casti->render('faq', ['faq' => Seo::faq($clanek['faq'])]);
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
+        $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem');
         $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);
         $clanek['komentare_html'] = $nahled ? '' : $interakce->komentareHtml($clanek);
         $clanek['stitky'] = $this->app->db()->all('SELECT s.nazev, s.seo_link FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [$clanek['idc']]);
@@ -245,7 +253,9 @@ final class Kernel
     private function nenalezeno(): Response
     {
         // než web odpoví 404, zkusí přesměrování ze staré adresy (ruční i po změně adresy článku)
-        $cil = $this->app->db()->one('SELECT * FROM {presmerovani} WHERE z_adresy = ?', [trim($this->app->request->path(), '/')]);
+        $cil = Rozsireni::je($this->app->settings(), 'presmerovani')
+            ? $this->app->db()->one('SELECT * FROM {presmerovani} WHERE z_adresy = ?', [trim($this->app->request->path(), '/')])
+            : null;
         if ($cil !== null) {
             $this->app->db()->run('UPDATE {presmerovani} SET pocet = pocet + 1 WHERE idp = ?', [$cil['idp']]);
 

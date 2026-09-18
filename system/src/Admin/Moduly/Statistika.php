@@ -17,6 +17,7 @@ final class Statistika extends Modul
     public const string NAZEV_RETRO = 'Statistika';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'statistika';
+    public const string ROZSIRENI = 'statistika';
 
     protected function akceVypis(): Response
     {

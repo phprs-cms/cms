@@ -17,6 +17,7 @@ final class Ankety extends Modul
     public const string NAZEV_RETRO = 'Editace anket';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'ankety';
+    public const string ROZSIRENI = 'ankety';
 
     protected function akceVypis(): Response
     {

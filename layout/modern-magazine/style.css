@@ -213,3 +213,8 @@ img { display: block; max-width: 100%; height: auto; }
 .anketa-vysledek { position: relative; display: flex; justify-content: space-between; gap: 10px; margin: 6px 0; padding: 5px 8px; font-size: 14px; background: rgb(127 127 127 / 0.12); }
 .anketa-vysledek span { position: relative; z-index: 1; }
 .anketa-vysledek i { position: absolute; inset: 0 auto 0 0; background: rgb(127 127 127 / 0.3); }
+
+/* reklama */
+.reklama { margin: 24px auto; text-align: center; }
+.reklama-oznaceni { display: block; margin-bottom: 4px; font: 10px/1.2 system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.55; }
+.reklama img { display: inline-block; max-width: 100%; height: auto; }

@@ -54,6 +54,7 @@ $info = function () use ($clanek, $url): string {
 		</ul>
 	</aside>
 <?php endif ?>
+	<?= $clanek['reklama_html'] ?? '' ?>
 	<?= $clanek['hodnoceni_html'] ?? '' ?>
 	<?= $clanek['komentare_html'] ?? '' ?>
 </article>

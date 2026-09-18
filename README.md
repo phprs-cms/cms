@@ -99,10 +99,18 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   - *Stav systému:* kontroly serveru, databáze, souborů, bezpečnosti a provozu, zkušební e-mail,
     bezpečnostní hlavičky, `/stav.json?token=…`. Kontrola „poslední záloha" přijde se Zálohou DB v M5.
 - ~~**M4 – import z phpRS 2.x**~~ – zrušeno (18. 9. 2026): phpRS 3 je samostatný systém bez cesty ze starého phpRS.
-- **M5 – rozšíření:** plug-iny (položka menu + systémový blok + háčky), **Reklamní systém** (pozice,
-  kampaně, počítání zobrazení a prokliků, plánování, ads.txt), Download sekce (nízká priorita), levely a
-  registrace čtenářů, Záloha DB, Správa modulů, slovenština a angličtina administrace.
-  Weblinky se nepřebírají – v dnešním webu nemají místo.
+- **M5 – rozšíření a provoz:**
+  - *Rozšíření:* uzavřený systém. Všechna rozšíření jsou součástí balíčku a píše je tým phpRS; administrátor je jen
+    zapíná a vypíná (Nastavení → Rozšíření). Cizí plug-iny ani veřejné API pro ně neexistují – cílem je systém,
+    kde je vše připravené. Jádro (články, média, rubriky, stránky, bloky, uživatelé, nastavení) vypnout nejde.
+  - *Reklamní systém:* bannery (obrázek / kód), pozice (blok Reklama, pod článkem), plánování od–do, váha,
+    strop zobrazení, počítání zobrazení a prokliků, označení „Reklama", `ads.txt`.
+  - *Zálohy:* záloha databáze jedním klikem i automaticky jednou týdně, stažení, kontrola stáří ve Stavu systému.
+  - *Aktualizace:* administrace čte podepsaný soubor `aktualizace.json` (hostovaný na webu projektu / GitHub Pages),
+    balíček je ZIP v GitHub Releases. Ověřuje se SHA-256 a podpis Ed25519 (veřejný klíč je součástí systému,
+    soukromý má jen vydavatel). Před aktualizací se zálohuje databáze; nepřepisuje se `config.php`, `media/`,
+    `storage/` ani vlastní layouty; migrace databáze proběhnou samy. Vydání připravuje `tools/vydani.php`.
+  - Později: Download sekce (nízká priorita), levely a registrace čtenářů, slovenština a angličtina administrace.
 - **M6 – Bloky 2.0:** ~~zóny (hlavička, sloupce, nad/pod obsahem, patička), rozvržení 3/2/1 sloupec/plná šířka,
   přetahování myší, pojmenované vzhledy~~ (hotovo); zbývají nové typy
   bloků: menu (vlastní odkazy), článek/články z rubriky, otvírák, karusel, štítky, autoři, newsletter
@@ -132,6 +140,15 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
 - **Provoz:** automatické zálohy (DB + média) do ZIP / na vzdálené úložiště, aktualizace systému jedním
   klikem s kontrolou podpisu, režim údržby, cron bez cronu (úlohy spouštěné návštěvou).
 - **API:** veřejné čtecí REST/JSON API pro mobilní aplikaci nebo headless použití.
+
+## Distribuce a podpora projektu
+
+- **Zdarma, open source (GPL).** Systém se nabízí bez poplatků a bez placených verzí.
+- **Web projektu:** co systém umí, živé demo, stažení, dokumentace, seznam změn, „Podpořte vývoj". Web poběží
+  na phpRS 3 jako referenční instalace a hostuje i `aktualizace.json`.
+- **Dobrovolný příspěvek:** QR platba na účet, GitHub Sponsors, případně Ko-fi / Stripe. V administraci jen
+  nenápadný odkaz „Podpořit vývoj" u Stavu systému (lze skrýt) – žádné naléhavé výzvy ani omezené funkce.
+- **Vydávání:** zdrojový kód a Releases na GitHubu; instalace se aktualizují z administrace (viz M5).
 
 ## Licence
 

@@ -68,6 +68,48 @@ final class Auth
         $this->db->update('user', ['pocet_chyb' => 0, 'posledni_login' => date('Y-m-d H:i:s')], ['idu' => $user['idu']]);
 
         $this->session->regenerate();
+        if ($user['totp_tajemstvi'] !== '') {
+            // heslo sedí, ale účet má dvoufázové přihlášení: přihlášení dokončí až kód z aplikace
+            $this->session->set('idu_ceka', ['idu' => (int) $user['idu'], 'cas' => time()]);
+
+            return null;
+        }
+        $this->session->set('idu', (int) $user['idu']);
+        $this->user = false;
+
+        return null;
+    }
+
+    /** Heslo bylo zadáno správně a čeká se na kód z ověřovací aplikace (nejdéle 5 minut). */
+    public function cekaNaKod(): bool
+    {
+        $ceka = $this->session->get('idu_ceka');
+
+        return is_array($ceka) && time() - (int) $ceka['cas'] < 300;
+    }
+
+    /** Druhý krok přihlášení: kód z aplikace, nebo jednorázový záložní kód. @return string|null text chyby */
+    public function overKod(string $kod, string $ip): ?string
+    {
+        if (!$this->cekaNaKod()) {
+            return 'Přihlášení vypršelo, začněte prosím znovu.';
+        }
+        $pokusu = (int) $this->db->value("SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE", [$ip]);
+        if ($pokusu >= 10) {
+            return 'Příliš mnoho pokusů. Zkuste to znovu za 15 minut.';
+        }
+        $user = $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [(int) $this->session->get('idu_ceka')['idu']]);
+        $zalozni = $user === null ? null : Totp::pouzijZalozni($user['totp_zalozni'], $kod);
+        if ($user === null || (!Totp::over($user['totp_tajemstvi'], $kod) && $zalozni === null)) {
+            $this->db->insert('kontrola_ip', ['ip_adresa' => $ip, 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+
+            return 'Kód není správný.';
+        }
+        if ($zalozni !== null) {
+            $this->db->update('user', ['totp_zalozni' => $zalozni], ['idu' => $user['idu']]);
+        }
+        $this->session->remove('idu_ceka');
+        $this->session->regenerate();
         $this->session->set('idu', (int) $user['idu']);
         $this->user = false;
 

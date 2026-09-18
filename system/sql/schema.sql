@@ -25,6 +25,8 @@ CREATE TABLE rs_user (
     blokovat       BOOL NOT NULL DEFAULT 0,
     pocet_chyb     SMALLINT UNSIGNED NOT NULL DEFAULT 0,  -- neúspěšná přihlášení v řadě
     prostredi      VARCHAR(10)  NOT NULL DEFAULT '',      -- vzhled administrace: retro | 2026; prázdné = výchozí z konfigurace
+    totp_tajemstvi VARCHAR(64)  NOT NULL DEFAULT '',      -- dvoufázové přihlášení (TOTP); prázdné = vypnuté
+    totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,
     PRIMARY KEY (idu),
     UNIQUE KEY uq_user (user)
@@ -150,6 +152,8 @@ CREATE TABLE rs_clanky (
     hodnoceni      INT UNSIGNED NOT NULL DEFAULT 0,       -- součet známek
     mn_hodnoceni   INT UNSIGNED NOT NULL DEFAULT 0,       -- počet hlasů
     zmeneno        DATETIME NULL,
+    zamek_kdo      INT UNSIGNED NULL,                     -- kdo má článek právě otevřený v editoru
+    zamek_cas      DATETIME NULL,
     PRIMARY KEY (idc),
     UNIQUE KEY uq_clanky_seo (seo_link),
     KEY ix_clanky_index (visible, zobr_na_indexu, priority, datum),
@@ -375,4 +379,19 @@ CREATE TABLE rs_reklama (
     kliky         INT UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (idr),
     KEY ix_reklama_pozice (pozice, aktivni)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- ---------------------------------------------------------------------------
+-- Protokol změn v administraci
+CREATE TABLE rs_protokol (
+    idp   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    cas   DATETIME NOT NULL,
+    kdo   INT UNSIGNED NULL,
+    jmeno VARCHAR(100) NOT NULL DEFAULT '',               -- jméno v okamžiku akce (účet může později zaniknout)
+    modul VARCHAR(30) NOT NULL,
+    akce  VARCHAR(40) NOT NULL,
+    popis VARCHAR(255) NOT NULL DEFAULT '',
+    PRIMARY KEY (idp),
+    KEY ix_protokol_cas (cas),
+    KEY ix_protokol_kdo (kdo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

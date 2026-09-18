@@ -67,6 +67,11 @@ final class Autori extends Modul
         if (!$data['blokovat']) {
             $data['pocet_chyb'] = 0;
         }
+        if ($r->postBool('totp_reset')) {
+            // uživatel ztratil telefon i záložní kódy: administrátor mu dvoufázové přihlášení vypne
+            $data['totp_tajemstvi'] = '';
+            $data['totp_zalozni'] = null;
+        }
 
         $chyby = [];
         if (!preg_match('/^[a-zA-Z0-9._-]{2,40}$/', $data['user'])) {

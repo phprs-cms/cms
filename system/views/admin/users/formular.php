@@ -83,6 +83,12 @@ $typy = [0 => 'Autor – píše a upravuje vlastní články', 1 => 'Redaktor �
 	</div>
 </div>
 <?php endif ?>
+<?php if (!empty($autor['totp_tajemstvi'])): ?>
+<div class="radek">
+	<span class="popisek">Dvoufázové přihlášení</span>
+	<div class="volby"><span class="stitek stitek-vydano">zapnuté</span> <label><input type="checkbox" name="totp_reset" value="1"> Vypnout (uživatel ztratil telefon i záložní kódy)</label></div>
+</div>
+<?php endif ?>
 <?php if (!$sam): ?>
 <div class="radek">
 	<span class="popisek">Blokovat</span>

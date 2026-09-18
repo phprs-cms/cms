@@ -52,7 +52,7 @@ $ikona = require __DIR__ . '/ikony.php';
 <?php endforeach ?>
 	</form>
 	<button class="tema-prepinac" type="button" data-tema-prepinac title="Světlý / tmavý režim" aria-label="Přepnout světlý a tmavý režim"><?= $ikona('tema') ?></button>
-	<span class="prihlasen"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></span>
+	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="Můj účet"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
 </div>
 <?php endif ?>
 <main class="obsah">

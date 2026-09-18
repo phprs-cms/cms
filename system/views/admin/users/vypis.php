@@ -13,7 +13,7 @@
 <tbody>
 <?php foreach ($autori as $a): ?>
 <tr<?= $a['blokovat'] ? ' class="nevydany"' : '' ?>>
-	<td><a href="<?= e($modul->url('edit', ['id' => $a['idu']])) ?>"><?= e($a['user']) ?></a><?= $a['blokovat'] ? ' <strong>(blokován)</strong>' : '' ?></td>
+	<td><a href="<?= e($modul->url('edit', ['id' => $a['idu']])) ?>"><?= e($a['user']) ?></a><?= $a['blokovat'] ? ' <strong>(blokován)</strong>' : '' ?><?= $a['totp_tajemstvi'] !== '' ? ' <span class="stitek stitek-vydano" title="dvoufázové přihlášení">2FA</span>' : '' ?></td>
 	<td><?= e($a['jmeno']) ?></td>
 	<td><?= e($a['email']) ?></td>
 	<td><?= e(PhpRS\Core\Auth::TYPY[(int) $a['admin']] ?? '?') ?></td>

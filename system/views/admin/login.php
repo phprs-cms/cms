@@ -5,6 +5,7 @@
  * @var PhpRS\Core\App $app
  * @var string|null $chyba
  * @var string $login
+ * @var bool $kod  druhý krok: heslo už sedí, čeká se na kód z ověřovací aplikace
  * @var string $prostredi  výchozí prostředí webu (uživatel ještě není známý)
  */
 $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
@@ -29,8 +30,14 @@ $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 <?php endif ?>
 <form method="post" action="<?= e($app->url('admin.php')) ?>">
 <?= $app->session->csrfField() ?>
+<?php if ($kod): ?>
+<input type="hidden" name="krok" value="kod">
+<p>Zadejte šestimístný kód z ověřovací aplikace. Nemáte telefon? Použijte jeden ze záložních kódů.</p>
+<div class="login-pole"><label for="kod">Ověřovací kód:</label> <input class="textpole" type="text" id="kod" name="kod" size="20" maxlength="12" inputmode="numeric" autocomplete="one-time-code" required autofocus></div>
+<?php else: ?>
 <div class="login-pole"><label for="user">Uživatel (User):</label> <input class="textpole" type="text" id="user" name="user" value="<?= e($login) ?>" size="20" maxlength="40" autocomplete="username" required autofocus></div>
 <div class="login-pole"><label for="password">Heslo (Password):</label> <input class="textpole" type="password" id="password" name="password" size="20" autocomplete="current-password" required></div>
+<?php endif ?>
 <p><input class="tl" type="submit" value=" OK "></p>
 </form>
 </div>

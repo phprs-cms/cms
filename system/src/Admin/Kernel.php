@@ -33,6 +33,7 @@ final class Kernel
         Moduly\Bloky::class,
         Moduly\Autori::class,
         Moduly\Presmerovani::class,
+        Moduly\ProtokolZmen::class,
         Moduly\Konfigurace::class,
     ];
 
@@ -90,6 +91,9 @@ final class Kernel
         }
 
         $ident = $request->get('modul');
+        if ($akce === 'ucet') {
+            return (new Ucet($this))->handle();
+        }
         if ($akce === 'prostredi' && $request->isPost()) {
             if (isset(self::PROSTREDI[$request->post('prostredi')])) {
                 $app->db()->update('user', ['prostredi' => $request->post('prostredi')], ['idu' => $app->auth()->id()]);
@@ -110,7 +114,14 @@ final class Kernel
             return $this->page('Chyba', $app->view->render('admin/chyba', ['text' => 'K tomuto modulu nemáte přístup.']), 403);
         }
 
-        return (new $class($this))->handle($akce === '' ? 'vypis' : $akce);
+        $odpoved = (new $class($this))->handle($akce === '' ? 'vypis' : $akce);
+        if ($request->isPost() && $odpoved->status === 302 && $akce !== 'poradi' && $akce !== 'zamek') {
+            // každá provedená změna v administraci jde do protokolu
+            $popis = $request->post('titulek') ?: ($request->post('nazev') ?: ($request->post('user') ?: ($request->post('otazka') ?: $request->post('zalozka'))));
+            Protokol::zapis($app, $ident, $akce, $popis);
+        }
+
+        return $odpoved;
     }
 
     /**
@@ -188,9 +199,17 @@ final class Kernel
         $app = $this->app;
         $chyba = null;
         if ($app->request->isPost()) {
-            $chyba = $app->auth()->login($app->request->post('user'), $app->request->post('password'), $app->request->ip());
-            if ($chyba === null) {
+            $druhyKrok = $app->request->post('kod') !== '' || $app->request->post('krok') === 'kod';
+            $chyba = $druhyKrok
+                ? $app->auth()->overKod($app->request->post('kod'), $app->request->ip())
+                : $app->auth()->login($app->request->post('user'), $app->request->post('password'), $app->request->ip());
+            if ($chyba === null && $app->auth()->user() !== null) {
+                Protokol::zapis($app, 'prihlaseni', 'login', $druhyKrok ? 'dvoufázově' : '');
+
                 return Response::redirect($app->url('admin.php'));
+            }
+            if ($chyba !== null && !$druhyKrok) {
+                Protokol::zapis($app, 'prihlaseni', 'neuspech', 'účet: ' . mb_substr($app->request->post('user'), 0, 40));
             }
         }
 
@@ -198,6 +217,7 @@ final class Kernel
             'app' => $app,
             'chyba' => $chyba,
             'login' => $app->request->post('user'),
+            'kod' => $app->auth()->cekaNaKod(),
             'prostredi' => $this->prostredi(),
         ]), $chyba === null ? 200 : 401);
     }

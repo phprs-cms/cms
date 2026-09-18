@@ -27,8 +27,22 @@ final class Kernel
         Moduly\Konfigurace::class,
     ];
 
+    /** Vzhledy administrace: stejné HTML, jiný stylesheet (image/admin.css a image/admin-2026.css). */
+    public const array PROSTREDI = ['retro' => 'phpRS retro', '2026' => 'phpRS 2026'];
+
     public function __construct(public readonly App $app)
     {
+    }
+
+    /** Prostředí přihlášeného uživatele; když si žádné nezvolil (a na přihlašovací stránce), platí výchozí z Konfigurace. */
+    public function prostredi(): string
+    {
+        $volba = (string) ($this->app->auth()->user()['prostredi'] ?? '');
+        if (!isset(self::PROSTREDI[$volba])) {
+            $volba = $this->app->settings()->get('prostredi_admin');
+        }
+
+        return isset(self::PROSTREDI[$volba]) ? $volba : 'retro';
     }
 
     public function handle(): Response
@@ -53,8 +67,15 @@ final class Kernel
         }
 
         $ident = $request->get('modul');
+        if ($akce === 'prostredi' && $request->isPost()) {
+            if (isset(self::PROSTREDI[$request->post('prostredi')])) {
+                $app->db()->update('user', ['prostredi' => $request->post('prostredi')], ['idu' => $app->auth()->id()]);
+            }
+
+            return Response::redirect($app->url('admin.php' . (preg_match('/^[a-z]+$/', $ident) ? '?modul=' . $ident : '')));
+        }
         if ($ident === '') {
-            return $this->page('', $app->view->render('admin/desktop'));
+            return $this->page('', $app->view->render('admin/desktop', $this->desktop()));
         }
         $class = $this->moduly()[$ident] ?? null;
         if ($class === null) {
@@ -96,7 +117,38 @@ final class Kernel
             'aktivni' => $app->request->get('modul'),
             'user' => $app->auth()->user(),
             'hlasky' => $app->session->takeFlashes(),
+            'prostredi' => $this->prostredi(),
         ]), $status);
+    }
+
+    /**
+     * Data úvodní obrazovky. Retro ukazuje jen logo jako originál, prostředí 2026 přehled redakce.
+     *
+     * @return array<string, mixed>
+     */
+    private function desktop(): array
+    {
+        $data = ['app' => $this->app, 'prostredi' => $this->prostredi(), 'moduly' => $this->moduly()];
+        if ($data['prostredi'] === 'retro') {
+            return $data;
+        }
+        $db = $this->app->db();
+        $autori = $this->app->auth()->spravovaniAutori();
+        $jen = $autori === null ? '' : ' AND autor IN (' . implode(',', $autori) . ')';
+
+        return $data + [
+            'pocty' => [
+                'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
+                'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
+                'Čekají na vydání' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0{$jen}"),
+                'Přečtení celkem' => (int) $db->value("SELECT COALESCE(SUM(visit), 0) FROM {clanky} WHERE 1 = 1{$jen}"),
+            ],
+            'posledni' => $db->all(
+                "SELECT c.idc, c.titulek, c.datum, c.visible, c.visit, t.nazev AS tema_jm
+                 FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE 1 = 1" . str_replace('autor', 'c.autor', $jen) . "
+                 ORDER BY COALESCE(c.zmeneno, c.datum) DESC LIMIT 6",
+            ),
+        ];
     }
 
     private function login(): Response
@@ -114,6 +166,7 @@ final class Kernel
             'app' => $app,
             'chyba' => $chyba,
             'login' => $app->request->post('user'),
+            'prostredi' => $this->prostredi(),
         ]), $chyba === null ? 200 : 401);
     }
 }

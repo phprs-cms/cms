@@ -1,20 +1,29 @@
 <?php
 /**
- * Layout "default" - globální šablona stránky.
+ * Layout "Classic Newspaper" - globální šablona stránky.
  *
- * Kolem obsahu vykreslí sloupce s bloky tak, jak jsou nastavené v administraci (Úprava bloků).
- * Vlastní layout = kopie této složky pod jiným názvem; vybírá se v Konfiguraci.
+ * Vzhled klasického deníku: datum, hlavička s názvem listu, lišta rubrik, obsah a vpravo
+ * úzký sloupec, do kterého se poskládají všechny postranní sloupce bloků z administrace.
  *
  * @var PhpRS\Core\Settings $web
  * @var string $titulek  prázdný na hlavní stránce
  * @var array{hlavni:bool, popis:string, klicova_slova:string, obrazek:string, typ:string, noindex:bool} $meta
  * @var list<array{ids:int, html:string, hlavni:bool}> $sloupce
+ * @var list<array<string, mixed>> $rubriky
  * @var callable(string): string $url
  * @var string $kanonicka
- * @var list<array<string, mixed>> $rubriky  viditelné rubriky jako strom (klíč "uroven") - pro navigaci v záhlaví
  */
 $nazevWebu = $web->get('nazev_webu');
-$pocetSloupcu = count(array_filter($sloupce, fn (array $s): bool => trim($s['html']) !== ''));
+$hlavniObsah = '';
+$postranni = '';
+foreach ($sloupce as $sloupec) {
+    if ($sloupec['hlavni']) {
+        $hlavniObsah .= $sloupec['html'];
+    } else {
+        $postranni .= $sloupec['html'];
+    }
+}
+$jeClanek = $meta['typ'] === 'article';
 ?>
 <!doctype html>
 <html lang="cs">
@@ -40,33 +49,41 @@ $pocetSloupcu = count(array_filter($sloupce, fn (array $s): bool => trim($s['htm
 <meta property="og:image" content="<?= e($meta['obrazek']) ?>">
 <?php endif ?>
 <link rel="alternate" type="application/rss+xml" title="<?= e($nazevWebu) ?>" href="<?= e($url('rss.xml')) ?>">
-<link rel="stylesheet" href="<?= e($url('layout/default/style.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
+<link rel="stylesheet" href="<?= e($url('layout/classic-newspaper/style.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body>
-<header class="zahlavi">
+<a class="preskocit" href="#obsah">Přeskočit na obsah</a>
+<header class="hlavicka">
 	<div class="obal">
-		<a class="nazev-webu" href="<?= e($url('')) ?>"><?= e($nazevWebu) ?></a>
+		<div class="hlavicka-lista">
+			<span class="dnes"><?= e(datum_slovy()) ?></span>
+			<span class="sluzby"><a href="<?= e($url('hledani')) ?>">Hledat</a><a href="<?= e($url('rss.xml')) ?>">RSS</a></span>
+		</div>
+		<a class="titul-listu" href="<?= e($url('')) ?>"><?= e($nazevWebu) ?></a>
 <?php if ($web->get('popis_webu') !== ''): ?>
 		<p class="motto"><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
+		<nav class="rubriky-lista" aria-label="Rubriky">
+<?php foreach ($rubriky as $r): if ($r['uroven'] > 0) { continue; } ?>
+			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"><?= e($r['nazev']) ?></a>
+<?php endforeach ?>
+		</nav>
 	</div>
 </header>
-<div class="obal sloupce sloupce-<?= $pocetSloupcu ?>">
-<?php foreach ($sloupce as $i => $sloupec): if (trim($sloupec['html']) === '') { continue; } ?>
-<?php if ($sloupec['hlavni']): ?>
-	<main class="sloupec sloupec-hlavni" id="obsah">
-<?= $sloupec['html'] ?>
+<div class="obal stranka<?= $jeClanek ? ' stranka-clanek' : '' ?>">
+	<main id="obsah" class="hlavni">
+<?= $hlavniObsah ?>
 	</main>
-<?php else: ?>
-	<aside class="sloupec sloupec-bocni sloupec-<?= $i === 0 ? 'levy' : 'pravy' ?>">
-<?= $sloupec['html'] ?>
+<?php if (trim($postranni) !== ''): ?>
+	<aside class="postranni" aria-label="Další obsah">
+<?= $postranni ?>
 	</aside>
 <?php endif ?>
-<?php endforeach ?>
 </div>
-<footer class="zapati">
+<footer class="paticka">
 	<div class="obal">
-		&copy; <?= date('Y') ?> <?= e($nazevWebu) ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3
+		<span class="paticka-titul"><?= e($nazevWebu) ?></span>
+		<span>&copy; <?= date('Y') ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3</span>
 	</div>
 </footer>
 </body>

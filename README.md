@@ -48,12 +48,31 @@ Nový modul administrace: třída v `system/src/Admin/Moduly/` dědící z `Modu
 `NAZEV`, metody `akceVypis()`, `akceEdit()`…), šablony ve `system/views/admin/<ident>/` a zápis do
 `Kernel::MODULY`.
 
-Vlastní layout: zkopírujte `layout/default/` pod jiným názvem a vyberte ho v Konfiguraci. Layout může
-přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
+### Šablony webu (layouty)
+
+| složka | název | vzhled |
+| --- | --- | --- |
+| `layout/default` | phpRS | původní rozvržení: tři sloupce, bloky po stranách |
+| `layout/classic-newspaper` | Classic Newspaper | seriózní deník – patkové titulky, tenké linky, otvírák, pravý sloupec |
+| `layout/modern-magazine` | Modern Magazine | výrazný magazín – černá lišta, hero článek, mřížka karet, pás bloků dole |
+
+Layout = `base.php` (stránka), `blok.php` (jeden blok), `cla_*.php` (šablony článku s režimy
+náhled / krátký / celý; `$poradi === 0` je první článek titulní strany), `style.css` a `info.php`
+(název a popis). Vybírá se při instalaci a v Konfiguraci. Vlastní layout: zkopírujte některou složku pod
+jiným názvem. Layout může přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
+Layouty nepoužívají externí písma ani skripty (GDPR, rychlost).
+
+### Prostředí administrace
+
+Administrace má dva vzhledy nad **stejným HTML**: `phpRS retro` (`image/admin.css`, podoba phpRS 2.8) a
+`phpRS 2026` (`image/admin-2026.css`, moderní, responzivní, světlý i tmavý režim). Výchozí se volí při
+instalaci a v Konfiguraci, každý autor si přepíná sám v horní liště (`rs_user.prostredi`). Nové šablony
+administrace proto pište jen s existujícími třídami (`.formular .radek`, `table.vypis`, `.tl`,
+`a.navigace`…) a bez vložených barev – pak fungují v obou prostředích.
 
 ## Stav
 
-Hotovo (milník 1): instalátor, přihlášení, Editace autorů (práva, vazby), Editace článků, Editace
+Hotovo (milník 1): instalátor s volbou prostředí a šablony, dvě prostředí administrace, tři šablony webu, přihlášení, Editace autorů (práva, vazby), Editace článků, Editace
 novinek, Úprava bloků, Úprava rubrik, Konfigurace; web: hlavní stránka, článek, rubrika, vyhledávání,
 RSS, přesměrování starých adres phpRS 2.
 

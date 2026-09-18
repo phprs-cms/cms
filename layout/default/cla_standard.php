@@ -9,6 +9,7 @@
  *
  * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm
  * @var string $rezim
+ * @var int $poradi  pořadí ve výpisu od nuly (0 = první článek první stránky)
  * @var callable(string): string $url
  * @var list<array<string, mixed>> $souvisejici
  */

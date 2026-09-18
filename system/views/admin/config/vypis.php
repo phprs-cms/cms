@@ -3,7 +3,8 @@
  * @var PhpRS\Admin\Moduly\Konfigurace $modul
  * @var string $csrf
  * @var array<string, string> $hodnoty
- * @var list<string> $layouty
+ * @var array<string, array{nazev:string, popis:string}> $layouty
+ * @var array<string, string> $prostredi
  * @var array<int, string> $ankety
  */
 ?>
@@ -29,13 +30,22 @@
 	<input class="textpole siroke" type="email" id="email_webu" name="email_webu" value="<?= e($hodnoty['email_webu']) ?>" maxlength="190">
 </div>
 <div class="radek">
-	<label for="layout">Layout webu</label>
+	<label for="layout">Šablona webu (layout)</label>
 	<div><select id="layout" name="layout">
-<?php foreach ($layouty as $l): ?>
-		<option value="<?= e($l) ?>"<?= $hodnoty['layout'] === $l ? ' selected' : '' ?>><?= e($l) ?></option>
+<?php foreach ($layouty as $slozka => $l): ?>
+		<option value="<?= e($slozka) ?>"<?= $hodnoty['layout'] === $slozka ? ' selected' : '' ?>><?= e($l['nazev']) ?></option>
 <?php endforeach ?>
 	</select>
-	<span class="napoveda">Adresáře ve složce layout/.</span></div>
+	<span class="napoveda">Vzhled webu pro čtenáře. Layouty jsou složky v layout/.</span></div>
+</div>
+<div class="radek">
+	<label for="prostredi_admin">Výchozí prostředí administrace</label>
+	<div><select id="prostredi_admin" name="prostredi_admin">
+<?php foreach ($prostredi as $klic => $nazev): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
+		<option value="<?= e($klic) ?>"<?= $hodnoty['prostredi_admin'] === $klic ? ' selected' : '' ?>><?= e($nazev) ?></option>
+<?php endforeach ?>
+	</select>
+	<span class="napoveda">Platí pro přihlašovací stránku a pro autory, kteří si sami nevybrali. Každý si prostředí přepíná v horní liště.</span></div>
 </div>
 </fieldset>
 

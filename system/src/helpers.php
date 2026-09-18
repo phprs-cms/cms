@@ -37,3 +37,13 @@ function datum(string|\DateTimeInterface|null $value, bool $withTime = false): s
 
     return $dt->format($withTime ? 'j. n. Y H:i' : 'j. n. Y');
 }
+
+/** Datum slovy: "pátek 18. září 2026". */
+function datum_slovy(string|\DateTimeInterface|null $value = null): string
+{
+    $dny = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
+    $mesice = [1 => 'ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'];
+    $dt = $value instanceof \DateTimeInterface ? $value : new \DateTimeImmutable($value ?? 'now');
+
+    return $dny[(int) $dt->format('w')] . ' ' . $dt->format('j') . '. ' . $mesice[(int) $dt->format('n')] . ' ' . $dt->format('Y');
+}

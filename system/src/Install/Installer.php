@@ -9,6 +9,7 @@ use PhpRS\Core\Db;
 use PhpRS\Core\Request;
 use PhpRS\Core\Response;
 use PhpRS\Core\View;
+use PhpRS\Front\Layouty;
 
 /**
  * Webový instalátor: ověří server, založí tabulky, prvního admina a zapíše config.php.
@@ -34,6 +35,7 @@ final class Installer
         $data = [
             'db_host' => 'localhost', 'db_port' => '3306', 'db_name' => '', 'db_user' => '', 'db_password' => '', 'db_prefix' => 'rs_',
             'nazev_webu' => 'Můj magazín', 'user' => 'admin', 'jmeno' => '', 'email' => '',
+            'prostredi' => '2026', 'layout' => 'default',
         ];
         $chyby = [];
 
@@ -48,7 +50,7 @@ final class Installer
             }
         }
 
-        return $this->stranka('formular', ['pozadavky' => $pozadavky, 'data' => $data, 'chyby' => $chyby]);
+        return $this->stranka('formular', ['pozadavky' => $pozadavky, 'data' => $data, 'chyby' => $chyby, 'layouty' => Layouty::seznam()]);
     }
 
     /** @return list<array{nazev:string, ok:bool, info:string}> */
@@ -88,6 +90,12 @@ final class Installer
         }
         if ($d['email'] !== '' && filter_var($d['email'], FILTER_VALIDATE_EMAIL) === false) {
             $chyby['email'] = 'E-mail nemá platný tvar.';
+        }
+        if (!in_array($d['prostredi'], ['retro', '2026'], true)) {
+            $d['prostredi'] = 'retro';
+        }
+        if (!isset(Layouty::seznam()[$d['layout']])) {
+            $d['layout'] = 'default';
         }
         if ($chyby !== []) {
             return $chyby;
@@ -163,9 +171,11 @@ final class Installer
                 'email' => $d['email'],
                 'admin' => Auth::ADMIN,
                 'pravo_vydavat' => 1,
+                'prostredi' => $d['prostredi'],
             ]);
 
-            foreach (['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => 'default'] as $klic => $hodnota) {
+            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => $d['layout'], 'prostredi_admin' => $d['prostredi']];
+            foreach ($nastaveni as $klic => $hodnota) {
                 $db->insert('config', ['promenna' => $klic, 'hodnota' => $hodnota]);
             }
             $db->insert('levely', ['nazev_levelu' => 'Základní', 'hodnota' => 0, 'zakladni' => 1]);

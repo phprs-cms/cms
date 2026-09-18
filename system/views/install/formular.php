@@ -4,9 +4,15 @@
  * @var list<array{nazev:string, ok:bool, info:string}> $pozadavky
  * @var array<string, string> $data
  * @var array<string, string> $chyby
+ * @var array<string, array{nazev:string, popis:string}> $layouty
  */
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
 $splneno = !in_array(false, array_column($pozadavky, 'ok'), true);
+$nahledy = require __DIR__ . '/nahledy.php';
+$prostredi = [
+    '2026' => ['phpRS 2026', 'Moderní, minimalistické a responzivní prostředí s postranním menu a přehledem redakce.'],
+    'retro' => ['phpRS retro', 'Vzhled původního phpRS 2: modré menu, šedá tlačítka, Verdana. Pro pamětníky.'],
+];
 ?>
 <!doctype html>
 <html lang="cs">
@@ -15,47 +21,96 @@ $splneno = !in_array(false, array_column($pozadavky, 'ok'), true);
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Instalace phpRS 3</title>
-<link rel="stylesheet" href="<?= e($base) ?>/image/admin.css">
+<link rel="stylesheet" href="<?= e($base) ?>/image/install.css?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body>
-<div class="obsah">
-<img class="logo" style="margin-top:20px" src="<?= e($base) ?>/image/phprs_logo.svg" width="280" height="100" alt="phpRS 3">
-<h2>Instalace redakčního systému</h2>
+<main class="instalator">
+<header class="uvod">
+	<div class="znacka">php<b>RS</b><sup>3</sup></div>
+	<h1>Instalace redakčního systému</h1>
+	<p>Pět krátkých kroků a váš magazín běží. Vše lze později změnit v administraci.</p>
+</header>
 
-<h3 class="stred">1. Kontrola serveru</h3>
-<table class="vypis">
-<tbody>
+<section class="krok">
+	<h2><span>1</span> Kontrola serveru</h2>
+	<ul class="kontrola">
 <?php foreach ($pozadavky as $p): ?>
-<tr<?= $p['ok'] ? '' : ' class="nevydany"' ?>><td><?= e($p['nazev']) ?></td><td><?= e($p['info']) ?></td><td class="stred"><strong><?= $p['ok'] ? 'OK' : 'CHYBA' ?></strong></td></tr>
+		<li<?= $p['ok'] ? '' : ' class="spatne"' ?>><div><?= e($p['nazev']) ?> <small>– <?= e($p['info']) ?></small></div></li>
 <?php endforeach ?>
-</tbody>
-</table>
+	</ul>
+</section>
 
 <?php if (!$splneno): ?>
-<p class="hlaska hlaska-chyba">Server nesplňuje požadavky. Opravte položky označené CHYBA a obnovte stránku.</p>
+<p class="hlaska hlaska-chyba" role="alert">Server nesplňuje požadavky. Opravte položky označené křížkem a obnovte stránku.</p>
 <?php else: ?>
-<form class="formular" method="post" autocomplete="off">
-<fieldset>
-<legend>2. Databáze MySQL / MariaDB</legend>
-<div class="radek"><label for="db_host">Server</label><div><input class="textpole" type="text" id="db_host" name="db_host" value="<?= e($data['db_host']) ?>" size="30"> port <input class="textpole" type="number" name="db_port" value="<?= e($data['db_port']) ?>" style="width:80px" aria-label="Port"></div></div>
-<div class="radek"><label for="db_name">Název databáze</label><div><input class="textpole" type="text" id="db_name" name="db_name" value="<?= e($data['db_name']) ?>" size="30" required><?= $chyba('db_name') ?></div></div>
-<div class="radek"><label for="db_user">Uživatel</label><input class="textpole" type="text" id="db_user" name="db_user" value="<?= e($data['db_user']) ?>" size="30" required></div>
-<div class="radek"><label for="db_password">Heslo</label><input class="textpole" type="password" id="db_password" name="db_password" size="30" autocomplete="off"></div>
-<div class="radek"><label for="db_prefix">Předpona tabulek</label><div><input class="textpole" type="text" id="db_prefix" name="db_prefix" value="<?= e($data['db_prefix']) ?>" size="12" required><?= $chyba('db_prefix') ?>
-<span class="napoveda">Databázi je potřeba mít předem založenou (na hostingu v jeho administraci).</span></div></div>
-</fieldset>
-<fieldset>
-<legend>3. Web a administrátor</legend>
-<div class="radek"><label for="nazev_webu">Název webu</label><input class="textpole siroke" type="text" id="nazev_webu" name="nazev_webu" value="<?= e($data['nazev_webu']) ?>" required></div>
-<div class="radek"><label for="user">Uživatel (login)</label><div><input class="textpole" type="text" id="user" name="user" value="<?= e($data['user']) ?>" size="30" required><?= $chyba('user') ?></div></div>
-<div class="radek"><label for="jmeno">Jméno</label><input class="textpole siroke" type="text" id="jmeno" name="jmeno" value="<?= e($data['jmeno']) ?>"></div>
-<div class="radek"><label for="email">E-mail</label><div><input class="textpole siroke" type="email" id="email" name="email" value="<?= e($data['email']) ?>"><?= $chyba('email') ?></div></div>
-<div class="radek"><label for="password">Heslo</label><div><input class="textpole" type="password" id="password" name="password" size="30" autocomplete="new-password" required><?= $chyba('password') ?><span class="napoveda">Alespoň 10 znaků.</span></div></div>
-<div class="radek"><label for="password2">Heslo znovu</label><input class="textpole" type="password" id="password2" name="password2" size="30" autocomplete="new-password" required></div>
-</fieldset>
-<p class="tlacitka"><input class="tl" type="submit" value="Nainstalovat phpRS 3"></p>
+<?php if ($chyby !== []): ?>
+<p class="hlaska hlaska-chyba" role="alert">Instalaci se nepodařilo dokončit – zkontrolujte zvýrazněná pole.</p>
+<?php endif ?>
+<form method="post" autocomplete="off">
+<section class="krok">
+	<h2><span>2</span> Databáze</h2>
+	<p>MySQL nebo MariaDB. Prázdnou databázi založte předem – na hostingu v jeho administraci.</p>
+	<div class="pole">
+		<div class="cele s-portem">
+			<div><label for="db_host">Server</label><input type="text" id="db_host" name="db_host" value="<?= e($data['db_host']) ?>"></div>
+			<div><label for="db_port">Port</label><input type="number" id="db_port" name="db_port" value="<?= e($data['db_port']) ?>"></div>
+		</div>
+		<div><label for="db_name">Název databáze</label><input type="text" id="db_name" name="db_name" value="<?= e($data['db_name']) ?>" required><?= $chyba('db_name') ?></div>
+		<div><label for="db_prefix">Předpona tabulek</label><input type="text" id="db_prefix" name="db_prefix" value="<?= e($data['db_prefix']) ?>" required><?= $chyba('db_prefix') ?></div>
+		<div><label for="db_user">Uživatel</label><input type="text" id="db_user" name="db_user" value="<?= e($data['db_user']) ?>" required></div>
+		<div><label for="db_password">Heslo</label><input type="password" id="db_password" name="db_password" autocomplete="off"></div>
+	</div>
+</section>
+
+<section class="krok">
+	<h2><span>3</span> Web a administrátor</h2>
+	<p>Účet, kterým se poprvé přihlásíte do administrace.</p>
+	<div class="pole">
+		<div class="cele"><label for="nazev_webu">Název webu</label><input type="text" id="nazev_webu" name="nazev_webu" value="<?= e($data['nazev_webu']) ?>" required></div>
+		<div><label for="user">Přihlašovací jméno</label><input type="text" id="user" name="user" value="<?= e($data['user']) ?>" required><?= $chyba('user') ?></div>
+		<div><label for="jmeno">Jméno a příjmení</label><input type="text" id="jmeno" name="jmeno" value="<?= e($data['jmeno']) ?>"><span class="napoveda">Zobrazuje se u článků.</span></div>
+		<div class="cele"><label for="email">E-mail</label><input type="email" id="email" name="email" value="<?= e($data['email']) ?>"><?= $chyba('email') ?></div>
+		<div><label for="password">Heslo</label><input type="password" id="password" name="password" autocomplete="new-password" minlength="10" required><?= $chyba('password') ?><span class="napoveda">Alespoň 10 znaků.</span></div>
+		<div><label for="password2">Heslo znovu</label><input type="password" id="password2" name="password2" autocomplete="new-password" required></div>
+	</div>
+</section>
+
+<section class="krok">
+	<h2><span>4</span> Prostředí administrace</h2>
+	<p>Stejné funkce, dva vzhledy. Každý autor si mezi nimi přepíná jedním kliknutím přímo v administraci.</p>
+	<div class="volby" role="radiogroup" aria-label="Prostředí administrace">
+<?php foreach ($prostredi as $klic => [$nazev, $popis]): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
+		<label class="volba">
+			<input type="radio" name="prostredi" value="<?= e($klic) ?>"<?= $data['prostredi'] === $klic ? ' checked' : '' ?>>
+			<?= $nahledy[$klic] ?>
+			<strong><?= e($nazev) ?></strong>
+			<span><?= e($popis) ?></span>
+		</label>
+<?php endforeach ?>
+	</div>
+</section>
+
+<section class="krok">
+	<h2><span>5</span> Šablona webu</h2>
+	<p>Jak uvidí magazín čtenáři.</p>
+	<div class="volby" role="radiogroup" aria-label="Šablona webu">
+<?php foreach ($layouty as $slozka => $l): ?>
+		<label class="volba">
+			<input type="radio" name="layout" value="<?= e($slozka) ?>"<?= $data['layout'] === $slozka ? ' checked' : '' ?>>
+			<?= $nahledy[$slozka] ?? $nahledy['default'] ?>
+			<strong><?= e($l['nazev']) ?></strong>
+			<span><?= e($l['popis']) ?></span>
+		</label>
+<?php endforeach ?>
+	</div>
+</section>
+
+<div class="akce">
+	<button class="tlacitko" type="submit">Nainstalovat phpRS 3</button>
+	<small>Vytvoří tabulky v databázi a soubor config.php.</small>
+</div>
 </form>
 <?php endif ?>
-</div>
+</main>
 </body>
 </html>

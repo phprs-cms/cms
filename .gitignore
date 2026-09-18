@@ -4,3 +4,4 @@
 !/storage/**/.gitkeep
 /vendor/
 .DS_Store
+/image/ukazka/

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpRS\Front;
 
+use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
 use PhpRS\Core\Response;
 use PhpRS\Core\View;
@@ -136,6 +137,7 @@ final class Kernel
         $obsah = $this->view->render($this->sablonaClanku($clanek), [
             'clanek' => $clanek,
             'rezim' => 'cely',
+            'poradi' => 0,
             'url' => $this->app->url(...),
             'souvisejici' => $this->clanky->zeSkupiny($clanek),
         ]);
@@ -185,12 +187,14 @@ final class Kernel
      */
     private function proVypis(array $clanky, int $celkem, int $strana, string $cesta, array $parametry = []): array
     {
-        $nahledy = array_map(fn (array $clanek): string => $this->view->render($this->sablonaClanku($clanek), [
+        // "poradi" (od nuly) dovoluje layoutu vysázet první článek výpisu jinak - jako otvírák
+        $nahledy = array_map(fn (array $clanek, int $poradi): string => $this->view->render($this->sablonaClanku($clanek), [
             'clanek' => $clanek,
             'rezim' => (int) $clanek['typ_clanku'] === 2 ? 'kratky' : 'nahled',
+            'poradi' => $strana === 1 ? $poradi : $poradi + 1000,
             'url' => $this->app->url(...),
             'souvisejici' => [],
-        ]), $clanky);
+        ]), $clanky, array_keys($clanky));
 
         return [
             'nahledy' => $nahledy,
@@ -200,6 +204,7 @@ final class Kernel
             'strankaUrl' => fn (int $s): string => $this->app->url($cesta) . (($query = http_build_query($parametry + ($s > 1 ? ['strana' => $s] : []))) !== '' ? '?' . $query : ''),
             'rubrika' => null,
             'hledano' => null,
+            'hlavni' => $cesta === '',
             'url' => $this->app->url(...),
         ];
     }
@@ -227,6 +232,7 @@ final class Kernel
             'titulek' => $titulek,
             'meta' => $meta + ['hlavni' => false, 'popis' => '', 'klicova_slova' => $web->get('klicova_slova'), 'obrazek' => '', 'typ' => 'website', 'noindex' => false],
             'sloupce' => $bloky->sloupce($obsah, !empty($meta['hlavni'])),
+            'rubriky' => Rubriky::strom($this->app->db(), true),
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]), $status);

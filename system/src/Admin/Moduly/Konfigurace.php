@@ -28,7 +28,8 @@ final class Konfigurace extends Modul
 
         return $this->view('vypis', 'Konfigurace systému', [
             'hodnoty' => $hodnoty,
-            'layouty' => array_map(basename(...), glob(PHPRS_ROOT . '/layout/*', GLOB_ONLYDIR) ?: []),
+            'layouty' => \PhpRS\Front\Layouty::seznam(),
+            'prostredi' => \PhpRS\Admin\Kernel::PROSTREDI,
             'ankety' => $this->db->pairs('SELECT ida, titulek FROM {ankety} WHERE zobrazit = 1 ORDER BY ida DESC'),
         ]);
     }
@@ -50,6 +51,10 @@ final class Konfigurace extends Modul
         $nastaveni->set('pocet_clanku', (string) max(1, min(100, $r->postInt('pocet_clanku', 7))));
         $nastaveni->set('pocet_novinek', (string) max(0, min(50, $r->postInt('pocet_novinek', 3))));
         $nastaveni->set('aktivni_anketa', (string) $r->postInt('aktivni_anketa'));
+
+        if (isset(\PhpRS\Admin\Kernel::PROSTREDI[$r->post('prostredi_admin')])) {
+            $nastaveni->set('prostredi_admin', $r->post('prostredi_admin'));
+        }
 
         $layout = $r->post('layout');
         if (preg_match('/^[a-z0-9_-]+$/i', $layout) && is_dir(PHPRS_ROOT . '/layout/' . $layout)) {

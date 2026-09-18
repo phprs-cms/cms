@@ -22,6 +22,7 @@ CREATE TABLE rs_user (
     pravo_vydavat  BOOL NOT NULL DEFAULT 0,
     blokovat       BOOL NOT NULL DEFAULT 0,
     pocet_chyb     SMALLINT UNSIGNED NOT NULL DEFAULT 0,  -- neúspěšná přihlášení v řadě
+    prostredi      VARCHAR(10)  NOT NULL DEFAULT '',      -- vzhled administrace: retro | 2026; prázdné = výchozí z konfigurace
     posledni_login DATETIME NULL,
     PRIMARY KEY (idu),
     UNIQUE KEY uq_user (user)

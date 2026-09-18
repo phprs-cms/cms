@@ -10,6 +10,7 @@
  * @var array<string, mixed>|null $rubrika
  * @var string|null $hledano
  * @var callable(string): string $url
+ * @var bool $hlavni  výpis hlavní stránky
  */
 ?>
 <?php if ($rubrika !== null): ?>
@@ -35,7 +36,9 @@
 <?php if ($nahledy === [] && $hledano === null): ?>
 <p>Zatím zde nejsou žádné články.</p>
 <?php endif ?>
+<div class="vypis-seznam<?= $hlavni && $strana === 1 ? ' vypis-titulni' : '' ?>">
 <?= implode("\n", $nahledy) ?>
+</div>
 
 <?php if ($stran > 1): ?>
 <nav class="strankovani" aria-label="Stránkování">

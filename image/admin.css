@@ -134,14 +134,45 @@ h3 {
 	color: var(--cervena);
 }
 
+/* prvky pouzivane jen prostredim 2026 */
+
+.znacka,
+.menu-prepinac {
+	display: none;
+}
+
 /* login lista */
 
 .loginprouzek {
+	display: flex;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	gap: 2px 18px;
 	font-size: 11px;
-	text-align: right;
 	background: var(--modra-vypln);
 	border-bottom: 2px solid var(--modra);
 	padding: 2px 8px;
+}
+.prepinac-prostredi {
+	margin: 0;
+}
+.prepinac-prostredi button {
+	background: none;
+	border: 0;
+	padding: 0 2px;
+	font: inherit;
+	color: var(--modra);
+	text-decoration: underline;
+	cursor: pointer;
+}
+.prepinac-prostredi button:hover {
+	color: var(--cervena);
+}
+.prepinac-prostredi button.aktivni {
+	color: #000000;
+	font-weight: bold;
+	text-decoration: none;
+	cursor: default;
 }
 
 /* obsah */
@@ -388,12 +419,17 @@ body.login {
 body.login h1 {
 	margin-bottom: 0;
 }
-body.login table {
-	margin: 0 auto;
-	text-align: left;
+body.login h1 b {
+	font-weight: inherit;
 }
-body.login td {
-	padding: 3px 4px;
+.login-pole {
+	display: grid;
+	grid-template-columns: 150px auto;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+	margin: 6px 0;
+	text-align: left;
 }
 
 /* mobil */

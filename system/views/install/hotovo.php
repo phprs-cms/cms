@@ -11,22 +11,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Instalace phpRS 3</title>
-<link rel="stylesheet" href="<?= e($base) ?>/image/admin.css">
+<link rel="stylesheet" href="<?= e($base) ?>/image/install.css?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body>
-<div class="obsah">
-<img class="logo" style="margin-top:20px" src="<?= e($base) ?>/image/phprs_logo.svg" width="280" height="100" alt="phpRS 3">
+<main class="instalator">
+<header class="uvod">
+	<div class="znacka">php<b>RS</b><sup>3</sup></div>
 <?php if ($jizNainstalovano): ?>
-<h2>phpRS 3 je už nainstalován</h2>
-<p class="hlaska">Soubor config.php existuje. Instalátor z bezpečnostních důvodů nic nemění - soubor install.php ze serveru smažte.</p>
+	<h1>phpRS 3 je už nainstalován</h1>
+	<p>Soubor config.php existuje, instalátor proto nic nemění.</p>
 <?php else: ?>
-<h2>Instalace proběhla úspěšně</h2>
-<p class="hlaska hlaska-ok">Databáze je připravena a config.php zapsán. Nyní ze serveru smažte soubor install.php.</p>
+	<h1>Hotovo, magazín běží</h1>
+	<p>Databáze je připravena a konfigurace zapsána.</p>
 <?php endif ?>
-<p class="navigace-radek">
-	<a class="navigace" href="<?= e($base) ?>/admin.php">Přejít do administrace</a>
-	<a class="navigace" href="<?= e($base) ?>/">Zobrazit web</a>
-</p>
+</header>
+<p class="hlaska <?= $jizNainstalovano ? 'hlaska-chyba' : 'hlaska-ok' ?>">Z bezpečnostních důvodů teď ze serveru smažte soubor <strong>install.php</strong>.</p>
+<div class="akce">
+	<a class="tlacitko" href="<?= e($base) ?>/admin.php">Přejít do administrace</a>
+	<a class="tlacitko druhe" href="<?= e($base) ?>/">Zobrazit web</a>
 </div>
+</main>
 </body>
 </html>

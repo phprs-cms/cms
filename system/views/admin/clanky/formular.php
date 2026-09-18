@@ -45,14 +45,22 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <legend>Vydání</legend>
 <div class="radek">
 	<label for="stav">Stav</label>
-	<div><select id="stav" name="stav"<?= $smiVydavat ? '' : ' disabled' ?>>
-		<option value="koncept"<?= $clanek['visible'] ? '' : ' selected' ?>>Koncept – na webu není vidět</option>
+	<div><select id="stav" name="stav">
+		<option value="koncept"<?= !$clanek['visible'] && $clanek['stav_redakce'] === '' ? ' selected' : '' ?>>Koncept – rozepsaný</option>
+		<option value="korektura"<?= !$clanek['visible'] && $clanek['stav_redakce'] === 'korektura' ? ' selected' : '' ?>>Ke korektuře – hotovo, prosím o kontrolu</option>
+<?php if ($smiVydavat): ?>
+		<option value="schvaleno"<?= !$clanek['visible'] && $clanek['stav_redakce'] === 'schvaleno' ? ' selected' : '' ?>>Schváleno – čeká na vydání</option>
 		<option value="vydany"<?= $clanek['visible'] ? ' selected' : '' ?>>Vydaný</option>
+<?php endif ?>
 	</select>
 <?php if (!$smiVydavat): ?>
-	<span class="napoveda">Nemáte právo vydávat. Článek po uložení vydá redaktor.</span>
+	<span class="napoveda">Až bude článek hotový, přepněte ho na „Ke korektuře“ – vydá ho redaktor.</span>
 <?php endif ?>
 	</div>
+</div>
+<div class="radek">
+	<label for="poznamka">Poznámka pro redakci</label>
+	<div><textarea class="textbox" id="poznamka" name="poznamka" rows="2" style="min-height:54px" placeholder="Na webu se neukazuje."><?= e((string) $clanek['poznamka']) ?></textarea></div>
 </div>
 <div class="radek">
 	<label for="datum">Datum vydání</label>
@@ -64,6 +72,9 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<div class="volby">
 		<label><input type="checkbox" name="zobr_na_indexu" value="1"<?= $clanek['zobr_na_indexu'] ? ' checked' : '' ?>> Zobrazit na hlavní stránce</label><br>
 		<label><input type="checkbox" name="pripnout" value="1"<?= $clanek['priority'] > 0 ? ' checked' : '' ?>> Připnout nahoru (otvírák)</label>
+<?php if ($clanek['visible']): ?>
+		<br><label><input type="checkbox" name="oznacit_aktualizaci" value="1"> Označit jako aktualizovaný (čtenář uvidí „Aktualizováno“ s dnešním datem)</label>
+<?php endif ?>
 	</div>
 </div>
 <p class="tlacitka">

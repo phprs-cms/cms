@@ -97,6 +97,17 @@ final class Kernel
 
             return new Response('', 204);
         }
+        if (str_starts_with($path, '/newsletter') && Rozsireni::je($this->app->settings(), 'newsletter')) {
+            $newsletter = new Newsletter($this->app, $this->view);
+            if ($path === '/newsletter' && $request->isPost()) {
+                return $newsletter->prihlas();
+            }
+            if (preg_match('#^/newsletter/(potvrdit|odhlasit)/([a-f0-9]{32})$#', $path, $m)) {
+                [$nadpis, $text] = $m[1] === 'potvrdit' ? $newsletter->potvrd($m[2]) : $newsletter->odhlas($m[2]);
+
+                return $this->stranka($nadpis, $this->view->render('zprava', ['nadpis' => $nadpis, 'text' => $text, 'url' => $this->app->url(...)]), ['noindex' => true]);
+            }
+        }
         if ($path === '/mcp') {
             return (new \PhpRS\Mcp\Server($this->app))->handle();
         }

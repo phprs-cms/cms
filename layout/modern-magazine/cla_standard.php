@@ -25,6 +25,9 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 <?php if ($clanek['obrazek'] !== ''): ?>
 	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt=""></figure>
 <?php endif ?>
+<?php if (!empty($clanek['aktualizovano'])): ?>
+	<p class="clanek-aktualizovano obal-uzky">Aktualizováno <?= e(datum($clanek['aktualizovano'], true)) ?></p>
+<?php endif ?>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text obal-uzky"><?= $clanek['text'] ?></div>
 	<?= $clanek['faq_html'] ?? '' ?>

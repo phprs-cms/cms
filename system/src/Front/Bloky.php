@@ -129,7 +129,7 @@ final class Bloky
             )))]),
             'kon' => $web->get('email_webu') === '' && $web->get('text_paticky') === '' ? '' : '<p class="blok-kontakt">' . nl2br(e($web->get('text_paticky')))
                 . ($web->get('email_webu') !== '' ? '<br><a href="mailto:' . e($web->get('email_webu')) . '">' . e($web->get('email_webu')) . '</a>' : '') . '</p>',
-            'nws' => class_exists(Newsletter::class) ? (new Newsletter($this->app, $this->view))->formularHtml() : '',
+            'nws' => (new Newsletter($this->app, $this->view))->formularHtml(),
             default => '',
         };
     }

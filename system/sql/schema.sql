@@ -131,7 +131,9 @@ CREATE TABLE rs_clanky (
     autor          INT UNSIGNED NULL,
     datum          DATETIME NOT NULL,                     -- datum vydání (i budoucí)
     datum_pl       DATETIME NULL,                         -- datum stažení z hlavní stránky
-    visible        BOOL NOT NULL DEFAULT 0,               -- "Vydat článek"
+    visible        BOOL NOT NULL DEFAULT 0,               -- vydaný článek (jinak koncept)
+    stav_redakce   VARCHAR(12) NOT NULL DEFAULT '',       -- '' rozepsáno | korektura | schvaleno (jen u nevydaných)
+    poznamka       TEXT NULL,                             -- interní poznámka redakce
     zobr_na_indexu BOOL NOT NULL DEFAULT 1,
     priority       TINYINT UNSIGNED NOT NULL DEFAULT 0,
     typ_clanku     TINYINT UNSIGNED NOT NULL DEFAULT 1,   -- 1 dlouhý (náhled + celý), 2 krátký
@@ -152,6 +154,7 @@ CREATE TABLE rs_clanky (
     hodnoceni      INT UNSIGNED NOT NULL DEFAULT 0,       -- součet známek
     mn_hodnoceni   INT UNSIGNED NOT NULL DEFAULT 0,       -- počet hlasů
     zmeneno        DATETIME NULL,
+    aktualizovano  DATETIME NULL,                         -- kdy byl vydaný článek podstatně doplněn
     zamek_kdo      INT UNSIGNED NULL,                     -- kdo má článek právě otevřený v editoru
     zamek_cas      DATETIME NULL,
     PRIMARY KEY (idc),
@@ -411,4 +414,28 @@ CREATE TABLE rs_api_tokeny (
     PRIMARY KEY (idt),
     UNIQUE KEY uq_tokeny_otisk (otisk),
     CONSTRAINT fk_tokeny_user FOREIGN KEY (idu) REFERENCES rs_user (idu) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- ---------------------------------------------------------------------------
+-- Newsletter
+CREATE TABLE rs_odberatele (
+    ido       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email     VARCHAR(190) NOT NULL,
+    token     CHAR(32) NOT NULL,                          -- pro potvrzení a odhlášení odkazem z e-mailu
+    potvrzen  BOOL NOT NULL DEFAULT 0,
+    prihlasen DATETIME NOT NULL,
+    PRIMARY KEY (ido),
+    UNIQUE KEY uq_odberatele_email (email),
+    KEY ix_odberatele_token (token)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+CREATE TABLE rs_newsletter (
+    idn       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    predmet   VARCHAR(200) NOT NULL,
+    uvod      TEXT NOT NULL,
+    clanky    VARCHAR(255) NOT NULL DEFAULT '',           -- idc článků oddělená čárkou
+    vytvoreno DATETIME NOT NULL,
+    odeslano  DATETIME NULL,                              -- NULL = rozesílka ještě nedoběhla
+    posledni  INT UNSIGNED NOT NULL DEFAULT 0,            -- ido posledního obslouženého odběratele
+    pocet     INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY (idn)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

@@ -16,7 +16,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>">Nový článek</a> <a class="navigace" href="<?= e($modul->url('kalendar')) ?>">Redakční kalendář</a></p>
 
 <nav class="zalozky" aria-label="Stav článků">
-<?php foreach (['' => 'Všechny', 'vydane' => 'Vydané', 'plan' => 'Naplánované', 'koncepty' => 'Koncepty a čekající na vydání'] as $klic => $nazev): ?>
+<?php foreach (['' => 'Všechny', 'vydane' => 'Vydané', 'plan' => 'Naplánované', 'koncepty' => 'Koncepty', 'korektura' => 'Ke korektuře', 'schvaleno' => 'Schválené'] as $klic => $nazev): ?>
 	<a href="<?= e($modul->url('', array_filter(['stav' => $klic]))) ?>"<?= $filtr['stav'] === $klic ? ' class="aktivni" aria-current="true"' : '' ?>><?= e($nazev) ?></a>
 <?php endforeach ?>
 </nav>
@@ -56,7 +56,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 	<td><?= e($c['tema_jm']) ?></td>
 	<td><?= e($c['autor_jm'] ?: $c['autor_login']) ?></td>
 	<td class="cislo"><?= e(datum($c['datum'], true)) ?></td>
-	<td><span class="stitek stitek-<?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'plan' : 'vydano') ?>"><?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'naplánováno' : 'vydáno') ?></span></td>
+	<td><span class="stitek stitek-<?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'plan' : 'vydano') ?>"><?= !$c['visible'] ? (['korektura' => 'ke korektuře', 'schvaleno' => 'schváleno'][$c['stav_redakce']] ?? 'koncept') : (strtotime($c['datum']) > time() ? 'naplánováno' : 'vydáno') ?></span></td>
 	<td class="cislo"><?= (int) $c['visit'] ?>x</td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>">Upravit</a><?php if (!$c['visible'] && $smiVydavat): ?> · <button class="navigace" type="submit" form="vydat" name="idc" value="<?= (int) $c['idc'] ?>">Vydat</button><?php endif ?> · <a href="<?= e($app->url('clanek/' . $c['seo_link'] . '?nahled=1')) ?>" target="_blank" rel="noopener">Náhled</a></td>
 	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $c['idc'] ?>" aria-label="Označit ke smazání: <?= e($c['titulek']) ?>"></td>

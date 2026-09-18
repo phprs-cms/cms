@@ -50,7 +50,9 @@ final class Clanky extends Modul
         $podminkyStavu = [
             'vydane' => 'c.visible = 1 AND c.datum <= NOW()',
             'plan' => 'c.visible = 1 AND c.datum > NOW()',
-            'koncepty' => 'c.visible = 0',
+            'koncepty' => "c.visible = 0 AND c.stav_redakce = ''",
+            'korektura' => "c.visible = 0 AND c.stav_redakce = 'korektura'",
+            'schvaleno' => "c.visible = 0 AND c.stav_redakce = 'schvaleno'",
         ];
         if (isset($podminkyStavu[$stav])) {
             $where[] = $podminkyStavu[$stav];
@@ -60,7 +62,7 @@ final class Clanky extends Modul
         $celkem = (int) $this->db->value("SELECT COUNT(*) FROM {clanky} c WHERE {$cond}", $params);
         $strana = max(1, $this->request->getInt('strana', 1));
         $clanky = $this->db->all(
-            "SELECT c.idc, c.seo_link, c.titulek, c.datum, c.visible, c.visit, c.kom, c.priority,
+            "SELECT c.idc, c.stav_redakce, c.seo_link, c.titulek, c.datum, c.visible, c.visit, c.kom, c.priority,
                     t.nazev AS tema_jm, u.jmeno AS autor_jm, u.user AS autor_login
              FROM {clanky} c
              JOIN {topic} t ON t.idt = c.tema
@@ -93,7 +95,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
-            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'shrnuti' => '', 'faq' => '',
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
         ]);
     }
 
@@ -146,6 +148,8 @@ final class Clanky extends Modul
             'datum' => self::datumZFormulare($r->post('datum')) ?? date('Y-m-d H:i:s'),
             'datum_pl' => self::datumZFormulare($r->post('datum_pl')),
             'visible' => (int) ($r->post('stav') === 'vydany' && $auth->smiVydavat()),
+            'stav_redakce' => in_array($r->post('stav'), ['korektura', 'schvaleno'], true) && ($r->post('stav') !== 'schvaleno' || $auth->smiVydavat()) ? $r->post('stav') : '',
+            'poznamka' => $r->post('poznamka'),
             'zobr_na_indexu' => (int) $r->postBool('zobr_na_indexu'),
             // připnutý článek = priorita > 0; hlavní stránka řadí podle priority a pak podle data
             'priority' => $r->postBool('pripnout') ? max(100, (int) ($puvodni['priority'] ?? 0)) : 0,
@@ -182,6 +186,9 @@ final class Clanky extends Modul
             return $this->formular(['idc' => $id] + $data, $chyby);
         }
 
+        if ($r->postBool('oznacit_aktualizaci') && $data['visible']) {
+            $data['aktualizovano'] = date('Y-m-d H:i:s');
+        }
         $data['seo_link'] = $this->volnySeoLink($data['seo_link'], $id);
         $data['skupina_cl'] = $this->serial($r->postInt('skupina_cl'), $r->post('serial_novy'));
         if ($id > 0) {
@@ -251,7 +258,7 @@ final class Clanky extends Modul
         if (!$this->request->isPost() || $clanek === null || !$this->app->auth()->smiVydavat()) {
             return $this->zpet('Článek nelze vydat.', typ: 'chyba');
         }
-        $this->db->update('clanky', ['visible' => 1], ['idc' => $clanek['idc']]);
+        $this->db->update('clanky', ['visible' => 1, 'stav_redakce' => ''], ['idc' => $clanek['idc']]);
 
         return $this->zpet(strtotime($clanek['datum']) > time() ? 'Článek je naplánován na ' . datum($clanek['datum'], true) . '.' : 'Článek byl vydán.', '', ['stav' => 'koncepty']);
     }

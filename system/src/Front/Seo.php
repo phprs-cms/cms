@@ -288,7 +288,7 @@ final class Seo
                 'description' => $meta['popis'] ?? '',
                 'image' => $clanek['obrazek'] !== '' ? [$this->absolutni($clanek['obrazek'])] : null,
                 'datePublished' => date('c', strtotime($clanek['datum'])),
-                'dateModified' => date('c', strtotime($clanek['zmeneno'] ?? $clanek['datum'])),
+                'dateModified' => date('c', strtotime($clanek['aktualizovano'] ?? $clanek['zmeneno'] ?? $clanek['datum'])),
                 'author' => $clanek['autor_jm'] !== null ? ['@type' => 'Person', 'name' => $clanek['autor_jm'], 'url' => $this->web . 'autor/' . (int) $clanek['autor']] : $vydavatel,
                 'publisher' => $vydavatel,
                 'articleSection' => $clanek['tema_jm'],

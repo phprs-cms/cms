@@ -50,6 +50,7 @@ final class Bloky extends Modul
         'hle' => 'Vyhledávání',
         'nov' => 'Novinky',
         'ank' => 'Anketa',
+        'nws' => 'Newsletter – přihlášení k odběru',
         'soc' => 'Sociální sítě',
         'kon' => 'Kontakt na redakci',
         'rek' => 'Reklama',
@@ -77,6 +78,7 @@ final class Bloky extends Modul
         'Čtenáři a redakce' => [
             'nov' => ['Novinky', 'Krátké zprávy redakce.', '✎'],
             'ank' => ['Anketa', 'Aktuální anketa s hlasováním.', '◔'],
+            'nws' => ['Newsletter', 'Formulář pro přihlášení k odběru novinek e-mailem.', '✉'],
             'soc' => ['Sociální sítě', 'Odkazy na profily vyplněné v Nastavení.', '@'],
             'kon' => ['Kontakt', 'E-mail redakce a text z patičky.', '✉'],
         ],

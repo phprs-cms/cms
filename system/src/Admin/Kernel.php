@@ -28,6 +28,7 @@ final class Kernel
         Moduly\Novinky::class,
         Moduly\Komentare::class,
         Moduly\Ankety::class,
+        Moduly\NewsletterAdmin::class,
         Moduly\Statistika::class,
         Moduly\Reklama::class,
         Moduly\Bloky::class,
@@ -185,7 +186,8 @@ final class Kernel
             'pocty' => [
                 'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
-                'Čekají na vydání' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0{$jen}"),
+                'Ke korektuře' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0 AND stav_redakce = 'korektura'{$jen}"),
+                'Koncepty' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0 AND stav_redakce <> 'korektura'{$jen}"),
                 ...(Rozsireni::je($this->app->settings(), 'komentare') ? ['Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0')] : []),
                 'Přečtení celkem' => (int) $db->value("SELECT COALESCE(SUM(visit), 0) FROM {clanky} WHERE 1 = 1{$jen}"),
             ],

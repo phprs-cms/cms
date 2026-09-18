@@ -10,8 +10,8 @@ use PhpRS\Core\Response;
 /**
  * Editace článků.
  *
- * Pravidla převzatá z phpRS 2:
- *  - autor vidí a edituje články své a svých podřízených, admin všechny,
+ * Pravidla:
+ *  - autor vidí a edituje články své a svých podřízených, redaktor a administrátor všechny,
  *  - vydaný článek smí měnit jen ten, kdo má "právo vydávat",
  *  - bez práva vydávat nejde nastavit "Vydat článek: Ano" (článek čeká na redaktora).
  */
@@ -60,7 +60,7 @@ final class Clanky extends Modul
         $celkem = (int) $this->db->value("SELECT COUNT(*) FROM {clanky} c WHERE {$cond}", $params);
         $strana = max(1, $this->request->getInt('strana', 1));
         $clanky = $this->db->all(
-            "SELECT c.idc, c.link, c.seo_link, c.titulek, c.datum, c.visible, c.visit, c.kom, c.priority,
+            "SELECT c.idc, c.seo_link, c.titulek, c.datum, c.visible, c.visit, c.kom, c.priority,
                     t.nazev AS tema_jm, u.jmeno AS autor_jm, u.user AS autor_login
              FROM {clanky} c
              JOIN {topic} t ON t.idt = c.tema
@@ -89,7 +89,7 @@ final class Clanky extends Modul
         }
 
         return $this->formular([
-            'idc' => 0, 'link' => '', 'seo_link' => '', 'titulek' => '', 'uvod' => '', 'text' => '', 'obrazek' => '',
+            'idc' => 0, 'seo_link' => '', 'titulek' => '', 'uvod' => '', 'text' => '', 'obrazek' => '',
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
@@ -139,7 +139,7 @@ final class Clanky extends Modul
             'datum_pl' => self::datumZFormulare($r->post('datum_pl')),
             'visible' => (int) ($r->post('stav') === 'vydany' && $auth->smiVydavat()),
             'zobr_na_indexu' => (int) $r->postBool('zobr_na_indexu'),
-            // připnutý článek = priorita > 0 (phpRS 2 řadil hlavní stránku podle čísla priority)
+            // připnutý článek = priorita > 0; hlavní stránka řadí podle priority a pak podle data
             'priority' => $r->postBool('pripnout') ? max(100, (int) ($puvodni['priority'] ?? 0)) : 0,
             'typ_clanku' => $r->postBool('kratky') ? 2 : 1,
             'sablona' => $r->postInt('sablona') ?: null,
@@ -169,7 +169,7 @@ final class Clanky extends Modul
             $chyby['autor'] = 'Vyberte autora.';
         }
         if ($chyby !== []) {
-            return $this->formular(['idc' => $id, 'link' => $puvodni['link'] ?? ''] + $data, $chyby);
+            return $this->formular(['idc' => $id] + $data, $chyby);
         }
 
         $data['seo_link'] = $this->volnySeoLink($data['seo_link'], $id);
@@ -184,9 +184,7 @@ final class Clanky extends Modul
                 Presmerovani::pridej($this->db, 'clanek/' . $puvodni['seo_link'], 'clanek/' . $data['seo_link']);
             }
         } else {
-            $id = $this->db->transaction(function () use ($data): int {
-                return $this->db->insert('clanky', $data + ['link' => $this->novyLink($data['datum'])]);
-            });
+            $id = $this->db->insert('clanky', $data);
         }
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
@@ -299,7 +297,7 @@ final class Clanky extends Modul
         ]);
     }
 
-    /** Seriál (v phpRS 2 "skupina souvisejících článků"): vybraný, nebo nově založený podle názvu. */
+    /** Seriál: vybraný, nebo nově založený podle názvu. */
     private function serial(int $ids, string $novy): ?int
     {
         $novy = mb_substr($novy, 0, 150);
@@ -348,20 +346,6 @@ final class Clanky extends Modul
         }
 
         return $clanek;
-    }
-
-    /** Volací link ve tvaru RRRRMMDDNN jako v phpRS 2 (první článek dne končí 01). */
-    private function novyLink(string $datum): int
-    {
-        $den = (int) date('Ymd', strtotime($datum)) * 100;
-        $posledni = (int) $this->db->value('SELECT MAX(link) FROM {clanky} WHERE link BETWEEN ? AND ? FOR UPDATE', [$den, $den + 99]);
-        $link = $posledni > 0 ? $posledni + 1 : $den + 1;
-        if ($link > $den + 99) {
-            // víc než 99 článků za den: pokračuje se za nejvyšším existujícím číslem
-            $link = (int) $this->db->value('SELECT MAX(link) FROM {clanky}') + 1;
-        }
-
-        return $link;
     }
 
     private function volnySeoLink(string $seo, int $idc): string

@@ -11,7 +11,7 @@
 <div class="radek"><label for="na_adresu">Přesměrovat na</label><div><input class="textpole siroke" type="text" id="na_adresu" name="na_adresu" maxlength="255" required placeholder="/clanek/nova-adresa nebo https://…"></div></div>
 <p class="tlacitka"><input class="tl" type="submit" value="Přidat přesměrování"></p>
 </form>
-<p class="smltxt">Přesměrování se použije jen tehdy, když na staré adrese nic není. Při změně adresy vydaného článku vzniká samo; staré adresy phpRS 2 (view.php?cisloclanku=…) systém přesměruje i bez záznamu.</p>
+<p class="smltxt">Přesměrování se použije jen tehdy, když na staré adrese nic není. Při změně adresy vydaného článku vzniká samo.</p>
 <?php if ($zaznamy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">

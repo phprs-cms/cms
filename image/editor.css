@@ -20,8 +20,6 @@
 .editor-plocha img { max-width: 100%; height: auto; }
 .editor-plocha figcaption { font: 13px/1.4 system-ui, sans-serif; color: var(--ed-text-slaby); }
 .editor-plocha a { color: var(--ed-akcent); }
-.editor-plocha obrazek { display: block; margin: 1em 0; padding: 14px; border: 1px dashed var(--ed-linka); background: var(--ed-lista); font: 13px/1.4 system-ui, sans-serif; color: var(--ed-text-slaby); text-align: center; }
-.editor-plocha obrazek::before { content: "Obrázek z médií č. " attr(id) " (značka phpRS)"; }
 .editor-pole { display: none; width: 100%; min-height: 380px; border: 0 !important; border-radius: 0 !important; font: 13px/1.5 ui-monospace, Menlo, Consolas, "Courier New", monospace !important; resize: vertical; }
 .editor-zdroj .editor-pole { display: block; }
 .editor-zdroj .editor-plocha { display: none; }

@@ -13,6 +13,7 @@
 <?php if ($prostredi === 'retro'): ?>
 <img class="logo" src="<?= e($app->url('image/phprs_logo.svg')) ?>" width="420" height="150" alt="phpRS - redakční a informační systém">
 <p class="verze">verze <?= e(PHPRS_VERSION) ?></p>
+<p class="verze">Retro prostředí je vzpomínka na původní phpRS Jiřího Lukáše (2001–2007). Do současnosti vás vrátí přepínač „2026“ vpravo nahoře.</p>
 <?php else: ?>
 <div class="prehled-hlavicka">
 	<h2>Přehled</h2>

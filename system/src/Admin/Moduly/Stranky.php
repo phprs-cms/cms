@@ -9,7 +9,7 @@ use PhpRS\Core\Response;
 
 /**
  * Stránky: samostatný obsah mimo rubriky (O nás, Kontakt, Zásady ochrany soukromí...).
- * Stránka má adresu /<seo_link>; nahrazuje "stránkové aliasy" z phpRS 2.
+ * Stránka má adresu /<seo_link>.
  */
 final class Stranky extends Modul
 {

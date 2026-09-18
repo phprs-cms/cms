@@ -1,16 +1,16 @@
 # phpRS 3
 
-Redakční systém pro internetové časopisy a magazíny. Duchovní nástupce českého
-[phpRS](https://phprs.net/) (Jiří Lukáš, 2001–2007; komunitní verze do 2.8.3a) napsaný
-od nuly pro PHP 8.4+ a MySQL 8 / MariaDB 10.6+.
+Redakční systém pro internetové časopisy a magazíny, napsaný od nuly pro PHP 8.4+ a MySQL 8 / MariaDB 10.6+.
+Hlásí se k odkazu českého [phpRS](https://phprs.net/) (Jiří Lukáš, 2001–2007), jehož vývoj skončil:
+přebírá jeho jednoduchost, zaměření na články a rubriky a české názvosloví v databázi.
 
-Co zůstává z originálu: jednoduchost, zaměření na články a rubriky, administrace
-`admin.php?modul=clanky&akce=edit`, tabulky `rs_*` s českými názvy sloupců, web složený ze
-sloupců a bloků, šablony článků se třemi režimy (náhled / krátký / celý), autoři s právem
-vydávat a vazbami nadřízený–podřízený. A vzhled administrace – modré menu, šedá tlačítka, Verdana.
+**Není to nová verze starého phpRS a nejde na ni přejít.** Data ze starého phpRS 2 se nepřevádějí, staré adresy
+se nepřesměrovávají a žádná stará funkce se kvůli kompatibilitě nedrží. Jedinou vzpomínkou je prostředí
+administrace „phpRS retro" – pro zábavu přepínatelný vzhled původního systému (modré menu, šedá tlačítka,
+Verdana) nad úplně stejnými funkcemi, jaké má moderní prostředí „phpRS 2026".
 
-Co je nové: PDO a připravené dotazy všude, `password_hash`, CSRF ochrana, InnoDB s cizími
-klíči, utf8mb4, hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné globální proměnné.
+Co je uvnitř: PDO a připravené dotazy všude, `password_hash`, CSRF ochrana, InnoDB s cizími klíči, utf8mb4,
+hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné globální proměnné, žádný framework.
 
 ## Instalace
 
@@ -31,7 +31,7 @@ php -S localhost:8080 system/dev-router.php
 ## Struktura
 
 ```
-index.php, admin.php, install.php   vstupní body (view.php a search.php jen přesměrují staré adresy phpRS 2)
+index.php, admin.php, install.php   vstupní body
 config.php                          vytvoří instalátor
 image/                              CSS, JS a logo administrace
 layout/<název>/                     vzhled webu: base.php, blok.php, cla_*.php, style.css
@@ -75,7 +75,7 @@ administrace proto pište jen s existujícími třídami (`.formular .radek`, `t
 
 Hotovo (milník 1): instalátor s volbou prostředí a šablony, dvě prostředí administrace, tři šablony webu, přihlášení, Editace autorů (práva, vazby), Editace článků, Editace
 novinek, Úprava bloků, Úprava rubrik, Konfigurace; web: hlavní stránka, článek, rubrika, vyhledávání,
-RSS, přesměrování starých adres phpRS 2.
+RSS.
 
 Plán (pořadí = priorita; stav k 18. 9. 2026):
 
@@ -98,8 +98,7 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   - *Soukromí a cookies:* vestavěná lišta / externí služba (Cookiebot) / nic; evidence souhlasů bez IP adres.
   - *Stav systému:* kontroly serveru, databáze, souborů, bezpečnosti a provozu, zkušební e-mail,
     bezpečnostní hlavičky, `/stav.json?token=…`. Kontrola „poslední záloha" přijde se Zálohou DB v M5.
-- **M4 – import z phpRS 2.x:** převod `rs_*` tabulek včetně kódování win-1250 / ISO-8859-2 → UTF-8,
-  zachování `link` (staré adresy fungují dál), obrázků galerie a hesel (přehashování při prvním přihlášení).
+- ~~**M4 – import z phpRS 2.x**~~ – zrušeno (18. 9. 2026): phpRS 3 je samostatný systém bez cesty ze starého phpRS.
 - **M5 – rozšíření:** plug-iny (položka menu + systémový blok + háčky), **Reklamní systém** (pozice,
   kampaně, počítání zobrazení a prokliků, plánování, ads.txt), Download sekce (nízká priorita), levely a
   registrace čtenářů, Záloha DB, Správa modulů, slovenština a angličtina administrace.

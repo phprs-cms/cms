@@ -1,19 +1,19 @@
 # phpRS 3
 
-Duchovní nástupce českého CMS phpRS 2.8 pro magazíny. Čisté PHP 8.4+ bez frameworku a bez Composeru
+Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (vývoj originálu skončil). Čisté PHP 8.4+ bez frameworku a bez Composeru
 (vlastní PSR-4 autoloader v `system/bootstrap.php`), MySQL přes PDO, serverové HTML + trocha vanilla JS.
 
 ## Zásady
 
-- **Jednoduchost nad abstrakcí.** Kód má přečíst i člověk, který kdysi upravoval phpRS 2. Žádné DI
+- **Jednoduchost nad abstrakcí.** Kód má přečíst i poučený laik, který si chce web upravit. Žádné DI
   kontejnery, ORM, build kroky ani npm. Nová závislost = potřeba silného důvodu.
-- **Z phpRS držíme ducha, ne mechaniky.** Zůstává: jednoduchost, zaměření na magazíny, datový model a
-  názvy tabulek/sloupců (`rs_clanky.titulek`, `rs_topic`… kvůli importu z 2.x), identifikátory modulů
-  (`users, clanky, news, bloky, topic, config, intergal`), adresy `admin.php?modul=&akce=` a retro vzhled.
-  Nezůstává ovládání z roku 2005: číselné priority, „typ 1–5", „Vydat článek Ano/Ne", volací linky ve
-  formulářích apod. Uživatel (2026-09-18): nový člověk musí všemu rozumět bez znalosti phpRS. Staré
-  hodnoty se dál ukládají do původních sloupců (priority, typ, visible), jen je UI pojmenovává lidsky
-  (připnout, vzhled bloku, stav). Reference originálu: `../phprs-original-reference/`.
+- **Z phpRS držíme ducha, ne mechaniky – a žádnou kompatibilitu.** Uživatel (2026-09-18) zrušil import ze
+  starého phpRS: nepřevádějí se data, nepřesměrovávají staré adresy, nedrží se žádný sloupec ani funkce „kvůli
+  2.x". Zůstává jednoduchost, zaměření na magazíny, české názvy tabulek/sloupců (`rs_clanky.titulek`…) a
+  identifikátory modulů, protože tak už systém je postavený. Ovládání musí být srozumitelné člověku, který
+  phpRS nikdy neviděl. **Retro prostředí je jen vtipná pocta** – skin nad stejným HTML, nic víc; nepřidávej
+  kvůli němu žádné chování. Původní zdroják a screenshoty (`../phprs-original-reference/`) slouží jen jako
+  vizuální předloha retro skinu.
 - **Vzhled prostředí 2026** vychází z referenčního screenshotu uživatele (čistý styl à la Clockhaus):
   seskupené menu s čárovými ikonami (`views/admin/ikony.php`), podklad #F7F7F8, bílé karty s jemnou linkou,
   výrazné nadpisy, avatar a přepínač světlý/tmavý vpravo nahoře. Retro je jen skin téhož HTML a ukazuje
@@ -40,7 +40,6 @@ Duchovní nástupce českého CMS phpRS 2.8 pro magazíny. Čisté PHP 8.4+ bez 
   výchozí šablony v `system/views/front/` – layout je jen vypíše, nebo si šablonu přepíše vlastní.
 - Editor článků a galerie: `image/editor.js` + `image/editor.css` (barvy přes proměnné `--ed-*` z obou
   admin stylesheetů). Nahrané soubory jdou vždy přes `Core\Obrazky` (překódování GD, složka `media/`).
-- Schéma se mění v `system/sql/schema.sql`; každá změna musí zůstat mapovatelná z phpRS 2.x (importér M4).
 - Bezpečnost: jen připravené dotazy (`{tabulka}` doplní předponu), výstup přes `e()`, každý POST
   má CSRF (kontroluje `Admin\Kernel`), práva článků viz `Moduly\Clanky`.
 - HTML článků a bloků je důvěryhodné (píší ho autoři), komentáře a vstupy čtenářů nikdy.

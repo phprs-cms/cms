@@ -17,7 +17,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 	<item>
 		<title><?= e($c['titulek']) ?></title>
 		<link><?= e($adresa . 'clanek/' . $c['seo_link']) ?></link>
-		<guid isPermaLink="false">phprs-<?= e($c['link']) ?></guid>
+		<guid isPermaLink="false">clanek-<?= (int) $c['idc'] ?></guid>
 		<pubDate><?= e(date(DATE_RSS, strtotime($c['datum']))) ?></pubDate>
 		<category><?= e($c['tema_jm']) ?></category>
 		<description><?= e($c['uvod']) ?></description>

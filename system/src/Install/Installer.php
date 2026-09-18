@@ -174,7 +174,6 @@ final class Installer
             $rubrika = $db->insert('topic', ['nazev' => 'Aktuality', 'seo_link' => 'aktuality', 'popis' => '']);
             $db->insert('news', ['titulek' => 'Web běží na phpRS 3', 'informace' => 'Instalace proběhla úspěšně.', 'datum' => date('Y-m-d H:i:s')]);
             $db->insert('clanky', [
-                'link' => (int) date('Ymd') * 100 + 1,
                 'seo_link' => 'vitejte-v-phprs-3',
                 'titulek' => 'Vítejte v phpRS 3',
                 'uvod' => '<p>Redakční systém je nainstalován a připraven. Tento článek můžete v administraci upravit nebo smazat.</p>',

@@ -130,7 +130,7 @@ final class Request
         return '/' . trim($uri, '/');
     }
 
-    /** Název spuštěného skriptu: "index.php", "view.php"... (kvůli starým adresám phpRS 2). */
+    /** Název spuštěného skriptu: "index.php", "admin.php"... */
     public function script(): string
     {
         return basename((string) ($this->server['SCRIPT_NAME'] ?? 'index.php'));

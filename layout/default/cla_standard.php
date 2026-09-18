@@ -2,7 +2,7 @@
 /**
  * Šablona článku "Standardní".
  *
- * Stejně jako v phpRS 2 má tři režimy:
+ * Šablona má tři režimy:
  *   nahled - úvod s odkazem na celý článek (hlavní stránka, rubrika, hledání)
  *   kratky - krátký článek: jen úvod, bez samostatné stránky
  *   cely   - celý článek

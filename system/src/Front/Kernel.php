@@ -17,9 +17,10 @@ use PhpRS\Core\View;
  *   /rubrika/<seo-link>  výpis rubriky
  *   /hledani?q=...       vyhledávání
  *   /rss.xml             RSS kanál
- *   /<alias>             stránkový alias
- *
- * Staré adresy phpRS 2 (view.php?cisloclanku=, search.php?rstema=) se přesměrují na nové.
+ *   /stitek/<seo-link>   články se štítkem
+ *   /autor/<id>          články autora
+ *   /<adresa>            statická stránka
+ *   robots.txt, sitemap.xml, llms.txt, feed.json... viz Seo
  */
 final class Kernel
 {
@@ -40,10 +41,6 @@ final class Kernel
     public function handle(): Response
     {
         $request = $this->app->request;
-        if (($stare = $this->stareAdresy()) !== null) {
-            return $stare;
-        }
-
         $path = $request->path();
         if ($path === '/' || $path === '/index.php') {
             return $this->hlavniStranka();
@@ -123,14 +120,6 @@ final class Kernel
             return Response::json(['stav' => \PhpRS\Core\Stav::souhrn($kontroly), 'verze' => PHPRS_VERSION, 'cas' => date('c'), 'kontroly' => $kontroly]);
         }
 
-        $alias = $this->app->db()->one("SELECT * FROM {alias} WHERE alias = ? AND typ = 'clanek'", [ltrim($path, '/')]);
-        if ($alias !== null) {
-            $seo = $this->app->db()->value('SELECT seo_link FROM {clanky} WHERE idc = ?', [(int) $alias['hodnota']]);
-            if ($seo !== null) {
-                return $this->clanek((string) $seo);
-            }
-        }
-
         $stranka = $this->app->db()->one('SELECT * FROM {stranky} WHERE seo_link = ? AND zobrazit = 1', [ltrim($path, '/')]);
         if ($stranka !== null) {
             return $this->stranka($stranka['titulek'], $this->view->render('stranka', ['stranka' => $stranka]), ['popis' => $stranka['popis']]);
@@ -163,30 +152,6 @@ final class Kernel
         $hlavicka = ['nazev' => '#' . $stitek['nazev'], 'popis' => ''];
 
         return $this->stranka('Štítek ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)));
-    }
-
-    private function stareAdresy(): ?Response
-    {
-        $request = $this->app->request;
-        $db = $this->app->db();
-
-        $cislo = $request->getInt('cisloclanku');
-        if ($cislo > 0) {
-            $seo = $db->value('SELECT seo_link FROM {clanky} WHERE link = ?', [$cislo]);
-
-            return $seo !== null ? Response::redirect($this->app->url('clanek/' . $seo), 301) : $this->nenalezeno();
-        }
-        if ($request->script() === 'search.php') {
-            $seo = $db->value('SELECT seo_link FROM {topic} WHERE idt = ?', [$request->getInt('rstema')]);
-            if ($seo !== null) {
-                return Response::redirect($this->app->url('rubrika/' . $seo), 301);
-            }
-            $text = $request->get('rstext');
-
-            return Response::redirect($this->app->url('hledani' . ($text !== '' && $text !== 'all-phpRS-all' ? '?q=' . rawurlencode($text) : '')), 301);
-        }
-
-        return null;
     }
 
     private function hlavniStranka(): Response

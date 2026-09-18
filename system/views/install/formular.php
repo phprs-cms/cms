@@ -11,7 +11,7 @@ $splneno = !in_array(false, array_column($pozadavky, 'ok'), true);
 $nahledy = require __DIR__ . '/nahledy.php';
 $prostredi = [
     '2026' => ['phpRS 2026', 'Moderní, minimalistické a responzivní prostředí s postranním menu a přehledem redakce.'],
-    'retro' => ['phpRS retro', 'Vzhled původního phpRS 2: modré menu, šedá tlačítka, Verdana. Pro pamětníky.'],
+    'retro' => ['phpRS retro', 'Pro zábavu a pro pamětníky: vzhled původního phpRS z let 2001–2007 – modré menu, šedá tlačítka, Verdana.'],
 ];
 ?>
 <!doctype html>

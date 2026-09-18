@@ -181,9 +181,6 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php else: ?>
 <input type="hidden" name="sablona" value="<?= (int) (array_key_first($sablony) ?? 0) ?>">
 <?php endif ?>
-<?php if ($clanek['link'] !== ''): ?>
-<p class="napoveda">Číslo článku: <?= e($clanek['link']) ?> (stará adresa phpRS: view.php?cisloclanku=<?= e($clanek['link']) ?>)</p>
-<?php endif ?>
 </details>
 <?php if ($revize !== []): ?>
 <details class="pokrocile">

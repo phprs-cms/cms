@@ -34,7 +34,10 @@ final class Kernel
         Moduly\Konfigurace::class,
     ];
 
-    /** Vzhledy administrace: stejné HTML, jiný stylesheet (image/admin.css a image/admin-2026.css). */
+    /**
+     * Vzhledy administrace: stejné HTML, jiný stylesheet (image/admin.css a image/admin-2026.css).
+     * Retro je pocta původnímu phpRS (Jiří Lukáš, 2001-2007), jehož vývoj skončil - žádnou starou funkci nenese.
+     */
     public const array PROSTREDI = ['retro' => 'phpRS retro', '2026' => 'phpRS 2026'];
 
     public function __construct(public readonly App $app)

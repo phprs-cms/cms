@@ -9,9 +9,9 @@ use PhpRS\Core\Obrazky;
 use PhpRS\Core\Response;
 
 /**
- * Média (v phpRS 2 "Galerie obrázků"): nahrávání i přetažením a přímo z editoru článku, složky,
+ * Média: nahrávání i přetažením a přímo z editoru článku, složky,
  * popisky, mazání a přehled, ve kterých článcích je obrázek použitý.
- * Obrázek se do článku vkládá z editoru, nebo značkou <obrazek id="N"> jako v phpRS 2.
+ * Obrázek se do článku vkládá z editoru.
  */
 final class Galerie extends Modul
 {
@@ -84,12 +84,12 @@ final class Galerie extends Modul
 
     /**
      * Přepočítá, které obrázky článek používá: hlavní obrázek, obrázky vložené editorem
-     * (data-id, adresa souboru) a značky <obrazek id="N">. Volá se při uložení článku.
+     * (data-id, adresa souboru). Volá se při uložení článku.
      */
     public static function zapisPouziti(\PhpRS\Core\Db $db, int $idc, string ...$html): void
     {
         $vse = implode(' ', $html);
-        preg_match_all('/(?:data-id="|<obrazek\b[^>]*\bid=")(\d+)"/i', $vse, $m);
+        preg_match_all('/data-id="(\d+)"/', $vse, $m);
         $ids = array_map(intval(...), $m[1]);
         preg_match_all('#media/\d{4}/\d{2}/[a-z0-9-]+\.(?:jpg|png|webp|gif)#', $vse, $cesty);
         foreach (array_unique($cesty[0]) as $cesta) {

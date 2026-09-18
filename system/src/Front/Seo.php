@@ -91,7 +91,7 @@ final class Seo
             'version' => 'https://jsonfeed.org/version/1.1', 'title' => $s->get('nazev_webu'), 'description' => $s->get('popis_webu'),
             'home_page_url' => $this->web, 'feed_url' => $this->web . 'feed.json', 'language' => 'cs',
             'items' => array_map(fn (array $c): array => array_filter([
-                'id' => 'phprs-' . $c['link'], 'url' => $this->web . 'clanek/' . $c['seo_link'], 'title' => $c['titulek'],
+                'id' => 'clanek-' . $c['idc'], 'url' => $this->web . 'clanek/' . $c['seo_link'], 'title' => $c['titulek'],
                 'summary' => trim(strip_tags($c['uvod'])), 'content_html' => $c['uvod'] . $c['text'],
                 'image' => $c['obrazek'] !== '' ? $this->absolutni($c['obrazek']) : null,
                 'date_published' => date('c', strtotime($c['datum'])), 'date_modified' => $c['zmeneno'] ? date('c', strtotime($c['zmeneno'])) : null,

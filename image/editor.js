@@ -19,7 +19,6 @@
 
 	var POVOLENE = { P: [], H2: [], H3: [], H4: [], STRONG: [], EM: [], B: [], I: [], U: [], S: [], SUB: [], SUP: [], BR: [], HR: [],
 		A: ['href', 'title', 'target', 'rel'], UL: [], OL: [], LI: [], BLOCKQUOTE: [], CODE: [], PRE: [],
-		OBRAZEK: ['id', 'zarovnani', 'nahled'], // značka galerie z phpRS 2 - v editoru se ukazuje jako zástupný rámeček
 		FIGURE: ['class'], FIGCAPTION: [], IMG: ['src', 'alt', 'width', 'height', 'loading', 'data-id'],
 		TABLE: [], THEAD: [], TBODY: [], TR: [], TH: ['colspan', 'rowspan'], TD: ['colspan', 'rowspan'], IFRAME: ['src', 'width', 'height', 'allowfullscreen', 'title'] };
 	var PREVOD = { DIV: 'P', H1: 'H2', H5: 'H4', H6: 'H4' };

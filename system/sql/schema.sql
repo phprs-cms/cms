@@ -1,10 +1,9 @@
 -- phpRS 3.0 - struktura databáze
 --
--- Názvy tabulek a sloupců se záměrně drží phpRS 2.8 (rs_clanky.titulek, rs_topic.nazev...),
--- aby se v databázi vyznal každý, kdo znal původní systém, a aby import z 2.x byl přímočarý.
+-- Názvy tabulek a sloupců jsou česky a vycházejí z původního phpRS (rs_clanky.titulek, rs_topic.nazev...).
+-- Jde o nový systém: data ze starého phpRS 2 se nepřevádějí.
 -- Předpona "rs_" se při instalaci nahradí předponou z config.php.
--- Rozdíly proti 2.8: InnoDB + cizí klíče, utf8mb4, skutečné typy DATETIME/BOOL,
--- práva v samostatné tabulce místo seznamu "1:5:7", hesla přes password_hash().
+-- InnoDB s cizími klíči, utf8mb4, hesla přes password_hash().
 --
 -- Tento soubor je vždy úplné aktuální schéma pro novou instalaci. Každá změna se zároveň zapisuje
 -- jako migrace do system/sql/migrace/NNNN-popis.sql, aby se stávající weby aktualizovaly samy.
@@ -31,7 +30,7 @@ CREATE TABLE rs_user (
     UNIQUE KEY uq_user (user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
--- Přístup uživatele k modulu administrace (v 2.8 sloupec rs_moduly_prava.fks_prava_users)
+-- Přístup uživatele k modulu administrace
 CREATE TABLE rs_user_prava (
     fk_id_user   INT UNSIGNED NOT NULL,
     ident_modulu VARCHAR(30)  NOT NULL,
@@ -46,17 +45,6 @@ CREATE TABLE rs_vazby_prava (
     PRIMARY KEY (fk_id_nadrizeny, fk_id_podrizeny),
     CONSTRAINT fk_vazby_nad FOREIGN KEY (fk_id_nadrizeny) REFERENCES rs_user (idu) ON DELETE CASCADE,
     CONSTRAINT fk_vazby_pod FOREIGN KEY (fk_id_podrizeny) REFERENCES rs_user (idu) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
-
--- Nastavení modulů v menu administrace (pořadí, vlastní titulek, barva, blokování)
-CREATE TABLE rs_moduly (
-    ident_modulu   VARCHAR(30) NOT NULL,
-    nazev_menu     VARCHAR(60) NOT NULL DEFAULT '',       -- prázdné = výchozí titulek modulu
-    poradi_menu    SMALLINT UNSIGNED NOT NULL DEFAULT 100,
-    all_prava_users BOOL NOT NULL DEFAULT 0,              -- 1 = přístup mají všichni přihlášení
-    blokovat_modul BOOL NOT NULL DEFAULT 0,
-    barva_bg       CHAR(7) NOT NULL DEFAULT '',
-    PRIMARY KEY (ident_modulu)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- ---------------------------------------------------------------------------
@@ -132,7 +120,6 @@ CREATE TABLE rs_odpovedi (
 
 CREATE TABLE rs_clanky (
     idc            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    link           BIGINT UNSIGNED NOT NULL,              -- volací link RRRRMMDDNN, shodný s phpRS 2 (view.php?cisloclanku=)
     seo_link       VARCHAR(160) NOT NULL,
     titulek        VARCHAR(255) NOT NULL,
     uvod           MEDIUMTEXT NOT NULL,
@@ -157,7 +144,6 @@ CREATE TABLE rs_clanky (
     noindex        BOOL NOT NULL DEFAULT 0,
     shrnuti        TEXT NULL,                             -- blok "Ve zkratce": jeden bod na řádek
     faq            TEXT NULL,                             -- otázky a odpovědi: otázka, pod ní odpověď, prázdný řádek
-    znacky         BOOL NOT NULL DEFAULT 1,               -- zpracovávat phpRS značky v textu
     povolit_kom    BOOL NOT NULL DEFAULT 1,
     kom            INT UNSIGNED NOT NULL DEFAULT 0,       -- počet komentářů
     visit          INT UNSIGNED NOT NULL DEFAULT 0,       -- počet přečtení
@@ -165,7 +151,6 @@ CREATE TABLE rs_clanky (
     mn_hodnoceni   INT UNSIGNED NOT NULL DEFAULT 0,       -- počet hlasů
     zmeneno        DATETIME NULL,
     PRIMARY KEY (idc),
-    UNIQUE KEY uq_clanky_link (link),
     UNIQUE KEY uq_clanky_seo (seo_link),
     KEY ix_clanky_index (visible, zobr_na_indexu, priority, datum),
     KEY ix_clanky_tema (tema, visible, datum),
@@ -228,7 +213,7 @@ CREATE TABLE rs_imggal_obr (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- ---------------------------------------------------------------------------
--- Novinky, bloky, aliasy
+-- Novinky a bloky
 -- ---------------------------------------------------------------------------
 CREATE TABLE rs_news (
     idn       INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -254,16 +239,6 @@ CREATE TABLE rs_bloky (
     PRIMARY KEY (idb),
     KEY ix_bloky_zona (zona, hodnost),
     CONSTRAINT fk_bloky_level   FOREIGN KEY (level_blok) REFERENCES rs_levely (idl) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
-
--- Stránkové aliasy: /licence -> článek
-CREATE TABLE rs_alias (
-    ida     INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    alias   VARCHAR(120) NOT NULL,
-    hodnota VARCHAR(255) NOT NULL,
-    typ     VARCHAR(20) NOT NULL DEFAULT 'clanek',
-    PRIMARY KEY (ida),
-    UNIQUE KEY uq_alias (alias)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- Ochrana proti opakování akce ze stejné IP (přihlášení, hlasování v anketě, hodnocení, komentáře)

@@ -30,3 +30,10 @@ $pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Čas, náhodný identifik
 <?php if ($souhlasy !== []): ?>
 <p class="napoveda">Souhlasy za posledních 30 dní: <?= implode(' · ', array_map(fn (array $r): string => e($r['kategorie'] === 'nic' ? 'jen nezbytné' : $r['kategorie']) . ' ' . (int) $r['pocet'] . '×', $souhlasy)) ?></p>
 <?php endif ?>
+<fieldset>
+<legend>Žádost čtenáře o osobní údaje</legend>
+<p class="napoveda">Když čtenář požádá o výpis nebo výmaz svých údajů (GDPR), zadejte jeho e-mail. Týká se komentářů a odběru newsletteru.</p>
+<div class="radek"><label for="gdpr_email">E-mail čtenáře</label><input class="textpole siroke" type="email" id="gdpr_email" name="gdpr_email" maxlength="190"></div>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('osobni_udaje')) ?>" name="gdpr_co" value="export" formnovalidate>Stáhnout jeho údaje</button>
+<button class="navigace" type="submit" formaction="<?= e($modul->url('osobni_udaje')) ?>" name="gdpr_co" value="smazat" data-potvrdit="Nevratně smazat komentáře a odběr tohoto čtenáře?">Smazat jeho údaje</button></p>
+</fieldset>

@@ -21,6 +21,13 @@ $pole('povolit_komentare', 'Komentáře pod články', 'ano');
 	</select>
 </div>
 </fieldset>
+<details class="pokrocile"<?= $hodnoty['udrzba'] === '1' ? ' open' : '' ?>>
+<summary>Režim údržby<?= $hodnoty['udrzba'] === '1' ? ' – ZAPNUTÝ' : '' ?></summary>
+<?php
+$pole('udrzba', 'Web je dočasně mimo provoz', 'ano', 'Návštěvníci uvidí jen oznámení níže. Přihlášená redakce vidí web normálně.');
+$pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
+?>
+</details>
 <details class="pokrocile">
 <summary>Sociální sítě</summary>
 <?php foreach (PhpRS\Admin\Moduly\Konfigurace::SITE as $klic => $nazev) { $pole($klic, $nazev, 'url', '', 'placeholder="https://"'); } ?>
@@ -34,6 +41,7 @@ $pole('klicova_slova', 'Klíčová slova webu', 'text');
 $pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50" style="width:90px"');
 $pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
 $pole('hlidat_platnost', 'Stahovat články z hlavní stránky', 'ano', 'Článek po svém „datu stažení“ zmizí z hlavní stránky; v rubrice zůstane.');
+$pole('webhook_url', 'Webhook po vydání článku', 'url', 'Adresa ze služby Make, Zapier, IFTTT nebo n8n. Po vydání článku na ni systém pošle titulek, perex, adresu a obrázek – služba je pak sama sdílí na Facebook, X, Mastodon, do Slacku apod.', 'placeholder="https://"');
 $pole('cache_stranek', 'Cache stránek', 'ano', 'Hotové stránky se čtenářům podávají z paměti – web je rychlejší a vydrží nápor. Nechte zapnuté.');
 ?>
 </details>

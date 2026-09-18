@@ -41,7 +41,7 @@ final class Konfigurace extends Modul
         'zakladni' => [
             'nazev_webu' => 'text', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
-            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano',
+            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
         ],
         'vzhled' => ['logo_webu' => 'text', 'prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [
@@ -185,6 +185,58 @@ final class Konfigurace extends Modul
         }
 
         return $this->zpet('Systém byl aktualizován na verzi ' . $verze . '. Databáze se upraví sama při příštím načtení administrace.', '', ['zalozka' => 'zalohy']);
+    }
+
+    /** Žádost o osobní údaje čtenáře (GDPR): export nebo výmaz všeho, co je k e-mailu uloženo. */
+    protected function akceOsobniUdaje(): Response
+    {
+        $email = mb_strtolower($this->request->post('gdpr_email'));
+        if (!$this->request->isPost() || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            return $this->zpet('Zadejte platný e-mail čtenáře.', '', ['zalozka' => 'cookies'], 'chyba');
+        }
+        $komentare = $this->db->all('SELECT k.idk, k.datum, k.od, k.od_mail, k.od_ip, k.obsah, c.titulek AS clanek FROM {komentare} k JOIN {clanky} c ON c.idc = k.clanek WHERE k.od_mail = ?', [$email]);
+        $odber = $this->db->one('SELECT email, prihlasen, potvrzen FROM {odberatele} WHERE email = ?', [$email]);
+        if ($this->request->post('gdpr_co') === 'smazat') {
+            $clanky = array_unique(array_column($this->db->all('SELECT clanek FROM {komentare} WHERE od_mail = ?', [$email]), 'clanek'));
+            $this->db->delete('komentare', ['od_mail' => $email]);
+            $this->db->delete('odberatele', ['email' => $email]);
+            foreach ($clanky as $idc) {
+                \PhpRS\Front\Interakce::prepocitej($this->db, (int) $idc);
+            }
+
+            return $this->zpet('Smazáno: komentářů ' . count($komentare) . ', odběr newsletteru ' . ($odber !== null ? 'ano' : 'ne') . '.', '', ['zalozka' => 'cookies']);
+        }
+
+        return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
+            'Content-Type' => 'application/json; charset=utf-8', 'Content-Disposition' => 'attachment; filename="osobni-udaje.json"',
+        ]);
+    }
+
+    /** Záloha nahraných médií: ZIP složky media/ ke stažení. */
+    protected function akceZalohaMedii(): Response
+    {
+        if (!class_exists(\ZipArchive::class) || !is_dir(PHPRS_ROOT . '/media')) {
+            return $this->zpet('Na serveru chybí rozšíření zip – média si stáhněte přes FTP.', '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+        $soubor = PHPRS_ROOT . '/storage/cache/media-' . bin2hex(random_bytes(6)) . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($soubor, \ZipArchive::CREATE);
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(PHPRS_ROOT . '/media', \FilesystemIterator::SKIP_DOTS)) as $polozka) {
+            // varianty pro srcset a WebP se dají kdykoli vytvořit znovu - do zálohy jdou jen původní obrázky
+            if ($polozka->isFile() && !preg_match('/(-1200|-nahled)\.[a-z]+$|\.webp$/', $polozka->getFilename()) && !str_starts_with($polozka->getFilename(), '.')) {
+                $zip->addFile($polozka->getPathname(), substr($polozka->getPathname(), strlen(PHPRS_ROOT) + 1));
+            }
+        }
+        $zip->close();
+        if (!is_file($soubor)) {
+            return $this->zpet('Ve složce media/ zatím nic není.', '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+        register_shutdown_function(static fn () => @unlink($soubor));
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="media-' . date('Ymd') . '.zip"');
+        header('Content-Length: ' . filesize($soubor));
+        readfile($soubor);
+        exit;
     }
 
     /** Zkušební e-mail na adresu redakce - ověří, že server umí odesílat poštu. */

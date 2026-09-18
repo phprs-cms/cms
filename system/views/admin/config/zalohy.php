@@ -48,5 +48,6 @@
 </table>
 </div>
 <?php endif ?>
-<p class="napoveda">Záloha obsahuje celou databázi (články, nastavení, uživatele). Nahrané obrázky ze složky media/ zálohujte přes FTP. Zálohy leží ve složce storage/zalohy/, která není z webu přístupná – stahujte si je i mimo server.</p>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('zaloha_medii')) ?>">Stáhnout zálohu médií (ZIP)</button></p>
+<p class="napoveda">Záloha databáze obsahuje články, nastavení a uživatele; nahrané obrázky jsou v záloze médií. Zálohy leží ve složce storage/zalohy/, která není z webu přístupná – stahujte si je i mimo server.</p>
 </fieldset>

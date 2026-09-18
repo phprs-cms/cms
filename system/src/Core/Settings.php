@@ -29,6 +29,9 @@ final class Settings
         'pocet_novinek' => '3',
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky
         'povolit_komentare' => '1',
+        'udrzba' => '0',              // režim údržby: návštěvníci vidí oznámení, přihlášená redakce web
+        'udrzba_text' => 'Na webu právě pracujeme. Zkuste to prosím za chvíli.',
+        'webhook_url' => '',          // kam poslat údaje o právě vydaném článku (Make, Zapier...)
         'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',

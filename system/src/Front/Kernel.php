@@ -47,6 +47,11 @@ final class Kernel
     public function handle(): Response
     {
         $request = $this->app->request;
+        if ($this->app->settings()->bool('udrzba') && $request->path() !== '/mcp' && $this->app->auth()->user() === null) {
+            return new Response('<!doctype html><html lang="cs"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' . e($this->app->settings()->get('nazev_webu')) . '</title>'
+                . '<body style="font:18px/1.5 system-ui,sans-serif;display:grid;place-items:center;min-height:90vh;margin:0;padding:24px;text-align:center"><div><h1 style="font-size:28px">' . e($this->app->settings()->get('nazev_webu'))
+                . '</h1><p>' . e($this->app->settings()->get('udrzba_text')) . '</p></div>', 503, ['Content-Type' => 'text/html; charset=utf-8', 'Retry-After' => '3600']);
+        }
         if (($zCache = Cache::nacti($this->app)) !== null) {
             return $zCache;
         }
@@ -107,6 +112,9 @@ final class Kernel
 
                 return $this->stranka($nadpis, $this->view->render('zprava', ['nadpis' => $nadpis, 'text' => $text, 'url' => $this->app->url(...)]), ['noindex' => true]);
             }
+        }
+        if (str_starts_with($path, '/api/') && Rozsireni::je($this->app->settings(), 'api')) {
+            return (new Api($this->app, $this->clanky))->handle($path);
         }
         if ($path === '/mcp') {
             return (new \PhpRS\Mcp\Server($this->app))->handle();

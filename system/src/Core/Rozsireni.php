@@ -20,6 +20,7 @@ final class Rozsireni
         'statistika' => ['Statistika', 'Vlastní měření návštěvnosti bez cookies.', true],
         'presmerovani' => ['Přesměrování', 'Správa přesměrování 301 ze starých adres.', true],
         'newsletter' => ['Newsletter', 'Přihlášení k odběru s potvrzením e-mailem a rozesílka výběru článků odběratelům.', false],
+        'api' => ['Veřejné API', 'Čtecí JSON API pro mobilní aplikaci nebo jiný web: /api/clanky, /api/clanky/<adresa>, /api/rubriky.', false],
         'claude' => ['Napojení na Claude', 'MCP server na adrese /mcp: Claude umí s právy vašeho účtu číst a psát články, spravovat bloky a tvořit šablony webu. Přístupový token si každý vytvoří v nabídce Můj účet.', false],
         'reklama' => ['Reklamní systém', 'Bannery a reklamní kódy v blocích a pod články, plánování, počítání zobrazení a prokliků, ads.txt.', false],
     ];

@@ -121,28 +121,32 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   vestavěné šablony jsou jen ke čtení), náhled `?sablona=…`, aktivace. Každý zásah jde do Protokolu změn.
   Zbývá: asistent přímo v editoru (návrh titulků, perexu, korektura) – vyžaduje API klíč správce.
 
-### M-X – schválené náměty (pořadí se určuje průběžně)
+### M-X – schválené náměty
 
 Hotovo:
 
-- **Dvoufázové přihlášení** (TOTP, záložní kódy, reset administrátorem), stránka **Můj účet**, **protokol změn**
-  v administraci (půl roku zpět), kontrola 2FA administrátorů ve Stavu systému.
-- **Zámek proti souběžné úpravě** článku (upozornění, že článek má otevřený kolega).
-- **Výkon:** cache celých stránek pro nepřihlášené (5 min, maže se při každé změně), WebP varianty a `srcset`
-  u hlavních obrázků i obrázků v textu, lazy-loading.
+- **Bezpečnost účtů:** dvoufázové přihlášení (TOTP, záložní kódy), stránka Můj účet, protokol změn, zámek proti
+  souběžné úpravě článku.
+- **Výkon:** cache celých stránek pro nepřihlášené, WebP varianty a `srcset`, lazy-loading.
+- **Redakční workflow:** stavy koncept → ke korektuře → schváleno → vydáno, interní poznámka u článku, označení
+  „Aktualizováno".
+- **Newsletter** (rozšíření): přihlášení s potvrzením e-mailem, blok Newsletter, vydání = předmět + úvod + vybrané
+  články, zkušební odeslání, rozesílka po dávkách, odhlášení jedním klikem, export odběratelů.
+- **Distribuce:** webhook po vydání článku (Make, Zapier, IFTTT, n8n → sdílení na sociální sítě, Slack…).
+- **Veřejné API** (rozšíření): `/api/clanky`, `/api/clanky/<adresa>`, `/api/rubriky`.
+- **Právo:** žádost čtenáře o osobní údaje – export a výmaz podle e-mailu (komentáře, newsletter).
+- **Provoz:** režim údržby, záloha médií do ZIP, úlohy spouštěné návštěvou (aktualizace, zálohy).
+- **Jednoduché ovládání:** vizuální editor bloků ve stránce webu, volby jako karty, pokročilá nastavení schovaná.
 
-Zbývá:
+Zbývá (větší celky):
 
-- **Newsletter:** sběr odběratelů (double opt-in), odeslání výběru článků.
-- **Redakční workflow:** stavy koncept → ke korektuře → schváleno → vydáno, interní poznámky u článku.
-- **Placený / uzamčený obsah:** článek jen pro přihlášené či předplatitele, měkký paywall, registrace čtenářů.
-- **Typy obsahu:** fotogalerie v článku, živá reportáž, podcast/video s přehrávačem, recenze s hodnocením,
-  označení „Aktualizováno".
-- **Distribuce:** automatické sdílení (Mastodon/Bluesky/Facebook/X přes webhooky), Web Push.
+- **Registrace čtenářů a uzamčený obsah:** článek jen pro přihlášené či předplatitele, měkký paywall.
+- **Typy obsahu:** fotogalerie v článku s prohlížečkou, živá reportáž, podcast/video s přehrávačem, recenze s hodnocením.
 - **Vícejazyčnost** webu a **více webů z jedné instalace**.
-- **Právo a přístupnost:** export/výmaz osobních údajů (GDPR), kontrola přístupnosti obsahu v editoru.
-- **Provoz:** záloha médií do ZIP / na vzdálené úložiště, režim údržby, úlohy spouštěné návštěvou.
-- **API:** veřejné čtecí REST/JSON API.
+- **Web Push**, webhook i pro články naplánované do budoucna (dnes se volá při ručním vydání).
+- **Kontrola přístupnosti obsahu** v editoru (alt texty, hierarchie nadpisů).
+- **Asistent v editoru** (návrh titulků a perexu, korektura) – navazuje na M7.
+- Slovenština a angličtina administrace, Download sekce.
 
 ## Distribuce a podpora projektu
 

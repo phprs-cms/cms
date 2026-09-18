@@ -28,6 +28,13 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Změna databáze = dva zápisy:** úplné schéma v `system/sql/schema.sql` (nové instalace) a migrace
   `system/sql/migrace/NNNN-popis.sql` (stávající weby; provede se sama při vstupu admina do administrace,
   číslo drží `rs_config.verze_db`).
+- **Rozšíření jsou uzavřený systém** (`Core\Rozsireni::SEZNAM`): žádné cizí plug-iny, žádné veřejné API,
+  žádné nahrávání kódu z administrace. Nová volitelná funkce = položka v `SEZNAM` + `ROZSIRENI` u modulu +
+  kontrola `Rozsireni::je()` na webu. Jádro (články, média, rubriky, stránky, bloky, uživatelé, nastavení) vypnout nejde.
+- **Vydání a aktualizace:** verze je `PHPRS_VERSION` v `system/bootstrap.php`; `php tools/vydani.php <verze> --url=…`
+  vytvoří `dist/*.zip` a podepsaný `dist/aktualizace.json`. Soukromý klíč `tools/klice/vydavatel.key` NIKDY do gitu
+  ani do balíčku; veřejný `system/aktualizace.pub` je součástí systému. `Core\Aktualizace::CHRANENE` = co se nepřepisuje.
+  Až bude web projektu, doplnit `Aktualizace::VYCHOZI_URL`.
 - **Nastavení** (`Moduly\Konfigurace`): nová volba = klíč v `Settings::DEFAULTS` + typ v `Konfigurace::POLE`
   (podle typu se hodnota čistí) + řádek `$pole(...)` v `views/admin/config/<zalozka>.php`.
 - **Layouty musí vypsat `<?= $hlava ?>` před `</head>` a `<?= $pata ?>` před `</body>`** - tudy jde SEO,

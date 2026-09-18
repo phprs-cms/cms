@@ -7,7 +7,8 @@ namespace PhpRS\Core;
 /**
  * Aktualizace systému z administrace.
  *
- * Zdroj je soubor aktualizace.json: {"verze","vydano","url","sha256","podpis","min_php","zmeny":[...]}.
+ * Zdroj je soubor aktualizace.json: {"verze","vydano","url","sha256","podpis","min_php","bezpecnostni","zmeny":[...]}.
+ * Vydání označené "bezpecnostni": true se umí nainstalovat samo (Nastavení -> Zálohy a aktualizace).
  * Balíček (ZIP) se přijme jen tehdy, když sedí SHA-256 a podpis Ed25519 nad řetězcem "verze|sha256"
  * ověřený veřejným klíčem system/aktualizace.pub. Soukromý klíč má jen vydavatel (tools/vydani.php).
  * Nikdy se nepřepisuje config.php, media/, storage/, install.php ani layouty, které nejsou součástí balíčku.
@@ -63,6 +64,46 @@ final class Aktualizace
         }
 
         return $stav;
+    }
+
+    /**
+     * Údržba na pozadí: jednou za 12 hodin ověří novou verzi; bezpečnostní vydání nainstaluje samo (je-li to
+     * povoleno), jinak administrátora upozorní e-mailem. Volá se po odeslání stránky, takže čtenáře nezdržuje.
+     */
+    public static function naPozadi(App $app): void
+    {
+        $s = $app->settings();
+        $a = new self($s);
+        if ($a->url() === '') {
+            return;
+        }
+        $cache = json_decode($s->get('aktualizace_cache'), true);
+        if (is_array($cache) && time() - (int) ($cache['overeno'] ?? 0) < 12 * 3600) {
+            return;
+        }
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        ignore_user_abort(true);
+        $nova = $a->stav(true)['nova'];
+        if ($nova === null || empty($nova['bezpecnostni']) || $s->get('aktualizace_pokus') === $nova['verze']) {
+            return;
+        }
+        $s->set('aktualizace_pokus', (string) $nova['verze']); // každá verze se zkouší a oznamuje jen jednou
+        $vysledek = 'Je k dispozici bezpečnostní aktualizace ' . $nova['verze'] . '. Nainstalujte ji v administraci: Nastavení → Zálohy a aktualizace.';
+        if ($s->bool('aktualizace_auto')) {
+            try {
+                Zaloha::vytvor($app->db(), 'predaktualizaci');
+                $a->nainstaluj();
+                $vysledek = 'Bezpečnostní aktualizace ' . $nova['verze'] . ' byla nainstalována automaticky. Před instalací vznikla záloha databáze.';
+            } catch (\Throwable $e) {
+                $vysledek .= ' Automatická instalace se nezdařila: ' . $e->getMessage();
+            }
+        }
+        $komu = $s->get('email_webu');
+        if ($komu !== '' && function_exists('mail')) {
+            @mail($komu, '=?UTF-8?B?' . base64_encode('phpRS: bezpečnostní aktualizace ' . $nova['verze']) . '?=', $vysledek . "\n\nZměny:\n- " . implode("\n- ", $nova['zmeny']) . "\n\n" . $s->get('nazev_webu'), "Content-Type: text/plain; charset=utf-8\r\nFrom: {$komu}");
+        }
     }
 
     /** @return string nainstalovaná verze */

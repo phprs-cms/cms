@@ -150,6 +150,19 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   nenápadný odkaz „Podpořit vývoj" u Stavu systému (lze skrýt) – žádné naléhavé výzvy ani omezené funkce.
 - **Vydávání:** zdrojový kód a Releases na GitHubu; instalace se aktualizují z administrace (viz M5).
 
+## Údržba a bezpečnost (pro vydavatele)
+
+- **Žádné cizí knihovny za běhu** – není co hlídat kvůli zranitelnostem závislostí; Dependabot sleduje jen GitHub Actions.
+- **Každá změna:** `.github/workflows/kontrola.yml` – kouřový test `tools/test.sh` (čistá instalace + průchod webem
+  a administrací) na PHP 8.4 a 8.5, Semgrep (bezpečnostní pravidla), Gitleaks (klíče a hesla v repozitáři).
+  Běží i každé pondělí bez změn. Lokálně: `tools/test.sh` (potřebuje MySQL; databázi `phprs3_test` smaže a vytvoří).
+- **Vydání:** zvýšit `PHPRS_VERSION`, commit, `git tag -a v3.0.1 -m "- oprava …"` a push tagu →
+  `.github/workflows/vydani.yml` sestaví ZIP, podepíše `aktualizace.json` (tajemství `PHPRS_KLIC` v prostředí
+  `vydani` s povinným schválením), založí Release a zveřejní manifest na GitHub Pages. Ručně totéž umí
+  `php tools/vydani.php`.
+- **Bezpečnostní oprava:** do zprávy tagu přidat `[bezpecnostni]`. Instalace se po novinkách dívají dvakrát denně,
+  bezpečnostní verzi si nainstalují samy (lze vypnout), správce dostane e-mail. Postup hlášení chyb: `SECURITY.md`.
+
 ## Licence
 
 GNU GPL verze 2 nebo novější – stejně jako původní phpRS. Text licence je v souboru `LICENSE`.

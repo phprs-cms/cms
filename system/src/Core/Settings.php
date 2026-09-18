@@ -63,6 +63,8 @@ final class Settings
         'zalohy_auto' => '1',         // týdenní automatická záloha databáze
         'aktualizace_url' => '',      // adresa souboru aktualizace.json; prázdné = výchozí zdroj projektu
         'aktualizace_cache' => '',
+        'aktualizace_auto' => '1',    // bezpečnostní vydání instalovat automaticky
+        'aktualizace_pokus' => '',    // verze, kterou už údržba na pozadí zkoušela / oznámila
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
         'ads_txt' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)

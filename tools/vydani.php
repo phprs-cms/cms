@@ -3,7 +3,10 @@
  * phpRS 3 - příprava vydání (spouští vydavatel na svém počítači, na web se nenahrává).
  *
  *   php tools/vydani.php 3.0.1 --url=https://github.com/<ucet>/<repo>/releases/download/v3.0.1/phprs-3.0.1.zip \
- *       --zmena="Oprava ..." --zmena="Nové ..."
+ *       --zmena="Oprava ..." --zmena="Nové ..." [--bezpecnostni]
+ *
+ * --bezpecnostni označí vydání jako bezpečnostní opravu: instalace se na ně aktualizují samy a správce dostane e-mail.
+ * Soukromý klíč lze místo souboru předat proměnnou prostředí PHPRS_KLIC (base64) - pro vydávání z GitHub Actions.
  *
  * Vytvoří dist/phprs-<verze>.zip (soubory sledované gitem) a dist/aktualizace.json podepsaný soukromým klíčem.
  * Klíče: tools/klice/vydavatel.key (SOUKROMÝ - nikdy do gitu, zálohujte si ho) a system/aktualizace.pub (veřejný, součást systému).
@@ -16,10 +19,12 @@ if (PHP_SAPI !== 'cli') {
 }
 $koren = dirname(__DIR__);
 $verze = $argv[1] ?? '';
-$volby = ['url' => '', 'zmeny' => []];
+$volby = ['url' => '', 'zmeny' => [], 'bezpecnostni' => false];
 foreach (array_slice($argv, 2) as $arg) {
     if (str_starts_with($arg, '--url=')) {
         $volby['url'] = substr($arg, 6);
+    } elseif ($arg === '--bezpecnostni') {
+        $volby['bezpecnostni'] = true;
     } elseif (str_starts_with($arg, '--zmena=')) {
         $volby['zmeny'][] = substr($arg, 8);
     }
@@ -34,7 +39,7 @@ if (!str_contains((string) file_get_contents($koren . '/system/bootstrap.php'), 
 // --- klíče
 $soukromy = $koren . '/tools/klice/vydavatel.key';
 $verejny = $koren . '/system/aktualizace.pub';
-if (!is_file($soukromy)) {
+if (getenv('PHPRS_KLIC') === false && !is_file($soukromy)) {
     @mkdir(dirname($soukromy), 0700, true);
     $par = sodium_crypto_sign_keypair();
     file_put_contents($soukromy, base64_encode(sodium_crypto_sign_secretkey($par)) . "\n");
@@ -43,7 +48,10 @@ if (!is_file($soukromy)) {
     echo "Vytvořen nový pár klíčů. SOUKROMÝ klíč {$soukromy} si bezpečně zálohujte; veřejný system/aktualizace.pub commitněte.\n";
     exit("Spusťte příkaz znovu, až bude veřejný klíč v gitu (musí být součástí balíčku).\n");
 }
-$sk = base64_decode(trim((string) file_get_contents($soukromy)), true);
+$sk = base64_decode(trim(getenv('PHPRS_KLIC') !== false ? (string) getenv('PHPRS_KLIC') : (string) file_get_contents($soukromy)), true);
+if ($sk === false || strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES || base64_encode(sodium_crypto_sign_publickey_from_secretkey($sk)) !== trim((string) file_get_contents($verejny))) {
+    exit("Soukromý klíč neodpovídá veřejnému klíči system/aktualizace.pub.\n");
+}
 
 // --- balíček ze souborů sledovaných gitem
 $soubory = array_filter(explode("\n", (string) shell_exec('cd ' . escapeshellarg($koren) . ' && git ls-files')));
@@ -67,7 +75,7 @@ $sha = hash_file('sha256', $zipSoubor);
 $manifest = [
     'verze' => $verze, 'vydano' => date('Y-m-d'), 'url' => $volby['url'], 'sha256' => $sha,
     'podpis' => base64_encode(sodium_crypto_sign_detached($verze . '|' . $sha, $sk)),
-    'min_php' => '8.4', 'zmeny' => $volby['zmeny'],
+    'min_php' => '8.4', 'bezpecnostni' => $volby['bezpecnostni'], 'zmeny' => $volby['zmeny'],
 ];
 file_put_contents($koren . '/dist/aktualizace.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n");
 echo "Hotovo: dist/phprs-{$verze}.zip (" . round(filesize($zipSoubor) / 1024) . " kB) a dist/aktualizace.json\n";

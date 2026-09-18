@@ -10,7 +10,7 @@
 <p class="hlaska hlaska-chyba"><?= e($aktualizace['chyba']) ?></p>
 <?php elseif ($aktualizace['nova'] !== null): ?>
 <div class="hlaska hlaska-ok">
-	<p><strong>K dispozici je verze <?= e($aktualizace['nova']['verze']) ?></strong><?= !empty($aktualizace['nova']['vydano']) ? ' (' . e(datum((string) $aktualizace['nova']['vydano'])) . ')' : '' ?></p>
+	<p><strong><?= !empty($aktualizace['nova']['bezpecnostni']) ? 'Bezpečnostní aktualizace: verze ' : 'K dispozici je verze ' ?><?= e($aktualizace['nova']['verze']) ?></strong><?= !empty($aktualizace['nova']['vydano']) ? ' (' . e(datum((string) $aktualizace['nova']['vydano'])) . ')' : '' ?></p>
 <?php if ($aktualizace['nova']['zmeny'] !== []): ?>
 	<ul><?php foreach ($aktualizace['nova']['zmeny'] as $zmena): ?><li><?= e($zmena) ?></li><?php endforeach ?></ul>
 <?php endif ?>
@@ -23,6 +23,7 @@
 <?php if ($aktualizace['nastaveno']): ?>
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('zkontroluj')) ?>">Zkontrolovat teď</button></p>
 <?php endif ?>
+<?php $pole('aktualizace_auto', 'Bezpečnostní aktualizace instalovat automaticky', 'ano', 'Doporučeno. Týká se jen vydání označených jako bezpečnostní; běžné verze instalujete sami. Systém se po novinkách dívá dvakrát denně, před instalací zálohuje databázi a o výsledku pošle e-mail na adresu redakce.'); ?>
 <?php $pole('aktualizace_url', 'Vlastní zdroj aktualizací', 'url', 'Nechte prázdné. Jinou adresu souboru aktualizace.json vyplňte jen tehdy, když si verze spravujete sami.', 'placeholder="https://"'); ?>
 </fieldset>
 

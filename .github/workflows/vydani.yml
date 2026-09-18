@@ -1,0 +1,36 @@
+# Vydání nové verze: stačí poslat tag (git tag v3.0.1 && git push --tags).
+# Sestaví ZIP, podepíše aktualizace.json soukromým klíčem z tajemství PHPRS_KLIC, založí GitHub Release
+# a zveřejní aktualizace.json na GitHub Pages (větev gh-pages) - odtud si ho čtou instalace.
+#
+# Tag končící "-sec" (v3.0.1-sec není nutné; stačí napsat do zprávy tagu [bezpecnostni]) označí vydání jako bezpečnostní.
+# Tajemství PHPRS_KLIC uložte do prostředí "vydani" s povinným schválením (Settings -> Environments),
+# aby podpis nemohl proběhnout bez vašeho potvrzení.
+name: Vydání
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  vydani:
+    runs-on: ubuntu-latest
+    environment: vydani
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.4', extensions: 'zip, sodium', coverage: none }
+      - name: Sestavit a podepsat
+        env: { PHPRS_KLIC: '${{ secrets.PHPRS_KLIC }}' }
+        run: |
+          VERZE="${GITHUB_REF_NAME#v}"
+          ZPRAVA="$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")"
+          PRIZNAK=""; echo "$ZPRAVA" | grep -qi '\[bezpecnostni\]' && PRIZNAK="--bezpecnostni"
+          ZMENY=(); while IFS= read -r radek; do [ -n "$radek" ] && ZMENY+=("--zmena=${radek#- }"); done < <(echo "$ZPRAVA" | grep '^- ' || true)
+          php tools/vydani.php "$VERZE" "--url=https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/phprs-${VERZE}.zip" $PRIZNAK "${ZMENY[@]}"
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v2
+        with: { files: 'dist/*.zip', generate_release_notes: true }
+      - name: Zveřejnit aktualizace.json
+        uses: peaceiris/actions-gh-pages@v4
+        with: { github_token: '${{ secrets.GITHUB_TOKEN }}', publish_dir: dist, exclude_assets: '*.zip', keep_files: true }

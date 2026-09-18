@@ -98,6 +98,11 @@ final class Kernel
             return Response::redirect($app->url('admin.php' . (preg_match('/^[a-z]+$/', $ident) ? '?modul=' . $ident : '')));
         }
         if ($ident === '') {
+            $nova = $app->auth()->isAdmin() ? (new \PhpRS\Core\Aktualizace($app->settings()))->stav()['nova'] : null;
+            if ($nova !== null) {
+                $app->session->flash(!empty($nova['bezpecnostni']) ? 'chyba' : 'info', (!empty($nova['bezpecnostni']) ? 'Je k dispozici BEZPEČNOSTNÍ aktualizace ' : 'Je k dispozici nová verze ') . $nova['verze'] . ' – Nastavení → Zálohy a aktualizace.');
+            }
+
             return $this->page('', $app->view->render('admin/desktop', $this->desktop()));
         }
         $class = $this->moduly()[$ident] ?? null;

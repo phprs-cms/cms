@@ -33,3 +33,9 @@ $pole('povolit_komentare', 'Komentáře u článků', 'ano', 'U jednotlivého č
 $pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
 ?>
 </fieldset>
+<fieldset>
+<legend>Výkon</legend>
+<?php
+$pole('cache_stranek', 'Cache stránek', 'ano', 'Hotové stránky se čtenářům podávají z paměti (platnost 5 minut), web je několikanásobně rychlejší a vydrží nápor. Každá změna v administraci i nový komentář cache hned smaže. Při zapnutém Reklamním systému se cache nepoužívá.');
+?>
+</fieldset>

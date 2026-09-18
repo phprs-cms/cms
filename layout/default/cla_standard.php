@@ -29,7 +29,7 @@ $info = function () use ($clanek, $url): string {
 		<h1><?= e($clanek['titulek']) ?></h1>
 	</header>
 <?php if ($clanek['obrazek'] !== ''): ?>
-	<img class="clanek-obrazek" src="<?= e($clanek['obrazek']) ?>" alt="">
+	<img class="clanek-obrazek" src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt="">
 <?php endif ?>
 	<div class="perex"><?= $clanek['uvod'] ?></div>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
@@ -67,7 +67,7 @@ $info = function () use ($clanek, $url): string {
 	<h2><a href="<?= e($adresa) ?>"><?= e($clanek['titulek']) ?></a></h2>
 <?php endif ?>
 <?php if ($clanek['obrazek'] !== ''): ?>
-	<img class="clanek-obrazek" src="<?= e($clanek['obrazek']) ?>" alt="" loading="lazy">
+	<img class="clanek-obrazek" src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt="" loading="lazy">
 <?php endif ?>
 	<div class="perex"><?= $clanek['uvod'] ?></div>
 <?php if ($rezim === 'nahled'): ?>

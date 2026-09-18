@@ -22,7 +22,7 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 		<p class="clanek-podpis"><?= $clanek['autor_jm'] !== null ? '<span class="autor">' . e($clanek['autor_jm']) . '</span>' : '' ?><?= $cas ?></p>
 	</header>
 <?php if ($clanek['obrazek'] !== ''): ?>
-	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>" alt=""></figure>
+	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt=""></figure>
 <?php endif ?>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text"><?= $clanek['text'] ?></div>
@@ -53,7 +53,7 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 <?php else: ?>
 <article class="clanek clanek-nahled<?= $poradi === 0 ? ' clanek-otvirak' : '' ?><?= $clanek['obrazek'] !== '' ? ' ma-foto' : '' ?>">
 <?php if ($clanek['obrazek'] !== ''): ?>
-	<<?= $rezim === 'nahled' ? 'a href="' . e($adresa) . '" tabindex="-1" aria-hidden="true"' : 'div' ?> class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>" alt="" loading="<?= $poradi === 0 ? 'eager' : 'lazy' ?>"></<?= $rezim === 'nahled' ? 'a' : 'div' ?>>
+	<<?= $rezim === 'nahled' ? 'a href="' . e($adresa) . '" tabindex="-1" aria-hidden="true"' : 'div' ?> class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt="" loading="<?= $poradi === 0 ? 'eager' : 'lazy' ?>"></<?= $rezim === 'nahled' ? 'a' : 'div' ?>>
 <?php endif ?>
 	<div class="clanek-telo">
 		<?= $rubrika ?>

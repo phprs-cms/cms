@@ -40,6 +40,11 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Layouty musí vypsat `<?= $hlava ?>` před `</head>` a `<?= $pata ?>` před `</body>`** - tudy jde SEO,
   strukturovaná data, měřicí kódy a cookie lišta (`Front\Seo`). Měřicí skripty čekající na souhlas mají
   `type="text/plain" data-souhlas="analytika"` (+ `data-cookieconsent` pro Cookiebot).
+- **Cache stránek** (`Front\Cache`): cachuje se jen výstup `Front\Kernel::stranka()` pro nepřihlášené bez osobních
+  cookies; cokoli, co se má lišit podle čtenáře, musí buď běžet v JS, nebo mít vlastní cookie `phprs_*`, která
+  cache vypíná. Každý POST v administraci i formuláře čtenářů volají `Cache::vymaz()`.
+- **Obrázky:** varianty `-1200`, `-nahled` a sourozenci `.webp` vznikají v `Core\Obrazky::uloz()`; `srcset` doplňuje
+  `Front\Clanky::priprav()`. WebP se podává přes `.htaccess` (a `dev-router.php`), HTML se kvůli němu nemění.
 - **Formuláře čtenářů** (komentáře, hodnocení, ankety – `Front\Interakce`) nemají session ani CSRF token;
   chrání je `Core\Antispam` (podepsaný čas, honeypot, limit na otisk IP). Cokoli od čtenáře se vypisuje
   jen přes `e()`. Do `rs_kontrola_ip` a statistik se nikdy neukládá IP adresa, jen otisk.

@@ -29,6 +29,7 @@ final class Settings
         'pocet_novinek' => '3',
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky
         'povolit_komentare' => '1',
+        'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
         'statistika' => '1',          // vlastní měření návštěvnosti bez cookies

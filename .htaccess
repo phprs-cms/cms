@@ -5,8 +5,17 @@ Options -Indexes
     RewriteEngine On
     # config.php a skryté soubory nejsou pro návštěvníky
     RewriteRule ^(config(\.sample)?\.php|\..*)$ - [F,L]
+    # obrázky z media/: prohlížeči, který umí WebP, podat menší sourozenecký soubor foto.jpg.webp
+    RewriteCond %{HTTP_ACCEPT} image/webp
+    RewriteCond %{REQUEST_FILENAME}.webp -f
+    RewriteRule ^(media/.+\.(?:jpe?g|png))$ $1.webp [T=image/webp,E=webp:1,L]
+
     # vše, co není existující soubor nebo adresář, obslouží index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header append Vary Accept env=REDIRECT_webp
 </IfModule>

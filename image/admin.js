@@ -96,6 +96,17 @@
 		});
 	}
 
+	// Editor článku: každou minutu dá serveru vědět, že je článek stále otevřený (zámek proti souběžné úpravě)
+	var formClanku = document.querySelector('form.formular-clanek');
+	if (formClanku && formClanku.idc && formClanku.idc.value !== '0') {
+		setInterval(function () {
+			var data = new FormData();
+			data.append('_csrf', formClanku._csrf.value);
+			data.append('idc', formClanku.idc.value);
+			fetch(formClanku.action.replace('akce=uloz', 'akce=zamek'), { method: 'POST', body: data, credentials: 'same-origin' });
+		}, 60000);
+	}
+
 	// Varování před opuštěním rozepsaného formuláře
 	document.querySelectorAll('form.formular').forEach(function (form) {
 		var zmeneno = false;

@@ -23,7 +23,7 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 		<?= $podpis ?>
 	</header>
 <?php if ($clanek['obrazek'] !== ''): ?>
-	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>" alt=""></figure>
+	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt=""></figure>
 <?php endif ?>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text obal-uzky"><?= $clanek['text'] ?></div>
@@ -55,7 +55,7 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 <article class="karta<?= $poradi === 0 ? ' karta-hero' : '' ?><?= $clanek['obrazek'] !== '' ? ' ma-foto' : ' bez-fota' ?>">
 	<div class="karta-foto">
 <?php if ($clanek['obrazek'] !== ''): ?>
-		<img src="<?= e($clanek['obrazek']) ?>" alt="" loading="<?= $poradi === 0 ? 'eager' : 'lazy' ?>">
+		<img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt="" loading="<?= $poradi === 0 ? 'eager' : 'lazy' ?>">
 <?php else: ?>
 		<span aria-hidden="true"><?= e(mb_substr($clanek['tema_jm'], 0, 1)) ?></span>
 <?php endif ?>

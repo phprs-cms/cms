@@ -122,24 +122,28 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   korektura, shrnutí „Ve zkratce", SEO popis, alt texty obrázků, štítky. Klíč k API zadává správce v
   Konfiguraci; bez něj systém funguje beze změny.
 
-### M-X – schválené náměty (uživatel 18. 9. 2026 odsouhlasil všechny; pořadí se určí průběžně)
+### M-X – schválené náměty (pořadí se určuje průběžně)
 
-- **Newsletter:** sběr odběratelů (double opt-in), odeslání výběru článků; navazuje na původní „Poštovní centrum".
-- **Placený / uzamčený obsah:** navazuje na levely – článek jen pro přihlášené či předplatitele, měkký paywall.
-- **Dvoufázové přihlášení (TOTP)** pro redakci, protokol změn (kdo co kdy upravil), vynucení silných hesel.
-- **Výkon:** cache celých stránek pro nepřihlášené, WebP/AVIF a `srcset` u obrázků, lazy-loading, kritické CSS.
-- **Redakční workflow:** stavy koncept → ke korektuře → schváleno → vydáno, interní poznámky u článku,
-  zámek proti souběžné úpravě, redakční kalendář.
-- **Typy obsahu:** fotogalerie v článku, živá reportáž (online přenos po minutách), podcast/video s přehrávačem,
-  rozhovor, recenze s hodnocením, opravy a aktualizace článku („Aktualizováno").
-- **Distribuce:** automatické sdílení (Mastodon/Bluesky/Facebook/X přes webhooky), JSON Feed, Web Push,
-  AMP se nepřebírá.
-- **Vícejazyčnost** webu a **více webů z jedné instalace** (předpona tabulek už to umožňuje).
-- **Právo a přístupnost:** cookie lišta jen když je co odsouhlasit, export/výmaz osobních údajů (GDPR),
-  kontrola přístupnosti obsahu (alt texty, hierarchie nadpisů) přímo v editoru.
-- **Provoz:** automatické zálohy (DB + média) do ZIP / na vzdálené úložiště, aktualizace systému jedním
-  klikem s kontrolou podpisu, režim údržby, cron bez cronu (úlohy spouštěné návštěvou).
-- **API:** veřejné čtecí REST/JSON API pro mobilní aplikaci nebo headless použití.
+Hotovo:
+
+- **Dvoufázové přihlášení** (TOTP, záložní kódy, reset administrátorem), stránka **Můj účet**, **protokol změn**
+  v administraci (půl roku zpět), kontrola 2FA administrátorů ve Stavu systému.
+- **Zámek proti souběžné úpravě** článku (upozornění, že článek má otevřený kolega).
+- **Výkon:** cache celých stránek pro nepřihlášené (5 min, maže se při každé změně), WebP varianty a `srcset`
+  u hlavních obrázků i obrázků v textu, lazy-loading.
+
+Zbývá:
+
+- **Newsletter:** sběr odběratelů (double opt-in), odeslání výběru článků.
+- **Redakční workflow:** stavy koncept → ke korektuře → schváleno → vydáno, interní poznámky u článku.
+- **Placený / uzamčený obsah:** článek jen pro přihlášené či předplatitele, měkký paywall, registrace čtenářů.
+- **Typy obsahu:** fotogalerie v článku, živá reportáž, podcast/video s přehrávačem, recenze s hodnocením,
+  označení „Aktualizováno".
+- **Distribuce:** automatické sdílení (Mastodon/Bluesky/Facebook/X přes webhooky), Web Push.
+- **Vícejazyčnost** webu a **více webů z jedné instalace**.
+- **Právo a přístupnost:** export/výmaz osobních údajů (GDPR), kontrola přístupnosti obsahu v editoru.
+- **Provoz:** záloha médií do ZIP / na vzdálené úložiště, režim údržby, úlohy spouštěné návštěvou.
+- **API:** veřejné čtecí REST/JSON API.
 
 ## Distribuce a podpora projektu
 

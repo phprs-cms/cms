@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpRS\Front;
 
 use PhpRS\Core\Db;
+use PhpRS\Core\Obrazky;
 use PhpRS\Core\Settings;
 
 /**
@@ -38,6 +39,17 @@ final class Clanky
     {
         if ($clanek['obrazek'] !== '' && !preg_match('#^(https?:)?/#', $clanek['obrazek'])) {
             $clanek['obrazek'] = $this->zaklad . '/' . $clanek['obrazek'];
+        }
+        // responzivní obrázky: hlavní obrázek i obrázky v textu dostanou srcset z variant, které vznikly při nahrání
+        $clanek['obrazek_srcset'] = Obrazky::srcset(ltrim(substr($clanek['obrazek'], strlen($this->zaklad)), '/'), $this->zaklad);
+        foreach (['uvod', 'text'] as $cast) {
+            if (str_contains($clanek[$cast], 'media/')) {
+                $clanek[$cast] = preg_replace_callback('#<img\b(?![^>]*\bsrcset=)([^>]*?)\bsrc="([^"]*?(media/\d{4}/\d{2}/[^"]+))"#i', function (array $m): string {
+                    $srcset = Obrazky::srcset($m[3], $this->zaklad);
+
+                    return $srcset === '' ? $m[0] : '<img' . $m[1] . 'src="' . $m[2] . '" srcset="' . e($srcset) . '" sizes="(max-width: 800px) 100vw, 800px"';
+                }, $clanek[$cast]) ?? $clanek[$cast];
+            }
         }
 
         return $clanek;

@@ -42,6 +42,9 @@ final class Kernel
     public function handle(): Response
     {
         $request = $this->app->request;
+        if (($zCache = Cache::nacti($this->app)) !== null) {
+            return $zCache;
+        }
         $path = $request->path();
         if ($path === '/' || $path === '/index.php') {
             return $this->hlavniStranka();
@@ -97,6 +100,7 @@ final class Kernel
         }
         if ($request->isPost() && in_array($path, ['/komentar', '/hodnoceni', '/anketa'], true)) {
             $interakce = new Interakce($this->app, $this->view);
+            Cache::vymaz();
 
             return match ($path) {
                 '/komentar' => $interakce->ulozKomentar(),
@@ -318,7 +322,7 @@ final class Kernel
             Statistika::zaznamenej($this->app, $clanek === null ? null : (int) $clanek['idc']);
         }
 
-        return Response::html($this->view->render('base', [
+        $html = $this->view->render('base', [
             'web' => $web,
             'titulek' => $titulek,
             'meta' => $meta + ['hlavni' => false, 'popis' => '', 'klicova_slova' => $web->get('klicova_slova'), 'obrazek' => '', 'typ' => 'website', 'noindex' => false],
@@ -331,6 +335,11 @@ final class Kernel
             'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
-        ]), $status);
+        ]);
+        if ($status === 200 && empty($meta['noindex']) && $this->app->request->get('nahled') === '') {
+            Cache::uloz($this->app, $html, $clanek === null ? null : (int) $clanek['idc']);
+        }
+
+        return Response::html($html, $status);
     }
 }

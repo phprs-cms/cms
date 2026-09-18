@@ -103,6 +103,14 @@ final class Clanky extends Modul
         if ($clanek === null) {
             return $this->chyba('Článek neexistuje nebo k němu nemáte přístup.', 404);
         }
+        // zámek proti souběžné úpravě: platí 3 minuty od posledního "jsem tu" z editoru
+        $ja = $this->app->auth()->id();
+        if ($clanek['zamek_kdo'] !== null && (int) $clanek['zamek_kdo'] !== $ja && strtotime((string) $clanek['zamek_cas']) > time() - 180) {
+            $kdo = $this->db->value("SELECT IF(jmeno = '', user, jmeno) FROM {user} WHERE idu = ?", [$clanek['zamek_kdo']]);
+            $this->app->session->flash('chyba', "Článek má právě otevřený {$kdo}. Když ho uložíte oba, přepíšete si navzájem změny – domluvte se, kdo bude pokračovat.");
+        } else {
+            $this->db->update('clanky', ['zamek_kdo' => $ja, 'zamek_cas' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
+        }
 
         return $this->formular($clanek);
     }
@@ -152,6 +160,8 @@ final class Clanky extends Modul
             'shrnuti' => $r->post('shrnuti'),
             'faq' => $r->post('faq'),
             'zmeneno' => date('Y-m-d H:i:s'),
+            'zamek_kdo' => null, // uložením se článek uvolní
+            'zamek_cas' => null,
         ];
 
         $chyby = [];
@@ -201,6 +211,18 @@ final class Clanky extends Modul
         return $r->post('po_ulozeni') === 'zustat'
             ? $this->zpet($hlaska, 'edit', ['id' => $id])
             : $this->zpet($hlaska);
+    }
+
+    /** "Jsem tu" z otevřeného editoru - prodlužuje zámek článku. */
+    protected function akceZamek(): Response
+    {
+        $clanek = $this->request->isPost() ? $this->nacti($this->request->postInt('idc')) : null;
+        $ja = $this->app->auth()->id();
+        if ($clanek !== null && ($clanek['zamek_kdo'] === null || (int) $clanek['zamek_kdo'] === $ja || strtotime((string) $clanek['zamek_cas']) <= time() - 180)) {
+            $this->db->update('clanky', ['zamek_kdo' => $ja, 'zamek_cas' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
+        }
+
+        return Response::json(['ok' => $clanek !== null]);
     }
 
     /** Redakční kalendář: články podle data vydání v měsíční mřížce. */

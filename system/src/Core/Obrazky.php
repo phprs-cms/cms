@@ -7,11 +7,15 @@ namespace PhpRS\Core;
 /**
  * Příjem nahraných obrázků: ověření, zmenšení na rozumnou velikost, náhled, uložení do media/RRRR/MM/.
  * Obrázek se vždy znovu zakóduje přes GD - tím zmizí EXIF (poloha z mobilu) i případný podstrčený kód.
+ *
+ * Ke každému obrázku vznikají varianty: <jmeno>-1200.<ext> (střední) a <jmeno>-nahled.<ext> (640 px) pro srcset
+ * a ke každé z nich sourozenec <soubor>.webp, který server podá prohlížečům s podporou WebP (.htaccess).
  */
 final class Obrazky
 {
     public const int MAX_STRANA = 2000;
     public const int NAHLED_STRANA = 640;
+    public const int STREDNI_STRANA = 1200;
     private const int MAX_BAJTU = 20 * 1024 * 1024;
     private const int MAX_PIXELU = 50_000_000;
 
@@ -68,12 +72,20 @@ final class Obrazky
             [$w, $h] = [imagesx($obr), imagesy($obr)];
             $cil = $zaklad . '.' . $pripona;
             self::zapis($obr, PHPRS_ROOT . '/' . $cil, $pripona);
+            self::webp($obr, PHPRS_ROOT . '/' . $cil, $pripona);
+            if (max($w, $h) > self::STREDNI_STRANA) {
+                $stredni = self::zmensi($obr, self::STREDNI_STRANA);
+                $stredniCil = PHPRS_ROOT . '/' . $zaklad . '-1200.' . $pripona;
+                self::zapis($stredni, $stredniCil, $pripona);
+                self::webp($stredni, $stredniCil, $pripona);
+            }
         }
 
         $nahled = self::zmensi($obr, self::NAHLED_STRANA);
         $nahledPripona = $pripona === 'gif' ? 'png' : $pripona;
         $nahledCil = $zaklad . '-nahled.' . $nahledPripona;
         self::zapis($nahled, PHPRS_ROOT . '/' . $nahledCil, $nahledPripona);
+        self::webp($nahled, PHPRS_ROOT . '/' . $nahledCil, $nahledPripona);
 
         return [
             'obr_poloha' => $cil, 'obr_width' => $w, 'obr_height' => $h, 'obr_vel' => (int) filesize(PHPRS_ROOT . '/' . $cil),
@@ -86,8 +98,14 @@ final class Obrazky
     public static function smaz(string ...$cesty): void
     {
         foreach ($cesty as $cesta) {
-            if (preg_match('#^media/\d{4}/\d{2}/[a-z0-9-]+\.(jpg|png|webp|gif)$#', $cesta) && is_file(PHPRS_ROOT . '/' . $cesta)) {
-                unlink(PHPRS_ROOT . '/' . $cesta);
+            if (!preg_match('#^(media/\d{4}/\d{2}/[a-z0-9-]+)\.(jpg|png|webp|gif)$#', $cesta, $m)) {
+                continue;
+            }
+            // s obrázkem mizí i jeho varianty pro srcset a WebP
+            foreach ([$cesta, $cesta . '.webp', $m[1] . '-1200.' . $m[2], $m[1] . '-1200.' . $m[2] . '.webp'] as $soubor) {
+                if (is_file(PHPRS_ROOT . '/' . $soubor)) {
+                    unlink(PHPRS_ROOT . '/' . $soubor);
+                }
             }
         }
     }
@@ -121,6 +139,37 @@ final class Obrazky
         if (!$ok) {
             throw new \RuntimeException('Obrázek se nepodařilo uložit - zkontrolujte práva ke složce media/.');
         }
+    }
+
+    /** WebP sourozenec (foto.jpg -> foto.jpg.webp); bývá o 25-35 % menší. */
+    private static function webp(\GdImage $obr, string $soubor, string $pripona): void
+    {
+        if ($pripona !== 'webp' && function_exists('imagewebp')) {
+            imagepalettetotruecolor($obr);
+            @imagewebp($obr, $soubor . '.webp', 82);
+        }
+    }
+
+    /**
+     * Atribut srcset pro obrázek z media/ podle existujících variant; prázdný řetězec, když žádné nejsou.
+     *
+     * @param string $cesta cesta od kořene webu bez úvodního lomítka (media/2026/09/foto.jpg)
+     */
+    public static function srcset(string $cesta, string $zaklad): string
+    {
+        if (!preg_match('#^(media/\d{4}/\d{2}/[a-z0-9-]+?)(-1200|-nahled)?\.(jpg|png|webp)$#', $cesta, $m)) {
+            return '';
+        }
+        $varianty = [];
+        foreach (['-nahled' => self::NAHLED_STRANA, '-1200' => self::STREDNI_STRANA, '' => self::MAX_STRANA] as $pripona => $sirka) {
+            $soubor = $m[1] . $pripona . '.' . $m[3];
+            if (is_file(PHPRS_ROOT . '/' . $soubor)) {
+                $info = $pripona === '' ? @getimagesize(PHPRS_ROOT . '/' . $soubor) : null;
+                $varianty[] = $zaklad . '/' . $soubor . ' ' . ($info ? $info[0] : $sirka) . 'w';
+            }
+        }
+
+        return count($varianty) > 1 ? implode(', ', $varianty) : '';
     }
 
     /** Fotky z mobilu bývají uložené naležato s příznakem otočení v EXIF. */

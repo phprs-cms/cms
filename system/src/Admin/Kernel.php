@@ -69,6 +69,9 @@ final class Kernel
             ]), 400);
         }
 
+        if ($request->isPost()) {
+            \PhpRS\Front\Cache::vymaz(); // každá změna v administraci zneplatní cache stránek webu
+        }
         $akce = $request->get('akce');
         if ($app->auth()->user() === null) {
             return $this->login();

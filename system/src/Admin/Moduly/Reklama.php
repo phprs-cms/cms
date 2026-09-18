@@ -92,6 +92,16 @@ final class Reklama extends Modul
         return $this->zpet('Reklama byla uložena.');
     }
 
+    /** Zapnutí / vypnutí reklamy jedním kliknutím z přehledu. */
+    protected function akcePrepni(): Response
+    {
+        if ($this->request->isPost()) {
+            $this->db->run('UPDATE {reklama} SET aktivni = 1 - aktivni WHERE idr = ?', [$this->request->postInt('idr')]);
+        }
+
+        return $this->zpet('Hotovo.');
+    }
+
     protected function akceSmaz(): Response
     {
         if ($this->request->isPost()) {

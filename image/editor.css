@@ -167,3 +167,15 @@ a.prihlasen { color: inherit; text-decoration: none; display: inline-flex; align
 .potvrzeni::backdrop { background: rgb(0 0 0 / 0.45); }
 .potvrzeni p { margin: 0 0 16px; font-weight: bold; }
 .potvrzeni div { display: flex; gap: 8px; }
+
+/* volby jako karty (Nastavení → Vzhled, cookies; role uživatele; druh reklamy) */
+.karty-volby { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.karta-volba { position: relative; display: block; padding: 12px; border: 2px solid var(--ed-linka); border-radius: var(--ed-radius); background: var(--ed-plocha); cursor: pointer; font-size: 12.5px; line-height: 1.4; color: var(--ed-text-slaby); font-weight: normal !important; }
+.karta-volba:hover { border-color: var(--ed-text-slaby); }
+.karta-volba:has(input:checked) { border-color: var(--ed-akcent); box-shadow: 0 0 0 1px var(--ed-akcent); }
+.karta-volba:has(input:focus-visible) { outline: 2px solid var(--ed-akcent); outline-offset: 2px; }
+.karta-volba input { position: absolute; opacity: 0; }
+.karta-volba svg { display: block; width: 100%; height: auto; margin-bottom: 10px; border: 1px solid var(--ed-linka); border-radius: var(--ed-radius-maly); background: #FFFFFF; }
+.karta-volba strong { display: block; margin-bottom: 2px; font-size: 14px; color: var(--ed-text); }
+.karta-volba:has(input:checked) strong::after { content: "  ✓"; color: var(--ed-akcent); }
+details.pokrocile > .radek:first-of-type { margin-top: 4px; }

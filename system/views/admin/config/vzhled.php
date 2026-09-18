@@ -1,29 +1,36 @@
-<?php /** Záložka Vzhled. */ ?>
+<?php
+/** Záložka Vzhled: šablona webu a prostředí administrace jako obrázkové karty. */
+$nahledy = require dirname(__DIR__, 2) . '/install/nahledy.php';
+?>
 <fieldset>
-<legend>Web</legend>
-<div class="radek">
-	<label for="layout">Šablona webu</label>
-	<div><select id="layout" name="layout">
+<legend>Šablona webu</legend>
+<div class="karty-volby">
 <?php foreach ($layouty as $slozka => $l): ?>
-		<option value="<?= e($slozka) ?>"<?= $hodnoty['layout'] === $slozka ? ' selected' : '' ?>><?= e($l['nazev']) ?> – <?= e($l['popis']) ?></option>
+	<label class="karta-volba">
+		<input type="radio" name="layout" value="<?= e($slozka) ?>"<?= $hodnoty['layout'] === $slozka ? ' checked' : '' ?>>
+		<?= $nahledy[$slozka] ?? $nahledy['default'] ?>
+		<strong><?= e($l['nazev']) ?></strong>
+		<span><?= e($l['popis']) ?></span>
+	</label>
 <?php endforeach ?>
-	</select>
-	<span class="napoveda">Se šablonou se nastaví i rozvržení stránky, které jí sluší. Změnit ho můžete v sekci Bloky a rozvržení.</span></div>
 </div>
-<div class="radek">
+<p class="napoveda">Se šablonou se nastaví i rozvržení stránky, které jí sluší. Bloky a rozvržení pak doladíte přímo na webu v sekci Bloky a rozvržení.</p>
+<div class="radek" style="margin-top:16px">
 	<label for="logo_webu">Logo</label>
 	<div><input class="textpole siroke" type="text" id="logo_webu" name="logo_webu" value="<?= e($hodnoty['logo_webu']) ?>" maxlength="255" placeholder="nepovinné – jinak se v záhlaví zobrazí název webu" data-obrazek></div>
 </div>
 </fieldset>
 <fieldset>
-<legend>Administrace</legend>
-<div class="radek">
-	<label for="prostredi_admin">Výchozí prostředí</label>
-	<div><select id="prostredi_admin" name="prostredi_admin">
-<?php foreach ($prostredi as $klic => $nazev): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
-		<option value="<?= e($klic) ?>"<?= $hodnoty['prostredi_admin'] === $klic ? ' selected' : '' ?>><?= e($nazev) ?></option>
+<legend>Vzhled administrace</legend>
+<div class="karty-volby">
+<?php foreach (['2026' => ['phpRS 2026', 'Moderní prostředí s postranním menu.'], 'retro' => ['phpRS retro', 'Pro zábavu: vzhled původního phpRS.']] as $klic => [$nazev, $popis]): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
+	<label class="karta-volba">
+		<input type="radio" name="prostredi_admin" value="<?= e($klic) ?>"<?= $hodnoty['prostredi_admin'] === $klic ? ' checked' : '' ?>>
+		<?= $nahledy[$klic] ?>
+		<strong><?= e($nazev) ?></strong>
+		<span><?= e($popis) ?></span>
+	</label>
 <?php endforeach ?>
-	</select>
-	<span class="napoveda">Pro přihlašovací stránku a pro uživatele, kteří si sami nevybrali. Každý si prostředí přepíná v horní liště.</span></div>
 </div>
+<p class="napoveda">Výchozí volba pro přihlašovací stránku a nové uživatele. Každý si prostředí přepíná sám v horní liště.</p>
 </fieldset>

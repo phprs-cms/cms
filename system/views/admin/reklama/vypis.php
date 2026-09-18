@@ -9,7 +9,7 @@
 use PhpRS\Admin\Moduly\Reklama;
 ?>
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>">Nová reklama</a></p>
-<p class="smltxt">Pozice Sloupec, Hlavička a Patička umístíte na web blokem „Reklama“ v sekci <a href="<?= e($app->url('admin.php?modul=bloky&akce=novy&sys=rek')) ?>">Bloky a rozvržení</a>. Pozice Pod článkem se zobrazuje sama. Když je na pozici víc reklam, střídají se podle váhy. Každá reklama je na webu označena slovem „Reklama“.</p>
+<p class="smltxt">Reklama pod článkem se zobrazuje sama. Ostatní pozice umístíte na web blokem „Reklama“ v sekci <a href="<?= e($app->url('admin.php?modul=bloky')) ?>">Bloky a rozvržení</a>. Každá reklama je na webu označena slovem „Reklama“.</p>
 <?php if ($reklamy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">
@@ -27,6 +27,7 @@ use PhpRS\Admin\Moduly\Reklama;
 	<td class="cislo"><?= $r['typ'] === 'kod' || $r['zobrazeni'] == 0 ? '–' : number_format($r['kliky'] / $r['zobrazeni'] * 100, 2, ',', ' ') . ' %' ?></td>
 	<td><span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= $bezi ? 'běží' : 'neběží' ?></span></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $r['idr']])) ?>">Upravit</a> ·
+		<form method="post" action="<?= e($modul->url('prepni')) ?>" style="display:inline"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit"><?= $r['aktivni'] ? 'Vypnout' : 'Zapnout' ?></button></form> ·
 		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="Opravdu smazat reklamu i s jejími počty?"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
 </tr>
 <?php endforeach ?>
@@ -34,8 +35,11 @@ use PhpRS\Admin\Moduly\Reklama;
 </table>
 </div>
 <?php endif ?>
-<form class="formular" method="post" action="<?= e($modul->url('ads_txt')) ?>" style="margin-top:28px">
+<details class="pokrocile"<?= $adsTxt !== '' ? ' open' : '' ?>>
+<summary>Soubor ads.txt (vyžadují ho reklamní sítě)</summary>
+<form class="formular" method="post" action="<?= e($modul->url('ads_txt')) ?>">
 <?= $csrf ?>
 <div class="radek"><label for="ads_txt">Soubor ads.txt</label><div><textarea class="textbox kod" id="ads_txt" name="ads_txt" rows="4" style="min-height:80px" spellcheck="false"><?= e($adsTxt) ?></textarea><span class="napoveda">Seznam autorizovaných prodejců reklamy, jak vám ho dodala reklamní síť (např. google.com, pub-…, DIRECT, …). Bude dostupný na adrese /ads.txt.</span></div></div>
 <p class="tlacitka"><input class="tl" type="submit" value="Uložit ads.txt"></p>
 </form>
+</details>

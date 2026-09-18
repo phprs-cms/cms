@@ -133,6 +133,17 @@
 		}, 60000);
 	}
 
+	// Obecné: formulář s data-prepinac="pole" ukazuje jen řádky, jejichž data-pro obsahuje zvolenou hodnotu pole
+	document.querySelectorAll('form[data-prepinac]').forEach(function (form) {
+		var jmeno = form.getAttribute('data-prepinac');
+		var prepni = function () {
+			var zvolene = form.querySelector('[name="' + jmeno + '"]:checked') || form.querySelector('select[name="' + jmeno + '"]');
+			form.querySelectorAll('[data-pro]').forEach(function (radek) { radek.hidden = !zvolene || radek.getAttribute('data-pro').split(' ').indexOf(zvolene.value) === -1; });
+		};
+		form.addEventListener('change', function (e) { if (e.target.name === jmeno) { prepni(); } });
+		prepni();
+	});
+
 	// Formulář bloku: ukazuje jen pole, která zvolený typ bloku používá (data-pro="zkratka zkratka")
 	var formBloku = document.querySelector('[data-blok-formular]');
 	if (formBloku) {

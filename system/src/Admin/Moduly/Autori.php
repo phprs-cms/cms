@@ -86,8 +86,6 @@ final class Autori extends Modul
         if ($heslo !== '' || $id === 0) {
             if (mb_strlen($heslo) < 10) {
                 $chyby['password'] = 'Heslo musí mít alespoň 10 znaků.';
-            } elseif ($heslo !== $r->post('password2')) {
-                $chyby['password'] = 'Hesla se neshodují.';
             } else {
                 $data['password'] = password_hash($heslo, PASSWORD_DEFAULT);
             }
@@ -96,7 +94,10 @@ final class Autori extends Modul
             return $this->formular(['idu' => $id] + $data, $chyby);
         }
 
-        $moduly = array_intersect($r->postList('moduly'), array_map(fn (string $c): string => $c::IDENT, Kernel::MODULY));
+        // přístup do sekcí plyne z role; ruční výběr jen když o něj administrátor výslovně stojí
+        $moduly = $r->postBool('rucne')
+            ? array_intersect($r->postList('moduly'), array_map(fn (string $c): string => $c::IDENT, Kernel::MODULY))
+            : self::vychoziModuly((int) $data['admin']);
         $podrizeni = array_filter(array_map(intval(...), $r->postList('podrizeni')), fn (int $p): bool => $p > 0 && $p !== $id);
 
         $this->db->transaction(function () use (&$id, $data, $moduly, $podrizeni): void {
@@ -116,6 +117,26 @@ final class Autori extends Modul
         });
 
         return $this->zpet('Autor byl uložen.');
+    }
+
+    /**
+     * Sekce, do kterých má role přístup, když je administrátor nenastaví ručně.
+     *
+     * @return list<string>
+     */
+    public static function vychoziModuly(int $role): array
+    {
+        $moduly = [];
+        foreach (Kernel::MODULY as $class) {
+            if ($class::JEN_ADMIN || $class::PRO_VSECHNY) {
+                continue;
+            }
+            if ($role >= Auth::REDAKTOR || $class::IDENT === 'clanky') {
+                $moduly[] = $class::IDENT;
+            }
+        }
+
+        return $moduly;
     }
 
     protected function akceSmaz(): Response
@@ -154,6 +175,14 @@ final class Autori extends Modul
             'maModuly' => $this->request->isPost()
                 ? $this->request->postList('moduly')
                 : array_column($this->db->all('SELECT ident_modulu FROM {user_prava} WHERE fk_id_user = ?', [$id]), 'ident_modulu'),
+            'rucne' => $this->request->isPost() ? $this->request->postBool('rucne') : ($id > 0 && (int) $autor['admin'] !== Auth::ADMIN && (function () use ($id, $autor): bool {
+                $ma = array_column($this->db->all('SELECT ident_modulu FROM {user_prava} WHERE fk_id_user = ?', [$id]), 'ident_modulu');
+                $vychozi = self::vychoziModuly((int) $autor['admin']);
+                sort($ma);
+                sort($vychozi);
+
+                return $ma !== $vychozi;
+            })()),
             'ostatni' => $this->db->pairs('SELECT idu, IF(jmeno = \'\', user, CONCAT(jmeno, \' (\', user, \')\')) FROM {user} WHERE idu <> ? ORDER BY user', [$id]),
             'maPodrizene' => $this->request->isPost()
                 ? array_map(intval(...), $this->request->postList('podrizeni'))

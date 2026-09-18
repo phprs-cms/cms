@@ -1,36 +1,32 @@
 <?php /** Záložka Soukromí a cookies. */ ?>
 <fieldset>
-<legend>Cookie lišta a souhlasy</legend>
-<div class="radek">
-	<label for="cookies_rezim">Řešení souhlasů</label>
-	<div><select id="cookies_rezim" name="cookies_rezim">
-		<option value="vestavena"<?= $hodnoty['cookies_rezim'] === 'vestavena' ? ' selected' : '' ?>>Vestavěná lišta phpRS</option>
-		<option value="externi"<?= $hodnoty['cookies_rezim'] === 'externi' ? ' selected' : '' ?>>Externí služba (Cookiebot, CookieYes, Usercentrics…)</option>
-		<option value="zadna"<?= $hodnoty['cookies_rezim'] === 'zadna' ? ' selected' : '' ?>>Žádná – měřicí kódy se spouštějí hned</option>
-	</select>
-	<span class="napoveda">Vestavěná lišta se zobrazí, jen když je co odsouhlasit (vyplněné Google Analytics, Matomo nebo marketingový kód). Měřicí kódy se spustí až po souhlasu návštěvníka. Volbu „Žádná“ použijte jen tehdy, když souhlas řešíte jinak nebo ho nepotřebujete.</span></div>
+<legend>Cookie lišta</legend>
+<div class="karty-volby karty-volby-text">
+<?php foreach ([
+    'vestavena' => ['Vestavěná lišta', 'Doporučeno. Zobrazí se jen tehdy, když je co odsouhlasit; měření se spustí až po souhlasu.'],
+    'externi' => ['Externí služba', 'Cookiebot, CookieYes, Usercentrics… Vložíte jejich kód.'],
+    'zadna' => ['Žádná', 'Měřicí kódy se spouštějí hned. Jen když souhlas řešíte jinak.'],
+] as $klic => [$nazev, $popis]): ?>
+	<label class="karta-volba">
+		<input type="radio" name="cookies_rezim" value="<?= e($klic) ?>"<?= $hodnoty['cookies_rezim'] === $klic ? ' checked' : '' ?>>
+		<strong><?= e($nazev) ?></strong>
+		<span><?= e($popis) ?></span>
+	</label>
+<?php endforeach ?>
 </div>
 <?php
 $pole('cookies_text', 'Text lišty', 'radky');
-$pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Ke každé volbě návštěvníka uloží čas, náhodný identifikátor a zvolené kategorie – bez IP adresy. Slouží jako doklad o souhlasu.');
-$pole('cookies_zasady_url', 'Odkaz na zásady', 'text', 'Adresa stránky se zásadami ochrany soukromí, např. /zasady-ochrany-soukromi (vytvoříte ji v sekci Stránky).', 'maxlength="255"');
+$pole('cookies_zasady_url', 'Odkaz na zásady', 'text', 'Např. /zasady-ochrany-soukromi – stránku vytvoříte v sekci Stránky.', 'maxlength="255"');
 ?>
 </fieldset>
-<fieldset>
-<legend>Externí služba</legend>
-<?php $pole('cookies_externi_kod', 'Kód služby', 'kod', 'Vložte skript od poskytovatele (u Cookiebotu řádek s data-cbid). Načte se jako první v hlavičce. Měřicí kódy phpRS označí atributy <code>type="text/plain"</code> a <code>data-cookieconsent</code>, kterým Cookiebot a kompatibilní služby rozumí.', 'spellcheck="false"'); ?>
-</fieldset>
-<fieldset>
-<legend>Marketingové kódy</legend>
-<?php $pole('kod_marketing', 'Kód spouštěný po souhlasu s marketingem', 'kod', 'Meta Pixel, Sklik retargeting, Google Ads apod. Vkládejte celé značky &lt;script&gt;.', 'spellcheck="false"'); ?>
-</fieldset>
+<details class="pokrocile"<?= $hodnoty['cookies_rezim'] === 'externi' || $hodnoty['kod_marketing'] !== '' ? ' open' : '' ?>>
+<summary>Kódy a evidence</summary>
+<?php
+$pole('cookies_externi_kod', 'Kód externí služby', 'kod', 'Skript od poskytovatele (u Cookiebotu řádek s data-cbid). Načte se jako první.', 'spellcheck="false"');
+$pole('kod_marketing', 'Marketingové kódy', 'kod', 'Meta Pixel, Sklik retargeting, Google Ads… Spustí se až po souhlasu s marketingem.', 'spellcheck="false"');
+$pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Čas, náhodný identifikátor a zvolené kategorie – bez IP adresy. Doklad pro případnou kontrolu.');
+?>
+</details>
 <?php if ($souhlasy !== []): ?>
-<fieldset>
-<legend>Souhlasy za posledních 30 dní</legend>
-<ul>
-<?php foreach ($souhlasy as $r): ?>
-	<li><?= e($r['kategorie'] === 'nic' ? 'jen nezbytné' : $r['kategorie']) ?>: <strong><?= (int) $r['pocet'] ?></strong></li>
-<?php endforeach ?>
-</ul>
-</fieldset>
+<p class="napoveda">Souhlasy za posledních 30 dní: <?= implode(' · ', array_map(fn (array $r): string => e($r['kategorie'] === 'nic' ? 'jen nezbytné' : $r['kategorie']) . ' ' . (int) $r['pocet'] . '×', $souhlasy)) ?></p>
 <?php endif ?>

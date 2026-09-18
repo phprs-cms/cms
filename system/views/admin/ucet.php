@@ -9,6 +9,10 @@
  * @var string $noveTajemstvi      rozpracované zapínání dvoufázového přihlášení
  * @var string $uri
  * @var int $zbyvaKodu
+ * @var bool $claude  je zapnuté rozšíření Napojení na Claude
+ * @var list<array<string, mixed>> $tokeny
+ * @var string $novyToken  právě vytvořený token (zobrazí se jen jednou)
+ * @var string $adresaMcp
  */
 $akce = e($app->url('admin.php?akce=ucet'));
 ?>
@@ -63,3 +67,28 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <?php endif ?>
 </fieldset>
 </form>
+
+<?php if ($claude): ?>
+<form class="formular" method="post" action="<?= $akce ?>" style="margin-top:20px">
+<?= $csrf ?>
+<fieldset><legend>Napojení na Claude</legend>
+<?php if ($novyToken !== ''): ?>
+<div class="hlaska hlaska-ok">
+	<p><strong>Token je vytvořený.</strong> Zkopírujte si ho teď – už se nezobrazí.</p>
+	<p><code class="totp-klic"><?= e($novyToken) ?></code></p>
+	<p>V Claude Code spusťte:</p>
+	<p><code class="totp-klic" style="font-size:12px">claude mcp add --transport http phprs <?= e($adresaMcp) ?> --header "Authorization: Bearer <?= e($novyToken) ?>"</code></p>
+	<p class="napoveda">V aplikaci Claude přidejte vlastní konektor s adresou <?= e($adresaMcp) ?> a stejnou hlavičkou Authorization.</p>
+</div>
+<?php endif ?>
+<p>Claude bude s webem pracovat <strong>vaším jménem a s vašimi právy</strong>: psát a upravovat články<?= (int) $user['admin'] === 2 ? ', spravovat bloky a tvořit šablony webu' : '' ?>. Nové články zakládá jako koncepty. Všechny jeho zásahy najdete v Protokolu změn. Token chraňte jako heslo.</p>
+<?php foreach ($tokeny as $t): ?>
+<p><span class="stitek"><?= e($t['nazev']) ?></span> vytvořen <?= e(datum($t['vytvoren'])) ?>, <?= $t['pouzit'] ? 'naposledy použit ' . e(datum($t['pouzit'], true)) : 'zatím nepoužit' ?>
+	<button class="navigace" type="submit" name="co" value="token_smaz" onclick="this.form.idt.value=<?= (int) $t['idt'] ?>; return confirm('Zrušit token? Claude se jím už nepřihlásí.');">Zrušit</button></p>
+<?php endforeach ?>
+<input type="hidden" name="idt" value="0">
+<div class="radek"><label for="token-nazev">Název nového tokenu</label><input class="textpole" type="text" id="token-nazev" name="nazev" maxlength="100" size="30" placeholder="např. Claude na notebooku"></div>
+<p class="tlacitka"><button class="tl" type="submit" name="co" value="token_novy">Vytvořit token</button></p>
+</fieldset>
+</form>
+<?php endif ?>

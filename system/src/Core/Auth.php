@@ -135,6 +135,13 @@ final class Auth
         return $this->user;
     }
 
+    /** Přihlášení bez session - pro požadavky ověřené tokenem (MCP). */
+    public function prihlasJako(array $user): void
+    {
+        $this->user = $user;
+        $this->moduly = null;
+    }
+
     public function id(): int
     {
         return (int) ($this->user()['idu'] ?? 0);

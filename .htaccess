@@ -3,6 +3,9 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # některé hostingy nepředávají PHP hlavičku Authorization (potřebuje ji napojení na Claude)
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
     # config.php a skryté soubory nejsou pro návštěvníky
     RewriteRule ^(config(\.sample)?\.php|\..*)$ - [F,L]
     # obrázky z media/: prohlížeči, který umí WebP, podat menší sourozenecký soubor foto.jpg.webp

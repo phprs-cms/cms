@@ -111,16 +111,15 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
     soukromý má jen vydavatel). Před aktualizací se zálohuje databáze; nepřepisuje se `config.php`, `media/`,
     `storage/` ani vlastní layouty; migrace databáze proběhnou samy. Vydání připravuje `tools/vydani.php`.
   - Později: Download sekce (nízká priorita), levely a registrace čtenářů, slovenština a angličtina administrace.
-- **M6 – Bloky 2.0:** ~~zóny (hlavička, sloupce, nad/pod obsahem, patička), rozvržení 3/2/1 sloupec/plná šířka,
-  přetahování myší, pojmenované vzhledy~~ (hotovo); zbývají nové typy
-  bloků: menu (vlastní odkazy), článek/články z rubriky, otvírák, karusel, štítky, autoři, newsletter
-  (formulář), sociální sítě, kontakt, HTML/embed, reklamní pozice, „Ve zkratce", kalendář/archiv;
-  viditelnost podle rubriky a zařízení.
-- **M7 – napojení na Claude (AI):** vestavěný **MCP server** (`/mcp` s tokeny a právy autora), přes který
-  Claude umí číst a psát články, rubriky, bloky a **vytvářet a upravovat layouty** (soubory šablony v
-  izolované složce, náhled před aktivací, vrácení zpět); v editoru pak asistent: návrh titulků a perexu,
-  korektura, shrnutí „Ve zkratce", SEO popis, alt texty obrázků, štítky. Klíč k API zadává správce v
-  Konfiguraci; bez něj systém funguje beze změny.
+- **M6 – Bloky 2.0:** hotovo – zóny, rozvržení, přetahování myší, pojmenované vzhledy, typy bloků (otvírák, články
+  z rubriky, nejčtenější, rubriky, štítky, archiv, autoři, menu, stránky, vyhledávání, novinky, anketa, sociální sítě,
+  kontakt, reklama, vlastní HTML), viditelnost podle rubriky a zařízení, archiv po měsících (`/archiv/2026-09`).
+- **M7 – napojení na Claude:** hotovo – rozšíření „Napojení na Claude" (výchozí vypnuto) = MCP server na `/mcp`
+  (Streamable HTTP, JSON-RPC). Token si uživatel vytvoří v nabídce Můj účet; Claude jedná s jeho právy. Nástroje:
+  články (seznam, čtení, založení jako koncept, úprava s historií verzí, vydání jen s právem vydávat), rubriky, média,
+  bloky a – jen pro administrátora – šablony webu: kopie šablony, čtení a ukládání souborů (kontrola syntaxe PHP,
+  vestavěné šablony jsou jen ke čtení), náhled `?sablona=…`, aktivace. Každý zásah jde do Protokolu změn.
+  Zbývá: asistent přímo v editoru (návrh titulků, perexu, korektura) – vyžaduje API klíč správce.
 
 ### M-X – schválené náměty (pořadí se určuje průběžně)
 

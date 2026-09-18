@@ -19,6 +19,7 @@ final class Rozsireni
         'ankety' => ['Ankety', 'Anketa v bloku na webu, jeden hlas na čtenáře.', true],
         'statistika' => ['Statistika', 'Vlastní měření návštěvnosti bez cookies.', true],
         'presmerovani' => ['Přesměrování', 'Správa přesměrování 301 ze starých adres.', true],
+        'claude' => ['Napojení na Claude', 'MCP server na adrese /mcp: Claude umí s právy vašeho účtu číst a psát články, spravovat bloky a tvořit šablony webu. Přístupový token si každý vytvoří v nabídce Můj účet.', false],
         'reklama' => ['Reklamní systém', 'Bannery a reklamní kódy v blocích a pod články, plánování, počítání zobrazení a prokliků, ads.txt.', false],
     ];
 

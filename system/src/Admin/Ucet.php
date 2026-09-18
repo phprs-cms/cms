@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpRS\Admin;
 
 use PhpRS\Core\Response;
+use PhpRS\Core\Rozsireni;
 use PhpRS\Core\Totp;
 
 /**
@@ -22,7 +23,7 @@ final class Ucet
         $r = $app->request;
         $db = $app->db();
         $user = $app->auth()->user();
-        $data = ['zalozniKody' => [], 'noveTajemstvi' => ''];
+        $data = ['zalozniKody' => [], 'noveTajemstvi' => '', 'novyToken' => ''];
 
         if ($r->isPost()) {
             $hlaska = null;
@@ -47,6 +48,19 @@ final class Ucet
                         $db->update('user', ['password' => password_hash($nove, PASSWORD_DEFAULT)], ['idu' => $user['idu']]);
                         $hlaska = ['ok', 'Heslo bylo změněno.'];
                     }
+                    break;
+                case 'token_novy':
+                    if (!Rozsireni::je($app->settings(), 'claude')) {
+                        break;
+                    }
+                    $token = 'phprs_' . bin2hex(random_bytes(24));
+                    $db->insert('api_tokeny', ['idu' => $user['idu'], 'nazev' => mb_substr($r->post('nazev') ?: 'Claude', 0, 100), 'otisk' => hash('sha256', $token), 'vytvoren' => date('Y-m-d H:i:s')]);
+                    Protokol::zapis($app, 'ucet', 'vytvořen token pro Claude');
+                    // token se ukazuje jen teď - proto bez přesměrování
+                    return $this->stranka(['novyToken' => $token] + $data);
+                case 'token_smaz':
+                    $db->delete('api_tokeny', ['idt' => $r->postInt('idt'), 'idu' => $user['idu']]);
+                    $hlaska = ['ok', 'Token byl zrušen.'];
                     break;
                 case 'totp_start':
                     $app->session->set('totp_nove', Totp::noveTajemstvi());
@@ -93,6 +107,9 @@ final class Ucet
             'app' => $app, 'user' => $user, 'csrf' => $app->session->csrfField(),
             'uri' => $data['noveTajemstvi'] !== '' ? Totp::uri($data['noveTajemstvi'], $user['user'], $app->settings()->get('nazev_webu')) : '',
             'zbyvaKodu' => count((array) json_decode((string) $user['totp_zalozni'], true)),
+            'claude' => Rozsireni::je($app->settings(), 'claude'),
+            'tokeny' => $app->db()->all('SELECT * FROM {api_tokeny} WHERE idu = ? ORDER BY idt DESC', [$user['idu']]),
+            'adresaMcp' => $app->request->origin() . $app->url('mcp'),
         ]));
     }
 }

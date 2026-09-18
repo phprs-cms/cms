@@ -31,6 +31,11 @@ final class Kernel
     public function __construct(private readonly App $app)
     {
         $layout = $app->settings()->get('layout');
+        // náhled jiné šablony (?sablona=slozka) - jen přihlášenému administrátorovi, např. při tvorbě šablony přes Claude
+        $nahled = $app->request->get('sablona');
+        if ($nahled !== '' && preg_match('/^[a-z0-9_-]+$/i', $nahled) && is_file(PHPRS_ROOT . '/layout/' . $nahled . '/base.php') && $app->auth()->isAdmin()) {
+            $layout = $nahled;
+        }
         if (!preg_match('/^[a-z0-9_-]+$/i', $layout) || !is_dir(PHPRS_ROOT . '/layout/' . $layout)) {
             $layout = 'default';
         }
@@ -91,6 +96,9 @@ final class Kernel
             }
 
             return new Response('', 204);
+        }
+        if ($path === '/mcp') {
+            return (new \PhpRS\Mcp\Server($this->app))->handle();
         }
         if (preg_match('#^/r/(\d+)$#', $path, $m)) {
             return (new Reklama($this->app))->proklik((int) $m[1]);

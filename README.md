@@ -79,33 +79,23 @@ RSS, přesměrování starých adres phpRS 2.
 
 Plán (pořadí = priorita; stav k 18. 9. 2026):
 
-- **M2 – moderní tvorba článků:** ~~nahrávání obrázků, Média se složkami a vazbou na články, WYSIWYG editor
-  s automatickým ukládáním, značka `<obrazek id="…">`, dvousloupcový editor (text + nastavení), stavy
-  koncept / naplánováno / vydáno, připnutí~~ (hotovo), dále modul Redaktor (vydavatelská nástěnka: čeká na vydání / naplánováno),
-  skupiny souvisejících článků (seriály), štítky, revize článku (historie verzí), Stránkové aliasy
-  a statické stránky (O nás, Kontakt).
-- **M3 – čtenáři a měření:** Komentáře (moderace, antispam bez cookies, honeypot + časový zámek),
-  Ankety, hodnocení článků, vlastní Statistika bez cookies (návštěvy, nejčtenější, zdroje) + volitelné
-  napojení Google Analytics 4 / Matomo / Plausible s ohledem na souhlas (consent mode, cookie lišta).
-- **M3b – Nastavení s podzáložkami:** Základní · Vzhled · **SEO/GEO** · Měření · **Soukromí a cookies** · Pošta · **Stav systému**.
-  - *Soukromí a cookies:* buď externí řešení (Cookiebot, CookieYes, Usercentrics – stačí vložit ID/skript a
-    systém mu přizpůsobí načítání měřicích kódů), nebo vestavěná jednoduchá lišta: kategorie nezbytné /
-    analytické / marketingové, texty a odkaz na zásady z administrace, Google Consent Mode v2, skripty se
-    spouštějí až po souhlasu, evidence souhlasů, odkaz „Nastavení cookies" v patičce. Bez měřicích a
-    reklamních kódů se lišta nezobrazuje vůbec.
-  - *SEO:* robots.txt z administrace, přepínač indexování (noindex pro celý web / rubriku / článek),
-    XML sitemap + Google News sitemap, kanonické adresy, Open Graph / Twitter Cards, strukturovaná data
-    schema.org (`NewsArticle`, `BreadcrumbList`, `Organization`, `Person` u autorů), vlastní titulek a
-    popis u článku a rubriky, přesměrování 301 (správa + automaticky při změně adresy článku),
-    ověřovací meta tagy (Search Console, Bing), IndexNow ping po vydání.
-  - *GEO (viditelnost v AI vyhledávačích):* `llms.txt`, pravidla pro AI crawlery v robots.txt
-    (GPTBot, ClaudeBot, PerplexityBot, Google-Extended – povolit / zakázat), čistá Markdown verze článku
-    (`/clanek/…​.md`), shrnutí a klíčová fakta u článku (blok „Ve zkratce"), FAQ blok se schema.org,
-    důraz na autorství a datum aktualizace (E-E-A-T), plnotextové RSS / JSON Feed.
-  - *Stav systému (health check):* verze PHP a rozšíření, verze DB a čekající migrace, práva složek,
-    existence `install.php`, HTTPS a bezpečnostní hlavičky, dostupnost sitemap/robots, odesílání pošty,
-    volné místo, velikost DB a médií, poslední záloha, chyby z logu za 24 h, test mod_rewrite; totéž
-    jako JSON endpoint pro monitoring (`/stav.json` s tokenem).
+- **M2 – moderní tvorba článků:** hotovo – Média se složkami a vazbou na články, WYSIWYG editor s automatickým
+  ukládáním, dvousloupcový editor, stavy koncept / naplánováno / vydáno a vydání jedním klikem, připnutí,
+  štítky, seriály, historie verzí (20 posledních), statické Stránky. Zbývá: redakční kalendář.
+- **M3 – čtenáři:** Komentáře (moderace, antispam bez cookies: honeypot + časový zámek), Ankety, hodnocení
+  článků, vlastní Statistika bez cookies (návštěvy, nejčtenější, zdroje).
+- **M3b – Nastavení s podzáložkami:** hotovo – Základní · Vzhled · SEO a GEO · Měření · Soukromí a cookies · Stav systému.
+  - *SEO:* robots.txt, přepínač indexování, sitemap.xml, schema.org (NewsArticle, BreadcrumbList, WebSite,
+    Organization), Open Graph / Twitter Cards, výchozí obrázek pro sdílení, ověření Search Console a Bing.
+    Zbývá: noindex u rubriky/článku, vlastní titulek a popis článku, správa přesměrování 301 (+ automaticky
+    při změně adresy), Google News sitemap, IndexNow.
+  - *GEO:* pravidla pro AI roboty v robots.txt, llms.txt, Markdown verze článku (`/clanek/….md`).
+    Zbývá: blok „Ve zkratce" a FAQ se schema.org, `Person` stránky autorů, JSON Feed.
+  - *Měření:* GA4 (Consent Mode v2), Matomo, Plausible, vlastní kód do hlavičky.
+  - *Soukromí a cookies:* vestavěná lišta (nezbytné / analytické / marketingové, skripty až po souhlasu,
+    odvolání souhlasu), nebo externí služba (Cookiebot a kompatibilní), nebo nic. Zbývá: evidence souhlasů.
+  - *Stav systému:* kontroly serveru, databáze, souborů, bezpečnosti a provozu + `/stav.json?token=…`.
+    Zbývá: test odeslání e-mailu, bezpečnostní hlavičky, poslední záloha.
 - **M4 – import z phpRS 2.x:** převod `rs_*` tabulek včetně kódování win-1250 / ISO-8859-2 → UTF-8,
   zachování `link` (staré adresy fungují dál), obrázků galerie a hesel (přehashování při prvním přihlášení).
 - **M5 – rozšíření:** plug-iny (položka menu + systémový blok + háčky), **Reklamní systém** (pozice,

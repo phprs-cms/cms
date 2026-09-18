@@ -30,6 +30,29 @@ final class Settings
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky
         'povolit_komentare' => '1',
         'aktivni_anketa' => '0',
+        // SEO a GEO
+        'indexovani' => '1',          // 0 = celý web noindex + Disallow v robots.txt
+        'schema_org' => '1',          // strukturovaná data JSON-LD
+        'og_obrazek' => '',           // výchozí obrázek pro sdílení
+        'overeni_google' => '',
+        'overeni_bing' => '',
+        'robots_extra' => '',
+        'ai_crawlery' => 'povolit',   // povolit | zakazat (GPTBot, ClaudeBot, PerplexityBot...)
+        'llms_txt' => '1',
+        'markdown_clanky' => '1',     // /clanek/<adresa>.md
+        // měření
+        'ga4_id' => '',
+        'matomo_url' => '',
+        'matomo_id' => '0',
+        'plausible_domena' => '',
+        'kod_hlava' => '',
+        // soukromí a cookies
+        'cookies_rezim' => 'vestavena', // zadna | vestavena | externi
+        'cookies_externi_kod' => '',
+        'cookies_text' => 'Používáme cookies k měření návštěvnosti. Pomáhají nám zjistit, co čtenáře zajímá.',
+        'cookies_zasady_url' => '',
+        'kod_marketing' => '',
+        'stav_token' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 

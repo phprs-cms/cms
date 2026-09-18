@@ -14,6 +14,8 @@
  * @var list<array<string, mixed>> $rubriky
  * @var callable(string): string $url
  * @var string $kanonicka
+ * @var string $hlava  značky do <head> z Nastavení: ověření, strukturovaná data, měřicí kódy (vždy vypsat před </head>)
+ * @var string $pata   cookie lišta a kódy před </body> (vždy vypsat)
  * @var list<array{titulek:string, seo_link:string}> $stranky  statické stránky do navigace
  */
 $nazevWebu = $web->get('nazev_webu');
@@ -43,6 +45,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 <link rel="alternate" type="application/rss+xml" title="<?= e($nazevWebu) ?>" href="<?= e($url('rss.xml')) ?>">
 <link rel="stylesheet" href="<?= e($url('layout/modern-magazine/style.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
+<?= $hlava ?>
 </head>
 <body>
 <a class="preskocit" href="#obsah">Přeskočit na obsah</a>
@@ -99,5 +102,6 @@ $site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $w
 		<p class="drobne">&copy; <?= date('Y') ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3</p>
 	</div>
 </footer>
+<?= $pata ?>
 </body>
 </html>

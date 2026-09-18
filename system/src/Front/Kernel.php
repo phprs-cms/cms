@@ -63,6 +63,32 @@ final class Kernel
         if ($path === '/rss.xml') {
             return $this->rss();
         }
+        $seo = new Seo($this->app);
+        if ($path === '/robots.txt') {
+            return new Response($seo->robotsTxt(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        if ($path === '/sitemap.xml') {
+            return new Response($seo->sitemapXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
+        }
+        if ($path === '/llms.txt' && $this->app->settings()->bool('llms_txt')) {
+            return new Response($seo->llmsTxt(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        if (preg_match('#^/clanek/([a-z0-9-]+)\.md$#', $path, $m) && $this->app->settings()->bool('markdown_clanky')) {
+            $clanek = $this->clanky->podleSeo($m[1]);
+
+            return $clanek === null || (int) $clanek['typ_clanku'] === 2
+                ? $this->nenalezeno()
+                : new Response($seo->clanekMarkdown($clanek), 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'X-Robots-Tag' => 'noindex']);
+        }
+        if ($path === '/stav.json') {
+            $token = $this->app->settings()->get('stav_token');
+            if ($token === '' || !hash_equals($token, $request->get('token'))) {
+                return Response::json(['chyba' => 'Neplatný token.'], 403);
+            }
+            $kontroly = \PhpRS\Core\Stav::kontroly($this->app);
+
+            return Response::json(['stav' => \PhpRS\Core\Stav::souhrn($kontroly), 'verze' => PHPRS_VERSION, 'cas' => date('c'), 'kontroly' => $kontroly]);
+        }
 
         $alias = $this->app->db()->one("SELECT * FROM {alias} WHERE alias = ? AND typ = 'clanek'", [ltrim($path, '/')]);
         if ($alias !== null) {
@@ -166,6 +192,7 @@ final class Kernel
         ]);
 
         return $this->stranka($clanek['titulek'], $obsah, [
+            'clanek' => $clanek,
             'popis' => mb_strimwidth(trim(strip_tags($clanek['uvod'])), 0, 300, '…'),
             'klicova_slova' => $clanek['t_slova'],
             'obrazek' => $clanek['obrazek'],
@@ -249,6 +276,9 @@ final class Kernel
     {
         $web = $this->app->settings();
         $bloky = new Bloky($this->app, $this->view);
+        $seo = new Seo($this->app);
+        $clanek = $meta['clanek'] ?? null;
+        unset($meta['clanek']);
 
         return Response::html($this->view->render('base', [
             'web' => $web,
@@ -257,6 +287,8 @@ final class Kernel
             'obsah' => $obsah,
             'zony' => $bloky->zony(!empty($meta['hlavni'])),
             'rozvrzeni' => $bloky->rozvrzeni(),
+            'hlava' => $seo->hlava($titulek, $meta, $clanek),
+            'pata' => $seo->pata(),
             'rubriky' => Rubriky::strom($this->app->db(), true),
             'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
             'url' => $this->app->url(...),

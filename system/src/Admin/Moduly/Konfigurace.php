@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace PhpRS\Admin\Moduly;
 
+use PhpRS\Admin\Kernel;
 use PhpRS\Admin\Modul;
 use PhpRS\Core\Response;
-use PhpRS\Core\Settings;
+use PhpRS\Core\Stav;
+use PhpRS\Front\Layouty;
 
 /**
- * Konfigurace systému - základní nastavení webu (tabulka rs_config).
+ * Nastavení webu (tabulka rs_config) rozdělené do záložek.
+ * Každá záložka má šablonu views/admin/config/<zalozka>.php a seznam polí s typem - podle něj se hodnoty čistí.
  */
 final class Konfigurace extends Modul
 {
@@ -20,60 +23,116 @@ final class Konfigurace extends Modul
     public const string IKONA = 'nastaveni';
     public const bool JEN_ADMIN = true;
 
+    public const array ZALOZKY = [
+        'zakladni' => 'Základní', 'vzhled' => 'Vzhled', 'seo' => 'SEO a GEO',
+        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'stav' => 'Stav systému',
+    ];
+
     public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
 
-    private const array ZASKRTAVACI = ['hlidat_platnost', 'povolit_komentare'];
+    /**
+     * Pole jednotlivých záložek: klíč v rs_config => typ.
+     * text | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | vzor:/regex/
+     */
+    private const array POLE = [
+        'zakladni' => [
+            'nazev_webu' => 'text', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
+            'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
+            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano',
+        ],
+        'vzhled' => ['logo_webu' => 'text', 'prostredi_admin' => 'vyber:retro|2026'],
+        'seo' => [
+            'indexovani' => 'ano', 'schema_org' => 'ano', 'og_obrazek' => 'text', 'overeni_google' => 'vzor:/^[A-Za-z0-9_-]{0,100}$/',
+            'overeni_bing' => 'vzor:/^[A-Za-z0-9]{0,64}$/', 'robots_extra' => 'radky', 'ai_crawlery' => 'vyber:povolit|zakazat', 'llms_txt' => 'ano', 'markdown_clanky' => 'ano',
+        ],
+        'mereni' => [
+            'ga4_id' => 'vzor:/^(G-[A-Z0-9]{4,20})?$/', 'matomo_url' => 'url', 'matomo_id' => 'cislo:0:99999',
+            'plausible_domena' => 'vzor:/^([a-z0-9.-]{3,100})?$/', 'kod_hlava' => 'kod',
+        ],
+        'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod'],
+        'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
+    ];
 
     protected function akceVypis(): Response
     {
+        $zalozka = $this->zalozka($this->request->get('zalozka'));
+        $nastaveni = $this->app->settings();
         $hodnoty = [];
-        foreach (array_keys(Settings::DEFAULTS) as $klic) {
-            $hodnoty[$klic] = $this->app->settings()->get($klic);
+        foreach (array_keys(self::POLE[$zalozka]) as $klic) {
+            $hodnoty[$klic] = $nastaveni->get($klic);
         }
 
         return $this->view('vypis', 'Nastavení', [
-            'hodnoty' => $hodnoty,
-            'layouty' => \PhpRS\Front\Layouty::seznam(),
-            'prostredi' => \PhpRS\Admin\Kernel::PROSTREDI,
-            'ankety' => $this->db->pairs('SELECT ida, titulek FROM {ankety} WHERE zobrazit = 1 ORDER BY ida DESC'),
+            'zalozka' => $zalozka,
+            'hodnoty' => $hodnoty + ['layout' => $nastaveni->get('layout')],
+            'layouty' => Layouty::seznam(),
+            'prostredi' => Kernel::PROSTREDI,
+            'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
+            'adresaWebu' => $this->app->request->origin() . $this->app->url(''),
         ]);
     }
 
     protected function akceUloz(): Response
     {
+        $zalozka = $this->zalozka($this->request->post('zalozka'));
         if (!$this->request->isPost()) {
             return $this->zpet();
         }
-        $r = $this->request;
         $nastaveni = $this->app->settings();
-
-        foreach (['nazev_webu', 'popis_webu', 'klicova_slova', 'email_webu', 'logo_webu', 'text_paticky'] as $klic) {
-            $nastaveni->set($klic, $r->post($klic));
+        $chyby = [];
+        foreach (self::POLE[$zalozka] as $klic => $typ) {
+            // "kod" se neořezává ani jinak neupravuje - je to HTML/JS vložené administrátorem
+            $hodnota = $typ === 'kod' ? (string) ($_POST[$klic] ?? '') : $this->request->post($klic);
+            $cista = self::vycisti($typ, $hodnota, $this->request->postBool($klic));
+            if ($cista === null) {
+                $chyby[] = $klic;
+                continue;
+            }
+            $nastaveni->set($klic, $cista);
         }
-        foreach (self::SITE as $klic => $nazev) {
-            // jen platné adresy http(s), jinak prázdné
-            $adresa = $r->post($klic);
-            $nastaveni->set($klic, preg_match('#^https?://#i', $adresa) && filter_var($adresa, FILTER_VALIDATE_URL) ? $adresa : '');
+        if ($zalozka === 'vzhled') {
+            $layouty = Layouty::seznam();
+            $layout = $this->request->post('layout');
+            if (isset($layouty[$layout]) && $layout !== $nastaveni->get('layout')) {
+                // nová šablona webu přináší i rozvržení stránky, které jí sluší; změnit ho lze v Blocích
+                $nastaveni->set('layout', $layout);
+                $nastaveni->set('rozvrzeni', $layouty[$layout]['rozvrzeni']);
+            }
         }
-        foreach (self::ZASKRTAVACI as $klic) {
-            $nastaveni->set($klic, $r->postBool($klic) ? '1' : '0');
-        }
-        $nastaveni->set('pocet_clanku', (string) max(1, min(100, $r->postInt('pocet_clanku', 7))));
-        $nastaveni->set('pocet_novinek', (string) max(0, min(50, $r->postInt('pocet_novinek', 3))));
-        $nastaveni->set('aktivni_anketa', (string) $r->postInt('aktivni_anketa'));
-
-        if (isset(\PhpRS\Admin\Kernel::PROSTREDI[$r->post('prostredi_admin')])) {
-            $nastaveni->set('prostredi_admin', $r->post('prostredi_admin'));
-        }
-
-        $layout = $r->post('layout');
-        $layouty = \PhpRS\Front\Layouty::seznam();
-        if (isset($layouty[$layout]) && $layout !== $nastaveni->get('layout')) {
-            // nová šablona webu přináší i rozvržení stránky, které jí sluší; změnit ho lze v Úpravě bloků
-            $nastaveni->set('layout', $layout);
-            $nastaveni->set('rozvrzeni', $layouty[$layout]['rozvrzeni']);
+        if ($this->request->postBool('novy_token')) {
+            $nastaveni->set('stav_token', bin2hex(random_bytes(16)));
         }
 
-        return $this->zpet('Nastavení bylo uloženo.');
+        return $chyby === []
+            ? $this->zpet('Nastavení bylo uloženo.', '', ['zalozka' => $zalozka])
+            : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', ['zalozka' => $zalozka], 'chyba');
+    }
+
+    private function zalozka(string $zalozka): string
+    {
+        return isset(self::ZALOZKY[$zalozka]) ? $zalozka : 'zakladni';
+    }
+
+    /** @return string|null vyčištěná hodnota, null = neplatná */
+    private static function vycisti(string $typ, string $hodnota, bool $zaskrtnuto): ?string
+    {
+        [$druh, $parametr] = explode(':', $typ, 2) + [1 => ''];
+
+        return match ($druh) {
+            'ano' => $zaskrtnuto ? '1' : '0',
+            'text' => mb_substr(str_replace(["\r", "\n"], ' ', $hodnota), 0, 500),
+            'radky' => mb_substr($hodnota, 0, 5000),
+            'kod' => mb_substr($hodnota, 0, 20000),
+            'email' => $hodnota === '' || filter_var($hodnota, FILTER_VALIDATE_EMAIL) ? $hodnota : null,
+            'url' => $hodnota === '' || (preg_match('#^https?://#i', $hodnota) && filter_var($hodnota, FILTER_VALIDATE_URL)) ? rtrim($hodnota) : null,
+            'cislo' => (function () use ($hodnota, $parametr): string {
+                [$min, $max] = array_map(intval(...), explode(':', $parametr));
+
+                return (string) max($min, min($max, (int) $hodnota));
+            })(),
+            'vyber' => in_array($hodnota, explode('|', $parametr), true) ? $hodnota : null,
+            'vzor' => preg_match($parametr, $hodnota) ? $hodnota : null,
+            default => null,
+        };
     }
 }

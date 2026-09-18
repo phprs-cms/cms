@@ -8,6 +8,7 @@
  * @var string $zasady
  * @var bool $analytika
  * @var bool $marketing
+ * @var string $evidence  adresa pro zápis souhlasu, prázdná = neevidovat
  */
 ?>
 <div class="cookies-lista" id="cookies-lista" role="dialog" aria-modal="false" aria-labelledby="cookies-nadpis" hidden>
@@ -68,6 +69,13 @@
 		var bylo = precti() || [];
 		document.cookie = 'phprs_souhlas=' + encodeURIComponent(kategorie.join(',') || 'nic') + '; path=/; max-age=' + (180 * 86400) + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
 		lista.hidden = true; znovu.hidden = false;
+		var evidence = <?= json_encode($evidence) ?>;
+		if (evidence) {
+			var id = (document.cookie.match(/(?:^|; )phprs_souhlas_id=([a-f0-9]{32})/) || [])[1];
+			if (!id) { id = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(16)), function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); document.cookie = 'phprs_souhlas_id=' + id + '; path=/; max-age=' + (180 * 86400) + '; SameSite=Lax'; }
+			var data = new FormData(); data.append('id', id); data.append('kategorie', kategorie.join(',') || 'nic');
+			if (navigator.sendBeacon) { navigator.sendBeacon(evidence, data); } else { fetch(evidence, { method: 'POST', body: data }); }
+		}
 		// odvolaný souhlas se projeví po novém načtení stránky (už spuštěný skript nejde zastavit)
 		if (bylo.some(function (k) { return k !== 'nic' && kategorie.indexOf(k) === -1; })) { location.reload(); return; }
 		kategorie.forEach(povol);

@@ -43,13 +43,13 @@ final class Konfigurace extends Modul
         'vzhled' => ['logo_webu' => 'text', 'prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [
             'indexovani' => 'ano', 'schema_org' => 'ano', 'og_obrazek' => 'text', 'overeni_google' => 'vzor:/^[A-Za-z0-9_-]{0,100}$/',
-            'overeni_bing' => 'vzor:/^[A-Za-z0-9]{0,64}$/', 'robots_extra' => 'radky', 'ai_crawlery' => 'vyber:povolit|zakazat', 'llms_txt' => 'ano', 'markdown_clanky' => 'ano',
+            'overeni_bing' => 'vzor:/^[A-Za-z0-9]{0,64}$/', 'robots_extra' => 'radky', 'ai_crawlery' => 'vyber:povolit|zakazat', 'llms_txt' => 'ano', 'markdown_clanky' => 'ano', 'indexnow' => 'ano',
         ],
         'mereni' => [
             'ga4_id' => 'vzor:/^(G-[A-Z0-9]{4,20})?$/', 'matomo_url' => 'url', 'matomo_id' => 'cislo:0:99999',
             'plausible_domena' => 'vzor:/^([a-z0-9.-]{3,100})?$/', 'kod_hlava' => 'kod',
         ],
-        'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod'],
+        'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod', 'cookies_evidence' => 'ano'],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
 
@@ -69,6 +69,7 @@ final class Konfigurace extends Modul
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
             'adresaWebu' => $this->app->request->origin() . $this->app->url(''),
+            'souhlasy' => $zalozka === 'cookies' ? $this->db->all("SELECT kategorie, COUNT(*) AS pocet FROM {souhlasy} WHERE cas > NOW() - INTERVAL 30 DAY GROUP BY kategorie ORDER BY pocet DESC") : [],
         ]);
     }
 
@@ -99,6 +100,9 @@ final class Konfigurace extends Modul
                 $nastaveni->set('rozvrzeni', $layouty[$layout]['rozvrzeni']);
             }
         }
+        if ($zalozka === 'seo' && $nastaveni->bool('indexnow') && $nastaveni->get('indexnow_klic') === '') {
+            $nastaveni->set('indexnow_klic', bin2hex(random_bytes(16)));
+        }
         if ($this->request->postBool('novy_token')) {
             $nastaveni->set('stav_token', bin2hex(random_bytes(16)));
         }
@@ -106,6 +110,29 @@ final class Konfigurace extends Modul
         return $chyby === []
             ? $this->zpet('Nastavení bylo uloženo.', '', ['zalozka' => $zalozka])
             : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', ['zalozka' => $zalozka], 'chyba');
+    }
+
+    /** Zkušební e-mail na adresu redakce - ověří, že server umí odesílat poštu. */
+    protected function akceTestPosty(): Response
+    {
+        $komu = $this->app->settings()->get('email_webu');
+        if (!$this->request->isPost() || $komu === '') {
+            return $this->zpet('Nejprve vyplňte E-mail redakce v záložce Základní.', '', ['zalozka' => 'stav'], 'chyba');
+        }
+        $web = $this->app->settings()->get('nazev_webu');
+        $ok = function_exists('mail') && @mail(
+            $komu,
+            '=?UTF-8?B?' . base64_encode('Zkušební zpráva z ' . $web) . '?=',
+            "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION,
+            "Content-Type: text/plain; charset=utf-8\r\nFrom: {$komu}",
+        );
+
+        return $this->zpet(
+            $ok ? "Zpráva byla předána k odeslání na {$komu}. Pokud nedorazí, zkontrolujte spam a nastavení pošty u hostingu." : 'Server zprávu odmítl odeslat (funkce mail() selhala).',
+            '',
+            ['zalozka' => 'stav'],
+            $ok ? 'ok' : 'chyba',
+        );
     }
 
     private function zalozka(string $zalozka): string

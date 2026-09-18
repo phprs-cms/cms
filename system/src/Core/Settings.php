@@ -40,6 +40,8 @@ final class Settings
         'ai_crawlery' => 'povolit',   // povolit | zakazat (GPTBot, ClaudeBot, PerplexityBot...)
         'llms_txt' => '1',
         'markdown_clanky' => '1',     // /clanek/<adresa>.md
+        'indexnow' => '0',            // po vydání článku oznámit adresu vyhledávačům (Bing, Seznam, Yandex)
+        'indexnow_klic' => '',
         // měření
         'ga4_id' => '',
         'matomo_url' => '',
@@ -52,6 +54,7 @@ final class Settings
         'cookies_text' => 'Používáme cookies k měření návštěvnosti. Pomáhají nám zjistit, co čtenáře zajímá.',
         'cookies_zasady_url' => '',
         'kod_marketing' => '',
+        'cookies_evidence' => '1',    // zapisovat udělené souhlasy (doklad pro případnou kontrolu)
         'stav_token' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];

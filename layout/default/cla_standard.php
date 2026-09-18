@@ -7,7 +7,7 @@
  *   kratky - krátký článek: jen úvod, bez samostatné stránky
  *   cely   - celý článek
  *
- * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link)
+ * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce) a "faq_html"
  * @var string $rezim
  * @var int $poradi  pořadí ve výpisu od nuly (0 = první článek první stránky)
  * @var callable(string): string $url
@@ -32,7 +32,9 @@ $info = function () use ($clanek, $url): string {
 	<img class="clanek-obrazek" src="<?= e($clanek['obrazek']) ?>" alt="">
 <?php endif ?>
 	<div class="perex"><?= $clanek['uvod'] ?></div>
+	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text"><?= $clanek['text'] ?></div>
+	<?= $clanek['faq_html'] ?? '' ?>
 <?php if (!empty($clanek['stitky'])): ?>
 	<p class="clanek-stitky<?= '' ?>"><?php foreach ($clanek['stitky'] as $st): ?><a href="<?= e($url('stitek/' . $st['seo_link'])) ?>" rel="tag">#<?= e($st['nazev']) ?></a> <?php endforeach ?></p>
 <?php endif ?>

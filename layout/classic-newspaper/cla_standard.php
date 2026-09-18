@@ -3,7 +3,7 @@
  * Šablona článku "Standardní" pro layout Classic Newspaper.
  * Režimy: nahled / kratky (výpisy) a cely. První článek titulní strany ($poradi 0) je otvírák.
  *
- * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link)
+ * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce) a "faq_html"
  * @var string $rezim
  * @var int $poradi
  * @var callable(string): string $url
@@ -24,7 +24,9 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 <?php if ($clanek['obrazek'] !== ''): ?>
 	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>" alt=""></figure>
 <?php endif ?>
+	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text"><?= $clanek['text'] ?></div>
+	<?= $clanek['faq_html'] ?? '' ?>
 <?php if (!empty($clanek['stitky'])): ?>
 	<p class="clanek-stitky<?= '' ?>"><?php foreach ($clanek['stitky'] as $st): ?><a href="<?= e($url('stitek/' . $st['seo_link'])) ?>" rel="tag">#<?= e($st['nazev']) ?></a> <?php endforeach ?></p>
 <?php endif ?>

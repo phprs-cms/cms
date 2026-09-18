@@ -93,6 +93,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'shrnuti' => '', 'faq' => '',
         ]);
     }
 
@@ -145,6 +146,11 @@ final class Clanky extends Modul
             'zdroj' => $r->post('zdroj'),
             't_slova' => $r->post('t_slova'),
             'povolit_kom' => (int) $r->postBool('povolit_kom'),
+            'seo_titulek' => mb_substr($r->post('seo_titulek'), 0, 255),
+            'seo_popis' => mb_substr($r->post('seo_popis'), 0, 320),
+            'noindex' => (int) $r->postBool('noindex'),
+            'shrnuti' => $r->post('shrnuti'),
+            'faq' => $r->post('faq'),
             'zmeneno' => date('Y-m-d H:i:s'),
         ];
 
@@ -173,6 +179,10 @@ final class Clanky extends Modul
                 $this->ulozRevizi($puvodni);
             }
             $this->db->update('clanky', $data, ['idc' => $id]);
+            if ($puvodni['seo_link'] !== $data['seo_link'] && $puvodni['visible']) {
+                // vydaný článek změnil adresu: stará se přesměruje, aby odkazy a vyhledávače nepřišly o stránku
+                Presmerovani::pridej($this->db, 'clanek/' . $puvodni['seo_link'], 'clanek/' . $data['seo_link']);
+            }
         } else {
             $id = $this->db->transaction(function () use ($data): int {
                 return $this->db->insert('clanky', $data + ['link' => $this->novyLink($data['datum'])]);
@@ -181,6 +191,9 @@ final class Clanky extends Modul
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
         $this->ulozStitky($id, $r->post('stitky'));
+        if ($data['visible'] && !$data['noindex'] && strtotime($data['datum']) <= time()) {
+            (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $data['seo_link']);
+        }
 
         $hlaska = 'Článek byl uložen.';
         if (!$auth->smiVydavat()) {
@@ -190,6 +203,25 @@ final class Clanky extends Modul
         return $r->post('po_ulozeni') === 'zustat'
             ? $this->zpet($hlaska, 'edit', ['id' => $id])
             : $this->zpet($hlaska);
+    }
+
+    /** Redakční kalendář: články podle data vydání v měsíční mřížce. */
+    protected function akceKalendar(): Response
+    {
+        $mesic = preg_match('/^\d{4}-\d{2}$/', $this->request->get('mesic')) ? $this->request->get('mesic') : date('Y-m');
+        $od = new \DateTimeImmutable($mesic . '-01');
+        $autori = $this->app->auth()->spravovaniAutori();
+        $clanky = $this->db->all(
+            'SELECT idc, titulek, datum, visible FROM {clanky} WHERE datum >= ? AND datum < ?'
+            . ($autori !== null ? ' AND autor IN (' . implode(',', $autori) . ')' : '') . ' ORDER BY datum',
+            [$od->format('Y-m-d'), $od->modify('+1 month')->format('Y-m-d')],
+        );
+        $dny = [];
+        foreach ($clanky as $c) {
+            $dny[(int) date('j', strtotime($c['datum']))][] = $c;
+        }
+
+        return $this->view('kalendar', 'Redakční kalendář', ['od' => $od, 'dny' => $dny]);
     }
 
     /** Vydání konceptu jedním kliknutím z přehledu (dřív modul Redaktor). */

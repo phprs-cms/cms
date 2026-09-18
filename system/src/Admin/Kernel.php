@@ -27,6 +27,7 @@ final class Kernel
         Moduly\Novinky::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,
+        Moduly\Presmerovani::class,
         Moduly\Konfigurace::class,
     ];
 

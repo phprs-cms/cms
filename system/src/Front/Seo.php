@@ -57,11 +57,64 @@ final class Seo
         foreach ($db->all('SELECT seo_link, zmeneno FROM {stranky} WHERE zobrazit = 1') as $r) {
             $xml[] = $url($r['seo_link'], $r['zmeneno'], '0.4');
         }
-        foreach ($db->all('SELECT seo_link, COALESCE(zmeneno, datum) AS zmena FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 45000') as $r) {
+        foreach ($db->all('SELECT seo_link, COALESCE(zmeneno, datum) AS zmena FROM {clanky} WHERE visible = 1 AND noindex = 0 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 45000') as $r) {
             $xml[] = $url('clanek/' . $r['seo_link'], $r['zmena'], '0.8');
         }
 
         return '<?xml version="1.0" encoding="utf-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n" . implode("\n", $xml) . "\n</urlset>\n";
+    }
+
+    /** Google News sitemap: články za poslední dva dny. */
+    public function sitemapNewsXml(): string
+    {
+        $nazev = e($this->app->settings()->get('nazev_webu'));
+        $xml = [];
+        foreach ($this->app->db()->all('SELECT titulek, seo_link, datum FROM {clanky} WHERE visible = 1 AND noindex = 0 AND typ_clanku = 1 AND datum <= NOW() AND datum > NOW() - INTERVAL 2 DAY ORDER BY datum DESC LIMIT 1000') as $c) {
+            $xml[] = '<url><loc>' . e($this->web . 'clanek/' . $c['seo_link']) . '</loc><news:news><news:publication><news:name>' . $nazev . '</news:name><news:language>cs</news:language></news:publication>'
+                . '<news:publication_date>' . date('c', strtotime($c['datum'])) . '</news:publication_date><news:title>' . e($c['titulek']) . '</news:title></news:news></url>';
+        }
+
+        return '<?xml version="1.0" encoding="utf-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">' . "\n" . implode("\n", $xml) . "\n</urlset>\n";
+    }
+
+    /**
+     * JSON Feed 1.1 (https://jsonfeed.org) - moderní obdoba RSS s plným textem.
+     *
+     * @param list<array<string, mixed>> $clanky
+     * @return array<string, mixed>
+     */
+    public function jsonFeed(array $clanky): array
+    {
+        $s = $this->app->settings();
+
+        return [
+            'version' => 'https://jsonfeed.org/version/1.1', 'title' => $s->get('nazev_webu'), 'description' => $s->get('popis_webu'),
+            'home_page_url' => $this->web, 'feed_url' => $this->web . 'feed.json', 'language' => 'cs',
+            'items' => array_map(fn (array $c): array => array_filter([
+                'id' => 'phprs-' . $c['link'], 'url' => $this->web . 'clanek/' . $c['seo_link'], 'title' => $c['titulek'],
+                'summary' => trim(strip_tags($c['uvod'])), 'content_html' => $c['uvod'] . $c['text'],
+                'image' => $c['obrazek'] !== '' ? $this->absolutni($c['obrazek']) : null,
+                'date_published' => date('c', strtotime($c['datum'])), 'date_modified' => $c['zmeneno'] ? date('c', strtotime($c['zmeneno'])) : null,
+                'authors' => $c['autor_jm'] !== null ? [['name' => $c['autor_jm']]] : null, 'tags' => [$c['tema_jm']],
+            ]), $clanky),
+        ];
+    }
+
+    /**
+     * IndexNow: oznámí vyhledávačům (Bing, Seznam, Yandex) novou nebo změněnou adresu.
+     * Volá se po uložení vydaného článku; selhání se ignoruje, web kvůli němu nesmí čekat.
+     */
+    public function indexNow(string $cesta): void
+    {
+        $s = $this->app->settings();
+        $host = (string) parse_url($this->web, PHP_URL_HOST);
+        if (!$s->bool('indexnow') || $s->get('indexnow_klic') === '' || !$s->bool('indexovani') || in_array($host, ['localhost', '127.0.0.1'], true) || str_ends_with($host, '.test')) {
+            return;
+        }
+        $data = json_encode(['host' => $host, 'key' => $s->get('indexnow_klic'), 'keyLocation' => $this->web . $s->get('indexnow_klic') . '.txt', 'urlList' => [$this->web . $cesta]]);
+        @file_get_contents('https://api.indexnow.org/indexnow', false, stream_context_create(['http' => [
+            'method' => 'POST', 'header' => "Content-Type: application/json; charset=utf-8\r\n", 'content' => $data, 'timeout' => 3, 'ignore_errors' => true,
+        ]]));
     }
 
     /** llms.txt - průvodce webem pro jazykové modely (https://llmstxt.org). */
@@ -96,6 +149,11 @@ final class Seo
         $hlava[] = '- Rubrika: ' . $clanek['tema_jm'];
         $hlava[] = '- Zdroj: ' . $this->web . 'clanek/' . $clanek['seo_link'];
 
+        $shrnuti = array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: []));
+        if ($shrnuti !== []) {
+            array_push($hlava, '', '## Ve zkratce', '', ...array_map(fn (string $b): string => '- ' . $b, $shrnuti));
+        }
+
         return implode("\n", $hlava) . "\n\n" . self::htmlNaMarkdown($clanek['uvod']) . "\n\n" . self::htmlNaMarkdown($clanek['text']) . "\n";
     }
 
@@ -114,6 +172,8 @@ final class Seo
         }
         if (!$s->bool('indexovani')) {
             $h[] = '<meta name="robots" content="noindex, nofollow">';
+        } elseif ($clanek !== null && $clanek['noindex']) {
+            $h[] = '<meta name="robots" content="noindex, follow">';
         }
         if ($s->get('overeni_google') !== '') {
             $h[] = '<meta name="google-site-verification" content="' . e($s->get('overeni_google')) . '">';
@@ -163,6 +223,7 @@ final class Seo
             'zasady' => $s->get('cookies_zasady_url'),
             'analytika' => $this->meriSCookies(),
             'marketing' => $marketing !== '',
+            'evidence' => $s->bool('cookies_evidence') ? $this->app->url('souhlas') : '',
         ]);
     }
 
@@ -227,19 +288,48 @@ final class Seo
                 'image' => $clanek['obrazek'] !== '' ? [$this->absolutni($clanek['obrazek'])] : null,
                 'datePublished' => date('c', strtotime($clanek['datum'])),
                 'dateModified' => date('c', strtotime($clanek['zmeneno'] ?? $clanek['datum'])),
-                'author' => $clanek['autor_jm'] !== null ? ['@type' => 'Person', 'name' => $clanek['autor_jm']] : $vydavatel,
+                'author' => $clanek['autor_jm'] !== null ? ['@type' => 'Person', 'name' => $clanek['autor_jm'], 'url' => $this->web . 'autor/' . (int) $clanek['autor']] : $vydavatel,
                 'publisher' => $vydavatel,
                 'articleSection' => $clanek['tema_jm'],
                 'keywords' => implode(', ', array_column($clanek['stitky'] ?? [], 'nazev')) ?: null,
                 'mainEntityOfPage' => $this->web . 'clanek/' . $clanek['seo_link'],
                 'inLanguage' => 'cs',
             ]),
+            ...($this->faqData($clanek)),
             ['@type' => 'BreadcrumbList', 'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => $s->get('nazev_webu'), 'item' => $this->web],
                 ['@type' => 'ListItem', 'position' => 2, 'name' => $clanek['tema_jm'], 'item' => $this->web . 'rubrika/' . $clanek['tema_seo']],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $clanek['titulek']],
             ]],
         ]];
+    }
+
+    /**
+     * Otázky a odpovědi článku: text "otázka \n odpověď \n\n ..." -> dvojice.
+     *
+     * @return list<array{0:string, 1:string}>
+     */
+    public static function faq(?string $text): array
+    {
+        $dvojice = [];
+        foreach (preg_split('/\R\s*\R/', trim((string) $text)) ?: [] as $blok) {
+            $radky = preg_split('/\R/', trim($blok), 2) ?: [];
+            if (count($radky) === 2 && trim($radky[0]) !== '' && trim($radky[1]) !== '') {
+                $dvojice[] = [trim($radky[0]), trim($radky[1])];
+            }
+        }
+
+        return $dvojice;
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function faqData(array $clanek): array
+    {
+        $faq = self::faq($clanek['faq'] ?? '');
+
+        return $faq === [] ? [] : [['@type' => 'FAQPage', 'mainEntity' => array_map(fn (array $d): array => [
+            '@type' => 'Question', 'name' => $d[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $d[1]],
+        ], $faq)]];
     }
 
     private function absolutni(string $adresa): string

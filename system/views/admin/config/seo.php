@@ -8,8 +8,9 @@ $pole('og_obrazek', 'Výchozí obrázek pro sdílení', 'text', 'Použije se na 
 $pole('overeni_google', 'Ověření Google Search Console', 'text', 'Jen hodnota atributu content z meta tagu google-site-verification.', 'maxlength="100"');
 $pole('overeni_bing', 'Ověření Bing Webmaster', 'text', 'Hodnota content z meta tagu msvalidate.01.', 'maxlength="64"');
 $pole('robots_extra', 'Vlastní pravidla robots.txt', 'radky', 'Připojí se na konec souboru. Sitemap a pravidla níže doplňuje systém sám.', 'spellcheck="false"');
+$pole('indexnow', 'Oznamovat nové články (IndexNow)', 'ano', 'Po vydání článku pošle jeho adresu vyhledávačům Bing, Seznam a Yandex, takže ho zaindexují během minut. Google tento protokol nepoužívá.');
 ?>
-<p class="napoveda">Systém generuje: <a href="<?= e($adresaWebu) ?>robots.txt" target="_blank" rel="noopener">robots.txt</a> · <a href="<?= e($adresaWebu) ?>sitemap.xml" target="_blank" rel="noopener">sitemap.xml</a> · <a href="<?= e($adresaWebu) ?>rss.xml" target="_blank" rel="noopener">rss.xml</a>. Adresu sitemapy vložte do Search Console.</p>
+<p class="napoveda">Systém generuje: <a href="<?= e($adresaWebu) ?>robots.txt" target="_blank" rel="noopener">robots.txt</a> · <a href="<?= e($adresaWebu) ?>sitemap.xml" target="_blank" rel="noopener">sitemap.xml</a> · <a href="<?= e($adresaWebu) ?>sitemap-news.xml" target="_blank" rel="noopener">sitemap-news.xml</a> (Google News) · <a href="<?= e($adresaWebu) ?>feed.json" target="_blank" rel="noopener">feed.json</a> · <a href="<?= e($adresaWebu) ?>rss.xml" target="_blank" rel="noopener">rss.xml</a>. Adresu sitemapy vložte do Search Console.</p>
 </fieldset>
 <fieldset>
 <legend>AI vyhledávače a asistenti (GEO)</legend>

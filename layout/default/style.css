@@ -103,3 +103,14 @@ img { max-width: 100%; height: auto; }
 .clanek-stitky { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
 .clanek-stitky a { text-decoration: none; }
 .clanek-stitky a:hover { text-decoration: underline; }
+
+/* blok Ve zkratce a otázky s odpověďmi */
+.ve-zkratce { margin: 24px auto; padding: 16px 20px; border-left: 4px solid currentColor; background: rgb(127 127 127 / 0.08); font-size: 16px; line-height: 1.5; }
+.ve-zkratce h2 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; }
+.ve-zkratce ul { margin: 0; padding-left: 20px; }
+.ve-zkratce li { margin: 4px 0; }
+.faq { margin-top: 36px; }
+.faq h2 { font-size: 22px; }
+.faq details { border-top: 1px solid rgb(127 127 127 / 0.35); padding: 12px 0; }
+.faq summary { font-weight: 700; cursor: pointer; }
+.faq details p { margin: 8px 0 0; }

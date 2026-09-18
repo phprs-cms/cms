@@ -22,6 +22,10 @@ $skupina = '';
 </table>
 </div>
 <fieldset>
+<legend>Pošta</legend>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>">Odeslat zkušební e-mail na adresu redakce</button></p>
+</fieldset>
+<fieldset>
 <legend>Monitoring</legend>
 <?php if ($hodnoty['stav_token'] !== ''): ?>
 <p>Stav ve formátu JSON pro dohledové nástroje (UptimeRobot, Zabbix…):<br><code><?= e($adresaWebu) ?>stav.json?token=<?= e($hodnoty['stav_token']) ?></code></p>

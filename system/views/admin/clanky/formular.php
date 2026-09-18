@@ -139,6 +139,24 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<span class="napoveda">U převzatých textů: odkud pocházejí.</span></div>
 </div>
 <div class="radek">
+	<label for="shrnuti">Ve zkratce</label>
+	<div><textarea class="textbox" id="shrnuti" name="shrnuti" rows="4" style="min-height:80px"><?= e((string) $clanek['shrnuti']) ?></textarea>
+	<span class="napoveda">Tři až pět hlavních sdělení, každé na vlastní řádek. Zobrazí se nad článkem; pomáhá čtenářům i AI vyhledávačům.</span></div>
+</div>
+<div class="radek">
+	<label for="faq">Otázky a odpovědi</label>
+	<div><textarea class="textbox" id="faq" name="faq" rows="5" style="min-height:90px"><?= e((string) $clanek['faq']) ?></textarea>
+	<span class="napoveda">Otázka na jednom řádku, odpověď pod ní, mezi dvojicemi prázdný řádek. Zobrazí se pod článkem a ve strukturovaných datech (FAQ).</span></div>
+</div>
+<div class="radek">
+	<label for="seo_titulek">Titulek pro vyhledávače</label>
+	<div><input class="textpole siroke" type="text" id="seo_titulek" name="seo_titulek" value="<?= e($clanek['seo_titulek']) ?>" maxlength="255" placeholder="prázdné = titulek článku"></div>
+</div>
+<div class="radek">
+	<label for="seo_popis">Popis pro vyhledávače</label>
+	<div><input class="textpole siroke" type="text" id="seo_popis" name="seo_popis" value="<?= e($clanek['seo_popis']) ?>" maxlength="320" placeholder="prázdné = začátek perexu"></div>
+</div>
+<div class="radek">
 	<label for="datum_pl">Stáhnout z hlavní stránky</label>
 	<div><input class="textpole" type="datetime-local" id="datum_pl" name="datum_pl" value="<?= e($dt($clanek['datum_pl'])) ?>">
 	<span class="napoveda">Nepovinné. V rubrice a ve vyhledávání článek zůstane.</span></div>
@@ -147,6 +165,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<span class="popisek">Možnosti</span>
 	<div class="volby">
 		<label><input type="checkbox" name="povolit_kom" value="1"<?= $clanek['povolit_kom'] ? ' checked' : '' ?>> Povolit komentáře</label><br>
+		<label><input type="checkbox" name="noindex" value="1"<?= $clanek['noindex'] ? ' checked' : '' ?>> Skrýt před vyhledávači (noindex)</label><br>
 		<label><input type="checkbox" name="kratky" value="1"<?= (int) $clanek['typ_clanku'] === 2 ? ' checked' : '' ?>> Krátká zpráva – jen perex, bez vlastní stránky</label>
 	</div>
 </div>

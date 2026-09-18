@@ -13,7 +13,7 @@
  */
 $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['strana' => $s]);
 ?>
-<p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>">Nový článek</a></p>
+<p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>">Nový článek</a> <a class="navigace" href="<?= e($modul->url('kalendar')) ?>">Redakční kalendář</a></p>
 
 <nav class="zalozky" aria-label="Stav článků">
 <?php foreach (['' => 'Všechny', 'vydane' => 'Vydané', 'plan' => 'Naplánované', 'koncepty' => 'Koncepty a čekající na vydání'] as $klic => $nazev): ?>

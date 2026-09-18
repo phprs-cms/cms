@@ -10,6 +10,7 @@
  * @var array<string, string> $prostredi
  * @var list<array{skupina:string, nazev:string, stav:string, info:string}> $kontroly
  * @var string $adresaWebu
+ * @var list<array{kategorie:string, pocet:int}> $souhlasy
  */
 use PhpRS\Admin\Moduly\Konfigurace;
 

@@ -12,6 +12,7 @@
 </div>
 <?php
 $pole('cookies_text', 'Text lišty', 'radky');
+$pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Ke každé volbě návštěvníka uloží čas, náhodný identifikátor a zvolené kategorie – bez IP adresy. Slouží jako doklad o souhlasu.');
 $pole('cookies_zasady_url', 'Odkaz na zásady', 'text', 'Adresa stránky se zásadami ochrany soukromí, např. /zasady-ochrany-soukromi (vytvoříte ji v sekci Stránky).', 'maxlength="255"');
 ?>
 </fieldset>
@@ -23,3 +24,13 @@ $pole('cookies_zasady_url', 'Odkaz na zásady', 'text', 'Adresa stránky se zás
 <legend>Marketingové kódy</legend>
 <?php $pole('kod_marketing', 'Kód spouštěný po souhlasu s marketingem', 'kod', 'Meta Pixel, Sklik retargeting, Google Ads apod. Vkládejte celé značky &lt;script&gt;.', 'spellcheck="false"'); ?>
 </fieldset>
+<?php if ($souhlasy !== []): ?>
+<fieldset>
+<legend>Souhlasy za posledních 30 dní</legend>
+<ul>
+<?php foreach ($souhlasy as $r): ?>
+	<li><?= e($r['kategorie'] === 'nic' ? 'jen nezbytné' : $r['kategorie']) ?>: <strong><?= (int) $r['pocet'] ?></strong></li>
+<?php endforeach ?>
+</ul>
+</fieldset>
+<?php endif ?>

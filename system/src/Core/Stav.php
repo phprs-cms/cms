@@ -51,6 +51,7 @@ final class Stav
         $pridej('Bezpečnost', 'Instalátor', !is_file(PHPRS_ROOT . '/install.php') ? 'ok' : 'varovani', is_file(PHPRS_ROOT . '/install.php') ? 'soubor install.php je stále na serveru - smažte ho' : 'install.php je odstraněn');
         $pridej('Bezpečnost', 'HTTPS', $app->request->isHttps() ? 'ok' : 'varovani', $app->request->isHttps() ? 'web běží na šifrovaném spojení' : 'web neběží na HTTPS - přihlašovací údaje putují nešifrovaně');
         $pridej('Bezpečnost', 'Ladicí režim', !$app->debug(), $app->debug() ? 'v config.php je debug = true; na ostrém webu vypněte' : 'vypnutý');
+        $pridej('Bezpečnost', 'Bezpečnostní hlavičky', 'ok', 'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options');
         $slabi = (int) $db->value('SELECT COUNT(*) FROM {user} WHERE blokovat = 1');
         $pridej('Bezpečnost', 'Zablokované účty', $slabi === 0 ? 'ok' : 'varovani', $slabi === 0 ? 'žádné' : "{$slabi} - po opakovaně chybném hesle; odblokujete je v Uživatelích");
 

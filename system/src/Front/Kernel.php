@@ -70,6 +70,30 @@ final class Kernel
         if ($path === '/sitemap.xml') {
             return new Response($seo->sitemapXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
+        if ($path === '/sitemap-news.xml') {
+            return new Response($seo->sitemapNewsXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
+        }
+        if ($path === '/feed.json') {
+            [$clanky] = $this->clanky->naHlavniStranku(1, 20);
+
+            return new Response(json_encode($seo->jsonFeed($clanky), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 200, ['Content-Type' => 'application/feed+json; charset=utf-8']);
+        }
+        $klicIndexNow = $this->app->settings()->get('indexnow_klic');
+        if ($klicIndexNow !== '' && $path === '/' . $klicIndexNow . '.txt') {
+            return new Response($klicIndexNow, 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        if ($path === '/souhlas' && $request->isPost()) {
+            // evidence souhlasu s cookies: bez IP adresy, jen náhodný identifikátor z cookie návštěvníka
+            $kategorie = implode(',', array_intersect(explode(',', $request->post('kategorie')), ['analytika', 'marketing'])) ?: 'nic';
+            if ($this->app->settings()->bool('cookies_evidence') && preg_match('/^[a-f0-9]{32}$/', $request->post('id'))) {
+                $this->app->db()->insert('souhlasy', ['id_souhlasu' => $request->post('id'), 'cas' => date('Y-m-d H:i:s'), 'kategorie' => $kategorie]);
+            }
+
+            return new Response('', 204);
+        }
+        if (preg_match('#^/autor/(\d+)$#', $path, $m)) {
+            return $this->autor((int) $m[1]);
+        }
         if ($path === '/llms.txt' && $this->app->settings()->bool('llms_txt')) {
             return new Response($seo->llmsTxt(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
@@ -104,6 +128,19 @@ final class Kernel
         }
 
         return $this->nenalezeno();
+    }
+
+    private function autor(int $idu): Response
+    {
+        $autor = $this->app->db()->one("SELECT idu, IF(jmeno = '', user, jmeno) AS jmeno, url FROM {user} WHERE idu = ? AND blokovat = 0", [$idu]);
+        if ($autor === null) {
+            return $this->nenalezeno();
+        }
+        $strana = max(1, $this->app->request->getInt('strana', 1));
+        [$clanky, $celkem] = $this->clanky->odAutora($idu, $strana);
+        $hlavicka = ['nazev' => $autor['jmeno'], 'popis' => $autor['url'] !== '' ? '<p><a href="' . e($autor['url']) . '" rel="me noopener">' . e($autor['url']) . '</a></p>' : ''];
+
+        return $this->stranka($autor['jmeno'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'autor/' . $idu)), ['popis' => 'Články autora ' . $autor['jmeno']]);
     }
 
     private function stitek(string $seo): Response
@@ -181,6 +218,9 @@ final class Kernel
             $this->app->db()->run('UPDATE {clanky} SET visit = visit + 1 WHERE idc = ?', [$clanek['idc']]);
         }
 
+        $casti = new View([PHPRS_SYSTEM . '/views/front']);
+        $clanek['shrnuti_html'] = $casti->render('shrnuti', ['body' => array_values(array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: [])))]);
+        $clanek['faq_html'] = $casti->render('faq', ['faq' => Seo::faq($clanek['faq'])]);
         $clanek['stitky'] = $this->app->db()->all('SELECT s.nazev, s.seo_link FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [$clanek['idc']]);
 
         $obsah = $this->view->render($this->sablonaClanku($clanek), [
@@ -191,9 +231,9 @@ final class Kernel
             'souvisejici' => $this->clanky->zeSkupiny($clanek),
         ]);
 
-        return $this->stranka($clanek['titulek'], $obsah, [
+        return $this->stranka($clanek['seo_titulek'] !== '' ? $clanek['seo_titulek'] : $clanek['titulek'], $obsah, [
             'clanek' => $clanek,
-            'popis' => mb_strimwidth(trim(strip_tags($clanek['uvod'])), 0, 300, '…'),
+            'popis' => $clanek['seo_popis'] !== '' ? $clanek['seo_popis'] : mb_strimwidth(trim(strip_tags($clanek['uvod'])), 0, 300, '…'),
             'klicova_slova' => $clanek['t_slova'],
             'obrazek' => $clanek['obrazek'],
             'typ' => 'article',
@@ -227,6 +267,14 @@ final class Kernel
 
     private function nenalezeno(): Response
     {
+        // než web odpoví 404, zkusí přesměrování ze staré adresy (ruční i po změně adresy článku)
+        $cil = $this->app->db()->one('SELECT * FROM {presmerovani} WHERE z_adresy = ?', [trim($this->app->request->path(), '/')]);
+        if ($cil !== null) {
+            $this->app->db()->run('UPDATE {presmerovani} SET pocet = pocet + 1 WHERE idp = ?', [$cil['idp']]);
+
+            return Response::redirect(preg_match('#^https?://#i', $cil['na_adresu']) ? $cil['na_adresu'] : $this->app->url($cil['na_adresu']), 301);
+        }
+
         return $this->stranka('Stránka nenalezena', $this->view->render('nenalezeno', ['url' => $this->app->url(...)]), ['noindex' => true], 404);
     }
 

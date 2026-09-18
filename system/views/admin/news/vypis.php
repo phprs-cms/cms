@@ -32,7 +32,7 @@
 
 <?php if ($novinky !== []): ?>
 <h3 class="stred">Výpis novinek</h3>
-<form method="post" action="<?= e($modul->url('smaz')) ?>" onsubmit="return confirm('Opravdu vymazat všechny označené novinky?');">
+<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Opravdu vymazat všechny označené novinky?">
 <?= $csrf ?>
 <div class="tab-obal">
 <table class="vypis">

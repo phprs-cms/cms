@@ -27,7 +27,7 @@ final class Ucet
 
         if ($r->isPost()) {
             $hlaska = null;
-            switch ($r->post('co')) {
+            switch ($r->postInt('smaz_token') > 0 ? 'token_smaz' : $r->post('co')) {
                 case 'profil':
                     if ($r->post('email') !== '' && filter_var($r->post('email'), FILTER_VALIDATE_EMAIL) === false) {
                         $hlaska = ['chyba', 'E-mail nemá platný tvar.'];
@@ -59,7 +59,7 @@ final class Ucet
                     // token se ukazuje jen teď - proto bez přesměrování
                     return $this->stranka(['novyToken' => $token] + $data);
                 case 'token_smaz':
-                    $db->delete('api_tokeny', ['idt' => $r->postInt('idt'), 'idu' => $user['idu']]);
+                    $db->delete('api_tokeny', ['idt' => $r->postInt('smaz_token'), 'idu' => $user['idu']]);
                     $hlaska = ['ok', 'Token byl zrušen.'];
                     break;
                 case 'totp_start':

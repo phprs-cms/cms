@@ -14,7 +14,7 @@
 <?php if ($aktualizace['nova']['zmeny'] !== []): ?>
 	<ul><?php foreach ($aktualizace['nova']['zmeny'] as $zmena): ?><li><?= e($zmena) ?></li><?php endforeach ?></ul>
 <?php endif ?>
-	<p><button class="tl" type="submit" formaction="<?= e($modul->url('aktualizuj')) ?>" onclick="return confirm('Aktualizovat systém? Nejprve se vytvoří záloha databáze. Web bude několik vteřin nedostupný.');">Aktualizovat na <?= e($aktualizace['nova']['verze']) ?></button></p>
+	<p><button class="tl" type="submit" formaction="<?= e($modul->url('aktualizuj')) ?>" data-potvrdit="Aktualizovat systém? Nejprve se vytvoří záloha databáze. Web bude několik vteřin nedostupný.">Aktualizovat na <?= e($aktualizace['nova']['verze']) ?></button></p>
 </div>
 <p class="napoveda">Před aktualizací se zazálohuje databáze. Balíček se přijme jen s platným podpisem vydavatele. Nepřepisuje se config.php, nahraná média ani vlastní šablony webu.</p>
 <?php else: ?>
@@ -41,7 +41,7 @@
 	<td><?= e($z['soubor']) ?></td>
 	<td class="cislo"><?= e(date('j. n. Y H:i', $z['cas'])) ?></td>
 	<td class="cislo"><?= number_format($z['velikost'] / 1024, 0, ',', ' ') ?> kB</td>
-	<td class="akce"><a href="<?= e($modul->url('stahni_zalohu', ['soubor' => $z['soubor']])) ?>">Stáhnout</a> · <button class="navigace" type="submit" formaction="<?= e($modul->url('smaz_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" onclick="return confirm('Smazat zálohu?');">Smaž</button></td>
+	<td class="akce"><a href="<?= e($modul->url('stahni_zalohu', ['soubor' => $z['soubor']])) ?>">Stáhnout</a> · <button class="navigace" type="submit" formaction="<?= e($modul->url('smaz_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="Smazat zálohu?">Smaž</button></td>
 </tr>
 <?php endforeach ?>
 </tbody>

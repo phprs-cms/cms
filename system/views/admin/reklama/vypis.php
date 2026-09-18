@@ -27,7 +27,7 @@ use PhpRS\Admin\Moduly\Reklama;
 	<td class="cislo"><?= $r['typ'] === 'kod' || $r['zobrazeni'] == 0 ? '–' : number_format($r['kliky'] / $r['zobrazeni'] * 100, 2, ',', ' ') . ' %' ?></td>
 	<td><span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= $bezi ? 'běží' : 'neběží' ?></span></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $r['idr']])) ?>">Upravit</a> ·
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" onsubmit="return confirm('Opravdu smazat reklamu i s jejími počty?');"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
+		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="Opravdu smazat reklamu i s jejími počty?"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>

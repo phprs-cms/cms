@@ -24,7 +24,7 @@ $zona = function (string $klic) use ($bloky, $modul, $csrf): void {
 					<button type="button" class="navigace" data-posun="-1" title="Posunout výš" aria-label="Posunout blok <?= e($b['nazev']) ?> výš">↑</button>
 					<button type="button" class="navigace" data-posun="1" title="Posunout níž" aria-label="Posunout blok <?= e($b['nazev']) ?> níž">↓</button>
 					<a href="<?= e($modul->url('edit', ['id' => $b['idb']])) ?>">Upravit</a>
-					<form method="post" action="<?= e($modul->url('smaz')) ?>" onsubmit="return confirm('Opravdu smazat blok?');"><?= $csrf ?><input type="hidden" name="idb" value="<?= (int) $b['idb'] ?>"><button class="navigace" type="submit">Smaž</button></form>
+					<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Opravdu smazat blok?"><?= $csrf ?><input type="hidden" name="idb" value="<?= (int) $b['idb'] ?>"><button class="navigace" type="submit">Smaž</button></form>
 				</span>
 			</article>
 <?php endforeach ?>

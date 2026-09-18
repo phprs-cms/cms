@@ -24,7 +24,7 @@
 	<td><?php if ((int) $a['ida'] === $aktivni): ?><span class="stitek stitek-vydano">na webu</span> <?php endif ?><?php if ($a['uzavrena']): ?><span class="stitek">uzavřená</span><?php endif ?></td>
 	<td class="cislo"><?= e(datum($a['datum'])) ?></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $a['ida']])) ?>">Upravit</a> ·
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" onsubmit="return confirm('Opravdu smazat anketu i s hlasy?');"><?= $csrf ?><input type="hidden" name="ida" value="<?= (int) $a['ida'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
+		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="Opravdu smazat anketu i s hlasy?"><?= $csrf ?><input type="hidden" name="ida" value="<?= (int) $a['ida'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>

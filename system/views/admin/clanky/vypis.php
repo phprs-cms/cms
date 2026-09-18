@@ -42,7 +42,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <p class="stred">Žádné články.</p>
 <?php else: ?>
 <form method="post" id="vydat" action="<?= e($modul->url('vydat')) ?>"><?= $csrf ?></form>
-<form method="post" action="<?= e($modul->url('smaz')) ?>" onsubmit="return confirm('Opravdu vymazat všechny označené články?');">
+<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Opravdu vymazat všechny označené články?">
 <?= $csrf ?>
 <div class="tab-obal">
 <table class="vypis">

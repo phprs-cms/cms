@@ -21,7 +21,7 @@
 	<td><span class="stitek stitek-<?= $s['zobrazit'] ? 'vydano' : 'koncept' ?>"><?= $s['zobrazit'] ? 'zveřejněná' : 'skrytá' ?></span></td>
 	<td><?= $s['v_menu'] ? 'Ano' : 'Ne' ?></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $s['ids']])) ?>">Upravit</a> ·
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" onsubmit="return confirm('Opravdu smazat stránku?');"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
+		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="Opravdu smazat stránku?"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace" type="submit">Smaž</button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>

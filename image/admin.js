@@ -3,6 +3,32 @@
 (function () {
 	'use strict';
 
+	// Potvrzení nevratných akcí: data-potvrdit="text" na formuláři nebo tlačítku.
+	// Vlastní dialog místo window.confirm(), který vestavěné prohlížeče (např. v aplikacích) potichu potlačují.
+	var dialogPotvrzeni = null;
+	document.addEventListener('submit', function (e) {
+		var form = e.target, tlacitko = e.submitter;
+		var text = (tlacitko && tlacitko.getAttribute('data-potvrdit')) || form.getAttribute('data-potvrdit');
+		if (!text || form.potvrzeno) { return; }
+		e.preventDefault();
+		if (!dialogPotvrzeni) {
+			dialogPotvrzeni = document.createElement('dialog');
+			dialogPotvrzeni.className = 'potvrzeni';
+			dialogPotvrzeni.innerHTML = '<p></p><div><button type="button" class="tl" data-ano>Ano, provést</button> <button type="button" class="navigace" data-ne>Zrušit</button></div>';
+			document.body.appendChild(dialogPotvrzeni);
+			dialogPotvrzeni.querySelector('[data-ne]').addEventListener('click', function () { dialogPotvrzeni.close(); });
+		}
+		dialogPotvrzeni.querySelector('p').textContent = text;
+		dialogPotvrzeni.querySelector('[data-ano]').onclick = function () {
+			dialogPotvrzeni.close();
+			form.potvrzeno = true;
+			if (form.requestSubmit) { form.requestSubmit(tlacitko || undefined); } else { form.submit(); }
+			form.potvrzeno = false;
+		};
+		dialogPotvrzeni.showModal();
+		dialogPotvrzeni.querySelector('[data-ne]').focus();
+	});
+
 	// Prostředí 2026: světlý / tmavý režim (výchozí podle systému, volba se pamatuje v prohlížeči)
 	var temaTl = document.querySelector('[data-tema-prepinac]');
 	if (temaTl) {

@@ -47,7 +47,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <div class="media-slozka-uprava">
 	<form method="post" action="<?= e($modul->url('slozka')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><input class="textpole" type="text" name="nazev" value="<?= e($aktivniSlozka['nazev']) ?>" maxlength="100" required aria-label="Název složky"> <button class="navigace" type="submit">Přejmenovat</button></form>
 <?php if ($app->auth()->isAdmin()): ?>
-	<form method="post" action="<?= e($modul->url('slozka_smaz')) ?>" onsubmit="return confirm('Smazat složku? Obrázky v ní zůstanou a přejdou mezi nezařazené.');"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><button class="navigace" type="submit">Smazat složku</button></form>
+	<form method="post" action="<?= e($modul->url('slozka_smaz')) ?>" data-potvrdit="Smazat složku? Obrázky v ní zůstanou a přejdou mezi nezařazené."><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><button class="navigace" type="submit">Smazat složku</button></form>
 <?php endif ?>
 </div>
 <?php endif ?>
@@ -87,7 +87,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <?php endforeach ?>
 	</select>
 	<button class="navigace" type="submit" name="provest" value="presun">Přesunout do složky</button>
-	<button class="navigace" type="submit" name="provest" value="smaz" onclick="return confirm('Opravdu smazat označené obrázky? Z článků, kde jsou použité, zmizí.');">Smazat</button>
+	<button class="navigace" type="submit" name="provest" value="smaz" data-potvrdit="Opravdu smazat označené obrázky? Z článků, kde jsou použité, zmizí.">Smazat</button>
 </p>
 </form>
 

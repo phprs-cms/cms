@@ -40,7 +40,7 @@
 <p class="media-hromadne">S označenými:
 	<button class="tl" type="submit" name="provest" value="schvalit">Schválit</button>
 	<button class="navigace" type="submit" name="provest" value="skryt">Skrýt</button>
-	<button class="navigace" type="submit" name="provest" value="smazat" onclick="return confirm('Opravdu smazat označené komentáře? Smažou se i reakce na ně.');">Smazat</button>
+	<button class="navigace" type="submit" name="provest" value="smazat" data-potvrdit="Opravdu smazat označené komentáře? Smažou se i reakce na ně.">Smazat</button>
 </p>
 </form>
 <?php if ($stran > 1): ?>

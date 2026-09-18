@@ -22,7 +22,7 @@
 	<td class="stred"><?= $r['zobrazit'] ? 'Ano' : '<strong>Ne</strong>' ?></td>
 	<td class="akce">
 		<a href="<?= e($modul->url('edit', ['id' => $r['idt']])) ?>">Upravit</a> ·
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" onsubmit="return confirm('Opravdu smazat rubriku?');"><?= $csrf ?><input type="hidden" name="idt" value="<?= (int) $r['idt'] ?>"><button class="navigace" type="submit">Smaž</button></form>
+		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="Opravdu smazat rubriku?"><?= $csrf ?><input type="hidden" name="idt" value="<?= (int) $r['idt'] ?>"><button class="navigace" type="submit">Smaž</button></form>
 	</td>
 </tr>
 <?php endforeach ?>

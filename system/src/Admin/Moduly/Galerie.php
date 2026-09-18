@@ -17,6 +17,9 @@ final class Galerie extends Modul
 {
     public const string IDENT = 'intergal';
     public const string NAZEV = 'Média';
+    public const string NAZEV_RETRO = 'Galerie obrázků';
+    public const string SKUPINA = 'Obsah';
+    public const string IKONA = 'media';
 
     /** Nahrávat musí umět každý, kdo píše články; cizí obrázky ale mění a maže jen admin. */
     public const bool PRO_VSECHNY = true;

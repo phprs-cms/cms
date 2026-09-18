@@ -163,3 +163,8 @@ img { display: block; max-width: 100%; height: auto; }
 .clanek-text .obrazek-vpravo { float: right; max-width: 45%; margin: 0.4em 0 1em 1.4em; }
 .clanek-text hr { clear: both; border: 0; border-top: 1px solid var(--linka); margin: 2em 0; }
 .clanek-text iframe { max-width: 100%; }
+
+/* logo z Nastavení a odkazy v patičce */
+.logo-obrazek { display: inline-block; max-height: 34px; width: auto; vertical-align: middle; }
+.zapati a, .paticka a { margin-right: 12px; }
+.zapati span, .paticka .obal > span { margin-right: 12px; }

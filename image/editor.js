@@ -19,6 +19,7 @@
 
 	var POVOLENE = { P: [], H2: [], H3: [], H4: [], STRONG: [], EM: [], B: [], I: [], U: [], S: [], SUB: [], SUP: [], BR: [], HR: [],
 		A: ['href', 'title', 'target', 'rel'], UL: [], OL: [], LI: [], BLOCKQUOTE: [], CODE: [], PRE: [],
+		OBRAZEK: ['id', 'zarovnani', 'nahled'], // značka galerie z phpRS 2 - v editoru se ukazuje jako zástupný rámeček
 		FIGURE: ['class'], FIGCAPTION: [], IMG: ['src', 'alt', 'width', 'height', 'loading', 'data-id'],
 		TABLE: [], THEAD: [], TBODY: [], TR: [], TH: ['colspan', 'rowspan'], TD: ['colspan', 'rowspan'], IFRAME: ['src', 'width', 'height', 'allowfullscreen', 'title'] };
 	var PREVOD = { DIV: 'P', H1: 'H2', H5: 'H4', H6: 'H4' };
@@ -83,7 +84,7 @@
 		if (!okno) {
 			okno = document.createElement('dialog');
 			okno.className = 'galerie-okno';
-			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>Galerie obrázků</strong>'
+			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>Média</strong>'
 				+ '<label class="tl">Nahrát nový<input type="file" accept="image/*" multiple hidden></label>'
 				+ '<button type="button" class="navigace" data-zavri>Zavřít</button></div>'
 				+ '<div class="galerie-okno-filtr"><select aria-label="Složka"></select></div>'
@@ -309,7 +310,7 @@
 		var tl = document.createElement('button');
 		tl.type = 'button';
 		tl.className = 'navigace';
-		tl.textContent = 'Vybrat z galerie';
+		tl.textContent = 'Vybrat z médií';
 		var nahled = document.createElement('img');
 		nahled.className = 'obrazek-nahled';
 		nahled.alt = '';

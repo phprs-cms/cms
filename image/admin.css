@@ -147,7 +147,12 @@ h3 {
 /* prvky pouzivane jen prostredim 2026 */
 
 .znacka,
-.menu-prepinac {
+.menu-prepinac,
+.menu-skupina,
+.menu-prehled,
+.menu .ikona,
+.tema-prepinac,
+.avatar {
 	display: none;
 }
 

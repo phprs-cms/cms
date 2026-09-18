@@ -11,7 +11,7 @@
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
 <?= $csrf ?>
 <fieldset>
-<legend>Konfigurace základního nastavení</legend>
+<legend>Web</legend>
 <div class="radek">
 	<label for="nazev_webu">Název webu</label>
 	<input class="textpole siroke" type="text" id="nazev_webu" name="nazev_webu" value="<?= e($hodnoty['nazev_webu']) ?>" maxlength="150" required>
@@ -29,6 +29,29 @@
 	<label for="email_webu">E-mail redakce</label>
 	<input class="textpole siroke" type="email" id="email_webu" name="email_webu" value="<?= e($hodnoty['email_webu']) ?>" maxlength="190">
 </div>
+<div class="radek">
+	<label for="logo_webu">Logo</label>
+	<div><input class="textpole siroke" type="text" id="logo_webu" name="logo_webu" value="<?= e($hodnoty['logo_webu']) ?>" maxlength="255" placeholder="nepovinné – jinak se v záhlaví zobrazí název webu" data-obrazek></div>
+</div>
+<div class="radek">
+	<label for="text_paticky">Text v patičce</label>
+	<input class="textpole siroke" type="text" id="text_paticky" name="text_paticky" value="<?= e($hodnoty['text_paticky']) ?>" maxlength="300" placeholder="např. vydavatel, ISSN, kontakt">
+</div>
+</fieldset>
+
+<fieldset>
+<legend>Sociální sítě</legend>
+<?php foreach (PhpRS\Admin\Moduly\Konfigurace::SITE as $klic => $nazev): ?>
+<div class="radek">
+	<label for="<?= e($klic) ?>"><?= e($nazev) ?></label>
+	<input class="textpole siroke" type="url" id="<?= e($klic) ?>" name="<?= e($klic) ?>" value="<?= e($hodnoty[$klic]) ?>" maxlength="255" placeholder="https://">
+</div>
+<?php endforeach ?>
+<p class="napoveda">Vyplněné profily se zobrazí v patičce webu a ve strukturovaných datech pro vyhledávače.</p>
+</fieldset>
+
+<fieldset>
+<legend>Vzhled</legend>
 <div class="radek">
 	<label for="layout">Šablona webu (layout)</label>
 	<div><select id="layout" name="layout">
@@ -50,7 +73,7 @@
 </fieldset>
 
 <fieldset>
-<legend>Hlavní stránka</legend>
+<legend>Obsah</legend>
 <div class="radek">
 	<label for="pocet_clanku">Počet článků na stránku</label>
 	<input class="textpole" type="number" id="pocet_clanku" name="pocet_clanku" value="<?= (int) $hodnoty['pocet_clanku'] ?>" min="1" max="100" style="width:70px">

@@ -3,6 +3,17 @@
 (function () {
 	'use strict';
 
+	// Prostředí 2026: světlý / tmavý režim (výchozí podle systému, volba se pamatuje v prohlížeči)
+	var temaTl = document.querySelector('[data-tema-prepinac]');
+	if (temaTl) {
+		temaTl.addEventListener('click', function () {
+			var koren = document.documentElement;
+			var tmavy = koren.getAttribute('data-tema') ? koren.getAttribute('data-tema') === 'tmavy' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+			koren.setAttribute('data-tema', tmavy ? 'svetly' : 'tmavy');
+			try { localStorage.setItem('phprs3-tema', tmavy ? 'svetly' : 'tmavy'); } catch (e) { /* nic */ }
+		});
+	}
+
 	// Prostředí 2026: rozbalení menu na mobilu
 	var prepinac = document.querySelector('.menu-prepinac');
 	if (prepinac) {

@@ -23,6 +23,15 @@ abstract class Modul
     /** Titulek v menu. */
     public const string NAZEV = '';
 
+    /** Titulek v menu retro prostředí - původní název modulu z phpRS 2. */
+    public const string NAZEV_RETRO = '';
+
+    /** Skupina v menu: Obsah | Vzhled | Správa. */
+    public const string SKUPINA = 'Obsah';
+
+    /** Ikona v menu (klíč do sady ve views/admin/ikony.php). */
+    public const string IKONA = 'clanek';
+
     /** Modul vidí jen admin (autoři, konfigurace...). */
     public const bool JEN_ADMIN = false;
 

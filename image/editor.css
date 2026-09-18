@@ -20,6 +20,8 @@
 .editor-plocha img { max-width: 100%; height: auto; }
 .editor-plocha figcaption { font: 13px/1.4 system-ui, sans-serif; color: var(--ed-text-slaby); }
 .editor-plocha a { color: var(--ed-akcent); }
+.editor-plocha obrazek { display: block; margin: 1em 0; padding: 14px; border: 1px dashed var(--ed-linka); background: var(--ed-lista); font: 13px/1.4 system-ui, sans-serif; color: var(--ed-text-slaby); text-align: center; }
+.editor-plocha obrazek::before { content: "Obrázek z médií č. " attr(id) " (značka phpRS)"; }
 .editor-pole { display: none; width: 100%; min-height: 380px; border: 0 !important; border-radius: 0 !important; font: 13px/1.5 ui-monospace, Menlo, Consolas, "Courier New", monospace !important; resize: vertical; }
 .editor-zdroj .editor-pole { display: block; }
 .editor-zdroj .editor-plocha { display: none; }
@@ -108,3 +110,13 @@ button.galerie-polozka:hover, button.galerie-polozka:focus-visible { border-colo
 @media (max-width: 760px) {
 	.media { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- společné drobnosti: štítky stavu, rozbalovací "Další nastavení", titulek článku ---------- */
+
+.stitek { display: inline-block; padding: 1px 8px; border: 1px solid var(--ed-linka); border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--ed-text-slaby); }
+.stitek-vydano { border-color: #1A7F4B; color: #1A7F4B; }
+.stitek-plan { border-color: var(--ed-akcent); color: var(--ed-akcent); }
+.stitek-koncept { border-color: #B26A00; color: #B26A00; }
+.pokrocile { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--ed-linka); }
+.pokrocile summary { margin-bottom: 14px; font-weight: bold; cursor: pointer; }
+.titulek-pole { font-size: 20px !important; font-weight: 700; padding: 8px 10px !important; }

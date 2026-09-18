@@ -46,7 +46,7 @@ $nazevWebu = $web->get('nazev_webu');
 <body>
 <header class="zahlavi">
 	<div class="obal">
-		<a class="nazev-webu" href="<?= e($url('')) ?>"><?= e($nazevWebu) ?></a>
+		<a class="nazev-webu" href="<?= e($url('')) ?>"><?php if ($web->get('logo_webu') !== ''): ?><img class="logo-obrazek" src="<?= e((preg_match('#^(https?:)?/#', $web->get('logo_webu')) ? '' : $url('')) . $web->get('logo_webu')) ?>" alt="<?= e($nazevWebu) ?>"><?php else: ?><?= e($nazevWebu) ?><?php endif ?></a>
 <?php if ($web->get('popis_webu') !== ''): ?>
 		<p class="motto"><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
@@ -75,8 +75,15 @@ $nazevWebu = $web->get('nazev_webu');
 <?php if ($zony['paticka'] !== ''): ?>
 <div class="zona-paticka-obal"><div class="obal zona zona-paticka"><?= $zony['paticka'] ?></div></div>
 <?php endif ?>
+<?php
+$site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $web->get('soc_instagram'), 'X' => $web->get('soc_x'), 'YouTube' => $web->get('soc_youtube'), 'LinkedIn' => $web->get('soc_linkedin')]);
+?>
 <footer class="zapati">
 	<div class="obal">
+		<?php if ($web->get('text_paticky') !== ''): ?><span><?= e($web->get('text_paticky')) ?></span><?php endif ?>
+<?php foreach ($site as $sit => $adresa): ?>
+		<a href="<?= e($adresa) ?>" rel="me noopener" target="_blank"><?= e($sit) ?></a>
+<?php endforeach ?>
 		&copy; <?= date('Y') ?> <?= e($nazevWebu) ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3
 	</div>
 </footer>

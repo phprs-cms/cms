@@ -14,8 +14,13 @@ use PhpRS\Core\Settings;
 final class Konfigurace extends Modul
 {
     public const string IDENT = 'config';
-    public const string NAZEV = 'Konfigurace';
+    public const string NAZEV = 'Nastavení';
+    public const string NAZEV_RETRO = 'Konfigurace';
+    public const string SKUPINA = 'Správa';
+    public const string IKONA = 'nastaveni';
     public const bool JEN_ADMIN = true;
+
+    public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
 
     private const array ZASKRTAVACI = ['hlidat_platnost', 'povolit_komentare'];
 
@@ -26,7 +31,7 @@ final class Konfigurace extends Modul
             $hodnoty[$klic] = $this->app->settings()->get($klic);
         }
 
-        return $this->view('vypis', 'Konfigurace systému', [
+        return $this->view('vypis', 'Nastavení', [
             'hodnoty' => $hodnoty,
             'layouty' => \PhpRS\Front\Layouty::seznam(),
             'prostredi' => \PhpRS\Admin\Kernel::PROSTREDI,
@@ -42,8 +47,13 @@ final class Konfigurace extends Modul
         $r = $this->request;
         $nastaveni = $this->app->settings();
 
-        foreach (['nazev_webu', 'popis_webu', 'klicova_slova', 'email_webu'] as $klic) {
+        foreach (['nazev_webu', 'popis_webu', 'klicova_slova', 'email_webu', 'logo_webu', 'text_paticky'] as $klic) {
             $nastaveni->set($klic, $r->post($klic));
+        }
+        foreach (self::SITE as $klic => $nazev) {
+            // jen platné adresy http(s), jinak prázdné
+            $adresa = $r->post($klic);
+            $nastaveni->set($klic, preg_match('#^https?://#i', $adresa) && filter_var($adresa, FILTER_VALIDATE_URL) ? $adresa : '');
         }
         foreach (self::ZASKRTAVACI as $klic) {
             $nastaveni->set($klic, $r->postBool($klic) ? '1' : '0');

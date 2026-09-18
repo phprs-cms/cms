@@ -14,7 +14,10 @@ use PhpRS\Core\Response;
 final class Rubriky extends Modul
 {
     public const string IDENT = 'topic';
-    public const string NAZEV = 'Úprava rubrik';
+    public const string NAZEV = 'Rubriky';
+    public const string NAZEV_RETRO = 'Úprava rubrik';
+    public const string SKUPINA = 'Obsah';
+    public const string IKONA = 'rubriky';
 
     /**
      * Rubriky seřazené do stromu (do hloubky), každá s klíčem "uroven" (0 = hlavní rubrika).
@@ -46,7 +49,7 @@ final class Rubriky extends Modul
 
     protected function akceVypis(): Response
     {
-        return $this->view('vypis', 'Úprava rubrik', ['rubriky' => self::strom($this->db)]);
+        return $this->view('vypis', 'Rubriky', ['rubriky' => self::strom($this->db)]);
     }
 
     protected function akceNovy(): Response
@@ -126,7 +129,7 @@ final class Rubriky extends Modul
      */
     private function formular(array $rubrika, array $chyby = []): Response
     {
-        return $this->view('formular', $rubrika['idt'] ? 'Úprava rubriky' : 'Přidání nové rubriky', [
+        return $this->view('formular', $rubrika['idt'] ? 'Úprava rubriky' : 'Nová rubrika', [
             'rubrika' => $rubrika,
             'chyby' => $chyby,
             'rubriky' => self::strom($this->db),

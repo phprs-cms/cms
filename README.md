@@ -79,15 +79,20 @@ RSS, přesměrování starých adres phpRS 2.
 
 Plán (pořadí = priorita; stav k 18. 9. 2026):
 
-- **M2 – moderní tvorba článků:** ~~nahrávání obrázků a Galerie obrázků, WYSIWYG editor s automatickým
-  ukládáním rozepsaného textu, značka `<obrazek id="…">`~~ (hotovo), dále dvousloupcový editor
-  (text + nastavení), plánovač a modul Redaktor (vydavatelská nástěnka: čeká na vydání / naplánováno),
+- **M2 – moderní tvorba článků:** ~~nahrávání obrázků, Média se složkami a vazbou na články, WYSIWYG editor
+  s automatickým ukládáním, značka `<obrazek id="…">`, dvousloupcový editor (text + nastavení), stavy
+  koncept / naplánováno / vydáno, připnutí~~ (hotovo), dále modul Redaktor (vydavatelská nástěnka: čeká na vydání / naplánováno),
   skupiny souvisejících článků (seriály), štítky, revize článku (historie verzí), Stránkové aliasy
   a statické stránky (O nás, Kontakt).
 - **M3 – čtenáři a měření:** Komentáře (moderace, antispam bez cookies, honeypot + časový zámek),
   Ankety, hodnocení článků, vlastní Statistika bez cookies (návštěvy, nejčtenější, zdroje) + volitelné
   napojení Google Analytics 4 / Matomo / Plausible s ohledem na souhlas (consent mode, cookie lišta).
-- **M3b – Konfigurace s podzáložkami:** Základní · Vzhled · **SEO/GEO** · Měření · Pošta · **Stav systému**.
+- **M3b – Nastavení s podzáložkami:** Základní · Vzhled · **SEO/GEO** · Měření · **Soukromí a cookies** · Pošta · **Stav systému**.
+  - *Soukromí a cookies:* buď externí řešení (Cookiebot, CookieYes, Usercentrics – stačí vložit ID/skript a
+    systém mu přizpůsobí načítání měřicích kódů), nebo vestavěná jednoduchá lišta: kategorie nezbytné /
+    analytické / marketingové, texty a odkaz na zásady z administrace, Google Consent Mode v2, skripty se
+    spouštějí až po souhlasu, evidence souhlasů, odkaz „Nastavení cookies" v patičce. Bez měřicích a
+    reklamních kódů se lišta nezobrazuje vůbec.
   - *SEO:* robots.txt z administrace, přepínač indexování (noindex pro celý web / rubriku / článek),
     XML sitemap + Google News sitemap, kanonické adresy, Open Graph / Twitter Cards, strukturovaná data
     schema.org (`NewsArticle`, `BreadcrumbList`, `Organization`, `Person` u autorů), vlastní titulek a
@@ -107,7 +112,8 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   kampaně, počítání zobrazení a prokliků, plánování, ads.txt), Download sekce (nízká priorita), levely a
   registrace čtenářů, Záloha DB, Správa modulů, slovenština a angličtina administrace.
   Weblinky se nepřebírají – v dnešním webu nemají místo.
-- **M6 – Úprava bloků 2.0:** zóny *hlavička* a *patička* vedle sloupců, přetahování myší, a nové typy
+- **M6 – Bloky 2.0:** ~~zóny (hlavička, sloupce, nad/pod obsahem, patička), rozvržení 3/2/1 sloupec/plná šířka,
+  přetahování myší, pojmenované vzhledy~~ (hotovo); zbývají nové typy
   bloků: menu (vlastní odkazy), článek/články z rubriky, otvírák, karusel, štítky, autoři, newsletter
   (formulář), sociální sítě, kontakt, HTML/embed, reklamní pozice, „Ve zkratce", kalendář/archiv;
   viditelnost podle rubriky a zařízení.
@@ -117,7 +123,7 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   korektura, shrnutí „Ve zkratce", SEO popis, alt texty obrázků, štítky. Klíč k API zadává správce v
   Konfiguraci; bez něj systém funguje beze změny.
 
-### M-X – co by měl moderní redakční systém umět (náměty k rozhodnutí)
+### M-X – schválené náměty (uživatel 18. 9. 2026 odsouhlasil všechny; pořadí se určí průběžně)
 
 - **Newsletter:** sběr odběratelů (double opt-in), odeslání výběru článků; navazuje na původní „Poštovní centrum".
 - **Placený / uzamčený obsah:** navazuje na levely – článek jen pro přihlášené či předplatitele, měkký paywall.

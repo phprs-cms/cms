@@ -7,8 +7,9 @@ namespace PhpRS\Core;
 /**
  * Přihlášení do administrace a práva.
  *
- * Model práv je převzatý z phpRS 2: typ uživatele (autor / redaktor / admin),
- * přístup k jednotlivým modulům, "právo vydávat" a vazby nadřízený - podřízený.
+ * Role: autor píše vlastní články (vydat je smí jen s "právem vydávat"), redaktor spravuje
+ * a vydává články všech, administrátor navíc uživatele a nastavení. Přístup k modulům se
+ * u autorů a redaktorů nastavuje jednotlivě; vazby nadřízený - podřízený zůstaly z phpRS 2.
  */
 final class Auth
 {
@@ -16,7 +17,7 @@ final class Auth
     public const int REDAKTOR = 1;
     public const int ADMIN = 2;
 
-    public const array TYPY = [self::AUTOR => 'autor', self::REDAKTOR => 'redaktor', self::ADMIN => 'admin'];
+    public const array TYPY = [self::AUTOR => 'autor', self::REDAKTOR => 'redaktor', self::ADMIN => 'administrátor'];
 
     /** Po tolika chybných heslech v řadě se účet zablokuje (odblokuje ho admin). */
     private const int MAX_CHYB = 10;
@@ -102,9 +103,14 @@ final class Auth
         return (int) ($this->user()['admin'] ?? -1) === self::ADMIN;
     }
 
+    public function isRedaktor(): bool
+    {
+        return (int) ($this->user()['admin'] ?? -1) === self::REDAKTOR;
+    }
+
     public function smiVydavat(): bool
     {
-        return $this->isAdmin() || !empty($this->user()['pravo_vydavat']);
+        return $this->isAdmin() || $this->isRedaktor() || !empty($this->user()['pravo_vydavat']);
     }
 
     /** Má přihlášený uživatel přístup k modulu? Admin vždy; ostatní podle rs_user_prava. */
@@ -126,13 +132,13 @@ final class Auth
 
     /**
      * ID autorů, jejichž články smí uživatel spravovat: on sám a jeho podřízení.
-     * Admin spravuje vše - pro něj vrací null (bez omezení).
+     * Administrátor a redaktor spravují vše - pro ně vrací null (bez omezení).
      *
      * @return list<int>|null
      */
     public function spravovaniAutori(): ?array
     {
-        if ($this->isAdmin()) {
+        if ($this->isAdmin() || $this->isRedaktor()) {
             return null;
         }
         $podrizeni = array_column(

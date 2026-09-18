@@ -15,6 +15,7 @@ $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<script>try { var t = localStorage.getItem('phprs3-tema'); if (t) { document.documentElement.setAttribute('data-tema', t); } } catch (e) {}</script>
 <title>phpRS admin rozhraní</title>
 <link rel="stylesheet" href="<?= e($app->url($css)) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>

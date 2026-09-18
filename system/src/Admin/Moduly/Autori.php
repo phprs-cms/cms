@@ -15,12 +15,15 @@ use PhpRS\Core\Response;
 final class Autori extends Modul
 {
     public const string IDENT = 'users';
-    public const string NAZEV = 'Editace autorů';
+    public const string NAZEV = 'Uživatelé';
+    public const string NAZEV_RETRO = 'Editace autorů';
+    public const string SKUPINA = 'Správa';
+    public const string IKONA = 'uzivatele';
     public const bool JEN_ADMIN = true;
 
     protected function akceVypis(): Response
     {
-        return $this->view('vypis', 'Editace autorů', [
+        return $this->view('vypis', 'Uživatelé', [
             'autori' => $this->db->all(
                 'SELECT u.*, (SELECT COUNT(*) FROM {clanky} c WHERE c.autor = u.idu) AS pocet_clanku FROM {user} u ORDER BY u.user',
             ),
@@ -138,7 +141,7 @@ final class Autori extends Modul
             }
         }
 
-        return $this->view('formular', $id ? 'Úprava autora' : 'Přidání nového autora', [
+        return $this->view('formular', $id ? 'Úprava uživatele' : 'Nový uživatel', [
             'autor' => $autor,
             'chyby' => $chyby,
             'sam' => $id === $this->app->auth()->id(),

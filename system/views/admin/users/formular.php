@@ -11,9 +11,9 @@
  * @var list<int> $maPodrizene
  */
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
-$typy = [0 => 'autor - píše články', 1 => 'redaktor', 2 => 'admin - přístup ke všemu'];
+$typy = [0 => 'Autor – píše a upravuje vlastní články', 1 => 'Redaktor – upravuje a vydává články všech', 2 => 'Administrátor – navíc uživatelé a nastavení'];
 ?>
-<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na hlavní stránku sekce</a></p>
+<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled</a></p>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>" autocomplete="off">
 <?= $csrf ?>
 <input type="hidden" name="idu" value="<?= (int) $autor['idu'] ?>">
@@ -45,9 +45,9 @@ $typy = [0 => 'autor - píše články', 1 => 'redaktor', 2 => 'admin - přístu
 </div>
 
 <fieldset>
-<legend>Nastav práva</legend>
+<legend>Role a oprávnění</legend>
 <div class="radek">
-	<label for="admin">Typ uživatele</label>
+	<label for="admin">Role</label>
 	<div><select id="admin" name="admin"<?= $sam ? ' disabled' : '' ?>>
 <?php foreach ($typy as $hodnota => $popis): ?>
 		<option value="<?= $hodnota ?>"<?= (int) $autor['admin'] === $hodnota ? ' selected' : '' ?>><?= e($popis) ?></option>
@@ -60,26 +60,26 @@ $typy = [0 => 'autor - píše články', 1 => 'redaktor', 2 => 'admin - přístu
 </div>
 <div class="radek">
 	<span class="popisek">Právo vydávat</span>
-	<div class="volby"><label><input type="checkbox" name="pravo_vydavat" value="1"<?= $autor['pravo_vydavat'] ? ' checked' : '' ?>> Smí vydávat články a měnit už vydané</label>
-	<span class="napoveda">Bez tohoto práva autor článek jen připraví a vydá ho redaktor. Admin může vydávat vždy.</span></div>
+	<div class="volby"><label><input type="checkbox" name="pravo_vydavat" value="1"<?= $autor['pravo_vydavat'] ? ' checked' : '' ?>> Autor smí své články sám vydávat</label>
+	<span class="napoveda">Bez tohoto práva autor článek jen připraví a vydá ho redaktor. Redaktor a administrátor vydávají vždy.</span></div>
 </div>
 <div class="radek">
-	<span class="popisek">Přístup k modulům</span>
+	<span class="popisek">Přístup do sekcí</span>
 	<div class="volby">
 <?php foreach ($moduly as $ident => $nazev): ?>
 		<label><input type="checkbox" name="moduly[]" value="<?= e($ident) ?>"<?= in_array($ident, $maModuly, true) ? ' checked' : '' ?>> <?= e($nazev) ?></label><br>
 <?php endforeach ?>
-		<span class="napoveda">Admin má přístup ke všem modulům automaticky.</span>
+		<span class="napoveda">Části administrace, které uživatel uvidí v menu. Administrátor má přístup ke všemu automaticky; Média mají všichni.</span>
 	</div>
 </div>
 <?php if ($ostatni !== []): ?>
 <div class="radek">
-	<span class="popisek">Nastav vazby - podřízení autoři</span>
+	<span class="popisek">Podřízení autoři</span>
 	<div class="volby">
 <?php foreach ($ostatni as $idu => $jmeno): ?>
 		<label><input type="checkbox" name="podrizeni[]" value="<?= (int) $idu ?>"<?= in_array((int) $idu, $maPodrizene, true) ? ' checked' : '' ?>> <?= e($jmeno) ?></label><br>
 <?php endforeach ?>
-		<span class="napoveda">Uživatel vidí a může upravovat články svých podřízených.</span>
+		<span class="napoveda">Jen pro roli Autor: vidí a může upravovat i články vybraných autorů (např. vedoucí rubriky).</span>
 	</div>
 </div>
 <?php endif ?>

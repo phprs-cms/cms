@@ -47,7 +47,7 @@ $nazevWebu = $web->get('nazev_webu');
 <a class="preskocit" href="#obsah">Přeskočit na obsah</a>
 <header class="hlavicka">
 	<div class="obal">
-		<a class="logo" href="<?= e($url('')) ?>"><?= e($nazevWebu) ?></a>
+		<a class="logo" href="<?= e($url('')) ?>"><?php if ($web->get('logo_webu') !== ''): ?><img class="logo-obrazek" src="<?= e((preg_match('#^(https?:)?/#', $web->get('logo_webu')) ? '' : $url('')) . $web->get('logo_webu')) ?>" alt="<?= e($nazevWebu) ?>"><?php else: ?><?= e($nazevWebu) ?><?php endif ?></a>
 		<nav class="rubriky-lista" aria-label="Rubriky">
 <?php foreach ($rubriky as $r): if ($r['uroven'] > 0) { continue; } ?>
 			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"><?= e($r['nazev']) ?></a>
@@ -79,12 +79,19 @@ $nazevWebu = $web->get('nazev_webu');
 <?php if ($zony['paticka'] !== ''): ?>
 <div class="zona-paticka-obal"><div class="obal zona zona-paticka"><?= $zony['paticka'] ?></div></div>
 <?php endif ?>
+<?php
+$site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $web->get('soc_instagram'), 'X' => $web->get('soc_x'), 'YouTube' => $web->get('soc_youtube'), 'LinkedIn' => $web->get('soc_linkedin')]);
+?>
 <footer class="paticka">
 	<div class="obal">
 		<span class="logo"><?= e($nazevWebu) ?></span>
 <?php if ($web->get('popis_webu') !== ''): ?>
 		<p><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
+		<p class="drobne paticka-odkazy"><?php if ($web->get('text_paticky') !== ''): ?><span><?= e($web->get('text_paticky')) ?></span><?php endif ?>
+<?php foreach ($site as $sit => $adresa): ?>
+		<a href="<?= e($adresa) ?>" rel="me noopener" target="_blank"><?= e($sit) ?></a>
+<?php endforeach ?></p>
 		<p class="drobne">&copy; <?= date('Y') ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3</p>
 	</div>
 </footer>

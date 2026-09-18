@@ -14,18 +14,18 @@ use PhpRS\Core\Response;
 final class Kernel
 {
     /**
-     * Moduly v pořadí, v jakém jsou v menu. Identifikátory odpovídají phpRS 2
-     * (users, clanky, news, bloky, topic, config...).
+     * Moduly v pořadí, v jakém jsou v menu (po skupinách Obsah, Vzhled, Správa).
+     * Identifikátory odpovídají phpRS 2 (users, clanky, news, bloky, topic, config...).
      *
      * @var list<class-string<Modul>>
      */
     public const array MODULY = [
-        Moduly\Autori::class,
         Moduly\Clanky::class,
+        Moduly\Galerie::class,
+        Moduly\Rubriky::class,
         Moduly\Novinky::class,
         Moduly\Bloky::class,
-        Moduly\Rubriky::class,
-        Moduly\Galerie::class,
+        Moduly\Autori::class,
         Moduly\Konfigurace::class,
     ];
 

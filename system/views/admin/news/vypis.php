@@ -9,7 +9,7 @@
  */
 ?>
 <?php if ($novinka['idn']): ?>
-<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na hlavní stránku sekce</a></p>
+<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled</a></p>
 <?php endif ?>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
 <?= $csrf ?>
@@ -43,13 +43,13 @@
 	<td class="cislo"><?= e(datum($n['datum'], true)) ?></td>
 	<td><?= e($n['titulek']) ?></td>
 	<td><?= e(mb_strimwidth(strip_tags($n['informace']), 0, 120, '…')) ?></td>
-	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $n['idn']])) ?>">Edituj</a></td>
+	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $n['idn']])) ?>">Upravit</a></td>
 	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $n['idn'] ?>" aria-label="Označit ke smazání: <?= e($n['titulek']) ?>"></td>
 </tr>
 <?php endforeach ?>
 </tbody>
 </table>
 </div>
-<p class="stred"><input class="tl" type="submit" value="Vymaž všechny označené novinky"></p>
+<p class="stred"><input class="tl" type="submit" value="Smazat označené"></p>
 </form>
 <?php endif ?>

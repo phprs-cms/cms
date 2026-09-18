@@ -5,7 +5,7 @@
  * @var list<array<string, mixed>> $rubriky
  */
 ?>
-<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url('novy')) ?>">Přidat novou rubriku</a></p>
+<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url('novy')) ?>">Nová rubrika</a></p>
 <?php if ($rubriky === []): ?>
 <p class="stred">Zatím není založena žádná rubrika.</p>
 <?php else: ?>
@@ -21,7 +21,7 @@
 	<td class="cislo"><?= (int) $r['hodnost'] ?></td>
 	<td class="stred"><?= $r['zobrazit'] ? 'Ano' : '<strong>Ne</strong>' ?></td>
 	<td class="akce">
-		<a href="<?= e($modul->url('edit', ['id' => $r['idt']])) ?>">Edituj</a> /
+		<a href="<?= e($modul->url('edit', ['id' => $r['idt']])) ?>">Upravit</a> ·
 		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" onsubmit="return confirm('Opravdu smazat rubriku?');"><?= $csrf ?><input type="hidden" name="idt" value="<?= (int) $r['idt'] ?>"><button class="navigace" type="submit">Smaž</button></form>
 	</td>
 </tr>

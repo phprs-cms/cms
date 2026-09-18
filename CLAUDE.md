@@ -7,11 +7,17 @@ Duchovní nástupce českého CMS phpRS 2.8 pro magazíny. Čisté PHP 8.4+ bez 
 
 - **Jednoduchost nad abstrakcí.** Kód má přečíst i člověk, který kdysi upravoval phpRS 2. Žádné DI
   kontejnery, ORM, build kroky ani npm. Nová závislost = potřeba silného důvodu.
-- **Věrnost originálu.** Názvy tabulek/sloupců (`rs_clanky.titulek`, `rs_topic`…), identifikátory modulů
-  (`users, clanky, news, bloky, topic, config`…), adresy `admin.php?modul=&akce=`, české popisky
-  („Editace článků", „Zpět na hlavní stránku sekce", „Vymaž všechny označené…") a vzhled administrace
-  (`image/admin.css` – barvy a třídy z 2.8) se drží phpRS 2. Před návrhem nového modulu se podívej,
-  jak vypadal v originále: `../phprs-original-reference/` (zdroják 2.8.1a, dokumentace, screenshoty).
+- **Z phpRS držíme ducha, ne mechaniky.** Zůstává: jednoduchost, zaměření na magazíny, datový model a
+  názvy tabulek/sloupců (`rs_clanky.titulek`, `rs_topic`… kvůli importu z 2.x), identifikátory modulů
+  (`users, clanky, news, bloky, topic, config, intergal`), adresy `admin.php?modul=&akce=` a retro vzhled.
+  Nezůstává ovládání z roku 2005: číselné priority, „typ 1–5", „Vydat článek Ano/Ne", volací linky ve
+  formulářích apod. Uživatel (2026-09-18): nový člověk musí všemu rozumět bez znalosti phpRS. Staré
+  hodnoty se dál ukládají do původních sloupců (priority, typ, visible), jen je UI pojmenovává lidsky
+  (připnout, vzhled bloku, stav). Reference originálu: `../phprs-original-reference/`.
+- **Vzhled prostředí 2026** vychází z referenčního screenshotu uživatele (čistý styl à la Clockhaus):
+  seskupené menu s čárovými ikonami (`views/admin/ikony.php`), podklad #F7F7F8, bílé karty s jemnou linkou,
+  výrazné nadpisy, avatar a přepínač světlý/tmavý vpravo nahoře. Retro je jen skin téhož HTML a ukazuje
+  původní názvy modulů (`NAZEV_RETRO`).
 - **Dvě prostředí administrace nad jedním HTML** (retro `image/admin.css`, 2026 `image/admin-2026.css`).
   Každá změna šablon administrace se musí zkontrolovat v obou; nové třídy doplnit do obou stylesheetů.
   Pozor: klíč pole `'2026'` je v PHP int – při porovnání přetypovat na string.

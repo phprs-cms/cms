@@ -13,11 +13,14 @@ use PhpRS\Core\Response;
 final class Novinky extends Modul
 {
     public const string IDENT = 'news';
-    public const string NAZEV = 'Editace novinek';
+    public const string NAZEV = 'Novinky';
+    public const string NAZEV_RETRO = 'Editace novinek';
+    public const string SKUPINA = 'Obsah';
+    public const string IKONA = 'novinky';
 
     protected function akceVypis(): Response
     {
-        return $this->view('vypis', 'Editace novinek', [
+        return $this->view('vypis', 'Novinky', [
             'novinky' => $this->db->all('SELECT * FROM {news} ORDER BY datum DESC, idn DESC LIMIT 200'),
             'novinka' => ['idn' => 0, 'titulek' => '', 'informace' => '', 'datum' => date('Y-m-d H:i:s')],
         ]);

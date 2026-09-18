@@ -15,6 +15,13 @@ final class Settings
         'popis_webu' => '',
         'klicova_slova' => '',
         'email_webu' => '',
+        'logo_webu' => '',            // obrázek místo textového názvu v záhlaví
+        'text_paticky' => '',
+        'soc_facebook' => '',
+        'soc_instagram' => '',
+        'soc_x' => '',
+        'soc_youtube' => '',
+        'soc_linkedin' => '',
         'layout' => 'default',
         'rozvrzeni' => 'tri',         // tri | dva | jeden | plna (Úprava bloků)
         'prostredi_admin' => 'retro', // výchozí vzhled administrace: retro | 2026

@@ -18,7 +18,10 @@ use PhpRS\Core\Response;
 final class Clanky extends Modul
 {
     public const string IDENT = 'clanky';
-    public const string NAZEV = 'Editace článků';
+    public const string NAZEV = 'Články';
+    public const string NAZEV_RETRO = 'Editace článků';
+    public const string SKUPINA = 'Obsah';
+    public const string IKONA = 'clanek';
 
     private const int NA_STRANKU = 20;
 
@@ -59,7 +62,7 @@ final class Clanky extends Modul
             [...$params, self::NA_STRANKU, ($strana - 1) * self::NA_STRANKU],
         );
 
-        return $this->view('vypis', 'Výpis článků', [
+        return $this->view('vypis', 'Články', [
             'clanky' => $clanky,
             'celkem' => $celkem,
             'strana' => $strana,
@@ -79,7 +82,7 @@ final class Clanky extends Modul
             'idc' => 0, 'link' => '', 'seo_link' => '', 'titulek' => '', 'uvod' => '', 'text' => '', 'obrazek' => '',
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
-            'zdroj' => '', 't_slova' => '', 'znacky' => 1, 'povolit_kom' => 1,
+            'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1,
         ]);
     }
 
@@ -123,14 +126,14 @@ final class Clanky extends Modul
             'autor' => $r->postInt('autor'),
             'datum' => self::datumZFormulare($r->post('datum')) ?? date('Y-m-d H:i:s'),
             'datum_pl' => self::datumZFormulare($r->post('datum_pl')),
-            'visible' => (int) ($r->postBool('visible') && $auth->smiVydavat()),
+            'visible' => (int) ($r->post('stav') === 'vydany' && $auth->smiVydavat()),
             'zobr_na_indexu' => (int) $r->postBool('zobr_na_indexu'),
-            'priority' => max(0, min(255, $r->postInt('priority'))),
-            'typ_clanku' => $r->postInt('typ_clanku') === 2 ? 2 : 1,
+            // připnutý článek = priorita > 0 (phpRS 2 řadil hlavní stránku podle čísla priority)
+            'priority' => $r->postBool('pripnout') ? max(100, (int) ($puvodni['priority'] ?? 0)) : 0,
+            'typ_clanku' => $r->postBool('kratky') ? 2 : 1,
             'sablona' => $r->postInt('sablona') ?: null,
             'zdroj' => $r->post('zdroj'),
             't_slova' => $r->post('t_slova'),
-            'znacky' => (int) $r->postBool('znacky'),
             'povolit_kom' => (int) $r->postBool('povolit_kom'),
             'zmeneno' => date('Y-m-d H:i:s'),
         ];
@@ -165,8 +168,8 @@ final class Clanky extends Modul
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
 
         $hlaska = 'Článek byl uložen.';
-        if ($r->postBool('visible') && !$auth->smiVydavat()) {
-            $hlaska .= ' Nemáte právo vydávat - článek čeká na vydání redaktorem.';
+        if (!$auth->smiVydavat()) {
+            $hlaska .= ' Na webu se objeví, až ho vydá redaktor.';
         }
 
         return $r->post('po_ulozeni') === 'zustat'
@@ -203,7 +206,7 @@ final class Clanky extends Modul
             ? $this->db->pairs('SELECT idu, IF(jmeno = \'\', user, jmeno) FROM {user} ORDER BY 2')
             : $this->db->pairs('SELECT idu, IF(jmeno = \'\', user, jmeno) FROM {user} WHERE idu IN (' . implode(',', $povoleni) . ') ORDER BY 2');
 
-        return $this->view('formular', $clanek['idc'] ? 'Úprava článku' : 'Přidání nového článku', [
+        return $this->view('formular', $clanek['idc'] ? 'Úprava článku' : 'Nový článek', [
             'clanek' => $clanek,
             'chyby' => $chyby,
             'rubriky' => Rubriky::strom($this->db),

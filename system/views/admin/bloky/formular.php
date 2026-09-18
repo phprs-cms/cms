@@ -10,7 +10,7 @@ use PhpRS\Admin\Moduly\Bloky;
 
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
 ?>
-<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na hlavní stránku sekce</a></p>
+<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled</a></p>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
 <?= $csrf ?>
 <input type="hidden" name="idb" value="<?= (int) $blok['idb'] ?>">

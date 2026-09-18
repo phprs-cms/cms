@@ -15,7 +15,10 @@ use PhpRS\Core\Response;
 final class Bloky extends Modul
 {
     public const string IDENT = 'bloky';
-    public const string NAZEV = 'Úprava bloků';
+    public const string NAZEV = 'Bloky a rozvržení';
+    public const string NAZEV_RETRO = 'Úprava bloků';
+    public const string SKUPINA = 'Vzhled';
+    public const string IKONA = 'bloky';
 
     public const array ZONY = [
         'hlavicka' => 'Hlavička', 'leva' => 'Levý sloupec', 'nad' => 'Nad obsahem',
@@ -55,7 +58,7 @@ final class Bloky extends Modul
             $bloky[$zona][] = $blok;
         }
 
-        return $this->view('vypis', 'Úprava bloků', ['rozvrzeni' => $rozvrzeni, 'bloky' => $bloky]);
+        return $this->view('vypis', 'Bloky a rozvržení', ['rozvrzeni' => $rozvrzeni, 'bloky' => $bloky]);
     }
 
     /** Změna rozvržení stránky; bloky ze zrušených zón se přesunou do nejbližší existující. */
@@ -171,7 +174,7 @@ final class Bloky extends Modul
      */
     private function formular(array $blok, array $chyby = []): Response
     {
-        return $this->view('formular', $blok['idb'] ? 'Úprava bloku' : 'Přidání nového bloku', [
+        return $this->view('formular', $blok['idb'] ? 'Úprava bloku' : 'Nový blok', [
             'blok' => $blok,
             'chyby' => $chyby,
             'zony' => array_intersect_key(self::ZONY, array_flip(self::ROZVRZENI[$this->rozvrzeni()][2])),

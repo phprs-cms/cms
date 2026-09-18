@@ -65,6 +65,9 @@ final class Stav
             }
         }
         $pridej('Provoz', 'Chyby za posledních 24 hodin', $chyb === 0 ? 'ok' : 'varovani', $chyb === 0 ? 'žádné' : "{$chyb} - podrobnosti v storage/log/chyby.log");
+        $posledni = Zaloha::seznam()[0]['cas'] ?? 0;
+        $stari = $posledni > 0 ? (int) floor((time() - $posledni) / 86400) : null;
+        $pridej('Provoz', 'Záloha databáze', $stari !== null && $stari <= 8 ? 'ok' : 'varovani', $stari === null ? 'zatím žádná - vytvořte ji v záložce Zálohy a aktualizace' : ($stari === 0 ? 'dnes' : "před {$stari} dny") . ($web->bool('zalohy_auto') ? ', automatické zálohy zapnuté' : ', automatické zálohy vypnuté'));
         $pridej('Provoz', 'Indexování vyhledávači', $web->bool('indexovani') ? 'ok' : 'varovani', $web->bool('indexovani') ? 'povoleno' : 'zakázáno v záložce SEO a GEO - web se neobjeví ve vyhledávání');
         $media = 0;
         if (is_dir(PHPRS_ROOT . '/media')) {

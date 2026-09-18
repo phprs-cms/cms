@@ -6,9 +6,11 @@ namespace PhpRS\Admin\Moduly;
 
 use PhpRS\Admin\Kernel;
 use PhpRS\Admin\Modul;
+use PhpRS\Core\Aktualizace;
 use PhpRS\Core\Response;
 use PhpRS\Core\Rozsireni;
 use PhpRS\Core\Stav;
+use PhpRS\Core\Zaloha;
 use PhpRS\Front\Layouty;
 
 /**
@@ -26,7 +28,7 @@ final class Konfigurace extends Modul
 
     public const array ZALOZKY = [
         'zakladni' => 'Základní', 'vzhled' => 'Vzhled', 'seo' => 'SEO a GEO',
-        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'rozsireni' => 'Rozšíření', 'stav' => 'Stav systému',
+        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
     public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
@@ -52,6 +54,7 @@ final class Konfigurace extends Modul
         ],
         'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod', 'cookies_evidence' => 'ano'],
         'rozsireni' => [],
+        'zalohy' => ['zalohy_auto' => 'ano', 'aktualizace_url' => 'url'],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
 
@@ -71,6 +74,8 @@ final class Konfigurace extends Modul
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
             'zapnutaRozsireni' => Rozsireni::zapnuta($nastaveni),
+            'zalohy' => $zalozka === 'zalohy' ? Zaloha::seznam() : [],
+            'aktualizace' => $zalozka === 'zalohy' ? (new Aktualizace($nastaveni))->stav() : null,
             'adresaWebu' => $this->app->request->origin() . $this->app->url(''),
             'souhlasy' => $zalozka === 'cookies' ? $this->db->all("SELECT kategorie, COUNT(*) AS pocet FROM {souhlasy} WHERE cas > NOW() - INTERVAL 30 DAY GROUP BY kategorie ORDER BY pocet DESC") : [],
         ]);
@@ -116,6 +121,70 @@ final class Konfigurace extends Modul
         return $chyby === []
             ? $this->zpet('Nastavení bylo uloženo.', '', ['zalozka' => $zalozka])
             : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', ['zalozka' => $zalozka], 'chyba');
+    }
+
+    protected function akceZalohuj(): Response
+    {
+        if (!$this->request->isPost()) {
+            return $this->zpet();
+        }
+        try {
+            $soubor = Zaloha::vytvor($this->db);
+        } catch (\Throwable $e) {
+            return $this->zpet('Zálohu se nepodařilo vytvořit: ' . $e->getMessage(), '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+
+        return $this->zpet('Záloha ' . $soubor . ' je hotová.', '', ['zalozka' => 'zalohy']);
+    }
+
+    protected function akceStahniZalohu(): Response
+    {
+        $cesta = Zaloha::cesta($this->request->get('soubor'));
+        if ($cesta === null) {
+            return $this->chyba('Záloha neexistuje.', 404);
+        }
+
+        return new Response((string) file_get_contents($cesta), 200, [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename="' . basename($cesta) . '"',
+            'Content-Length' => (string) filesize($cesta),
+        ]);
+    }
+
+    protected function akceSmazZalohu(): Response
+    {
+        $cesta = Zaloha::cesta($this->request->post('soubor'));
+        if ($this->request->isPost() && $cesta !== null) {
+            unlink($cesta);
+        }
+
+        return $this->zpet('Záloha byla smazána.', '', ['zalozka' => 'zalohy']);
+    }
+
+    /** Znovu zjistí, zda je k dispozici novější verze. */
+    protected function akceZkontroluj(): Response
+    {
+        if ($this->request->isPost()) {
+            (new Aktualizace($this->app->settings()))->stav(true);
+        }
+
+        return $this->zpet('', '', ['zalozka' => 'zalohy']);
+    }
+
+    /** Stáhne, ověří a nainstaluje novou verzi. Před tím zazálohuje databázi. */
+    protected function akceAktualizuj(): Response
+    {
+        if (!$this->request->isPost()) {
+            return $this->zpet();
+        }
+        try {
+            Zaloha::vytvor($this->db, 'predaktualizaci');
+            $verze = (new Aktualizace($this->app->settings()))->nainstaluj();
+        } catch (\Throwable $e) {
+            return $this->zpet('Aktualizace se nezdařila: ' . $e->getMessage() . ' Na webu se nic nezměnilo.', '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+
+        return $this->zpet('Systém byl aktualizován na verzi ' . $verze . '. Databáze se upraví sama při příštím načtení administrace.', '', ['zalozka' => 'zalohy']);
     }
 
     /** Zkušební e-mail na adresu redakce - ověří, že server umí odesílat poštu. */

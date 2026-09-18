@@ -60,6 +60,9 @@ final class Settings
         'kod_marketing' => '',
         'cookies_evidence' => '1',    // zapisovat udělené souhlasy (doklad pro případnou kontrolu)
         'stav_token' => '',
+        'zalohy_auto' => '1',         // týdenní automatická záloha databáze
+        'aktualizace_url' => '',      // adresa souboru aktualizace.json; prázdné = výchozí zdroj projektu
+        'aktualizace_cache' => '',
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
         'ads_txt' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)

@@ -85,6 +85,10 @@ final class Kernel
             }
         }
 
+        if ($app->auth()->isAdmin()) {
+            \PhpRS\Core\Zaloha::automaticka($app->db(), $app->settings());
+        }
+
         $ident = $request->get('modul');
         if ($akce === 'prostredi' && $request->isPost()) {
             if (isset(self::PROSTREDI[$request->post('prostredi')])) {

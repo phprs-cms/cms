@@ -7,3 +7,6 @@
 /image/ukazka/
 /media/*
 !/media/.htaccess
+/dist/
+/tools/klice/
+/storage/zalohy/

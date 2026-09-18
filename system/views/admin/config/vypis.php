@@ -11,6 +11,8 @@
  * @var list<array{skupina:string, nazev:string, stav:string, info:string}> $kontroly
  * @var string $adresaWebu
  * @var list<string> $zapnutaRozsireni
+ * @var list<array{soubor:string, velikost:int, cas:int}> $zalohy
+ * @var array<string, mixed>|null $aktualizace
  * @var list<array{kategorie:string, pocet:int}> $souhlasy
  */
 use PhpRS\Admin\Moduly\Konfigurace;

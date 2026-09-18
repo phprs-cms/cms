@@ -194,6 +194,7 @@ final class Seo
         if ($s->bool('schema_org')) {
             $h[] = '<script type="application/ld+json">' . json_encode($this->strukturovanaData($titulek, $meta, $clanek), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . '</script>';
         }
+        $h[] = '<style>@media (max-width: 760px) { .jen-pocitac { display: none !important; } } @media (min-width: 761px) { .jen-mobil { display: none !important; } }</style>';
         $h[] = $this->mereni();
         if (trim($s->get('kod_hlava')) !== '') {
             $h[] = $s->get('kod_hlava');

@@ -36,15 +36,27 @@ final class Bloky extends Modul
     /** Kam se přesunou bloky ze zóny, která v novém rozvržení není. */
     private const array NAHRADNI_ZONA = ['dva' => ['leva' => 'prava'], 'jeden' => ['leva' => 'pod', 'prava' => 'pod'], 'plna' => ['leva' => 'pod', 'prava' => 'pod']];
 
-    /** Systémové bloky: zkratky shodné s phpRS 2. */
+    /** Typy bloků, které vykresluje systém: zkratka => název. Blok bez zkratky nese vlastní HTML. */
     public const array SYSTEMOVE = [
-        'rub' => 'Seznam rubrik',
-        'nov' => 'Novinky',
-        'hle' => 'Vyhledávání',
+        'otv' => 'Otvírák – velká upoutávka na připnutý nebo nejnovější článek',
+        'cla' => 'Články z rubriky',
         'nej' => 'Nejčtenější články',
+        'rub' => 'Seznam rubrik',
+        'sti' => 'Štítky',
+        'arc' => 'Archiv po měsících',
+        'aut' => 'Autoři',
+        'men' => 'Menu – vlastní odkazy',
+        'str' => 'Stránky (O nás, Kontakt…)',
+        'hle' => 'Vyhledávání',
+        'nov' => 'Novinky',
         'ank' => 'Anketa',
+        'nws' => 'Newsletter – přihlášení k odběru',
+        'soc' => 'Sociální sítě',
+        'kon' => 'Kontakt na redakci',
         'rek' => 'Reklama',
     ];
+
+    public const array ZARIZENI = ['vse' => 'všude', 'mobil' => 'jen na mobilu', 'pocitac' => 'jen na počítači a tabletu'];
 
     /** Vzhled bloku; v databázi číslo 1-5 jako v phpRS 2 (rs_bloky.typ). */
     public const array VZHLEDY = [1 => 'Běžný', 2 => 'Podbarvený', 3 => 'Zvýrazněný nadpis', 4 => 'V rámečku', 5 => 'Bez nadpisu'];
@@ -109,7 +121,7 @@ final class Bloky extends Modul
 
         return $this->formular([
             'idb' => 0, 'nazev' => self::SYSTEMOVE[$sys] ?? '', 'obsah' => '', 'typ' => 1,
-            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0, 'data_sys' => $sys === 'rek' ? 'sloupec' : '',
+            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0, 'data_sys' => $sys === 'rek' ? 'sloupec' : '', 'jen_rubrika' => null, 'zarizeni' => 'vse',
             'zona' => isset(self::ZONY[$zona]) ? $zona : 'prava',
         ]);
     }
@@ -132,13 +144,20 @@ final class Bloky extends Modul
         $povolene = self::ROZVRZENI[$this->rozvrzeni()][2];
         $data = [
             'nazev' => $r->post('nazev'),
-            'obsah' => $r->post('obsah'),
+            'obsah' => $sys === 'men' ? $r->post('obsah_menu') : $r->post('obsah'),
             'typ' => isset(self::VZHLEDY[$r->postInt('typ')]) ? $r->postInt('typ') : 1,
             'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '',
             'zobrazit' => (int) $r->postBool('zobrazit'),
             'zobrazit_kde' => isset(self::KDE[$r->postInt('zobrazit_kde')]) ? $r->postInt('zobrazit_kde') : 0,
             'zona' => in_array($r->post('zona'), $povolene, true) ? $r->post('zona') : end($povolene),
-            'data_sys' => isset(Reklama::POZICE[$r->post('data_sys')]) ? $r->post('data_sys') : '',
+            'data_sys' => match ($sys) {
+                'rek' => isset(Reklama::POZICE[$r->post('data_sys')]) ? $r->post('data_sys') : 'sloupec',
+                'cla' => $r->postInt('blok_rubrika') . ':' . max(1, min(20, $r->postInt('blok_pocet', 5))),
+                'nej', 'sti', 'aut', 'arc' => (string) max(1, min(50, $r->postInt('blok_pocet', 5))),
+                default => '',
+            },
+            'jen_rubrika' => $this->db->value('SELECT idt FROM {topic} WHERE idt = ?', [$r->postInt('jen_rubrika')]) !== null ? $r->postInt('jen_rubrika') : null,
+            'zarizeni' => isset(self::ZARIZENI[$r->post('zarizeni')]) ? $r->post('zarizeni') : 'vse',
         ];
         if ($data['nazev'] === '') {
             return $this->formular(['idb' => $id] + $data, ['nazev' => 'Vyplňte název bloku.']);
@@ -181,6 +200,7 @@ final class Bloky extends Modul
             'blok' => $blok,
             'chyby' => $chyby,
             'zony' => array_intersect_key(self::ZONY, array_flip(self::ROZVRZENI[$this->rozvrzeni()][2])),
+            'rubriky' => Rubriky::strom($this->db),
         ]);
     }
 }

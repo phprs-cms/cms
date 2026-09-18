@@ -20,7 +20,7 @@ final class Stranky extends Modul
     public const string IKONA = 'stranky';
 
     /** Adresy, které patří systému a stránka je mít nemůže. */
-    private const array VYHRAZENE = ['clanek', 'rubrika', 'stitek', 'hledani', 'admin', 'install', 'media', 'image', 'layout', 'system', 'storage', 'plugins', 'rss', 'sitemap', 'robots', 'llms', 'stav'];
+    private const array VYHRAZENE = ['clanek', 'rubrika', 'stitek', 'archiv', 'autor', 'mcp', 'api', 'newsletter', 'hledani', 'admin', 'install', 'media', 'image', 'layout', 'system', 'storage', 'plugins', 'rss', 'sitemap', 'robots', 'llms', 'stav'];
 
     protected function akceVypis(): Response
     {

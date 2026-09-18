@@ -219,3 +219,19 @@ img { display: block; max-width: 100%; height: auto; }
 .reklama { margin: 24px auto; text-align: center; }
 .reklama-oznaceni { display: block; margin-bottom: 4px; font: 10px/1.2 system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.55; }
 .reklama img { display: inline-block; max-width: 100%; height: auto; }
+
+/* nové typy bloků (M6) */
+.blok-clanky, .blok-menu { margin: 0; padding: 0; list-style: none; }
+.blok-clanky li, .blok-menu li { padding: 6px 0; border-bottom: 1px solid rgb(127 127 127 / 0.25); }
+.blok-clanky a, .blok-menu a { text-decoration: none; font-weight: 600; }
+.blok-clanky a:hover, .blok-menu a:hover { text-decoration: underline; }
+.blok-clanky small { opacity: 0.65; white-space: nowrap; }
+.zona-hlavicka .blok-menu, .zona-paticka .blok-menu { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.zona-hlavicka .blok-menu li, .zona-paticka .blok-menu li { border: 0; padding: 0; }
+.blok-stitky { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-weight: 600; }
+.blok-stitky a { text-decoration: none; }
+.blok-otvirak { display: block; text-decoration: none; color: inherit; }
+.blok-otvirak img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 10px; }
+.blok-otvirak strong { display: block; font-size: 1.35em; line-height: 1.2; margin-bottom: 6px; }
+.blok-otvirak span { opacity: 0.8; }
+.blok-otvirak:hover strong { text-decoration: underline; }

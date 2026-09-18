@@ -107,6 +107,22 @@
 		}, 60000);
 	}
 
+	// Formulář bloku: ukazuje jen pole, která zvolený typ bloku používá (data-pro="zkratka zkratka")
+	var formBloku = document.querySelector('[data-blok-formular]');
+	if (formBloku) {
+		var ukazPole = function () {
+			var typ = formBloku.sys_funkce.value;
+			formBloku.querySelectorAll('[data-pro]').forEach(function (radek) {
+				radek.hidden = radek.getAttribute('data-pro').split(' ').indexOf(typ) === -1;
+			});
+		};
+		formBloku.sys_funkce.addEventListener('change', function () {
+			if (formBloku.nazev.value === '' && formBloku.sys_funkce.value !== '') { formBloku.nazev.value = formBloku.sys_funkce.selectedOptions[0].textContent.split(' – ')[0]; }
+			ukazPole();
+		});
+		ukazPole();
+	}
+
 	// Varování před opuštěním rozepsaného formuláře
 	document.querySelectorAll('form.formular').forEach(function (form) {
 		var zmeneno = false;

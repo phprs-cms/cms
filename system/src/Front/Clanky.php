@@ -72,9 +72,15 @@ final class Clanky
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
-    public function zRubriky(int $idt, int $strana): array
+    public function zRubriky(int $idt, int $strana, ?int $limit = null): array
     {
-        return $this->vypis(self::VYDANE . ' AND c.tema = ?', [$idt], 'c.datum DESC, c.idc DESC', $strana);
+        return $this->vypis(self::VYDANE . ' AND c.tema = ?', [$idt], 'c.datum DESC, c.idc DESC', $strana, $limit);
+    }
+
+    /** @return array{0: list<array<string, mixed>>, 1: int} články vydané v měsíci "RRRR-MM" */
+    public function zMesice(string $mesic, int $strana): array
+    {
+        return $this->vypis(self::VYDANE . " AND DATE_FORMAT(c.datum, '%Y-%m') = ?", [$mesic], 'c.datum DESC, c.idc DESC', $strana);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */

@@ -108,6 +108,14 @@ final class Kernel
                 default => $interakce->ulozHlas(),
             };
         }
+        if (preg_match('#^/archiv/(\d{4}-\d{2})$#', $path, $m)) {
+            $strana = max(1, $request->getInt('strana', 1));
+            [$clanky, $celkem] = $this->clanky->zMesice($m[1], $strana);
+            $mesice = [1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec'];
+            $nadpis = 'Archiv: ' . $mesice[(int) substr($m[1], 5)] . ' ' . substr($m[1], 0, 4);
+
+            return $celkem === 0 ? $this->nenalezeno() : $this->stranka($nadpis, $this->view->render('vypis', ['rubrika' => ['nazev' => $nadpis, 'popis' => '']] + $this->proVypis($clanky, $celkem, $strana, 'archiv/' . $m[1])));
+        }
         if (preg_match('#^/autor/(\d+)$#', $path, $m)) {
             return $this->autor((int) $m[1]);
         }
@@ -188,7 +196,7 @@ final class Kernel
         return $this->stranka(
             $rubrika['nazev'],
             $this->view->render('vypis', ['rubrika' => $rubrika] + $this->proVypis($clanky, $celkem, $strana, 'rubrika/' . $seo)),
-            ['popis' => strip_tags($rubrika['popis'])],
+            ['popis' => strip_tags($rubrika['popis']), 'rubrika' => (int) $rubrika['idt']],
         );
     }
 
@@ -317,6 +325,7 @@ final class Kernel
         $bloky = new Bloky($this->app, $this->view);
         $seo = new Seo($this->app);
         $clanek = $meta['clanek'] ?? null;
+        $meta['rubrika'] ??= null;
         unset($meta['clanek']);
         if ($status === 200 && empty($meta['noindex'])) {
             Statistika::zaznamenej($this->app, $clanek === null ? null : (int) $clanek['idc']);
@@ -327,7 +336,7 @@ final class Kernel
             'titulek' => $titulek,
             'meta' => $meta + ['hlavni' => false, 'popis' => '', 'klicova_slova' => $web->get('klicova_slova'), 'obrazek' => '', 'typ' => 'website', 'noindex' => false],
             'obsah' => $obsah,
-            'zony' => $bloky->zony(!empty($meta['hlavni'])),
+            'zony' => $bloky->zony(!empty($meta['hlavni']), $clanek !== null ? (int) $clanek['tema'] : ($meta['rubrika'] ?? null)),
             'rozvrzeni' => $bloky->rozvrzeni(),
             'hlava' => $seo->hlava($titulek, $meta, $clanek),
             'pata' => $seo->pata(),

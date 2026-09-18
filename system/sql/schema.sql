@@ -239,9 +239,12 @@ CREATE TABLE rs_bloky (
     zobrazit     BOOL NOT NULL DEFAULT 1,
     zobrazit_kde TINYINT UNSIGNED NOT NULL DEFAULT 0,     -- 0 všude, 1 jen hlavní stránka, 2 všude mimo ni
     zona         VARCHAR(20) NOT NULL DEFAULT 'prava',    -- hlavicka, leva, nad, pod, prava, paticka
+    jen_rubrika  INT UNSIGNED NULL,                       -- NULL = všude; jinak jen v rubrice a u jejích článků
+    zarizeni     VARCHAR(10) NOT NULL DEFAULT 'vse',      -- vse | mobil | pocitac
     level_blok   INT UNSIGNED NULL,
     PRIMARY KEY (idb),
     KEY ix_bloky_zona (zona, hodnost),
+    CONSTRAINT fk_bloky_rubrika FOREIGN KEY (jen_rubrika) REFERENCES rs_topic (idt) ON DELETE SET NULL,
     CONSTRAINT fk_bloky_level   FOREIGN KEY (level_blok) REFERENCES rs_levely (idl) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 

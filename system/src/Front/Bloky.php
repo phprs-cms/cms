@@ -27,45 +27,108 @@ final class Bloky
         return isset(Nastaveni::ROZVRZENI[$rozvrzeni]) ? $rozvrzeni : 'tri';
     }
 
-    /** @return array<string, string> zóna => HTML bloků; vždy všechny klíče, prázdná zóna = '' */
-    public function zony(bool $hlavniStranka): array
+    /**
+     * @param int|null $rubrika rubrika právě zobrazené stránky (výpis rubriky nebo článek) - kvůli blokům "jen v rubrice"
+     * @return array<string, string> zóna => HTML bloků; vždy všechny klíče, prázdná zóna = ''
+     */
+    public function zony(bool $hlavniStranka, ?int $rubrika = null): array
     {
         $existujici = Nastaveni::ROZVRZENI[$this->rozvrzeni()][2];
         $html = array_fill_keys(array_keys(Nastaveni::ZONY), '');
         $kde = $hlavniStranka ? 'zobrazit_kde IN (0, 1)' : 'zobrazit_kde IN (0, 2)';
 
         foreach ($this->app->db()->all("SELECT * FROM {bloky} WHERE zobrazit = 1 AND {$kde} ORDER BY hodnost DESC, idb") as $blok) {
-            $obsah = $blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce'], (string) $blok['data_sys']);
+            if ($blok['jen_rubrika'] !== null && (int) $blok['jen_rubrika'] !== $rubrika) {
+                continue;
+            }
+            $obsah = $blok['sys_funkce'] === '' ? $blok['obsah'] : $this->systemovy($blok['sys_funkce'], (string) $blok['data_sys'], (string) $blok['obsah']);
             if (trim($obsah) === '') {
                 continue;
             }
             // blok ze zóny, kterou zvolené rozvržení nemá, se ukáže pod obsahem
             $zona = in_array($blok['zona'], $existujici, true) ? $blok['zona'] : 'pod';
-            $html[$zona] .= $this->view->render('blok', ['nadpis' => $blok['nazev'], 'obsah' => $obsah, 'typ' => (int) $blok['typ'], 'sys' => $blok['sys_funkce'], 'zona' => $zona]);
+            $blokHtml = $this->view->render('blok', ['nadpis' => $blok['nazev'], 'obsah' => $obsah, 'typ' => (int) $blok['typ'], 'sys' => $blok['sys_funkce'], 'zona' => $zona]);
+            // "jen na mobilu / jen na počítači" řeší obal s třídou; styl je v hlavičce stránky (Front\Seo), layout ho nemusí znát
+            $html[$zona] .= $blok['zarizeni'] === 'vse' ? $blokHtml : '<div class="jen-' . e($blok['zarizeni']) . '">' . $blokHtml . '</div>';
         }
 
         return $html;
     }
 
-    private function systemovy(string $zkratka, string $data): string
+    private function systemovy(string $zkratka, string $data, string $obsah): string
     {
-        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama'][$zkratka] ?? '';
+        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter'][$zkratka] ?? '';
         if (!Rozsireni::je($this->app->settings(), $rozsireni)) {
             return '';
         }
         $url = $this->app->url(...);
         $db = $this->app->db();
+        $web = $this->app->settings();
+        $clanky = new Clanky($db, $web, $this->app->request->basePath());
+        $pocet = max(1, min(50, (int) $data ?: 5));
 
         return match ($zkratka) {
             'rub' => $this->view->render('blok_rub', ['rubriky' => Rubriky::strom($db, true), 'url' => $url]),
             'nov' => $this->view->render('blok_nov', [
-                'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() ORDER BY datum DESC, idn DESC LIMIT ?', [$this->app->settings()->int('pocet_novinek')]),
+                'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() ORDER BY datum DESC, idn DESC LIMIT ?', [$web->int('pocet_novinek')]),
             ]),
             'hle' => $this->view->render('blok_hle', ['url' => $url, 'q' => $this->app->request->get('q')]),
-            'nej' => $this->view->render('blok_nej', ['clanky' => (new Clanky($db, $this->app->settings()))->nejctenejsi(5), 'url' => $url]),
+            'nej' => $this->view->render('blok_nej', ['clanky' => $clanky->nejctenejsi($pocet), 'url' => $url]),
             'ank' => (new Interakce($this->app, $this->view))->anketaHtml(),
             'rek' => (new Reklama($this->app))->html($data !== '' ? $data : 'sloupec'),
+            'cla' => (function () use ($clanky, $data, $url): string {
+                [$idt, $kolik] = array_map(intval(...), explode(':', $data . ':5'));
+                $seznam = $idt > 0 ? $clanky->zRubriky($idt, 1, max(1, min(20, $kolik)))[0] : $clanky->naHlavniStranku(1, max(1, min(20, $kolik)))[0];
+
+                return $seznam === [] ? '' : $this->view->render('blok_cla', ['clanky' => $seznam, 'url' => $url]);
+            })(),
+            'otv' => ($otvirak = $clanky->naHlavniStranku(1, 1)[0][0] ?? null) === null ? '' : $this->view->render('blok_otv', ['clanek' => $otvirak, 'url' => $url]),
+            'sti' => $this->view->render('blok_sti', ['url' => $url, 'stitky' => $db->all(
+                'SELECT s.nazev, s.seo_link, COUNT(*) AS pocet FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids JOIN {clanky} c ON c.idc = cs.idc
+                 WHERE c.visible = 1 AND c.datum <= NOW() GROUP BY s.ids, s.nazev, s.seo_link ORDER BY pocet DESC, s.nazev LIMIT ?',
+                [$pocet],
+            )]),
+            'arc' => $this->view->render('blok_arc', ['url' => $url, 'mesice' => $db->all(
+                "SELECT DATE_FORMAT(datum, '%Y-%m') AS mesic, COUNT(*) AS pocet FROM {clanky} WHERE visible = 1 AND datum <= NOW() GROUP BY mesic ORDER BY mesic DESC LIMIT ?",
+                [$pocet],
+            )]),
+            'aut' => $this->view->render('blok_aut', ['url' => $url, 'autori' => $db->all(
+                "SELECT u.idu, IF(u.jmeno = '', u.user, u.jmeno) AS jmeno, COUNT(*) AS pocet FROM {user} u JOIN {clanky} c ON c.autor = u.idu
+                 WHERE c.visible = 1 AND c.datum <= NOW() GROUP BY u.idu, jmeno ORDER BY pocet DESC LIMIT ?",
+                [$pocet],
+            )]),
+            'men' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => self::odkazy($obsah)]),
+            'str' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_map(
+                fn (array $st): array => [$st['titulek'], $st['seo_link']],
+                $db->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
+            )]),
+            'soc' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_values(array_filter(array_map(
+                fn (string $klic, string $nazev): ?array => $web->get($klic) !== '' ? [$nazev, $web->get($klic)] : null,
+                array_keys(\PhpRS\Admin\Moduly\Konfigurace::SITE),
+                \PhpRS\Admin\Moduly\Konfigurace::SITE,
+            )))]),
+            'kon' => $web->get('email_webu') === '' && $web->get('text_paticky') === '' ? '' : '<p class="blok-kontakt">' . nl2br(e($web->get('text_paticky')))
+                . ($web->get('email_webu') !== '' ? '<br><a href="mailto:' . e($web->get('email_webu')) . '">' . e($web->get('email_webu')) . '</a>' : '') . '</p>',
+            'nws' => class_exists(Newsletter::class) ? (new Newsletter($this->app, $this->view))->formularHtml() : '',
             default => '',
         };
+    }
+
+    /**
+     * Řádky "text | adresa" z bloku Menu.
+     *
+     * @return list<array{0:string, 1:string}>
+     */
+    private static function odkazy(string $text): array
+    {
+        $odkazy = [];
+        foreach (preg_split('/\R/', $text) ?: [] as $radek) {
+            [$popisek, $adresa] = array_map(trim(...), explode('|', $radek, 2) + [1 => '']);
+            if ($popisek !== '' && $adresa !== '' && !preg_match('#^\s*(javascript|data|vbscript):#i', $adresa)) {
+                $odkazy[] = [$popisek, $adresa];
+            }
+        }
+
+        return $odkazy;
     }
 }

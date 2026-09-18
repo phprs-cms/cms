@@ -21,6 +21,17 @@
 	--varovani: #F79009;
 	--sys-podklad: #F4F0FF;
 	--radius: 8px;
+
+	/* editor a galerie (image/editor.css) */
+	--ed-linka: var(--linka-pole);
+	--ed-plocha: var(--plocha);
+	--ed-lista: var(--podklad);
+	--ed-text: var(--text);
+	--ed-text-slaby: var(--text-slaby);
+	--ed-akcent: var(--akcent);
+	--ed-radius: 8px;
+	--ed-radius-maly: 5px;
+	--ed-lista-top: 56px;
 	--pismo: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	color-scheme: light dark;
 }

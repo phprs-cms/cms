@@ -22,6 +22,7 @@ $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 <meta name="robots" content="noindex, nofollow">
 <title><?= $nadpis !== '' ? e($nadpis) . ' - ' : '' ?>phpRS admin rozhraní</title>
 <link rel="stylesheet" href="<?= e($app->url($css)) ?>?v=<?= e(PHPRS_VERSION) ?>">
+<link rel="stylesheet" href="<?= e($app->url('image/editor.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body class="prostredi-<?= e($prostredi) ?>">
 <?php if ($user !== null): ?>
@@ -57,5 +58,6 @@ $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 <?= $obsah ?>
 </main>
 <script src="<?= e($app->url('image/admin.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>
+<script src="<?= e($app->url('image/editor.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" data-admin-url="<?= e($app->url('admin.php')) ?>" defer></script>
 </body>
 </html>

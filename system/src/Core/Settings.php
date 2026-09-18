@@ -22,6 +22,7 @@ final class Settings
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky
         'povolit_komentare' => '1',
         'aktivni_anketa' => '0',
+        'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 
     /** @var array<string, string>|null */

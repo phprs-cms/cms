@@ -6,6 +6,16 @@
  */
 
 :root {
+	/* editor a galerie (image/editor.css) */
+	--ed-linka: #8C8C8C;
+	--ed-plocha: #FFFFFF;
+	--ed-lista: #E6E6E6;
+	--ed-text: #000000;
+	--ed-text-slaby: #444444;
+	--ed-akcent: #0000FF;
+	--ed-radius: 0;
+	--ed-radius-maly: 0;
+
 	--modra: #0000FF;
 	--modra-vypln: #AAD5FF;
 	--modra-svetla: #D7EBFF;

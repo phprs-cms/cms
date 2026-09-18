@@ -148,3 +148,12 @@ img { display: block; max-width: 100%; height: auto; }
 	.clanek-text { font-size: 18px; }
 	.clanek-text > p:first-of-type::first-letter { font-size: 62px; }
 }
+
+/* obrázky v textu článku (editor a značka <obrazek>) */
+.clanek-text figure, .perex figure { margin: 1.6em 0; }
+.clanek-text figure img { width: 100%; }
+.clanek-text figcaption { margin-top: 6px; font-size: 13px; line-height: 1.4; color: var(--text-slaby); }
+.clanek-text .obrazek-vlevo { float: left; max-width: 45%; margin: 0.4em 1.4em 1em 0; }
+.clanek-text .obrazek-vpravo { float: right; max-width: 45%; margin: 0.4em 0 1em 1.4em; }
+.clanek-text hr { clear: both; border: 0; border-top: 1px solid var(--linka); margin: 2em 0; }
+.clanek-text iframe { max-width: 100%; }

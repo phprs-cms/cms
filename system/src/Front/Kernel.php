@@ -34,7 +34,7 @@ final class Kernel
         }
         // šablona se hledá nejdřív v layoutu webu, potom mezi systémovými - layout tak může přepsat cokoli
         $this->view = new View([PHPRS_ROOT . '/layout/' . $layout, PHPRS_SYSTEM . '/views/front']);
-        $this->clanky = new Clanky($app->db(), $app->settings());
+        $this->clanky = new Clanky($app->db(), $app->settings(), $app->request->basePath());
     }
 
     public function handle(): Response

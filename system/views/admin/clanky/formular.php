@@ -14,7 +14,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na hlavní stránku sekce</a></p>
 
-<form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
+<form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>" data-koncept="clanek-<?= (int) $clanek['idc'] ?>">
 <?= $csrf ?>
 <input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>">
 
@@ -33,18 +33,16 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </div>
 <div class="radek pres-celou">
 	<label for="uvod">Úvod</label>
-	<div data-nastroje="uvod"></div>
-	<textarea class="textbox" id="uvod" name="uvod" rows="7"><?= e($clanek['uvod']) ?></textarea>
-	<span class="napoveda">Zobrazuje se v náhledu na hlavní stránce i na začátku celého článku - v hlavním textu ho neopakujte. HTML je povoleno.</span>
+	<textarea class="textbox" id="uvod" name="uvod" rows="7" data-editor="maly"><?= e($clanek['uvod']) ?></textarea>
+	<span class="napoveda">Zobrazuje se v náhledu na hlavní stránce i na začátku celého článku - v hlavním textu ho neopakujte. </span>
 </div>
 <div class="radek pres-celou">
 	<label for="text">Hlavní text</label>
-	<div data-nastroje="text"></div>
-	<textarea class="textbox vysoky" id="text" name="text" rows="20"><?= e($clanek['text']) ?></textarea>
+	<textarea class="textbox vysoky" id="text" name="text" rows="20" data-editor><?= e($clanek['text']) ?></textarea>
 </div>
 <div class="radek">
 	<label for="obrazek">Hlavní obrázek</label>
-	<div><input class="textpole siroke" type="text" id="obrazek" name="obrazek" value="<?= e($clanek['obrazek']) ?>" maxlength="255" placeholder="adresa obrázku, např. storage-public/2026/foto.jpg">
+	<div><input class="textpole siroke" type="text" id="obrazek" name="obrazek" value="<?= e($clanek['obrazek']) ?>" maxlength="255" placeholder="vyberte z galerie, nebo vložte adresu obrázku" data-obrazek>
 	<span class="napoveda">Nepovinné. Layout ho může použít v náhledu článku a pro sdílení na sociálních sítích.</span></div>
 </div>
 

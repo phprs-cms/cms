@@ -19,6 +19,11 @@ Duchovní nástupce českého CMS phpRS 2.8 pro magazíny. Čisté PHP 8.4+ bez 
   nebo nový systémový blok se musí promítnout do všech tří. Žádná externí písma ani CDN.
 - Identifikátory v kódu (metody `akce*`, proměnné domény, šablony) česky bez diakritiky; komentáře a
   texty česky s diakritikou. Jádro (`Core/`) má API anglicky.
+- **Změna databáze = dva zápisy:** úplné schéma v `system/sql/schema.sql` (nové instalace) a migrace
+  `system/sql/migrace/NNNN-popis.sql` (stávající weby; provede se sama při vstupu admina do administrace,
+  číslo drží `rs_config.verze_db`).
+- Editor článků a galerie: `image/editor.js` + `image/editor.css` (barvy přes proměnné `--ed-*` z obou
+  admin stylesheetů). Nahrané soubory jdou vždy přes `Core\Obrazky` (překódování GD, složka `media/`).
 - Schéma se mění v `system/sql/schema.sql`; každá změna musí zůstat mapovatelná z phpRS 2.x (importér M4).
 - Bezpečnost: jen připravené dotazy (`{tabulka}` doplní předponu), výstup přes `e()`, každý POST
   má CSRF (kontroluje `Admin\Kernel`), práva článků viz `Moduly\Clanky`.

@@ -23,8 +23,57 @@ final class Clanky
 
     private const string VYDANE = 'c.visible = 1 AND c.datum <= NOW()';
 
-    public function __construct(private readonly Db $db, private readonly Settings $settings)
+    /** @param string $zaklad cesta k instalaci ("" nebo "/magazin") - doplňuje se před adresy obrázků z media/ */
+    public function __construct(private readonly Db $db, private readonly Settings $settings, private readonly string $zaklad = '')
     {
+    }
+
+    /**
+     * Úprava článku před předáním šabloně: adresa hlavního obrázku a phpRS značky v textu.
+     * Značka obrázku je stejná jako v phpRS 2: <obrazek id="5" zarovnani="vlevo|vpravo|nastred" nahled="ano|ne">
+     *
+     * @param array<string, mixed> $clanek
+     * @return array<string, mixed>
+     */
+    private function priprav(array $clanek): array
+    {
+        if ($clanek['obrazek'] !== '' && !preg_match('#^(https?:)?/#', $clanek['obrazek'])) {
+            $clanek['obrazek'] = $this->zaklad . '/' . $clanek['obrazek'];
+        }
+        if ($clanek['znacky']) {
+            foreach (['uvod', 'text'] as $cast) {
+                if (str_contains($clanek[$cast], '<obrazek')) {
+                    $clanek[$cast] = preg_replace_callback('/<obrazek\b([^>]*)>/i', $this->znackaObrazku(...), $clanek[$cast]) ?? $clanek[$cast];
+                }
+            }
+        }
+
+        return $clanek;
+    }
+
+    /** @param array<int, string> $m */
+    private function znackaObrazku(array $m): string
+    {
+        preg_match_all('/(\w+)\s*=\s*"([^"]*)"/', $m[1], $atributy, PREG_SET_ORDER);
+        $a = array_column($atributy, 2, 1);
+        $obr = $this->db->one('SELECT * FROM {imggal_obr} WHERE ido = ?', [(int) ($a['id'] ?? 0)]);
+        if ($obr === null) {
+            return '';
+        }
+        $nahled = ($a['nahled'] ?? 'ne') === 'ano' && $obr['nahl_poloha'] !== '';
+        $zarovnani = in_array($a['zarovnani'] ?? '', ['vlevo', 'vpravo'], true) ? $a['zarovnani'] : 'nastred';
+        $img = sprintf(
+            '<img src="%s" alt="%s" width="%d" height="%d" loading="lazy">',
+            e($this->zaklad . '/' . ($nahled ? $obr['nahl_poloha'] : $obr['obr_poloha'])),
+            e($obr['nazev']),
+            $nahled ? $obr['nahl_width'] : $obr['obr_width'],
+            $nahled ? $obr['nahl_height'] : $obr['obr_height'],
+        );
+        if ($nahled) {
+            $img = '<a href="' . e($this->zaklad . '/' . $obr['obr_poloha']) . '">' . $img . '</a>';
+        }
+
+        return '<figure class="obrazek-' . $zarovnani . '">' . $img . ($obr['popis'] !== '' ? '<figcaption>' . e($obr['popis']) . '</figcaption>' : '') . '</figure>';
     }
 
     public function naStranku(): int
@@ -65,7 +114,9 @@ final class Clanky
     /** @return array<string, mixed>|null */
     public function podleSeo(string $seo, bool $iNevydany = false): ?array
     {
-        return $this->db->one(self::SELECT . ' WHERE c.seo_link = ?' . ($iNevydany ? '' : ' AND ' . self::VYDANE), [$seo]);
+        $clanek = $this->db->one(self::SELECT . ' WHERE c.seo_link = ?' . ($iNevydany ? '' : ' AND ' . self::VYDANE), [$seo]);
+
+        return $clanek === null ? null : $this->priprav($clanek);
     }
 
     /**
@@ -105,6 +156,6 @@ final class Clanky
             [...$params, $limit, ($strana - 1) * $limit],
         );
 
-        return [$clanky, $celkem];
+        return [array_map($this->priprav(...), $clanky), $celkem];
     }
 }

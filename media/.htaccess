@@ -1,0 +1,5 @@
+# Nahrané soubory se jen servírují - nikdy nespouštějí.
+<FilesMatch "\.(php\d?|phtml|phar|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>
+Options -Indexes -ExecCGI

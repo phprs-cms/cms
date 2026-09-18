@@ -6,6 +6,7 @@ namespace PhpRS\Install;
 
 use PhpRS\Core\Auth;
 use PhpRS\Core\Db;
+use PhpRS\Core\Migrace;
 use PhpRS\Core\Request;
 use PhpRS\Core\Response;
 use PhpRS\Core\View;
@@ -128,7 +129,7 @@ final class Installer
         }
 
         try {
-            foreach ($this->prikazy($d['db_prefix']) as $sql) {
+            foreach (Migrace::prikazy((string) file_get_contents(PHPRS_SYSTEM . '/sql/schema.sql'), $d['db_prefix']) as $sql) {
                 $db->pdo()->exec($sql);
             }
             $this->vychoziData($db, $d, $heslo);
@@ -142,22 +143,6 @@ final class Installer
         }
 
         return [];
-    }
-
-    /** @return list<string> příkazy ze schema.sql s nahrazenou předponou */
-    private function prikazy(string $prefix): array
-    {
-        $sql = (string) file_get_contents(PHPRS_SYSTEM . '/sql/schema.sql');
-        // názvy omezení musí být v databázi jedinečné - dostanou předponu také
-        $sql = preg_replace('/\b(CONSTRAINT\s+)fk_/', '$1' . $prefix . 'fk_', $sql) ?? $sql;
-        $sql = preg_replace('/\brs_(?=[a-z])/', $prefix, $sql) ?? $sql;
-        $prikazy = preg_split('/;[ \t]*(\r?\n|$)/', $sql) ?: [];
-
-        return array_values(array_filter(array_map(trim(...), $prikazy), function (string $prikaz): bool {
-            $bezKomentaru = trim((string) preg_replace('/^\s*--.*$/m', '', $prikaz));
-
-            return $bezKomentaru !== '';
-        }));
     }
 
     /** @param array<string, string> $d */
@@ -174,7 +159,7 @@ final class Installer
                 'prostredi' => $d['prostredi'],
             ]);
 
-            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => $d['layout'], 'prostredi_admin' => $d['prostredi']];
+            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => $d['layout'], 'prostredi_admin' => $d['prostredi'], 'verze_db' => (string) Migrace::posledni()];
             foreach ($nastaveni as $klic => $hodnota) {
                 $db->insert('config', ['promenna' => $klic, 'hodnota' => $hodnota]);
             }

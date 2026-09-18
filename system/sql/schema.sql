@@ -5,6 +5,9 @@
 -- Předpona "rs_" se při instalaci nahradí předponou z config.php.
 -- Rozdíly proti 2.8: InnoDB + cizí klíče, utf8mb4, skutečné typy DATETIME/BOOL,
 -- práva v samostatné tabulce místo seznamu "1:5:7", hesla přes password_hash().
+--
+-- Tento soubor je vždy úplné aktuální schéma pro novou instalaci. Každá změna se zároveň zapisuje
+-- jako migrace do system/sql/migrace/NNNN-popis.sql, aby se stávající weby aktualizovaly samy.
 
 SET NAMES utf8mb4;
 
@@ -186,6 +189,27 @@ CREATE TABLE rs_komentare (
     KEY ix_komentare_clanek (clanek, datum),
     CONSTRAINT fk_komentare_clanek FOREIGN KEY (clanek)    REFERENCES rs_clanky (idc)    ON DELETE CASCADE,
     CONSTRAINT fk_komentare_reakce FOREIGN KEY (reakce_na) REFERENCES rs_komentare (idk) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- ---------------------------------------------------------------------------
+-- Galerie obrázků
+-- ---------------------------------------------------------------------------
+CREATE TABLE rs_imggal_obr (
+    ido         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    vlastnik    INT UNSIGNED NULL,
+    nazev       VARCHAR(150) NOT NULL DEFAULT '',          -- slouží i jako alternativní text (alt)
+    popis       VARCHAR(500) NOT NULL DEFAULT '',          -- popisek pod obrázkem
+    obr_poloha  VARCHAR(255) NOT NULL,                     -- cesta od kořene webu: media/2026/09/foto.jpg
+    obr_width   SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    obr_height  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    obr_vel     INT UNSIGNED NOT NULL DEFAULT 0,           -- velikost souboru v bajtech
+    nahl_poloha VARCHAR(255) NOT NULL DEFAULT '',
+    nahl_width  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    nahl_height SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    datum       DATETIME NOT NULL,
+    PRIMARY KEY (ido),
+    KEY ix_imggal_datum (datum),
+    CONSTRAINT fk_imggal_vlastnik FOREIGN KEY (vlastnik) REFERENCES rs_user (idu) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- ---------------------------------------------------------------------------

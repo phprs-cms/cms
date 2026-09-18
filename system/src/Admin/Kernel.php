@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpRS\Admin;
 
 use PhpRS\Core\App;
+use PhpRS\Core\Migrace;
 use PhpRS\Core\Response;
 
 /**
@@ -24,6 +25,7 @@ final class Kernel
         Moduly\Novinky::class,
         Moduly\Bloky::class,
         Moduly\Rubriky::class,
+        Moduly\Galerie::class,
         Moduly\Konfigurace::class,
     ];
 
@@ -64,6 +66,13 @@ final class Kernel
             $app->auth()->logout();
 
             return Response::redirect($app->url('admin.php'));
+        }
+
+        // aktualizace struktury databáze po nahrání nové verze systému
+        if ($app->auth()->isAdmin() && $app->settings()->int('verze_db') < Migrace::posledni()) {
+            foreach (Migrace::proved($app->db(), $app->settings()) as $migrace) {
+                $app->session->flash('info', 'Databáze byla aktualizována: ' . $migrace);
+            }
         }
 
         $ident = $request->get('modul');

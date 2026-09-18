@@ -5,3 +5,5 @@
 /vendor/
 .DS_Store
 /image/ukazka/
+/media/*
+!/media/.htaccess

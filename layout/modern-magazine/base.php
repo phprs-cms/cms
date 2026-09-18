@@ -8,22 +8,14 @@
  * @var PhpRS\Core\Settings $web
  * @var string $titulek  prázdný na hlavní stránce
  * @var array{hlavni:bool, popis:string, klicova_slova:string, obrazek:string, typ:string, noindex:bool} $meta
- * @var list<array{ids:int, html:string, hlavni:bool}> $sloupce
+ * @var string $obsah  hotové HTML obsahu stránky (výpis, článek...)
+ * @var array{hlavicka:string, leva:string, nad:string, pod:string, prava:string, paticka:string} $zony  HTML bloků v zónách
+ * @var string $rozvrzeni  tri | dva | jeden | plna - zvolené v Úpravě bloků
  * @var list<array<string, mixed>> $rubriky
  * @var callable(string): string $url
  * @var string $kanonicka
  */
 $nazevWebu = $web->get('nazev_webu');
-$hlavniObsah = '';
-$postranni = '';
-foreach ($sloupce as $sloupec) {
-    if ($sloupec['hlavni']) {
-        $hlavniObsah .= $sloupec['html'];
-    } else {
-        $postranni .= $sloupec['html'];
-    }
-}
-$jeClanek = $meta['typ'] === 'article';
 ?>
 <!doctype html>
 <html lang="cs">
@@ -64,15 +56,28 @@ $jeClanek = $meta['typ'] === 'article';
 		<a class="hledat" href="<?= e($url('hledani')) ?>">Hledat</a>
 	</div>
 </header>
-<main id="obsah" class="hlavni<?= $jeClanek ? ' hlavni-clanek' : '' ?>">
-<?= $hlavniObsah ?>
-</main>
-<?php if (trim($postranni) !== ''): ?>
-<aside class="pas-bloku" aria-label="Další obsah">
-	<div class="obal">
-<?= $postranni ?>
-	</div>
-</aside>
+<?php if ($zony['hlavicka'] !== ''): ?>
+<div class="obal zona zona-hlavicka"><?= $zony['hlavicka'] ?></div>
+<?php endif ?>
+<div class="obal stranka rozvrzeni-<?= e($rozvrzeni) ?><?= $zony['leva'] !== '' ? ' ma-levou' : '' ?><?= $zony['prava'] !== '' ? ' ma-pravou' : '' ?><?= $meta['typ'] === 'article' ? ' stranka-clanek' : '' ?>">
+<?php if ($zony['leva'] !== ''): ?>
+	<aside class="zona zona-leva" aria-label="Levý sloupec"><?= $zony['leva'] ?></aside>
+<?php endif ?>
+	<main id="obsah" class="hlavni">
+<?php if ($zony['nad'] !== ''): ?>
+		<div class="zona zona-nad"><?= $zony['nad'] ?></div>
+<?php endif ?>
+<?= $obsah ?>
+<?php if ($zony['pod'] !== ''): ?>
+		<div class="zona zona-pod"><?= $zony['pod'] ?></div>
+<?php endif ?>
+	</main>
+<?php if ($zony['prava'] !== ''): ?>
+	<aside class="zona zona-prava" aria-label="Pravý sloupec"><?= $zony['prava'] ?></aside>
+<?php endif ?>
+</div>
+<?php if ($zony['paticka'] !== ''): ?>
+<div class="zona-paticka-obal"><div class="obal zona zona-paticka"><?= $zony['paticka'] ?></div></div>
 <?php endif ?>
 <footer class="paticka">
 	<div class="obal">

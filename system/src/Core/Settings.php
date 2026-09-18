@@ -16,6 +16,7 @@ final class Settings
         'klicova_slova' => '',
         'email_webu' => '',
         'layout' => 'default',
+        'rozvrzeni' => 'tri',         // tri | dva | jeden | plna (Úprava bloků)
         'prostredi_admin' => 'retro', // výchozí vzhled administrace: retro | 2026
         'pocet_clanku' => '7',        // článků na hlavní stránce
         'pocet_novinek' => '3',

@@ -57,8 +57,11 @@ final class Konfigurace extends Modul
         }
 
         $layout = $r->post('layout');
-        if (preg_match('/^[a-z0-9_-]+$/i', $layout) && is_dir(PHPRS_ROOT . '/layout/' . $layout)) {
+        $layouty = \PhpRS\Front\Layouty::seznam();
+        if (isset($layouty[$layout]) && $layout !== $nastaveni->get('layout')) {
+            // nová šablona webu přináší i rozvržení stránky, které jí sluší; změnit ho lze v Úpravě bloků
             $nastaveni->set('layout', $layout);
+            $nastaveni->set('rozvrzeni', $layouty[$layout]['rozvrzeni']);
         }
 
         return $this->zpet('Nastavení bylo uloženo.');

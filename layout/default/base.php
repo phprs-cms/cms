@@ -2,19 +2,20 @@
 /**
  * Layout "default" - globální šablona stránky.
  *
- * Kolem obsahu vykreslí sloupce s bloky tak, jak jsou nastavené v administraci (Úprava bloků).
+ * Kolem obsahu vykreslí zóny s bloky podle rozvržení zvoleného v administraci (Úprava bloků).
  * Vlastní layout = kopie této složky pod jiným názvem; vybírá se v Konfiguraci.
  *
  * @var PhpRS\Core\Settings $web
  * @var string $titulek  prázdný na hlavní stránce
  * @var array{hlavni:bool, popis:string, klicova_slova:string, obrazek:string, typ:string, noindex:bool} $meta
- * @var list<array{ids:int, html:string, hlavni:bool}> $sloupce
+ * @var string $obsah  hotové HTML obsahu stránky (výpis, článek...)
+ * @var array{hlavicka:string, leva:string, nad:string, pod:string, prava:string, paticka:string} $zony  HTML bloků v zónách
+ * @var string $rozvrzeni  tri | dva | jeden | plna - zvolené v Úpravě bloků
  * @var callable(string): string $url
  * @var string $kanonicka
  * @var list<array<string, mixed>> $rubriky  viditelné rubriky jako strom (klíč "uroven") - pro navigaci v záhlaví
  */
 $nazevWebu = $web->get('nazev_webu');
-$pocetSloupcu = count(array_filter($sloupce, fn (array $s): bool => trim($s['html']) !== ''));
 ?>
 <!doctype html>
 <html lang="cs">
@@ -51,19 +52,29 @@ $pocetSloupcu = count(array_filter($sloupce, fn (array $s): bool => trim($s['htm
 <?php endif ?>
 	</div>
 </header>
-<div class="obal sloupce sloupce-<?= $pocetSloupcu ?>">
-<?php foreach ($sloupce as $i => $sloupec): if (trim($sloupec['html']) === '') { continue; } ?>
-<?php if ($sloupec['hlavni']): ?>
-	<main class="sloupec sloupec-hlavni" id="obsah">
-<?= $sloupec['html'] ?>
-	</main>
-<?php else: ?>
-	<aside class="sloupec sloupec-bocni sloupec-<?= $i === 0 ? 'levy' : 'pravy' ?>">
-<?= $sloupec['html'] ?>
-	</aside>
+<?php if ($zony['hlavicka'] !== ''): ?>
+<div class="obal zona zona-hlavicka"><?= $zony['hlavicka'] ?></div>
 <?php endif ?>
-<?php endforeach ?>
+<div class="obal stranka rozvrzeni-<?= e($rozvrzeni) ?><?= $zony['leva'] !== '' ? ' ma-levou' : '' ?><?= $zony['prava'] !== '' ? ' ma-pravou' : '' ?><?= $meta['typ'] === 'article' ? ' stranka-clanek' : '' ?>">
+<?php if ($zony['leva'] !== ''): ?>
+	<aside class="zona zona-leva" aria-label="Levý sloupec"><?= $zony['leva'] ?></aside>
+<?php endif ?>
+	<main id="obsah" class="hlavni">
+<?php if ($zony['nad'] !== ''): ?>
+		<div class="zona zona-nad"><?= $zony['nad'] ?></div>
+<?php endif ?>
+<?= $obsah ?>
+<?php if ($zony['pod'] !== ''): ?>
+		<div class="zona zona-pod"><?= $zony['pod'] ?></div>
+<?php endif ?>
+	</main>
+<?php if ($zony['prava'] !== ''): ?>
+	<aside class="zona zona-prava" aria-label="Pravý sloupec"><?= $zony['prava'] ?></aside>
+<?php endif ?>
 </div>
+<?php if ($zony['paticka'] !== ''): ?>
+<div class="zona-paticka-obal"><div class="obal zona zona-paticka"><?= $zony['paticka'] ?></div></div>
+<?php endif ?>
 <footer class="zapati">
 	<div class="obal">
 		&copy; <?= date('Y') ?> <?= e($nazevWebu) ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3

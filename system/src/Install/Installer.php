@@ -159,23 +159,16 @@ final class Installer
                 'prostredi' => $d['prostredi'],
             ]);
 
-            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => $d['layout'], 'prostredi_admin' => $d['prostredi'], 'verze_db' => (string) Migrace::posledni()];
+            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'email_webu' => $d['email'], 'layout' => $d['layout'], 'rozvrzeni' => Layouty::seznam()[$d['layout']]['rozvrzeni'], 'prostredi_admin' => $d['prostredi'], 'verze_db' => (string) Migrace::posledni()];
             foreach ($nastaveni as $klic => $hodnota) {
                 $db->insert('config', ['promenna' => $klic, 'hodnota' => $hodnota]);
             }
             $db->insert('levely', ['nazev_levelu' => 'Základní', 'hodnota' => 0, 'zakladni' => 1]);
             $sablona = $db->insert('cla_sab', ['nazev_cla_sab' => 'Standardní', 'soubor_cla_sab' => 'standard']);
 
-            $levy = $db->insert('sloupce', ['nazev' => 'levý sloupec']);
-            $stred = $db->insert('sloupce', ['nazev' => 'střední sloupec']);
-            $pravy = $db->insert('sloupce', ['nazev' => 'pravý sloupec']);
-            $bloky = [
-                [$levy, 'Rubriky', 'rub', 200], [$levy, 'Vyhledávání', 'hle', 100],
-                [$stred, 'Hlavní blok', 'hlb', 100],
-                [$pravy, 'Novinky', 'nov', 200], [$pravy, 'Nejčtenější články', 'nej', 100],
-            ];
-            foreach ($bloky as [$sloupec, $nazev, $sys, $hodnost]) {
-                $db->insert('bloky', ['nazev' => $nazev, 'obsah' => '', 'sys_funkce' => $sys, 'hodnost' => $hodnost, 'id_sloupec' => $sloupec]);
+            $bloky = [['leva', 'Rubriky', 'rub', 200], ['leva', 'Vyhledávání', 'hle', 100], ['prava', 'Novinky', 'nov', 200], ['prava', 'Nejčtenější články', 'nej', 100]];
+            foreach ($bloky as [$zona, $nazev, $sys, $hodnost]) {
+                $db->insert('bloky', ['nazev' => $nazev, 'obsah' => '', 'sys_funkce' => $sys, 'hodnost' => $hodnost, 'zona' => $zona]);
             }
 
             $rubrika = $db->insert('topic', ['nazev' => 'Aktuality', 'seo_link' => 'aktuality', 'popis' => '']);

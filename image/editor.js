@@ -13,6 +13,7 @@
 	var ADMIN = document.querySelector('script[data-admin-url]').getAttribute('data-admin-url');
 	var CSRF = (document.querySelector('input[name="_csrf"]') || {}).value || '';
 	var GALERIE = ADMIN + '?modul=intergal';
+	var ID_CLANKU = parseInt((document.querySelector('form[data-koncept] input[name="idc"]') || {}).value || '0', 10);
 
 	/* ---------- čištění HTML (vkládání z Wordu a webu) ---------- */
 
@@ -57,7 +58,9 @@
 
 	function nahraj(soubory) {
 		var data = new FormData();
+		var slozka = document.querySelector('.galerie-okno[open] select');
 		data.append('_csrf', CSRF);
+		data.append('sekce', slozka && /^\d+$/.test(slozka.value) ? slozka.value : '0');
 		Array.prototype.forEach.call(soubory, function (s) { data.append('soubory[]', s); });
 		return fetch(GALERIE + '&akce=nahraj&format=json', { method: 'POST', body: data, credentials: 'same-origin' })
 			.then(function (r) { return r.json(); })
@@ -83,9 +86,11 @@
 			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>Galerie obrázků</strong>'
 				+ '<label class="tl">Nahrát nový<input type="file" accept="image/*" multiple hidden></label>'
 				+ '<button type="button" class="navigace" data-zavri>Zavřít</button></div>'
-				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout.</p><div class="galerie-mrizka"></div>';
+				+ '<div class="galerie-okno-filtr"><select aria-label="Složka"></select></div>'
+				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.</p><div class="galerie-mrizka"></div>';
 			document.body.appendChild(okno);
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
+			okno.querySelector('select').addEventListener('change', function () { nacti(this.value); });
 			okno.querySelector('input[type=file]').addEventListener('change', function () {
 				nahraj(this.files).then(function (nove) { nove.reverse().forEach(function (o) { pridej(o, true); }); });
 				this.value = '';
@@ -107,14 +112,25 @@
 			b.addEventListener('click', function () { okno.close(); okno.zpetne(o); });
 			if (nahoru) { mrizka.prepend(b); } else { mrizka.appendChild(b); }
 		}
+		// filtr: "" = vše, "clanek" = obrázky tohoto článku, číslo = složka (0 = nezařazené)
+		function nacti(filtr) {
+			var dotaz = filtr === 'clanek' ? '&clanek=' + ID_CLANKU : (filtr !== '' ? '&sekce=' + filtr : '');
+			mrizka.textContent = 'Načítám…';
+			fetch(GALERIE + '&akce=seznam' + dotaz, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
+				var vyber = okno.querySelector('select');
+				vyber.textContent = '';
+				[['', 'Všechna média']].concat(ID_CLANKU ? [['clanek', 'V tomto článku']] : [], [['0', 'Nezařazené']], j.slozky.map(function (s) { return [String(s.id), 'Složka: ' + s.nazev]; })).forEach(function (v) {
+					var o = document.createElement('option');
+					o.value = v[0]; o.textContent = v[1]; o.selected = v[0] === filtr;
+					vyber.appendChild(o);
+				});
+				mrizka.textContent = j.obrazky.length ? '' : 'Tady zatím žádné obrázky nejsou.';
+				j.obrazky.forEach(function (o) { pridej(o, false); });
+			});
+		}
 		okno.zpetne = zpetne;
-		mrizka.textContent = 'Načítám…';
 		okno.showModal();
-		fetch(GALERIE + '&akce=seznam', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
-			mrizka.textContent = '';
-			if (!j.obrazky.length) { mrizka.textContent = 'Galerie je zatím prázdná - nahrajte první obrázek.'; }
-			j.obrazky.forEach(function (o) { pridej(o, false); });
-		});
+		nacti(okno.querySelector('select').value || '');
 	}
 
 	function htmlObrazku(o) {

@@ -162,6 +162,8 @@ final class Clanky extends Modul
             });
         }
 
+        Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
+
         $hlaska = 'Článek byl uložen.';
         if ($r->postBool('visible') && !$auth->smiVydavat()) {
             $hlaska .= ' Nemáte právo vydávat - článek čeká na vydání redaktorem.';

@@ -58,7 +58,7 @@ final class Migrace
     public static function prikazy(string $sql, string $prefix): array
     {
         // názvy omezení musí být v databázi jedinečné - dostanou předponu také
-        $sql = preg_replace('/\b(CONSTRAINT\s+)fk_/', '$1' . $prefix . 'fk_', $sql) ?? $sql;
+        $sql = preg_replace('/\b((?:CONSTRAINT|DROP FOREIGN KEY)\s+)fk_/', '$1' . $prefix . 'fk_', $sql) ?? $sql;
         $sql = preg_replace('/\brs_(?=[a-z])/', $prefix, $sql) ?? $sql;
         $prikazy = preg_split('/;[ \t]*(\r?\n|$)/', $sql) ?: [];
 

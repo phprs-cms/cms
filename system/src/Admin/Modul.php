@@ -63,6 +63,11 @@ abstract class Modul
         return $this->kernel->page('Chyba', $this->app->view->render('admin/chyba', ['text' => $text]), $status);
     }
 
+    public function app(): App
+    {
+        return $this->app;
+    }
+
     /** @param array<string, scalar> $params */
     public function url(string $akce = '', array $params = []): string
     {

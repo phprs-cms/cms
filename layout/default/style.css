@@ -21,10 +21,18 @@ img { max-width: 100%; height: auto; }
 .nazev-webu { font: bold 34px/1.1 var(--pismo-titulky); color: var(--text); text-decoration: none; }
 .motto { margin: 4px 0 0; color: var(--text-slaby); }
 
-.sloupce { display: grid; gap: 32px; align-items: start; }
-.sloupce-3 { grid-template-columns: 220px minmax(0, 1fr) 260px; }
-.sloupce-2 { grid-template-columns: minmax(0, 1fr) 260px; }
-.sloupce-2:has(.sloupec-levy) { grid-template-columns: 220px minmax(0, 1fr); }
+.stranka { display: grid; gap: 32px; align-items: start; grid-template-columns: minmax(0, 1fr); }
+.rozvrzeni-tri.ma-levou.ma-pravou { grid-template-columns: 220px minmax(0, 1fr) 260px; }
+.rozvrzeni-tri.ma-levou:not(.ma-pravou) { grid-template-columns: 220px minmax(0, 1fr); }
+.rozvrzeni-tri.ma-pravou:not(.ma-levou), .rozvrzeni-dva.ma-pravou { grid-template-columns: minmax(0, 1fr) 260px; }
+.rozvrzeni-jeden .hlavni { max-width: 760px; margin: 0 auto; width: 100%; }
+.zona-pod { padding-top: 26px; border-top: 1px solid var(--linka); }
+.zona-paticka-obal { margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--linka); }
+
+/* zóny bloků mimo sloupce: v řadě vedle sebe */
+.zona-hlavicka, .zona-paticka, .zona-pod { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 32px; }
+.zona-hlavicka { margin-bottom: 8px; }
+.zona-pod { margin-top: 40px; }
 
 .blok { margin-bottom: 26px; font-size: 14px; }
 .blok-nadpis { font: bold 13px var(--pismo); text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--text); }
@@ -72,8 +80,8 @@ img { max-width: 100%; height: auto; }
 .zapati { margin-top: 40px; padding: 22px 0; background: var(--podklad); border-top: 1px solid var(--linka); font-size: 13px; color: var(--text-slaby); }
 
 @media (max-width: 900px) {
-	.sloupce-3, .sloupce-2, .sloupce-2:has(.sloupec-levy) { grid-template-columns: minmax(0, 1fr); }
-	.sloupec-hlavni { order: -1; }
+	.stranka.stranka { grid-template-columns: minmax(0, 1fr); }
+	.hlavni { order: -1; }
 	.clanek h1, .vypis-hlavicka h1 { font-size: 28px; }
 }
 

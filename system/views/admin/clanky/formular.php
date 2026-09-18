@@ -43,7 +43,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <div class="radek">
 	<label for="obrazek">Hlavní obrázek</label>
 	<div><input class="textpole siroke" type="text" id="obrazek" name="obrazek" value="<?= e($clanek['obrazek']) ?>" maxlength="255" placeholder="vyberte z galerie, nebo vložte adresu obrázku" data-obrazek>
-	<span class="napoveda">Nepovinné. Layout ho může použít v náhledu článku a pro sdílení na sociálních sítích.</span></div>
+	<span class="napoveda">Nepovinné. Šablona webu ho použije v náhledu článku a při sdílení na sociálních sítích.<?php if ($clanek['idc']): ?> <a href="<?= e($modul->app()->url('admin.php?modul=intergal&clanek=' . (int) $clanek['idc'])) ?>" target="_blank" rel="noopener">Média použitá v tomto článku</a><?php endif ?></span></div>
 </div>
 
 <fieldset>

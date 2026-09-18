@@ -194,9 +194,16 @@ CREATE TABLE rs_komentare (
 -- ---------------------------------------------------------------------------
 -- Galerie obrázků
 -- ---------------------------------------------------------------------------
+CREATE TABLE rs_imggal_sekce (
+    ids   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    nazev VARCHAR(100) NOT NULL,
+    PRIMARY KEY (ids)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
 CREATE TABLE rs_imggal_obr (
     ido         INT UNSIGNED NOT NULL AUTO_INCREMENT,
     vlastnik    INT UNSIGNED NULL,
+    sekce       INT UNSIGNED NULL,                         -- složka
     nazev       VARCHAR(150) NOT NULL DEFAULT '',          -- slouží i jako alternativní text (alt)
     popis       VARCHAR(500) NOT NULL DEFAULT '',          -- popisek pod obrázkem
     obr_poloha  VARCHAR(255) NOT NULL,                     -- cesta od kořene webu: media/2026/09/foto.jpg
@@ -209,11 +216,13 @@ CREATE TABLE rs_imggal_obr (
     datum       DATETIME NOT NULL,
     PRIMARY KEY (ido),
     KEY ix_imggal_datum (datum),
+    KEY ix_imggal_sekce (sekce),
+    CONSTRAINT fk_imggal_sekce FOREIGN KEY (sekce) REFERENCES rs_imggal_sekce (ids) ON DELETE SET NULL,
     CONSTRAINT fk_imggal_vlastnik FOREIGN KEY (vlastnik) REFERENCES rs_user (idu) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- ---------------------------------------------------------------------------
--- Novinky, sloupce a bloky, aliasy
+-- Novinky, bloky, aliasy
 -- ---------------------------------------------------------------------------
 CREATE TABLE rs_news (
     idn       INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -224,28 +233,20 @@ CREATE TABLE rs_news (
     KEY ix_news_datum (datum)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-CREATE TABLE rs_sloupce (
-    ids      INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    nazev    VARCHAR(40) NOT NULL DEFAULT '',
-    zobrazit BOOL NOT NULL DEFAULT 1,
-    PRIMARY KEY (ids)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
-
 CREATE TABLE rs_bloky (
     idb          INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nazev        VARCHAR(100) NOT NULL,
     obsah        MEDIUMTEXT NOT NULL,                     -- HTML běžného bloku
-    typ          TINYINT UNSIGNED NOT NULL DEFAULT 1,     -- vzhled 1-5 (šablony blok1..blok5 v layoutu)
-    hodnost      SMALLINT UNSIGNED NOT NULL DEFAULT 100,  -- vyšší = výš
+    typ          TINYINT UNSIGNED NOT NULL DEFAULT 1,     -- vzhled: 1 běžný, 2 podbarvený, 3 zvýrazněný nadpis, 4 v rámečku, 5 bez nadpisu
+    hodnost      SMALLINT UNSIGNED NOT NULL DEFAULT 100,  -- pořadí v zóně, vyšší = výš (nastavuje se přetažením)
     sys_funkce   VARCHAR(30) NOT NULL DEFAULT '',         -- '' běžný blok; ank, nov, rub, kal, hlb nebo zkratka plug-inu
     data_sys     VARCHAR(255) NOT NULL DEFAULT '',
     zobrazit     BOOL NOT NULL DEFAULT 1,
     zobrazit_kde TINYINT UNSIGNED NOT NULL DEFAULT 0,     -- 0 všude, 1 jen hlavní stránka, 2 všude mimo ni
-    id_sloupec   INT UNSIGNED NOT NULL,
+    zona         VARCHAR(20) NOT NULL DEFAULT 'prava',    -- hlavicka, leva, nad, pod, prava, paticka
     level_blok   INT UNSIGNED NULL,
     PRIMARY KEY (idb),
-    KEY ix_bloky_sloupec (id_sloupec, hodnost),
-    CONSTRAINT fk_bloky_sloupec FOREIGN KEY (id_sloupec) REFERENCES rs_sloupce (ids),
+    KEY ix_bloky_zona (zona, hodnost),
     CONSTRAINT fk_bloky_level   FOREIGN KEY (level_blok) REFERENCES rs_levely (idl) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
@@ -268,4 +269,14 @@ CREATE TABLE rs_kontrola_ip (
     cas       DATETIME NOT NULL,
     PRIMARY KEY (idk),
     KEY ix_kontrola (typ, cil, ip_adresa, cas)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- Ve kterých článcích je obrázek použitý (přepočítá se při uložení článku)
+CREATE TABLE rs_imggal_pouziti (
+    ido INT UNSIGNED NOT NULL,
+    idc INT UNSIGNED NOT NULL,
+    PRIMARY KEY (ido, idc),
+    KEY ix_pouziti_clanek (idc),
+    CONSTRAINT fk_pouziti_obr FOREIGN KEY (ido) REFERENCES rs_imggal_obr (ido) ON DELETE CASCADE,
+    CONSTRAINT fk_pouziti_clanek FOREIGN KEY (idc) REFERENCES rs_clanky (idc) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

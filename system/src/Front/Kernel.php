@@ -54,6 +54,9 @@ final class Kernel
         if (preg_match('#^/rubrika/([a-z0-9-]+)$#', $path, $m)) {
             return $this->rubrika($m[1]);
         }
+        if (preg_match('#^/stitek/([a-z0-9-]+)$#', $path, $m)) {
+            return $this->stitek($m[1]);
+        }
         if ($path === '/hledani') {
             return $this->hledani();
         }
@@ -69,7 +72,25 @@ final class Kernel
             }
         }
 
+        $stranka = $this->app->db()->one('SELECT * FROM {stranky} WHERE seo_link = ? AND zobrazit = 1', [ltrim($path, '/')]);
+        if ($stranka !== null) {
+            return $this->stranka($stranka['titulek'], $this->view->render('stranka', ['stranka' => $stranka]), ['popis' => $stranka['popis']]);
+        }
+
         return $this->nenalezeno();
+    }
+
+    private function stitek(string $seo): Response
+    {
+        $stitek = $this->app->db()->one('SELECT * FROM {stitky} WHERE seo_link = ?', [$seo]);
+        if ($stitek === null) {
+            return $this->nenalezeno();
+        }
+        $strana = max(1, $this->app->request->getInt('strana', 1));
+        [$clanky, $celkem] = $this->clanky->seStitkem((int) $stitek['ids'], $strana);
+        $hlavicka = ['nazev' => '#' . $stitek['nazev'], 'popis' => ''];
+
+        return $this->stranka('Štítek ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)));
     }
 
     private function stareAdresy(): ?Response
@@ -133,6 +154,8 @@ final class Kernel
         if (!$nahled) {
             $this->app->db()->run('UPDATE {clanky} SET visit = visit + 1 WHERE idc = ?', [$clanek['idc']]);
         }
+
+        $clanek['stitky'] = $this->app->db()->all('SELECT s.nazev, s.seo_link FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [$clanek['idc']]);
 
         $obsah = $this->view->render($this->sablonaClanku($clanek), [
             'clanek' => $clanek,
@@ -235,6 +258,7 @@ final class Kernel
             'zony' => $bloky->zony(!empty($meta['hlavni'])),
             'rozvrzeni' => $bloky->rozvrzeni(),
             'rubriky' => Rubriky::strom($this->app->db(), true),
+            'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]), $status);

@@ -99,6 +99,12 @@ final class Clanky
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
+    public function seStitkem(int $ids, int $strana): array
+    {
+        return $this->vypis(self::VYDANE . ' AND EXISTS (SELECT 1 FROM {clanky_stitky} cs WHERE cs.idc = c.idc AND cs.ids = ?)', [$ids], 'c.datum DESC, c.idc DESC', $strana);
+    }
+
+    /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function hledej(string $q, int $strana): array
     {
         $like = '%' . addcslashes($q, '%_\\') . '%';

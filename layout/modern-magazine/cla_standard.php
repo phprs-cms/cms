@@ -3,7 +3,7 @@
  * Šablona článku "Standardní" pro layout Modern Magazine.
  * Režimy: nahled / kratky (karty ve výpisech) a cely. První článek titulní strany ($poradi 0) je hero.
  *
- * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm
+ * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link)
  * @var string $rezim
  * @var int $poradi
  * @var callable(string): string $url
@@ -26,6 +26,9 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>" alt=""></figure>
 <?php endif ?>
 	<div class="clanek-text obal-uzky"><?= $clanek['text'] ?></div>
+<?php if (!empty($clanek['stitky'])): ?>
+	<p class="clanek-stitky<?= ' obal-uzky' ?>"><?php foreach ($clanek['stitky'] as $st): ?><a href="<?= e($url('stitek/' . $st['seo_link'])) ?>" rel="tag">#<?= e($st['nazev']) ?></a> <?php endforeach ?></p>
+<?php endif ?>
 	<footer class="clanek-paticka obal-uzky">
 <?php if ($clanek['zdroj'] !== ''): ?>
 		<span>Zdroj: <?= e($clanek['zdroj']) ?></span>

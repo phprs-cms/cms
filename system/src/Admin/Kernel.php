@@ -23,6 +23,7 @@ final class Kernel
         Moduly\Clanky::class,
         Moduly\Galerie::class,
         Moduly\Rubriky::class,
+        Moduly\Stranky::class,
         Moduly\Novinky::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,

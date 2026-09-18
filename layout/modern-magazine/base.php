@@ -14,6 +14,7 @@
  * @var list<array<string, mixed>> $rubriky
  * @var callable(string): string $url
  * @var string $kanonicka
+ * @var list<array{titulek:string, seo_link:string}> $stranky  statické stránky do navigace
  */
 $nazevWebu = $web->get('nazev_webu');
 ?>
@@ -89,6 +90,9 @@ $site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $w
 		<p><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
 		<p class="drobne paticka-odkazy"><?php if ($web->get('text_paticky') !== ''): ?><span><?= e($web->get('text_paticky')) ?></span><?php endif ?>
+<?php foreach ($stranky as $st): ?>
+		<a href="<?= e($url($st['seo_link'])) ?>"><?= e($st['titulek']) ?></a>
+<?php endforeach ?>
 <?php foreach ($site as $sit => $adresa): ?>
 		<a href="<?= e($adresa) ?>" rel="me noopener" target="_blank"><?= e($sit) ?></a>
 <?php endforeach ?></p>

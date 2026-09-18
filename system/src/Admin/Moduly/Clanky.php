@@ -46,6 +46,15 @@ final class Clanky extends Modul
             $where[] = 'c.titulek LIKE ?';
             $params[] = '%' . addcslashes($hledat, '%_\\') . '%';
         }
+        $stav = $this->request->get('stav');
+        $podminkyStavu = [
+            'vydane' => 'c.visible = 1 AND c.datum <= NOW()',
+            'plan' => 'c.visible = 1 AND c.datum > NOW()',
+            'koncepty' => 'c.visible = 0',
+        ];
+        if (isset($podminkyStavu[$stav])) {
+            $where[] = $podminkyStavu[$stav];
+        }
         $cond = implode(' AND ', $where);
 
         $celkem = (int) $this->db->value("SELECT COUNT(*) FROM {clanky} c WHERE {$cond}", $params);
@@ -68,7 +77,8 @@ final class Clanky extends Modul
             'strana' => $strana,
             'stran' => max(1, (int) ceil($celkem / self::NA_STRANKU)),
             'rubriky' => Rubriky::strom($this->db),
-            'filtr' => ['tema' => $tema, 'hledat' => $hledat, 'moje' => $this->request->get('moje')],
+            'filtr' => ['tema' => $tema, 'hledat' => $hledat, 'moje' => $this->request->get('moje'), 'stav' => isset($podminkyStavu[$stav]) ? $stav : ''],
+            'smiVydavat' => $auth->smiVydavat(),
         ]);
     }
 
@@ -82,7 +92,7 @@ final class Clanky extends Modul
             'idc' => 0, 'link' => '', 'seo_link' => '', 'titulek' => '', 'uvod' => '', 'text' => '', 'obrazek' => '',
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
-            'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1,
+            'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
         ]);
     }
 
@@ -157,7 +167,11 @@ final class Clanky extends Modul
         }
 
         $data['seo_link'] = $this->volnySeoLink($data['seo_link'], $id);
+        $data['skupina_cl'] = $this->serial($r->postInt('skupina_cl'), $r->post('serial_novy'));
         if ($id > 0) {
+            if ([$puvodni['titulek'], $puvodni['uvod'], $puvodni['text']] !== [$data['titulek'], $data['uvod'], $data['text']]) {
+                $this->ulozRevizi($puvodni);
+            }
             $this->db->update('clanky', $data, ['idc' => $id]);
         } else {
             $id = $this->db->transaction(function () use ($data): int {
@@ -166,6 +180,7 @@ final class Clanky extends Modul
         }
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
+        $this->ulozStitky($id, $r->post('stitky'));
 
         $hlaska = 'Článek byl uložen.';
         if (!$auth->smiVydavat()) {
@@ -175,6 +190,31 @@ final class Clanky extends Modul
         return $r->post('po_ulozeni') === 'zustat'
             ? $this->zpet($hlaska, 'edit', ['id' => $id])
             : $this->zpet($hlaska);
+    }
+
+    /** Vydání konceptu jedním kliknutím z přehledu (dřív modul Redaktor). */
+    protected function akceVydat(): Response
+    {
+        $clanek = $this->nacti($this->request->postInt('idc'));
+        if (!$this->request->isPost() || $clanek === null || !$this->app->auth()->smiVydavat()) {
+            return $this->zpet('Článek nelze vydat.', typ: 'chyba');
+        }
+        $this->db->update('clanky', ['visible' => 1], ['idc' => $clanek['idc']]);
+
+        return $this->zpet(strtotime($clanek['datum']) > time() ? 'Článek je naplánován na ' . datum($clanek['datum'], true) . '.' : 'Článek byl vydán.', '', ['stav' => 'koncepty']);
+    }
+
+    /** Načte do editoru starší verzi článku; uloží se až odesláním formuláře. */
+    protected function akceRevize(): Response
+    {
+        $clanek = $this->nacti($this->request->getInt('id'));
+        $revize = $clanek === null ? null : $this->db->one('SELECT * FROM {clanky_revize} WHERE idr = ? AND idc = ?', [$this->request->getInt('idr'), $clanek['idc']]);
+        if ($revize === null) {
+            return $this->chyba('Verze článku neexistuje.', 404);
+        }
+        $this->app->session->flash('info', 'V editoru je verze z ' . datum($revize['datum'], true) . '. Platit začne, až článek uložíte.');
+
+        return $this->formular(['titulek' => $revize['titulek'], 'uvod' => $revize['uvod'], 'text' => $revize['text']] + $clanek);
     }
 
     protected function akceSmaz(): Response
@@ -213,7 +253,57 @@ final class Clanky extends Modul
             'autori' => $autori,
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
+            'serialy' => $this->db->pairs('SELECT ids, nazev_skup FROM {skup_cl} ORDER BY nazev_skup'),
+            'stitky' => $this->request->isPost() ? $this->request->post('stitky') : implode(', ', array_column(
+                $this->db->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [(int) $clanek['idc']]),
+                'nazev',
+            )),
+            'vsechnyStitky' => array_column($this->db->all('SELECT nazev FROM {stitky} ORDER BY nazev LIMIT 500'), 'nazev'),
+            'revize' => $this->db->all(
+                "SELECT r.idr, r.datum, r.titulek, IF(u.jmeno = '' OR u.jmeno IS NULL, u.user, u.jmeno) AS kdo_jm
+                 FROM {clanky_revize} r LEFT JOIN {user} u ON u.idu = r.kdo WHERE r.idc = ? ORDER BY r.idr DESC",
+                [(int) $clanek['idc']],
+            ),
         ]);
+    }
+
+    /** Seriál (v phpRS 2 "skupina souvisejících článků"): vybraný, nebo nově založený podle názvu. */
+    private function serial(int $ids, string $novy): ?int
+    {
+        $novy = mb_substr($novy, 0, 150);
+        if ($novy !== '') {
+            $existujici = $this->db->value('SELECT ids FROM {skup_cl} WHERE nazev_skup = ?', [$novy]);
+
+            return $existujici !== null ? (int) $existujici : $this->db->insert('skup_cl', ['nazev_skup' => $novy]);
+        }
+
+        return $this->db->value('SELECT ids FROM {skup_cl} WHERE ids = ?', [$ids]) !== null ? $ids : null;
+    }
+
+    /** Uloží předchozí podobu článku; drží se posledních 20 verzí. */
+    private function ulozRevizi(array $puvodni): void
+    {
+        $this->db->insert('clanky_revize', [
+            'idc' => $puvodni['idc'], 'datum' => $puvodni['zmeneno'] ?? $puvodni['datum'], 'kdo' => $this->app->auth()->id(),
+            'titulek' => $puvodni['titulek'], 'uvod' => $puvodni['uvod'], 'text' => $puvodni['text'],
+        ]);
+        $hranice = $this->db->value('SELECT idr FROM {clanky_revize} WHERE idc = ? ORDER BY idr DESC LIMIT 1 OFFSET 20', [$puvodni['idc']]);
+        if ($hranice !== null) {
+            $this->db->run('DELETE FROM {clanky_revize} WHERE idc = ? AND idr <= ?', [$puvodni['idc'], $hranice]);
+        }
+    }
+
+    /** Štítky zapsané čárkami; neznámé se založí. */
+    private function ulozStitky(int $idc, string $vstup): void
+    {
+        $this->db->delete('clanky_stitky', ['idc' => $idc]);
+        $nazvy = array_unique(array_filter(array_map(fn (string $n): string => mb_substr(trim($n), 0, 80), explode(',', $vstup))));
+        foreach (array_slice($nazvy, 0, 20) as $nazev) {
+            $seo = slugify($nazev, 90);
+            $ids = $this->db->value('SELECT ids FROM {stitky} WHERE seo_link = ?', [$seo]);
+            $ids = $ids !== null ? (int) $ids : $this->db->insert('stitky', ['nazev' => $nazev, 'seo_link' => $seo]);
+            $this->db->run('INSERT IGNORE INTO {clanky_stitky} (idc, ids) VALUES (?, ?)', [$idc, $ids]);
+        }
     }
 
     /** Načte článek, jen pokud ho přihlášený uživatel smí spravovat. */

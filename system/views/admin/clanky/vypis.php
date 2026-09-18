@@ -8,14 +8,21 @@
  * @var int $strana
  * @var int $stran
  * @var list<array<string, mixed>> $rubriky
- * @var array{tema:int, hledat:string, moje:string} $filtr
+ * @var array{tema:int, hledat:string, moje:string, stav:string} $filtr
+ * @var bool $smiVydavat
  */
 $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['strana' => $s]);
 ?>
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>">Nový článek</a></p>
 
+<nav class="zalozky" aria-label="Stav článků">
+<?php foreach (['' => 'Všechny', 'vydane' => 'Vydané', 'plan' => 'Naplánované', 'koncepty' => 'Koncepty a čekající na vydání'] as $klic => $nazev): ?>
+	<a href="<?= e($modul->url('', array_filter(['stav' => $klic]))) ?>"<?= $filtr['stav'] === $klic ? ' class="aktivni" aria-current="true"' : '' ?>><?= e($nazev) ?></a>
+<?php endforeach ?>
+</nav>
 <form method="get" action="<?= e($app->url('admin.php')) ?>" class="stred smltxt">
 	<input type="hidden" name="modul" value="clanky">
+	<input type="hidden" name="stav" value="<?= e($filtr['stav']) ?>">
 	<label>Rubrika:
 		<select name="tema">
 			<option value="0">všechny</option>
@@ -34,6 +41,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <?php if ($clanky === []): ?>
 <p class="stred">Žádné články.</p>
 <?php else: ?>
+<form method="post" id="vydat" action="<?= e($modul->url('vydat')) ?>"><?= $csrf ?></form>
 <form method="post" action="<?= e($modul->url('smaz')) ?>" onsubmit="return confirm('Opravdu vymazat všechny označené články?');">
 <?= $csrf ?>
 <div class="tab-obal">
@@ -50,7 +58,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 	<td class="cislo"><?= e(datum($c['datum'], true)) ?></td>
 	<td><span class="stitek stitek-<?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'plan' : 'vydano') ?>"><?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'naplánováno' : 'vydáno') ?></span></td>
 	<td class="cislo"><?= (int) $c['visit'] ?>x</td>
-	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>">Upravit</a> · <a href="<?= e($app->url('clanek/' . $c['seo_link'] . '?nahled=1')) ?>" target="_blank" rel="noopener">Náhled</a></td>
+	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>">Upravit</a><?php if (!$c['visible'] && $smiVydavat): ?> · <button class="navigace" type="submit" form="vydat" name="idc" value="<?= (int) $c['idc'] ?>">Vydat</button><?php endif ?> · <a href="<?= e($app->url('clanek/' . $c['seo_link'] . '?nahled=1')) ?>" target="_blank" rel="noopener">Náhled</a></td>
 	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $c['idc'] ?>" aria-label="Označit ke smazání: <?= e($c['titulek']) ?>"></td>
 </tr>
 <?php endforeach ?>

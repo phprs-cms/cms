@@ -10,6 +10,10 @@
  * @var array<int, string> $autori
  * @var array<int, string> $sablony
  * @var bool $smiVydavat
+ * @var array<int, string> $serialy
+ * @var string $stitky  štítky oddělené čárkou
+ * @var list<string> $vsechnyStitky
+ * @var list<array<string, mixed>> $revize
  */
 $dt = fn (?string $v): string => $v ? date('Y-m-d\TH:i', strtotime($v)) : '';
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
@@ -90,6 +94,23 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endforeach ?>
 	</select><?= $chyba('autor') ?></div>
 </div>
+<div class="radek">
+	<label for="stitky">Štítky</label>
+	<div><input class="textpole siroke" type="text" id="stitky" name="stitky" value="<?= e($stitky) ?>" maxlength="600" list="stitky-seznam" autocomplete="off" data-stitky>
+	<datalist id="stitky-seznam"><?php foreach ($vsechnyStitky as $s): ?><option value="<?= e($s) ?>"><?php endforeach ?></datalist>
+	<span class="napoveda">Oddělené čárkou, např. doprava, územní plán. Čtenář si podle štítku zobrazí související články.</span></div>
+</div>
+<div class="radek">
+	<label for="skupina_cl">Seriál</label>
+	<div><select id="skupina_cl" name="skupina_cl">
+		<option value="0">– článek není součástí seriálu –</option>
+<?php foreach ($serialy as $ids => $nazev): ?>
+		<option value="<?= (int) $ids ?>"<?= (int) $clanek['skupina_cl'] === (int) $ids ? ' selected' : '' ?>><?= e($nazev) ?></option>
+<?php endforeach ?>
+	</select>
+	<input class="textpole siroke" type="text" name="serial_novy" maxlength="150" placeholder="…nebo název nového seriálu" aria-label="Název nového seriálu" style="margin-top:6px">
+	<span class="napoveda">U článku se zobrazí odkazy na ostatní díly.</span></div>
+</div>
 </fieldset>
 
 <fieldset>
@@ -145,5 +166,16 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <p class="napoveda">Číslo článku: <?= e($clanek['link']) ?> (stará adresa phpRS: view.php?cisloclanku=<?= e($clanek['link']) ?>)</p>
 <?php endif ?>
 </details>
+<?php if ($revize !== []): ?>
+<details class="pokrocile">
+<summary>Historie verzí (<?= count($revize) ?>)</summary>
+<ul class="revize">
+<?php foreach ($revize as $rv): ?>
+	<li><a href="<?= e($modul->url('revize', ['id' => $clanek['idc'], 'idr' => $rv['idr']])) ?>" title="<?= e($rv['titulek']) ?>"><?= e(datum($rv['datum'], true)) ?></a> <span class="napoveda" style="display:inline"><?= e($rv['kdo_jm'] ?? '') ?></span></li>
+<?php endforeach ?>
+</ul>
+<p class="napoveda">Kliknutím načtete starší verzi do editoru. Uchovává se posledních 20 verzí.</p>
+</details>
+<?php endif ?>
 </aside>
 </form>

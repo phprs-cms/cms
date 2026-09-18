@@ -120,3 +120,10 @@ button.galerie-polozka:hover, button.galerie-polozka:focus-visible { border-colo
 .pokrocile { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--ed-linka); }
 .pokrocile summary { margin-bottom: 14px; font-weight: bold; cursor: pointer; }
 .titulek-pole { font-size: 20px !important; font-weight: 700; padding: 8px 10px !important; }
+
+/* záložky nad výpisem a seznam verzí */
+.zalozky { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 16px; border-bottom: 1px solid var(--ed-linka); }
+.zalozky a { padding: 7px 14px; border: 1px solid transparent; border-bottom: 0; border-radius: var(--ed-radius-maly) var(--ed-radius-maly) 0 0; text-decoration: none; color: var(--ed-text-slaby); font-weight: 600; margin-bottom: -1px; }
+.zalozky a:hover { color: var(--ed-text); }
+.zalozky a.aktivni { border-color: var(--ed-linka); background: var(--ed-plocha); color: var(--ed-akcent); }
+.revize { margin: 0 0 8px; padding-left: 18px; font-size: 13px; }

@@ -168,3 +168,8 @@ img { display: block; max-width: 100%; height: auto; }
 .logo-obrazek { display: inline-block; max-height: 34px; width: auto; vertical-align: middle; }
 .zapati a, .paticka a { margin-right: 12px; }
 .zapati span, .paticka .obal > span { margin-right: 12px; }
+
+/* štítky pod článkem */
+.clanek-stitky { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
+.clanek-stitky a { text-decoration: none; }
+.clanek-stitky a:hover { text-decoration: underline; }

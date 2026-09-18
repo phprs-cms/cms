@@ -81,21 +81,23 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
 
 - **M2 – moderní tvorba článků:** hotovo – Média se složkami a vazbou na články, WYSIWYG editor s automatickým
   ukládáním, dvousloupcový editor, stavy koncept / naplánováno / vydáno a vydání jedním klikem, připnutí,
-  štítky, seriály, historie verzí (20 posledních), statické Stránky. Zbývá: redakční kalendář.
-- **M3 – čtenáři:** Komentáře (moderace, antispam bez cookies: honeypot + časový zámek), Ankety, hodnocení
-  článků, vlastní Statistika bez cookies (návštěvy, nejčtenější, zdroje).
+  štítky, seriály, historie verzí, statické Stránky, redakční kalendář.
+- **M3 – čtenáři:** hotovo – Komentáře (reakce, moderace, režim schvalování; antispam bez cookies a bez CAPTCHA:
+  podepsaný časový zámek, honeypot, limit na IP, komentáře s odkazy čekají na schválení), hodnocení článků
+  hvězdičkami, Ankety (blok Anketa, jeden hlas na čtenáře), vlastní Statistika bez cookies (návštěvy,
+  zobrazení, nejčtenější články, zdroje návštěv; IP adresy se neukládají). Zbývá: anketa u konkrétního článku,
+  upozornění redakce na nový komentář e-mailem.
 - **M3b – Nastavení s podzáložkami:** hotovo – Základní · Vzhled · SEO a GEO · Měření · Soukromí a cookies · Stav systému.
-  - *SEO:* robots.txt, přepínač indexování, sitemap.xml, schema.org (NewsArticle, BreadcrumbList, WebSite,
-    Organization), Open Graph / Twitter Cards, výchozí obrázek pro sdílení, ověření Search Console a Bing.
-    Zbývá: noindex u rubriky/článku, vlastní titulek a popis článku, správa přesměrování 301 (+ automaticky
-    při změně adresy), Google News sitemap, IndexNow.
-  - *GEO:* pravidla pro AI roboty v robots.txt, llms.txt, Markdown verze článku (`/clanek/….md`).
-    Zbývá: blok „Ve zkratce" a FAQ se schema.org, `Person` stránky autorů, JSON Feed.
-  - *Měření:* GA4 (Consent Mode v2), Matomo, Plausible, vlastní kód do hlavičky.
-  - *Soukromí a cookies:* vestavěná lišta (nezbytné / analytické / marketingové, skripty až po souhlasu,
-    odvolání souhlasu), nebo externí služba (Cookiebot a kompatibilní), nebo nic. Zbývá: evidence souhlasů.
-  - *Stav systému:* kontroly serveru, databáze, souborů, bezpečnosti a provozu + `/stav.json?token=…`.
-    Zbývá: test odeslání e-mailu, bezpečnostní hlavičky, poslední záloha.
+  - *SEO:* robots.txt, přepínač indexování, sitemap.xml + Google News sitemap, schema.org (NewsArticle, FAQPage,
+    BreadcrumbList, WebSite, Organization, Person), Open Graph / Twitter Cards, vlastní titulek, popis a noindex
+    u článku, přesměrování 301 (modul Přesměrování + automaticky při změně adresy článku), IndexNow, ověření
+    Search Console a Bing.
+  - *GEO:* pravidla pro AI roboty, llms.txt, Markdown verze článku, blok „Ve zkratce", otázky a odpovědi (FAQ),
+    stránky autorů, JSON Feed.
+  - *Měření:* vestavěná statistika, GA4 (Consent Mode v2), Matomo, Plausible, vlastní kód do hlavičky.
+  - *Soukromí a cookies:* vestavěná lišta / externí služba (Cookiebot) / nic; evidence souhlasů bez IP adres.
+  - *Stav systému:* kontroly serveru, databáze, souborů, bezpečnosti a provozu, zkušební e-mail,
+    bezpečnostní hlavičky, `/stav.json?token=…`. Kontrola „poslední záloha" přijde se Zálohou DB v M5.
 - **M4 – import z phpRS 2.x:** převod `rs_*` tabulek včetně kódování win-1250 / ISO-8859-2 → UTF-8,
   zachování `link` (staré adresy fungují dál), obrázků galerie a hesel (přehashování při prvním přihlášení).
 - **M5 – rozšíření:** plug-iny (položka menu + systémový blok + háčky), **Reklamní systém** (pozice,

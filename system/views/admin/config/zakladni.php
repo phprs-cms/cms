@@ -20,6 +20,16 @@ $pole('text_paticky', 'Text v patičce', 'text', 'Například vydavatel, ISSN ne
 $pole('pocet_clanku', 'Článků na stránku', 'cislo', '', 'min="1" max="100" style="width:90px"');
 $pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50" style="width:90px"');
 $pole('hlidat_platnost', 'Stahovat články z hlavní stránky', 'ano', 'Článek po svém „datu stažení“ zmizí z hlavní stránky; v rubrice zůstane.');
-$pole('povolit_komentare', 'Komentáře u článků', 'ano');
+$pole('povolit_komentare', 'Komentáře u článků', 'ano', 'U jednotlivého článku je lze vypnout v jeho Dalším nastavení.');
+?>
+<div class="radek">
+	<label for="komentare_rezim">Zveřejňování komentářů</label>
+	<div><select id="komentare_rezim" name="komentare_rezim">
+		<option value="hned"<?= $hodnoty['komentare_rezim'] === 'hned' ? ' selected' : '' ?>>Hned – podezřelé komentáře čekají na schválení</option>
+		<option value="schvalovat"<?= $hodnoty['komentare_rezim'] === 'schvalovat' ? ' selected' : '' ?>>Až po schválení redakcí</option>
+	</select></div>
+</div>
+<?php
+$pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
 ?>
 </fieldset>

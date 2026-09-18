@@ -42,6 +42,7 @@ final class Bloky extends Modul
         'nov' => 'Novinky',
         'hle' => 'Vyhledávání',
         'nej' => 'Nejčtenější články',
+        'ank' => 'Anketa',
     ];
 
     /** Vzhled bloku; v databázi číslo 1-5 jako v phpRS 2 (rs_bloky.typ). */

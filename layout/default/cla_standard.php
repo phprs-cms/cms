@@ -7,7 +7,7 @@
  *   kratky - krátký článek: jen úvod, bez samostatné stránky
  *   cely   - celý článek
  *
- * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce) a "faq_html"
+ * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce), "faq_html", "hodnoceni_html" a "komentare_html" - hotové HTML, stačí vypsat
  * @var string $rezim
  * @var int $poradi  pořadí ve výpisu od nuly (0 = první článek první stránky)
  * @var callable(string): string $url
@@ -54,6 +54,8 @@ $info = function () use ($clanek, $url): string {
 		</ul>
 	</aside>
 <?php endif ?>
+	<?= $clanek['hodnoceni_html'] ?? '' ?>
+	<?= $clanek['komentare_html'] ?? '' ?>
 </article>
 <?php else: ?>
 <article class="clanek clanek-nahled<?= $clanek['priority'] > 0 ? ' clanek-dulezity' : '' ?>">

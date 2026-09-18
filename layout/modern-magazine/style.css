@@ -184,3 +184,32 @@ img { display: block; max-width: 100%; height: auto; }
 .faq details { border-top: 1px solid rgb(127 127 127 / 0.35); padding: 12px 0; }
 .faq summary { font-weight: 700; cursor: pointer; }
 .faq details p { margin: 8px 0 0; }
+
+/* hodnocení, komentáře a anketa (M3) */
+.hodnoceni { margin-top: 32px; }
+.hvezdy { position: relative; display: inline-block; color: rgb(127 127 127 / 0.35); letter-spacing: 2px; }
+.hvezdy::before { content: "★★★★★"; position: absolute; inset: 0; width: calc(var(--hodnota) / 5 * 100%); overflow: hidden; color: #E8A400; }
+.hodnoceni-formular { display: flex; align-items: center; gap: 2px; }
+.hodnoceni-formular span { margin-right: 8px; }
+.hodnoceni-formular button { border: 0; background: none; padding: 0 2px; font-size: 24px; line-height: 1; color: rgb(127 127 127 / 0.45); cursor: pointer; }
+.hodnoceni-formular button:hover, .hodnoceni-formular button:has(~ button:hover) { color: #E8A400; }
+.komentare { margin-top: 40px; font-size: 16px; line-height: 1.55; }
+.komentare h2 { font-size: 22px; }
+.komentare-seznam, .komentare-reakce { list-style: none; margin: 0; padding: 0; }
+.komentare-reakce { margin: 12px 0 0 28px; }
+.komentar { padding: 14px 0; border-top: 1px solid rgb(127 127 127 / 0.3); }
+.komentar-hlava { margin: 0 0 4px; font-size: 14px; }
+.komentar-hlava time { opacity: 0.65; margin-left: 6px; }
+.komentar-reagovat, [data-zrusit-reakci] { border: 0; background: none; padding: 0; margin-left: 10px; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; color: inherit; opacity: 0.75; }
+.komentar-text { overflow-wrap: anywhere; }
+.komentare-zprava { padding: 10px 14px; border: 1px solid #1A7F4B; color: #1A7F4B; }
+.komentare-chyba { border-color: #C4281C; color: #C4281C; }
+.komentar-formular { margin-top: 24px; padding-top: 18px; border-top: 2px solid currentColor; }
+.komentar-formular p { margin: 0 0 12px; }
+.komentar-formular label { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; }
+.komentar-formular input, .komentar-formular textarea { width: 100%; max-width: 100%; padding: 9px 10px; border: 1px solid rgb(127 127 127 / 0.6); border-radius: 0; background: transparent; color: inherit; font: inherit; }
+.komentar-formular button[type="submit"], .anketa button { padding: 10px 20px; border: 0; background: var(--text, #111); color: #FFFFFF; font: inherit; font-weight: 700; cursor: pointer; }
+.anketa-volba { display: block; padding: 4px 0; }
+.anketa-vysledek { position: relative; display: flex; justify-content: space-between; gap: 10px; margin: 6px 0; padding: 5px 8px; font-size: 14px; background: rgb(127 127 127 / 0.12); }
+.anketa-vysledek span { position: relative; z-index: 1; }
+.anketa-vysledek i { position: absolute; inset: 0 auto 0 0; background: rgb(127 127 127 / 0.3); }

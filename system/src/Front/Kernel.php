@@ -91,6 +91,15 @@ final class Kernel
 
             return new Response('', 204);
         }
+        if ($request->isPost() && in_array($path, ['/komentar', '/hodnoceni', '/anketa'], true)) {
+            $interakce = new Interakce($this->app, $this->view);
+
+            return match ($path) {
+                '/komentar' => $interakce->ulozKomentar(),
+                '/hodnoceni' => $interakce->ulozHodnoceni(),
+                default => $interakce->ulozHlas(),
+            };
+        }
         if (preg_match('#^/autor/(\d+)$#', $path, $m)) {
             return $this->autor((int) $m[1]);
         }
@@ -221,6 +230,9 @@ final class Kernel
         $casti = new View([PHPRS_SYSTEM . '/views/front']);
         $clanek['shrnuti_html'] = $casti->render('shrnuti', ['body' => array_values(array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: [])))]);
         $clanek['faq_html'] = $casti->render('faq', ['faq' => Seo::faq($clanek['faq'])]);
+        $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
+        $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);
+        $clanek['komentare_html'] = $nahled ? '' : $interakce->komentareHtml($clanek);
         $clanek['stitky'] = $this->app->db()->all('SELECT s.nazev, s.seo_link FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [$clanek['idc']]);
 
         $obsah = $this->view->render($this->sablonaClanku($clanek), [
@@ -327,6 +339,9 @@ final class Kernel
         $seo = new Seo($this->app);
         $clanek = $meta['clanek'] ?? null;
         unset($meta['clanek']);
+        if ($status === 200 && empty($meta['noindex'])) {
+            Statistika::zaznamenej($this->app, $clanek === null ? null : (int) $clanek['idc']);
+        }
 
         return Response::html($this->view->render('base', [
             'web' => $web,

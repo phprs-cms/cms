@@ -1,5 +1,9 @@
 <?php /** Záložka Měření. */ ?>
-<p class="hlaska">Vestavěná statistika přečtení článků funguje bez cookies a bez souhlasu. Externí nástroje níže se spouštějí podle nastavení v záložce Soukromí a cookies.</p>
+<fieldset>
+<legend>Vestavěná statistika</legend>
+<?php $pole('statistika', 'Měřit návštěvnost', 'ano', 'Návštěvy, zobrazení stránek, nejčtenější články a zdroje návštěv. Nepoužívá cookies ani neukládá IP adresy, takže nepotřebuje souhlas. Výsledky jsou v sekci Statistika.'); ?>
+</fieldset>
+<p class="hlaska">Externí nástroje níže se spouštějí podle nastavení v záložce Soukromí a cookies.</p>
 <fieldset>
 <legend>Google Analytics 4</legend>
 <?php $pole('ga4_id', 'ID měření', 'text', 'Ve tvaru G-XXXXXXXXXX. Systém vloží měřicí kód včetně Consent Mode v2.', 'placeholder="G-" maxlength="24"'); ?>

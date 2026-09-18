@@ -14,7 +14,7 @@ use PhpRS\Core\Response;
 final class Kernel
 {
     /**
-     * Moduly v pořadí, v jakém jsou v menu (po skupinách Obsah, Vzhled, Správa).
+     * Moduly v pořadí, v jakém jsou v menu (po skupinách Obsah, Čtenáři, Vzhled, Správa).
      * Identifikátory odpovídají phpRS 2 (users, clanky, news, bloky, topic, config...).
      *
      * @var list<class-string<Modul>>
@@ -25,6 +25,9 @@ final class Kernel
         Moduly\Rubriky::class,
         Moduly\Stranky::class,
         Moduly\Novinky::class,
+        Moduly\Komentare::class,
+        Moduly\Ankety::class,
+        Moduly\Statistika::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,
         Moduly\Presmerovani::class,
@@ -152,6 +155,7 @@ final class Kernel
                 'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
                 'Čekají na vydání' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0{$jen}"),
+                'Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0'),
                 'Přečtení celkem' => (int) $db->value("SELECT COALESCE(SUM(visit), 0) FROM {clanky} WHERE 1 = 1{$jen}"),
             ],
             'posledni' => $db->all(

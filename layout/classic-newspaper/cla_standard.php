@@ -3,7 +3,7 @@
  * Šablona článku "Standardní" pro layout Classic Newspaper.
  * Režimy: nahled / kratky (výpisy) a cely. První článek titulní strany ($poradi 0) je otvírák.
  *
- * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce) a "faq_html"
+ * @var array<string, mixed> $clanek  sloupce rs_clanky + tema_jm, tema_seo, autor_jm; u celého článku i "stitky" (nazev, seo_link), "shrnuti_html" (blok Ve zkratce), "faq_html", "hodnoceni_html" a "komentare_html" - hotové HTML, stačí vypsat
  * @var string $rezim
  * @var int $poradi
  * @var callable(string): string $url
@@ -46,6 +46,8 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 		</ul>
 	</aside>
 <?php endif ?>
+	<?= $clanek['hodnoceni_html'] ?? '' ?>
+	<?= $clanek['komentare_html'] ?? '' ?>
 </article>
 <?php else: ?>
 <article class="clanek clanek-nahled<?= $poradi === 0 ? ' clanek-otvirak' : '' ?><?= $clanek['obrazek'] !== '' ? ' ma-foto' : '' ?>">

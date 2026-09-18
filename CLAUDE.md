@@ -33,6 +33,11 @@ Duchovní nástupce českého CMS phpRS 2.8 pro magazíny. Čisté PHP 8.4+ bez 
 - **Layouty musí vypsat `<?= $hlava ?>` před `</head>` a `<?= $pata ?>` před `</body>`** - tudy jde SEO,
   strukturovaná data, měřicí kódy a cookie lišta (`Front\Seo`). Měřicí skripty čekající na souhlas mají
   `type="text/plain" data-souhlas="analytika"` (+ `data-cookieconsent` pro Cookiebot).
+- **Formuláře čtenářů** (komentáře, hodnocení, ankety – `Front\Interakce`) nemají session ani CSRF token;
+  chrání je `Core\Antispam` (podepsaný čas, honeypot, limit na otisk IP). Cokoli od čtenáře se vypisuje
+  jen přes `e()`. Do `rs_kontrola_ip` a statistik se nikdy neukládá IP adresa, jen otisk.
+- Hotové kusy HTML pro šablony článku (`shrnuti_html`, `faq_html`, `hodnoceni_html`, `komentare_html`) mají
+  výchozí šablony v `system/views/front/` – layout je jen vypíše, nebo si šablonu přepíše vlastní.
 - Editor článků a galerie: `image/editor.js` + `image/editor.css` (barvy přes proměnné `--ed-*` z obou
   admin stylesheetů). Nahrané soubory jdou vždy přes `Core\Obrazky` (překódování GD, složka `media/`).
 - Schéma se mění v `system/sql/schema.sql`; každá změna musí zůstat mapovatelná z phpRS 2.x (importér M4).

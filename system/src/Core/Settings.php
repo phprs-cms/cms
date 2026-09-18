@@ -29,6 +29,10 @@ final class Settings
         'pocet_novinek' => '3',
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky
         'povolit_komentare' => '1',
+        'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
+        'povolit_hodnoceni' => '1',
+        'statistika' => '1',          // vlastní měření návštěvnosti bez cookies
+        'tajny_klic' => '',           // vznikne sám; podepisuje formuláře čtenářů a solí otisky statistiky
         'aktivni_anketa' => '0',
         // SEO a GEO
         'indexovani' => '1',          // 0 = celý web noindex + Disallow v robots.txt

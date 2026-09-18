@@ -1,0 +1,49 @@
+<?php
+/**
+ * @var PhpRS\Core\App $app
+ * @var PhpRS\Admin\Moduly\Komentare $modul
+ * @var string $csrf
+ * @var list<array<string, mixed>> $komentare
+ * @var bool $cekajici
+ * @var int $pocetCekajicich
+ * @var int $strana
+ * @var int $stran
+ */
+?>
+<nav class="zalozky" aria-label="Stav komentářů">
+	<a href="<?= e($modul->url()) ?>"<?= $cekajici ? '' : ' class="aktivni"' ?>>Všechny</a>
+	<a href="<?= e($modul->url('', ['stav' => 'cekajici'])) ?>"<?= $cekajici ? ' class="aktivni"' : '' ?>>Čekají na schválení (<?= $pocetCekajicich ?>)</a>
+</nav>
+<?php if ($komentare === []): ?>
+<p>Žádné komentáře.</p>
+<?php else: ?>
+<form method="post" action="<?= e($modul->url('hromadne')) ?>">
+<?= $csrf ?>
+<input type="hidden" name="stav" value="<?= $cekajici ? 'cekajici' : '' ?>">
+<div class="tab-obal">
+<table class="vypis">
+<thead><tr><th></th><th>Komentář</th><th>Autor</th><th>Článek</th><th>Datum</th><th>Stav</th></tr></thead>
+<tbody>
+<?php foreach ($komentare as $k): ?>
+<tr<?= $k['zobrazit'] ? '' : ' class="nevydany"' ?>>
+	<td class="stred"><input type="checkbox" name="oznacene[]" value="<?= (int) $k['idk'] ?>" aria-label="Označit komentář od <?= e($k['od']) ?>"></td>
+	<td style="max-width:420px; overflow-wrap:anywhere"><?= nl2br(e(mb_strimwidth($k['obsah'], 0, 400, '…'))) ?></td>
+	<td><?= e($k['od']) ?><?= $k['od_mail'] !== '' ? '<br><small>' . e($k['od_mail']) . '</small>' : '' ?><br><small><?= e($k['od_ip']) ?></small></td>
+	<td><a href="<?= e($app->url('clanek/' . $k['seo_link'] . '#komentare')) ?>" target="_blank" rel="noopener"><?= e(mb_strimwidth($k['titulek'], 0, 60, '…')) ?></a></td>
+	<td class="cislo"><?= e(datum($k['datum'], true)) ?></td>
+	<td><span class="stitek stitek-<?= $k['zobrazit'] ? 'vydano' : 'koncept' ?>"><?= $k['zobrazit'] ? 'zveřejněný' : 'čeká / skrytý' ?></span></td>
+</tr>
+<?php endforeach ?>
+</tbody>
+</table>
+</div>
+<p class="media-hromadne">S označenými:
+	<button class="tl" type="submit" name="provest" value="schvalit">Schválit</button>
+	<button class="navigace" type="submit" name="provest" value="skryt">Skrýt</button>
+	<button class="navigace" type="submit" name="provest" value="smazat" onclick="return confirm('Opravdu smazat označené komentáře? Smažou se i reakce na ně.');">Smazat</button>
+</p>
+</form>
+<?php if ($stran > 1): ?>
+<p class="strankovani"><?php for ($s = 1; $s <= $stran; $s++): ?><?= $s === $strana ? '<strong>[' . $s . ']</strong>' : '<a href="' . e($modul->url('', array_filter(['stav' => $cekajici ? 'cekajici' : '', 'strana' => $s]))) . '">' . $s . '</a>' ?> <?php endfor ?></p>
+<?php endif ?>
+<?php endif ?>

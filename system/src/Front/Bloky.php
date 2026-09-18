@@ -58,6 +58,7 @@ final class Bloky
             ]),
             'hle' => $this->view->render('blok_hle', ['url' => $url, 'q' => $this->app->request->get('q')]),
             'nej' => $this->view->render('blok_nej', ['clanky' => (new Clanky($db, $this->app->settings()))->nejctenejsi(5), 'url' => $url]),
+            'ank' => (new Interakce($this->app, $this->view))->anketaHtml(),
             default => '',
         };
     }

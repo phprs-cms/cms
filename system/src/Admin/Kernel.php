@@ -31,6 +31,7 @@ final class Kernel
         Moduly\NewsletterAdmin::class,
         Moduly\Statistika::class,
         Moduly\Reklama::class,
+        Moduly\Vzhled::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,
         Moduly\Presmerovani::class,

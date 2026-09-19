@@ -1,14 +1,14 @@
 /* phpRS 3 - layout "default": čistý třísloupcový magazín */
 
 :root {
-	--barva: #0A2FC4;
-	--barva-tmava: #061B78;
+	--barva: var(--rs-akcent, #0A2FC4);
+	--barva-tmava: color-mix(in srgb, var(--barva) 70%, #000000);
 	--text: #1B1B1F;
 	--text-slaby: #5B5F6B;
 	--linka: #DADDE5;
 	--podklad: #F5F6F9;
-	--pismo: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-	--pismo-titulky: Georgia, "Times New Roman", serif;
+	--pismo: var(--rs-pismo-text, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+	--pismo-titulky: var(--rs-pismo-titulky, Georgia, "Times New Roman", serif);
 }
 * { box-sizing: border-box; }
 body { margin: 0; font: 16px/1.6 var(--pismo); color: var(--text); background: #FFFFFF; }

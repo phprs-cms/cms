@@ -8,9 +8,9 @@
 	--text-slaby: #5A5A5A;
 	--linka: #DFDFDF;
 	--linka-silna: #121212;
-	--akcent: #326891;
-	--titulky: "Bodoni 72", Didot, "Bodoni MT", "Playfair Display", Georgia, "Times New Roman", serif;
-	--sazba: Georgia, "Times New Roman", Times, serif;
+	--akcent: var(--rs-akcent, #326891);
+	--titulky: var(--rs-pismo-titulky, "Bodoni 72", Didot, "Bodoni MT", "Playfair Display", Georgia, "Times New Roman", serif);
+	--sazba: var(--rs-pismo-text, Georgia, "Times New Roman", Times, serif);
 	--popisky: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 * { box-sizing: border-box; }

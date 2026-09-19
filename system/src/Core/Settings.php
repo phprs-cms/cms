@@ -15,7 +15,11 @@ final class Settings
         'popis_webu' => '',
         'klicova_slova' => '',
         'email_webu' => '',
-        'logo_webu' => '',            // obrázek místo textového názvu v záhlaví
+        'logo_webu' => '',
+        'favicon' => '',
+        'brand_akcent' => '',         // hlavní barva webu (#rrggbb); prázdné = barva šablony
+        'brand_pismo_titulky' => 'vychozi', // klíč z Front\Identita::PISMA_TITULKU
+        'brand_pismo_text' => 'vychozi',            // obrázek místo textového názvu v záhlaví
         'text_paticky' => '',
         'soc_facebook' => '',
         'soc_instagram' => '',

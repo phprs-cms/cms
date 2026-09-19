@@ -9,8 +9,9 @@
 	--text-slaby: #6B6B6B;
 	--linka: #E2E2E2;
 	--podklad: #F2F2F2;
-	--akcent: #FF2D6F;
-	--grotesk: "Helvetica Neue", Helvetica, "Arial Nova", Arial, system-ui, sans-serif;
+	--akcent: var(--rs-akcent, #FF2D6F);
+	--grotesk: var(--rs-pismo-text, "Helvetica Neue", Helvetica, "Arial Nova", Arial, system-ui, sans-serif);
+	--titulky: var(--rs-pismo-titulky, "Helvetica Neue", Helvetica, "Arial Nova", Arial, system-ui, sans-serif);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -238,3 +239,6 @@ img { display: block; max-width: 100%; height: auto; }
 .clanek-aktualizovano { margin: 0 auto 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.7; }
 
 .newsletter-zprava { margin: 0 0 8px; padding: 8px 10px; border: 1px solid currentColor; font-size: 14px; }
+
+/* písmo titulků z Identity webu */
+h1, h2, h3, .logo, .blok-nadpis, .clanek-text blockquote { font-family: var(--titulky); }

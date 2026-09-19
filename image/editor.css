@@ -179,3 +179,16 @@ a.prihlasen { color: inherit; text-decoration: none; display: inline-flex; align
 .karta-volba strong { display: block; margin-bottom: 2px; font-size: 14px; color: var(--ed-text); }
 .karta-volba:has(input:checked) strong::after { content: "  ✓"; color: var(--ed-akcent); }
 details.pokrocile > .radek:first-of-type { margin-top: 4px; }
+
+/* identita webu */
+.identita-prepinac { font-weight: normal !important; margin-right: 12px; }
+.identita input[type="color"] { width: 46px; height: 32px; padding: 2px; border: 1px solid var(--ed-linka); border-radius: var(--ed-radius-maly); background: var(--ed-plocha); vertical-align: middle; cursor: pointer; }
+.identita-barvy { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.identita-barvy button { width: 28px; height: 28px; border: 2px solid var(--ed-plocha); border-radius: 50%; box-shadow: 0 0 0 1px var(--ed-linka); cursor: pointer; }
+.identita-barvy button:hover { box-shadow: 0 0 0 2px var(--ed-text); }
+.identita-ukazka { --u-akcent: ; padding: 22px 24px; border: 1px solid var(--ed-linka); border-radius: var(--ed-radius); background: #FFFFFF; color: #14171F; font-family: var(--u-text, Georgia, serif); font-size: 17px; line-height: 1.6; }
+.identita-ukazka-rubrika { font: 700 11px/1.3 system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--u-akcent, #326891); }
+.identita-ukazka h3 { margin: 4px 0 8px; font-family: var(--u-titulky, Georgia, serif); font-size: 28px; line-height: 1.15; text-align: left; color: #14171F; }
+.identita-ukazka p { margin: 0 0 14px; }
+.identita-ukazka a { color: var(--u-akcent, #326891); }
+.identita-ukazka-tlacitko { display: inline-block; padding: 8px 18px; background: var(--u-akcent, #326891); color: #FFFFFF; font: 700 13px system-ui, sans-serif; }

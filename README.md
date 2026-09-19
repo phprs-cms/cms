@@ -136,9 +136,12 @@ Hotovo:
 - **Veřejné API** (rozšíření): `/api/clanky`, `/api/clanky/<adresa>`, `/api/rubriky`.
 - **Právo:** žádost čtenáře o osobní údaje – export a výmaz podle e-mailu (komentáře, newsletter).
 - **Provoz:** režim údržby, záloha médií do ZIP, úlohy spouštěné návštěvou (aktualizace, zálohy).
+- **Identita webu** (Vzhled → Identita webu): šablona, logo, ikona webu, hlavní barva (vzorník + kontrola čitelnosti)
+  a písma titulků a textu s živou ukázkou; propisuje se do všech tří šablon přes `--rs-akcent`, `--rs-pismo-titulky`,
+  `--rs-pismo-text`. Jen systémová písma – nic se nestahuje z cizích serverů.
 - **Jednoduché ovládání:** vizuální editor bloků ve stránce webu, volby jako karty, pokročilá nastavení schovaná.
 
-Zbývá (větší celky):
+Zbývá (větší celky, v tomto pořadí):
 
 - **Registrace čtenářů a uzamčený obsah:** článek jen pro přihlášené či předplatitele, měkký paywall.
 - **Typy obsahu:** fotogalerie v článku s prohlížečkou, živá reportáž, podcast/video s přehrávačem, recenze s hodnocením.

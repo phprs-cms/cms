@@ -27,7 +27,7 @@ final class Konfigurace extends Modul
     public const bool JEN_ADMIN = true;
 
     public const array ZALOZKY = [
-        'zakladni' => 'Základní', 'vzhled' => 'Vzhled', 'seo' => 'SEO a GEO',
+        'zakladni' => 'Základní', 'vzhled' => 'Administrace', 'seo' => 'SEO a GEO',
         'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
@@ -43,7 +43,7 @@ final class Konfigurace extends Modul
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
             'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
         ],
-        'vzhled' => ['logo_webu' => 'text', 'prostredi_admin' => 'vyber:retro|2026'],
+        'vzhled' => ['prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [
             'indexovani' => 'ano', 'schema_org' => 'ano', 'og_obrazek' => 'text', 'overeni_google' => 'vzor:/^[A-Za-z0-9_-]{0,100}$/',
             'overeni_bing' => 'vzor:/^[A-Za-z0-9]{0,64}$/', 'robots_extra' => 'radky', 'ai_crawlery' => 'vyber:povolit|zakazat', 'llms_txt' => 'ano', 'markdown_clanky' => 'ano', 'indexnow' => 'ano',
@@ -98,15 +98,6 @@ final class Konfigurace extends Modul
                 continue;
             }
             $nastaveni->set($klic, $cista);
-        }
-        if ($zalozka === 'vzhled') {
-            $layouty = Layouty::seznam();
-            $layout = $this->request->post('layout');
-            if (isset($layouty[$layout]) && $layout !== $nastaveni->get('layout')) {
-                // nová šablona webu přináší i rozvržení stránky, které jí sluší; změnit ho lze v Blocích
-                $nastaveni->set('layout', $layout);
-                $nastaveni->set('rozvrzeni', $layouty[$layout]['rozvrzeni']);
-            }
         }
         if ($zalozka === 'seo' && $nastaveni->bool('indexnow') && $nastaveni->get('indexnow_klic') === '') {
             $nastaveni->set('indexnow_klic', bin2hex(random_bytes(16)));

@@ -133,6 +133,30 @@
 		}, 60000);
 	}
 
+	// Identita webu: živá ukázka barvy a písem, vzorník barev, kontrola čitelnosti barvy
+	var identita = document.querySelector('[data-identita]');
+	if (identita) {
+		var ukazka = identita.querySelector('[data-ukazka]'), barva = identita.brand_akcent;
+		var jas = function (hex) {
+			var k = [1, 3, 5].map(function (i) { var c = parseInt(hex.substr(i, 2), 16) / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); });
+			return 0.2126 * k[0] + 0.7152 * k[1] + 0.0722 * k[2];
+		};
+		var prekresli = function () {
+			var vlastni = identita.akcent_vlastni.value === '1';
+			ukazka.style.setProperty('--u-akcent', vlastni ? barva.value : '');
+			ukazka.style.setProperty('--u-titulky', identita.brand_pismo_titulky.selectedOptions[0].getAttribute('data-css') || '');
+			ukazka.style.setProperty('--u-text', identita.brand_pismo_text.selectedOptions[0].getAttribute('data-css') || '');
+			identita.querySelector('[data-kontrast]').hidden = !vlastni || 1.05 / (jas(barva.value) + 0.05) >= 4.5;
+		};
+		identita.addEventListener('input', prekresli);
+		identita.addEventListener('change', prekresli);
+		barva.addEventListener('input', function () { identita.akcent_vlastni.value = '1'; });
+		identita.querySelectorAll('[data-barva]').forEach(function (tl) {
+			tl.addEventListener('click', function () { barva.value = tl.getAttribute('data-barva'); identita.akcent_vlastni.value = '1'; prekresli(); });
+		});
+		prekresli();
+	}
+
 	// Obecné: formulář s data-prepinac="pole" ukazuje jen řádky, jejichž data-pro obsahuje zvolenou hodnotu pole
 	document.querySelectorAll('form[data-prepinac]').forEach(function (form) {
 		var jmeno = form.getAttribute('data-prepinac');

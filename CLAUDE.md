@@ -21,6 +21,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Dvě prostředí administrace nad jedním HTML** (retro `image/admin.css`, 2026 `image/admin-2026.css`).
   Každá změna šablon administrace se musí zkontrolovat v obou; nové třídy doplnit do obou stylesheetů.
   Pozor: klíč pole `'2026'` je v PHP int – při porovnání přetypovat na string.
+- **Identita webu** (`Front\Identita`, modul `vzhled`): šablony berou hlavní barvu a písma z proměnných `--rs-akcent`,
+  `--rs-pismo-titulky`, `--rs-pismo-text` s vlastní výchozí hodnotou (`--akcent: var(--rs-akcent, #326891)`). Nová šablona
+  je musí použít také. Žádná externí písma – jen sady v `Identita::PISMA_*`.
 - **Tři layouty webu** (`default`, `classic-newspaper`, `modern-magazine`): nová proměnná pro šablony
   nebo nový systémový blok se musí promítnout do všech tří. Žádná externí písma ani CDN.
 - Identifikátory v kódu (metody `akce*`, proměnné domény, šablony) česky bez diakritiky; komentáře a

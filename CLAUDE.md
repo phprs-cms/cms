@@ -67,6 +67,22 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   má CSRF (kontroluje `Admin\Kernel`), práva článků viz `Moduly\Clanky`.
 - HTML článků a bloků je důvěryhodné (píší ho autoři), komentáře a vstupy čtenářů nikdy.
 
+- **Společné prvky článku** (fotogalerie, prohlížečka fotek, přehrávač, živá reportáž, hodnocení recenze, zámek, účet čtenáře,
+  přepínač jazyků, Web Push) mají styl a skript v `image/web.css` a `image/web.js` – vkládá je `Front\Seo::hlava()`, takže fungují ve
+  všech šablonách včetně cizích. `Front\TypyObsahu` vkládá hotové HTML přímo do textu článku; layouty se kvůli nim nemění.
+- **Texty šablon webu jdou přes `t('Česky')`** (`Core\Jazyk`, slovníky `system/jazyky/<kód>.php`, klíčem je český text). Nový text
+  v layoutu nebo `views/front/` = obalit `t()` + doplnit do slovníků en/sk/de. Administrace má vlastní slovníky `admin-<kód>.php`
+  (přeložené jen hlavní obrazovky). Hodnoty formulářů (`value` skrytých polí a tlačítek s `name`) se NIKDY nepřekládají.
+- **Jazykové verze:** sloupec `jazyk` ('' = výchozí jazyk webu) mají rubriky, stránky a články (článek ho přebírá z rubriky při uložení);
+  `Jazyk::sloupecWebu()` je hodnota pro dotazy webu. `App::url()` přidává předponu `/en/` jen adresám bez přípony – soubory, `api/`,
+  `mcp`, `push/` jsou společné. Každý nový dotaz na webu, který vypisuje obsah, musí filtrovat podle jazyka.
+- **Zamčený obsah** řeší `Front\Ctenari::zamkni()` volané z `Front\Clanky::priprav()` – cokoli čte články jinudy, musí zámek
+  respektovat samo. Čtenáři nemají session: podepsaná cookie `phprs_ctenar` (v podpisu je otisk hesla), formuláře přes `Antispam`.
+- **Oznámení o vydání** (webhook, IndexNow, Web Push) odchází jen přes `Core\Oznameni::zpracuj()` a sloupec `rs_clanky.oznameno`;
+  nevolej `Webhook::clanekVydan()` přímo. Web Push: adresa odběru smí vést jen na služby v `Push::SLUZBY` (ochrana proti SSRF).
+- **AI asistent** (`Core\Asistent`): klíč `ai_klic` je typ `tajne` – do HTML jde jen jeho konec. Odpověď modelu je nedůvěryhodný vstup
+  (jen řetězce bez HTML). Modely: `Asistent::MODELY`.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

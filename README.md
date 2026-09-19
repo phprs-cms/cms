@@ -119,7 +119,7 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
   články (seznam, čtení, založení jako koncept, úprava s historií verzí, vydání jen s právem vydávat), rubriky, média,
   bloky a – jen pro administrátora – šablony webu: kopie šablony, čtení a ukládání souborů (kontrola syntaxe PHP,
   vestavěné šablony jsou jen ke čtení), náhled `?sablona=…`, aktivace. Každý zásah jde do Protokolu změn.
-  Zbývá: asistent přímo v editoru (návrh titulků, perexu, korektura) – vyžaduje API klíč správce.
+  Asistent přímo v editoru je hotový jako samostatné rozšíření (viz M-X).
 
 ### M-X – schválené náměty
 
@@ -141,15 +141,38 @@ Hotovo:
   `--rs-pismo-text`. Jen systémová písma – nic se nestahuje z cizích serverů.
 - **Jednoduché ovládání:** vizuální editor bloků ve stránce webu, volby jako karty, pokročilá nastavení schovaná.
 
-Zbývá (větší celky, v tomto pořadí):
+- **Fotogalerie v článku:** tlačítko „galerie" v editoru (výběr více fotek z Médií), mřížka na webu a prohlížečka fotek přes celou
+  obrazovku (klávesnice, tažení prstem); otevírá i jednotlivé obrázky v textu. Společné prvky článku jsou v `image/web.css|js`.
+- **Čtenáři a zamčený obsah** (rozšíření): registrace s potvrzením e-mailem, přihlášení podepsanou cookie (bez session, web zůstává
+  cachovatelný), zapomenuté heslo, smazání účtu; článek „jen pro přihlášené" nebo „jen pro předplatitele" s ukázkou prvních odstavců
+  a výzvou; předplatné zapisuje administrátor ručně (modul Čtenáři, export CSV); zamčený text neunikne přes RSS, API ani `.md`;
+  strukturovaná data `isAccessibleForFree`. Platební brána záměrně není.
+- **AI asistent v editoru** (rozšíření): návrhy titulků, perexu, shrnutí „Ve zkratce", SEO popisu a štítků, korektura s výběrem oprav
+  a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
+  Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
+- **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající
+  odkazy, tabulky bez záhlaví, rámce bez názvu, titulek verzálkami.
+- **Web Push** (rozšíření): oznámení o novém článku bez cizí služby a bez knihoven – VAPID (ES256) přes OpenSSL, zpráva bez obsahu,
+  `sw.js` si titulek stáhne z `/push.json`; blok Oznámení, `manifest.webmanifest` (iOS), rozesílka po dávkách, zaniklé odběry se mažou samy.
+- **Oznámení o vydání i pro naplánované články:** webhook, IndexNow a Web Push odchází, jakmile čas vydání nastane (`Core\Oznameni`,
+  kontrola po návštěvách nejvýš jednou za minutu) – platí i pro články vydané přes Claude (MCP).
+- **Jazyk webu a jazykové verze** (rozšíření): jazyk webu (cs, sk, en, de) přeloží texty šablon přes `t()` a slovníky `system/jazyky/`;
+  další verze běží na `/en/`, `/de/`… a mají své rubriky, články a stránky. Jazyk se volí u rubriky, článek ho převezme; překlad se
+  propojí s originálem (přepínač jazyků vede přímo na překlad, `hreflang`, `og:locale`, `inLanguage`); bloky jdou omezit na jazyk;
+  společná mapa webu, RSS/llms.txt/podcast pro každou verzi zvlášť.
+- **Typy obsahu:** živá reportáž (průběžné zápisy, čtenářům se načítají samy, `LiveBlogPosting`), přehrávač zvuku a videa (soubor,
+  YouTube, Vimeo, Spotify – cizí přehrávač se načte až po kliknutí), podcastový kanál `/podcast.xml`, recenze s hodnocením v % (`Review`).
+- **Jazyk administrace** podle uživatele (Můj účet): čeština, slovenština, angličtina – menu, přehled, přihlášení, Můj účet a psaní
+  článků. Nastavení webu a ostatní moduly zůstávají česky (další obrazovky: obalit texty `t()` a doplnit `system/jazyky/admin-*.php`).
+- **Provoz:** migrace databáze se provedou i při první návštěvě webu (se zámkem), takže automatická aktualizace web nerozbije.
 
-- **Registrace čtenářů a uzamčený obsah:** článek jen pro přihlášené či předplatitele, měkký paywall.
-- **Typy obsahu:** fotogalerie v článku s prohlížečkou, živá reportáž, podcast/video s přehrávačem, recenze s hodnocením.
-- **Vícejazyčnost** webu a **více webů z jedné instalace**.
-- **Web Push**, webhook i pro články naplánované do budoucna (dnes se volá při ručním vydání).
-- **Kontrola přístupnosti obsahu** v editoru (alt texty, hierarchie nadpisů).
-- **Asistent v editoru** (návrh titulků a perexu, korektura) – navazuje na M7.
-- Slovenština a angličtina administrace, Download sekce.
+Zbývá:
+
+- **Více webů z jedné instalace** – záměrně odloženo: šlo by proti jednoduchosti (jedna instalace = jeden web, další web = další kopie).
+- Doplatit překlad zbylých obrazovek administrace (Nastavení, Bloky, Média…) do angličtiny a slovenštiny.
+- Měkký paywall s počítadlem článků zdarma (dnes: ukázka prvních odstavců), platební brána pro předplatné.
+- Šifrovaný obsah Web Push zpráv (dnes se titulek stahuje z `/push.json`, což stačí a je jednodušší).
+- Download sekce (nízká priorita).
 
 ## Distribuce a podpora projektu
 

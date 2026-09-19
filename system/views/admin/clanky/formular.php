@@ -11,6 +11,7 @@
  * @var array<int, string> $sablony
  * @var bool $smiVydavat
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
+ * @var bool $asistent  AI asistent je zapnutý a má klíč
  * @var array<int, string> $serialy
  * @var string $stitky  štítky oddělené čárkou
  * @var list<string> $vsechnyStitky
@@ -21,7 +22,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled článků</a></p>
 
-<form class="formular formular-clanek" method="post" action="<?= e($modul->url('uloz')) ?>" data-koncept="clanek-<?= (int) $clanek['idc'] ?>">
+<form class="formular formular-clanek" method="post" action="<?= e($modul->url('uloz')) ?>" data-koncept="clanek-<?= (int) $clanek['idc'] ?>"<?= $asistent ? ' data-asistent="' . e($modul->url('asistent')) . '"' : '' ?>>
 <?= $csrf ?>
 <input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>">
 
@@ -133,6 +134,11 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </div>
 </fieldset>
 
+<fieldset class="kontrola" data-kontrola>
+<legend>Kontrola přístupnosti</legend>
+<div data-kontrola-vysledek aria-live="polite"><p class="napoveda">Kontrola běží při psaní (potřebuje JavaScript).</p></div>
+</fieldset>
+
 <details class="pokrocile"<?= $clanek['datum_pl'] || $clanek['zdroj'] !== '' || $clanek['t_slova'] !== '' || (int) $clanek['typ_clanku'] === 2 ? ' open' : '' ?>>
 <summary>Další nastavení</summary>
 <div class="radek">
@@ -218,3 +224,4 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endif ?>
 </aside>
 </form>
+<script src="<?= e($modul->app()->url('image/pomocnik.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>

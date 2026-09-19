@@ -293,6 +293,9 @@
 		});
 		if (pole.form) { pole.form.addEventListener('submit', function () { if (!zdroj) { pole.value = cisteHtml(plocha.innerHTML); } }); }
 		pocitej();
+		// pomocník editoru (kontrola přístupnosti, AI asistent) po zápisu do pole editor překreslí
+		window.phprsEditory = window.phprsEditory || {};
+		if (pole.id) { window.phprsEditory[pole.id] = { obnov: function () { zPole(); pocitej(); } }; }
 		return { obnov: zPole, stav: stav.lastChild };
 	}
 

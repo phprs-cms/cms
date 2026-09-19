@@ -35,7 +35,7 @@ final class Konfigurace extends Modul
 
     /**
      * Pole jednotlivých záložek: klíč v rs_config => typ.
-     * text | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | vzor:/regex/
+     * text | tajne (klíč: nevypisuje se zpět, prázdné pole = beze změny) | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | vzor:/regex/
      */
     private const array POLE = [
         'zakladni' => [
@@ -54,7 +54,7 @@ final class Konfigurace extends Modul
             'plausible_domena' => 'vzor:/^([a-z0-9.-]{3,100})?$/', 'kod_hlava' => 'kod', 'statistika' => 'ano',
         ],
         'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod', 'cookies_evidence' => 'ano'],
-        'rozsireni' => [],
+        'rozsireni' => ['ai_klic' => 'tajne', 'ai_model' => 'vyber:' . \PhpRS\Core\Asistent::MODELY_KLICE],
         'zalohy' => ['zalohy_auto' => 'ano', 'aktualizace_auto' => 'ano', 'aktualizace_url' => 'url'],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
@@ -64,8 +64,11 @@ final class Konfigurace extends Modul
         $zalozka = $this->zalozka($this->request->get('zalozka'));
         $nastaveni = $this->app->settings();
         $hodnoty = [];
-        foreach (array_keys(self::POLE[$zalozka]) as $klic) {
+        foreach (self::POLE[$zalozka] as $klic => $typ) {
             $hodnoty[$klic] = $nastaveni->get($klic);
+            if ($typ === 'tajne' && $hodnoty[$klic] !== '') {
+                $hodnoty[$klic] = '…' . substr($hodnoty[$klic], -4); // do stránky jde jen konec klíče pro kontrolu
+            }
         }
 
         return $this->view('vypis', 'Nastavení', [
@@ -93,6 +96,14 @@ final class Konfigurace extends Modul
         foreach (self::POLE[$zalozka] as $klic => $typ) {
             // "kod" se neořezává ani jinak neupravuje - je to HTML/JS vložené administrátorem
             $hodnota = $typ === 'kod' ? (string) ($_POST[$klic] ?? '') : $this->request->post($klic);
+            if ($typ === 'tajne') {
+                if ($this->request->postBool($klic . '_smazat')) {
+                    $nastaveni->set($klic, '');
+                } elseif ($hodnota !== '') {
+                    $nastaveni->set($klic, mb_substr($hodnota, 0, 300));
+                }
+                continue;
+            }
             $cista = self::vycisti($typ, $hodnota, $this->request->postBool($klic));
             if ($cista === null) {
                 $chyby[] = $klic;
@@ -105,6 +116,9 @@ final class Konfigurace extends Modul
         }
         if ($zalozka === 'rozsireni') {
             Rozsireni::uloz($nastaveni, $this->request->postList('rozsireni'));
+            if ($this->request->post('ai_klic') !== '' && ($chybaKlice = (new \PhpRS\Core\Asistent($nastaveni))->overKlic()) !== null) {
+                return $this->zpet('Nastavení je uložené, ale klíč asistenta nefunguje: ' . $chybaKlice, '', ['zalozka' => $zalozka], 'chyba');
+            }
         }
         if ($this->request->postBool('novy_token')) {
             $nastaveni->set('stav_token', bin2hex(random_bytes(16)));

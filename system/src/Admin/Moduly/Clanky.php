@@ -236,6 +236,44 @@ final class Clanky extends Modul
         return Response::json(['ok' => $clanek !== null]);
     }
 
+    /**
+     * AI asistent: návrh k rozepsanému článku (titulky, perex, shrnutí, SEO popis, štítky, korektura, popis obrázku).
+     * Pracuje s textem z formuláře, nic neukládá - o použití návrhu rozhoduje redaktor.
+     */
+    protected function akceAsistent(): Response
+    {
+        $asistent = new \PhpRS\Core\Asistent($this->app->settings());
+        if (!$this->request->isPost() || !$asistent->pripraven()) {
+            return Response::json(['chyba' => 'AI asistent není zapnutý nebo chybí klíč (Nastavení → Rozšíření).'], 400);
+        }
+        // pojistka proti nechtěné útratě: nejvýš 60 dotazů za hodinu na uživatele
+        $ja = $this->app->auth()->id();
+        if ((int) $this->db->value("SELECT COUNT(*) FROM {protokol} WHERE kdo = ? AND modul = 'asistent' AND cas > NOW() - INTERVAL 1 HOUR", [$ja]) >= 60) {
+            return Response::json(['chyba' => 'Za poslední hodinu jste asistenta použili 60×. Zkuste to prosím později.'], 429);
+        }
+        $ukol = $this->request->post('ukol');
+        $obrazek = null;
+        if ($ukol === 'alt') {
+            // jen soubory z media/: cesta se skládá z ověřených částí adresy
+            $obrazek = preg_match('#media/(\d{4}/\d{2}/[A-Za-z0-9._-]+\.(?:jpe?g|png|webp|gif))$#', (string) parse_url($this->request->post('obrazek'), PHP_URL_PATH), $m) ? PHPRS_ROOT . '/media/' . $m[1] : null;
+            $mensi = $obrazek === null ? null : preg_replace('/\.(\w+)$/', '-1200.$1', $obrazek);
+            $obrazek = $mensi !== null && is_file($mensi) ? $mensi : $obrazek;
+        }
+        try {
+            $vysledek = $asistent->navrhni($ukol, [
+                'titulek' => $this->request->post('titulek'),
+                'uvod' => $this->request->post('uvod'),
+                'text' => $this->request->post('text'),
+                'stitky_webu' => $ukol === 'stitky' ? array_column($this->db->all('SELECT nazev FROM {stitky} ORDER BY nazev LIMIT 300'), 'nazev') : [],
+            ], $obrazek);
+        } catch (\RuntimeException $e) {
+            return Response::json(['chyba' => $e->getMessage()], 502);
+        }
+        \PhpRS\Admin\Protokol::zapis($this->app, 'asistent', $ukol, mb_substr($this->request->post('titulek'), 0, 80));
+
+        return Response::json($vysledek);
+    }
+
     /** Redakční kalendář: články podle data vydání v měsíční mřížce. */
     protected function akceKalendar(): Response
     {
@@ -318,6 +356,7 @@ final class Clanky extends Modul
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
+            'asistent' => (new \PhpRS\Core\Asistent($this->app->settings()))->pripraven(),
             'serialy' => $this->db->pairs('SELECT ids, nazev_skup FROM {skup_cl} ORDER BY nazev_skup'),
             'stitky' => $this->request->isPost() ? $this->request->post('stitky') : implode(', ', array_column(
                 $this->db->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [(int) $clanek['idc']]),

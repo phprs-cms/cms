@@ -22,6 +22,7 @@ final class Rozsireni
         'newsletter' => ['Newsletter', 'Přihlášení k odběru s potvrzením e-mailem a rozesílka výběru článků odběratelům.', false],
         'ctenari' => ['Čtenáři a zamčený obsah', 'Registrace čtenářů, články jen pro přihlášené nebo pro předplatitele s ukázkou pro ostatní. Předplatné zapisuje administrátor ručně.', false],
         'api' => ['Veřejné API', 'Čtecí JSON API pro mobilní aplikaci nebo jiný web: /api/clanky, /api/clanky/<adresa>, /api/rubriky.', false],
+        'asistent' => ['AI asistent v editoru', 'Návrhy titulků, perexu, shrnutí, SEO popisu a štítků, korektura a popisy obrázků přímo při psaní článku. Potřebuje vlastní klíč Claude API (níže); text článku se při použití posílá službě Anthropic.', false],
         'claude' => ['Napojení na Claude', 'MCP server na adrese /mcp: Claude umí s právy vašeho účtu číst a psát články, spravovat bloky a tvořit šablony webu. Přístupový token si každý vytvoří v nabídce Můj účet.', false],
         'reklama' => ['Reklamní systém', 'Bannery a reklamní kódy v blocích a pod články, plánování, počítání zobrazení a prokliků, ads.txt.', false],
     ];

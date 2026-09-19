@@ -77,6 +77,8 @@ final class Settings
         'aktualizace_auto' => '1',    // bezpečnostní vydání instalovat automaticky
         'aktualizace_pokus' => '',    // verze, kterou už údržba na pozadí zkoušela / oznámila
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
+        'ai_klic' => '',              // klíč Claude API pro AI asistenta v editoru (nikdy se nevypisuje zpět do formuláře)
+        'ai_model' => 'claude-sonnet-5',
         'ads_txt' => '',
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];

@@ -10,6 +10,8 @@
 (function () {
 	'use strict';
 
+	var T = window.T || function (s) { return s; }; // překlad textů administrace (image/jazyky/admin-*.js)
+
 	var ADMIN = document.querySelector('script[data-admin-url]').getAttribute('data-admin-url');
 	var CSRF = (document.querySelector('input[name="_csrf"]') || {}).value || '';
 	var GALERIE = ADMIN + '?modul=intergal';
@@ -68,7 +70,7 @@
 				if (j.chyby && j.chyby.length) { window.alert(j.chyby.join('\n')); }
 				return j.obrazky || [];
 			})
-			.catch(function () { window.alert('Nahrání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.'); return []; });
+			.catch(function () { window.alert(T('Nahrání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.')); return []; });
 	}
 
 	function jsouObrazky(prenos) {
@@ -85,9 +87,9 @@
 		if (!okno) {
 			okno = document.createElement('dialog');
 			okno.className = 'galerie-okno';
-			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>Média</strong>'
-				+ '<label class="tl">Nahrát nový<input type="file" accept="image/*" multiple hidden></label>'
-				+ '<button type="button" class="navigace" data-zavri>Zavřít</button></div>'
+			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>' + T('Média') + '</strong>'
+				+ '<label class="tl">' + T('Nahrát nový') + '<input type="file" accept="image/*" multiple hidden></label>'
+				+ '<button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div>'
 				+ '<div class="galerie-okno-filtr"><select aria-label="Složka"></select></div>'
 				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.</p><div class="galerie-mrizka"></div>';
 			document.body.appendChild(okno);
@@ -111,7 +113,7 @@
 			b.className = 'galerie-polozka';
 			b.innerHTML = '<img loading="lazy" alt=""><span></span>';
 			b.firstChild.src = o.nahled;
-			b.lastChild.textContent = o.nazev || 'bez názvu';
+			b.lastChild.textContent = o.nazev || T('bez názvu');
 			b.addEventListener('click', function () {
 				if (!okno.vice) { okno.close(); okno.zpetne(o); return; }
 				var i = okno.vybrane.indexOf(o);
@@ -125,16 +127,16 @@
 		// filtr: "" = vše, "clanek" = obrázky tohoto článku, číslo = složka (0 = nezařazené)
 		function nacti(filtr) {
 			var dotaz = filtr === 'clanek' ? '&clanek=' + ID_CLANKU : (filtr !== '' ? '&sekce=' + filtr : '');
-			mrizka.textContent = 'Načítám…';
+			mrizka.textContent = T('Načítám…');
 			fetch(GALERIE + '&akce=seznam' + dotaz, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
 				var vyber = okno.querySelector('select');
 				vyber.textContent = '';
-				[['', 'Všechna média']].concat(ID_CLANKU ? [['clanek', 'V tomto článku']] : [], [['0', 'Nezařazené']], j.slozky.map(function (s) { return [String(s.id), 'Složka: ' + s.nazev]; })).forEach(function (v) {
+				[['', T('Všechna média')]].concat(ID_CLANKU ? [['clanek', T('V tomto článku')]] : [], [['0', T('Nezařazené')]], j.slozky.map(function (s) { return [String(s.id), T('Složka: ') + s.nazev]; })).forEach(function (v) {
 					var o = document.createElement('option');
 					o.value = v[0]; o.textContent = v[1]; o.selected = v[0] === filtr;
 					vyber.appendChild(o);
 				});
-				mrizka.textContent = j.obrazky.length ? '' : 'Tady zatím žádné obrázky nejsou.';
+				mrizka.textContent = j.obrazky.length ? '' : T('Tady zatím žádné obrázky nejsou.');
 				j.obrazky.forEach(function (o) { pridej(o, false); });
 			});
 		}
@@ -145,12 +147,12 @@
 			var tl = okno.querySelector('[data-vlozit]');
 			tl.hidden = !okno.vice;
 			tl.disabled = okno.vybrane.length < 2;
-			tl.textContent = okno.vybrane.length < 2 ? 'Označte aspoň 2 fotky' : 'Vložit galerii (' + okno.vybrane.length + ')';
+			tl.textContent = okno.vybrane.length < 2 ? T('Označte aspoň 2 fotky') : T('Vložit galerii (') + okno.vybrane.length + ')';
 		};
 		okno.oznac();
 		okno.querySelector('.napoveda').textContent = vice
-			? 'Klepnutím označte fotky v pořadí, v jakém mají jít za sebou. Soubory sem můžete i přetáhnout.'
-			: 'Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.';
+			? T('Klepnutím označte fotky v pořadí, v jakém mají jít za sebou. Soubory sem můžete i přetáhnout.')
+			: T('Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.');
 		okno.showModal();
 		nacti(okno.querySelector('select').value || '');
 	}
@@ -171,19 +173,19 @@
 	/* ---------- editor ---------- */
 
 	var TLACITKA = [
-		['¶', 'Odstavec', function () { prikaz('formatBlock', 'P'); }],
+		['¶', T('Odstavec'), function () { prikaz('formatBlock', 'P'); }],
 		['H2', 'Mezititulek', function () { prikaz('formatBlock', 'H2'); }, 'velky'],
-		['H3', 'Menší mezititulek', function () { prikaz('formatBlock', 'H3'); }, 'velky'],
-		['B', 'Tučně (Ctrl+B)', function () { prikaz('bold'); }],
-		['I', 'Kurzíva (Ctrl+I)', function () { prikaz('italic'); }],
-		['odkaz', 'Vložit odkaz (Ctrl+K)', odkaz],
-		['• seznam', 'Odrážkový seznam', function () { prikaz('insertUnorderedList'); }],
-		['1. seznam', 'Číslovaný seznam', function () { prikaz('insertOrderedList'); }, 'velky'],
-		['„citace“', 'Citace', function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
-		['obrázek', 'Vložit obrázek z médií', null, 'velky'],
-		['galerie', 'Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku', 'galerie', 'velky'],
-		['—', 'Oddělovací čára', function () { prikaz('insertHorizontalRule'); }, 'velky'],
-		['Tx', 'Odstranit formátování', function () { prikaz('removeFormat'); prikaz('unlink'); }]
+		['H3', T('Menší mezititulek'), function () { prikaz('formatBlock', 'H3'); }, 'velky'],
+		['B', T('Tučně (Ctrl+B)'), function () { prikaz('bold'); }],
+		['I', T('Kurzíva (Ctrl+I)'), function () { prikaz('italic'); }],
+		[T('odkaz'), T('Vložit odkaz (Ctrl+K)'), odkaz],
+		['• seznam', T('Odrážkový seznam'), function () { prikaz('insertUnorderedList'); }],
+		['1. seznam', T('Číslovaný seznam'), function () { prikaz('insertOrderedList'); }, 'velky'],
+		['„citace“', T('Citace'), function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
+		[T('obrázek'), T('Vložit obrázek z médií'), null, 'velky'],
+		['galerie', T('Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku'), 'galerie', 'velky'],
+		['—', T('Oddělovací čára'), function () { prikaz('insertHorizontalRule'); }, 'velky'],
+		['Tx', T('Odstranit formátování'), function () { prikaz('removeFormat'); prikaz('unlink'); }]
 	];
 
 	function prikaz(nazev, hodnota) { document.execCommand(nazev, false, hodnota || null); }
@@ -191,7 +193,7 @@
 	function odkaz() {
 		var vyber = window.getSelection();
 		var kotva = vyber.anchorNode && vyber.anchorNode.parentElement && vyber.anchorNode.parentElement.closest('a');
-		var url = window.prompt('Adresa odkazu (prázdné = odkaz zrušit):', kotva ? kotva.getAttribute('href') : 'https://');
+		var url = window.prompt(T('Adresa odkazu (prázdné = odkaz zrušit):'), kotva ? kotva.getAttribute('href') : 'https://');
 		if (url === null) { return; }
 		if (url === '') { prikaz('unlink'); return; }
 		if (vyber.isCollapsed && !kotva) { prikaz('insertHTML', '<a href="' + url.replace(/"/g, '&quot;') + '">' + url.replace(/</g, '&lt;') + '</a>'); } else { prikaz('createLink', url); }
@@ -218,7 +220,7 @@
 		function zPole() { plocha.innerHTML = pole.value.trim() || '<p><br></p>'; }
 		function pocitej() {
 			var slov = (plocha.innerText.trim().match(/\S+/g) || []).length;
-			stav.firstChild.textContent = slov + ' slov' + (maly ? '' : ' · čtení asi ' + Math.max(1, Math.round(slov / 200)) + ' min');
+			stav.firstChild.textContent = slov + T(' slov') + (maly ? '' : T(' · čtení asi ') + Math.max(1, Math.round(slov / 200)) + ' min');
 		}
 		function vlozObrazek(galerie) {
 			var rozsah = window.getSelection().rangeCount ? window.getSelection().getRangeAt(0).cloneRange() : null;
@@ -245,7 +247,7 @@
 		var html = document.createElement('button');
 		html.type = 'button';
 		html.textContent = 'HTML';
-		html.title = 'Přepnout na zdrojový kód';
+		html.title = T('Přepnout na zdrojový kód');
 		html.className = 'editor-html';
 		html.setAttribute('aria-pressed', 'false');
 		html.addEventListener('click', function () {
@@ -310,7 +312,7 @@
 			var data = { cas: Date.now(), pole: {} };
 			pole.forEach(function (p) { if (p.type === 'checkbox' || p.type === 'radio') { if (p.checked) { data.pole[p.name] = p.value; } else if (p.type === 'checkbox') { data.pole[p.name] = null; } } else { data.pole[p.name] = p.value; } });
 			try { localStorage.setItem(klic, JSON.stringify(data)); } catch (e) { return; }
-			editory.forEach(function (ed) { ed.stav.textContent = 'rozepsaný text uložen v prohlížeči ' + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); });
+			editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen v prohlížeči ') + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); });
 		}
 		form.addEventListener('input', function () { clearTimeout(casovac); casovac = setTimeout(uloz, 1500); });
 		form.addEventListener('submit', function () { clearTimeout(casovac); try { localStorage.removeItem(klic); } catch (e) { /* nic */ } });
@@ -322,7 +324,7 @@
 		if (!lisiSe) { return; }
 		var lista = document.createElement('p');
 		lista.className = 'hlaska';
-		lista.innerHTML = 'V prohlížeči je neuložená rozepsaná verze z ' + new Date(ulozene.cas).toLocaleString('cs-CZ') + '. <button type="button" class="navigace">Obnovit ji</button> <button type="button" class="navigace">Zahodit</button>';
+		lista.innerHTML = T('V prohlížeči je neuložená rozepsaná verze z ') + new Date(ulozene.cas).toLocaleString('cs-CZ') + '. <button type="button" class="navigace">Obnovit ji</button> <button type="button" class="navigace">Zahodit</button>';
 		form.parentNode.insertBefore(lista, form);
 		lista.children[0].addEventListener('click', function () {
 			pole.forEach(function (p) {
@@ -342,7 +344,7 @@
 		var tl = document.createElement('button');
 		tl.type = 'button';
 		tl.className = 'navigace';
-		tl.textContent = 'Vybrat z médií';
+		tl.textContent = T('Vybrat z médií');
 		var nahled = document.createElement('img');
 		nahled.className = 'obrazek-nahled';
 		nahled.alt = '';

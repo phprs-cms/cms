@@ -20,6 +20,8 @@ use PhpRS\Admin\Moduly\Konfigurace;
 /** Řádek formuláře: $pole('klic', 'Popisek', 'text|radky|kod|ano|cislo|url|email', 'nápověda', [atributy]) */
 $pole = function (string $klic, string $popisek, string $druh = 'text', string $napoveda = '', string $atributy = '') use ($hodnoty): void {
     $h = $hodnoty[$klic] ?? '';
+    $popisek = t($popisek);
+    $napoveda = $napoveda === '' ? '' : t($napoveda);
     $nap = $napoveda !== '' ? '<span class="napoveda">' . $napoveda . '</span>' : '';
     echo '<div class="radek">';
     if ($druh === 'ano') {
@@ -33,9 +35,9 @@ $pole = function (string $klic, string $popisek, string $druh = 'text', string $
     echo '</div>';
 };
 ?>
-<nav class="zalozky" aria-label="Sekce nastavení">
+<nav class="zalozky" aria-label="<?= e(t('Sekce nastavení')) ?>">
 <?php foreach (Konfigurace::ZALOZKY as $klic => $nazev): ?>
-	<a href="<?= e($modul->url('', ['zalozka' => $klic])) ?>"<?= $zalozka === $klic ? ' class="aktivni" aria-current="page"' : '' ?>><?= e($nazev) ?></a>
+	<a href="<?= e($modul->url('', ['zalozka' => $klic])) ?>"<?= $zalozka === $klic ? ' class="aktivni" aria-current="page"' : '' ?>><?= e(t($nazev)) ?></a>
 <?php endforeach ?>
 </nav>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
@@ -43,7 +45,7 @@ $pole = function (string $klic, string $popisek, string $druh = 'text', string $
 <input type="hidden" name="zalozka" value="<?= e($zalozka) ?>">
 <?php require __DIR__ . '/' . $zalozka . '.php'; ?>
 <?php if ($zalozka !== 'stav'): ?>
-<p class="tlacitka"><input class="tl" type="submit" value="Uložit nastavení"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Uložit nastavení')) ?>"></p>
 <?php endif ?>
 </form>
 <p class="verze">phpRS <?= e(PHPRS_VERSION) ?> · PHP <?= e(PHP_VERSION) ?></p>

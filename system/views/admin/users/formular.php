@@ -13,38 +13,38 @@
  * @var array<int, string> $ostatni
  * @var list<int> $maPodrizene
  */
-$chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
+$chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e(t($chyby[$pole])) . '</span>' : '';
 $role = [
     0 => ['Autor', 'Píše a upravuje vlastní články. Vydává je redaktor.'],
     1 => ['Redaktor', 'Upravuje a vydává články všech, spravuje rubriky, komentáře a další obsah.'],
     2 => ['Administrátor', 'Všechno včetně uživatelů, vzhledu a nastavení webu.'],
 ];
 ?>
-<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled</a></p>
+<p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled')) ?></a></p>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>" autocomplete="off">
 <?= $csrf ?>
 <input type="hidden" name="idu" value="<?= (int) $autor['idu'] ?>">
 <div class="radek">
-	<label for="jmeno">Jméno a příjmení</label>
-	<div><input class="textpole siroke" type="text" id="jmeno" name="jmeno" value="<?= e($autor['jmeno']) ?>" maxlength="100"><span class="napoveda">Zobrazuje se u článků.</span></div>
+	<label for="jmeno"><?= e(t('Jméno a příjmení')) ?></label>
+	<div><input class="textpole siroke" type="text" id="jmeno" name="jmeno" value="<?= e($autor['jmeno']) ?>" maxlength="100"><span class="napoveda"><?= e(t('Zobrazuje se u článků.')) ?></span></div>
 </div>
 <div class="radek">
-	<label for="user">Přihlašovací jméno</label>
+	<label for="user"><?= e(t('Přihlašovací jméno')) ?></label>
 	<div><input class="textpole" type="text" id="user" name="user" value="<?= e($autor['user']) ?>" maxlength="40" size="30" required><?= $chyba('user') ?></div>
 </div>
 <div class="radek">
-	<label for="email">E-mail</label>
+	<label for="email"><?= e(t('E-mail')) ?></label>
 	<div><input class="textpole siroke" type="email" id="email" name="email" value="<?= e($autor['email']) ?>" maxlength="190"><?= $chyba('email') ?></div>
 </div>
 <div class="radek">
 	<label for="password"><?= $autor['idu'] ? 'Nové heslo' : 'Heslo' ?></label>
 	<div><input class="textpole" type="password" id="password" name="password" size="30" minlength="10" autocomplete="new-password"<?= $autor['idu'] ? '' : ' required' ?>>
-	<label style="font-weight:normal"><input type="checkbox" onchange="document.getElementById('password').type = this.checked ? 'text' : 'password'"> zobrazit</label><?= $chyba('password') ?>
+	<label style="font-weight:normal"><input type="checkbox" onchange="document.getElementById('password').type = this.checked ? 'text' : 'password'"> <?= e(t('zobrazit')) ?></label><?= $chyba('password') ?>
 	<span class="napoveda">Alespoň 10 znaků.<?= $autor['idu'] ? ' Nechte prázdné, pokud heslo neměníte.' : ' Uživatel si ho pak změní v nabídce Můj účet.' ?></span></div>
 </div>
 
 <fieldset>
-<legend>Role</legend>
+<legend><?= e(t('Role')) ?></legend>
 <div class="karty-volby karty-volby-text">
 <?php foreach ($role as $hodnota => [$nazev, $popis]): ?>
 	<label class="karta-volba">
@@ -55,52 +55,52 @@ $role = [
 <?php endforeach ?>
 </div>
 <?php if ($sam): ?>
-<p class="napoveda">Vlastní účet nemůžete zbavit práv administrátora.</p>
+<p class="napoveda"><?= e(t('Vlastní účet nemůžete zbavit práv administrátora.')) ?></p>
 <?php endif ?>
 <div class="radek">
-	<span class="popisek">Autor</span>
-	<div class="volby"><label><input type="checkbox" name="pravo_vydavat" value="1"<?= $autor['pravo_vydavat'] ? ' checked' : '' ?>> smí své články sám vydávat</label>
-	<span class="napoveda">Týká se jen role Autor. Redaktor a administrátor vydávají vždy.</span></div>
+	<span class="popisek"><?= e(t('Autor')) ?></span>
+	<div class="volby"><label><input type="checkbox" name="pravo_vydavat" value="1"<?= $autor['pravo_vydavat'] ? ' checked' : '' ?>> <?= e(t('smí své články sám vydávat')) ?></label>
+	<span class="napoveda"><?= e(t('Týká se jen role Autor. Redaktor a administrátor vydávají vždy.')) ?></span></div>
 </div>
 </fieldset>
 
 <details class="pokrocile"<?= $rucne || $maPodrizene !== [] || $autor['blokovat'] || !empty($autor['url']) ? ' open' : '' ?>>
-<summary>Podrobné nastavení</summary>
+<summary><?= e(t('Podrobné nastavení')) ?></summary>
 <div class="radek">
-	<label for="url">Web uživatele</label>
+	<label for="url"><?= e(t('Web uživatele')) ?></label>
 	<input class="textpole siroke" type="url" id="url" name="url" value="<?= e($autor['url']) ?>" maxlength="255" placeholder="https://">
 </div>
 <div class="radek">
-	<span class="popisek">Přístup do sekcí</span>
+	<span class="popisek"><?= e(t('Přístup do sekcí')) ?></span>
 	<div class="volby">
-		<label><input type="checkbox" name="rucne" value="1"<?= $rucne ? ' checked' : '' ?>> nastavit ručně (jinak podle role)</label><br>
+		<label><input type="checkbox" name="rucne" value="1"<?= $rucne ? ' checked' : '' ?>> <?= e(t('nastavit ručně (jinak podle role)')) ?></label><br>
 <?php foreach ($moduly as $ident => $nazev): ?>
 		<label style="margin-left:22px"><input type="checkbox" name="moduly[]" value="<?= e($ident) ?>"<?= in_array($ident, $maModuly, true) ? ' checked' : '' ?>> <?= e($nazev) ?></label><br>
 <?php endforeach ?>
-		<span class="napoveda">Autor má běžně Články, redaktor všechny obsahové sekce. Média mají všichni, administrátor má vše.</span>
+		<span class="napoveda"><?= e(t('Autor má běžně Články, redaktor všechny obsahové sekce. Média mají všichni, administrátor má vše.')) ?></span>
 	</div>
 </div>
 <?php if ($ostatni !== []): ?>
 <div class="radek">
-	<span class="popisek">Smí upravovat i články autorů</span>
+	<span class="popisek"><?= e(t('Smí upravovat i články autorů')) ?></span>
 	<div class="volby">
 <?php foreach ($ostatni as $idu => $jmeno): ?>
 		<label><input type="checkbox" name="podrizeni[]" value="<?= (int) $idu ?>"<?= in_array((int) $idu, $maPodrizene, true) ? ' checked' : '' ?>> <?= e($jmeno) ?></label><br>
 <?php endforeach ?>
-		<span class="napoveda">Jen pro roli Autor – např. vedoucí rubriky.</span>
+		<span class="napoveda"><?= e(t('Jen pro roli Autor – např. vedoucí rubriky.')) ?></span>
 	</div>
 </div>
 <?php endif ?>
 <?php if (!empty($autor['totp_tajemstvi'])): ?>
 <div class="radek">
-	<span class="popisek">Dvoufázové přihlášení</span>
-	<div class="volby"><span class="stitek stitek-vydano">zapnuté</span> <label><input type="checkbox" name="totp_reset" value="1"> vypnout (uživatel ztratil telefon i záložní kódy)</label></div>
+	<span class="popisek"><?= e(t('Dvoufázové přihlášení')) ?></span>
+	<div class="volby"><span class="stitek stitek-vydano"><?= e(t('zapnuté')) ?></span> <label><input type="checkbox" name="totp_reset" value="1"> <?= e(t('vypnout (uživatel ztratil telefon i záložní kódy)')) ?></label></div>
 </div>
 <?php endif ?>
 <?php if (!$sam): ?>
 <div class="radek">
-	<span class="popisek">Zablokovat účet</span>
-	<div class="volby"><label><input type="checkbox" name="blokovat" value="1"<?= $autor['blokovat'] ? ' checked' : '' ?>> uživatel se nepřihlásí</label></div>
+	<span class="popisek"><?= e(t('Zablokovat účet')) ?></span>
+	<div class="volby"><label><input type="checkbox" name="blokovat" value="1"<?= $autor['blokovat'] ? ' checked' : '' ?>> <?= e(t('uživatel se nepřihlásí')) ?></label></div>
 </div>
 <?php endif ?>
 </details>

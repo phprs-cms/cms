@@ -13,7 +13,7 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 ?>
 <form method="get" action="<?= e($app->url('admin.php')) ?>" class="stred smltxt">
 	<input type="hidden" name="modul" value="protokol">
-	<label>Uživatel: <select name="kdo" onchange="this.form.submit()"><option value="0">všichni</option>
+	<label><?= e(t('Uživatel:')) ?> <select name="kdo" onchange="this.form.submit()"><option value="0"><?= e(t('všichni')) ?></option>
 <?php foreach ($uzivatele as $idu => $jmeno): ?>
 		<option value="<?= (int) $idu ?>"<?= $kdo === (int) $idu ? ' selected' : '' ?>><?= e($jmeno) ?></option>
 <?php endforeach ?>
@@ -21,7 +21,7 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 </form>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th>Kdy</th><th>Kdo</th><th>Kde</th><th>Co</th><th>Podrobnost</th></tr></thead>
+<thead><tr><th><?= e(t('Kdy')) ?></th><th><?= e(t('Kdo')) ?></th><th><?= e(t('Kde')) ?></th><th><?= e(t('Co')) ?></th><th><?= e(t('Podrobnost')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($zaznamy as $z): ?>
 <tr<?= $z['akce'] === 'neuspech' ? ' class="nevydany"' : '' ?>>
@@ -35,4 +35,4 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 </tbody>
 </table>
 </div>
-<p class="smltxt">Posledních 300 záznamů. Protokol se uchovává půl roku.</p>
+<p class="smltxt"><?= e(t('Posledních 300 záznamů. Protokol se uchovává půl roku.')) ?></p>

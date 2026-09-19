@@ -11,10 +11,10 @@ $posun = ((int) $od->format('N')) - 1;
 $dni = (int) $od->format('t');
 ?>
 <p class="navigace-radek">
-	<a class="navigace" href="<?= e($modul->url()) ?>">Zpět na přehled článků</a>
-	<a class="navigace" href="<?= e($modul->url('kalendar', ['mesic' => $od->modify('-1 month')->format('Y-m')])) ?>">← předchozí</a>
+	<a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled článků')) ?></a>
+	<a class="navigace" href="<?= e($modul->url('kalendar', ['mesic' => $od->modify('-1 month')->format('Y-m')])) ?>"><?= e(t('← předchozí')) ?></a>
 	<strong style="align-self:center"><?= e($mesice[(int) $od->format('n')] . ' ' . $od->format('Y')) ?></strong>
-	<a class="navigace" href="<?= e($modul->url('kalendar', ['mesic' => $od->modify('+1 month')->format('Y-m')])) ?>">další →</a>
+	<a class="navigace" href="<?= e($modul->url('kalendar', ['mesic' => $od->modify('+1 month')->format('Y-m')])) ?>"><?= e(t('další →')) ?></a>
 </p>
 <div class="kalendar">
 <?php foreach (['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'] as $d): ?>
@@ -30,4 +30,4 @@ $dni = (int) $od->format('t');
 	</div>
 <?php endfor ?>
 </div>
-<p class="smltxt">Zeleně vydané, modře naplánované, oranžově koncepty. Datum článku změníte v jeho úpravě.</p>
+<p class="smltxt"><?= e(t('Zeleně vydané, modře naplánované, oranžově koncepty. Datum článku změníte v jeho úpravě.')) ?></p>

@@ -2,9 +2,9 @@
 /** Záložka Administrace: výchozí prostředí administrace. */
 $nahledy = require dirname(__DIR__, 2) . '/install/nahledy.php';
 ?>
-<p class="hlaska">Šablonu webu, logo, barvu a písma najdete v sekci <a href="<?= e($modul->app()->url('admin.php?modul=vzhled')) ?>">Identita webu</a>.</p>
+<p class="hlaska"><?= e(t('Šablonu webu, logo, barvu a písma najdete v sekci')) ?> <a href="<?= e($modul->app()->url('admin.php?modul=vzhled')) ?>"><?= e(t('Identita webu')) ?></a>.</p>
 <fieldset>
-<legend>Vzhled administrace</legend>
+<legend><?= e(t('Vzhled administrace')) ?></legend>
 <div class="karty-volby">
 <?php foreach (['2026' => ['phpRS 2026', 'Moderní prostředí s postranním menu.'], 'retro' => ['phpRS retro', 'Pro zábavu: vzhled původního phpRS.']] as $klic => [$nazev, $popis]): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
 	<label class="karta-volba">
@@ -15,5 +15,5 @@ $nahledy = require dirname(__DIR__, 2) . '/install/nahledy.php';
 	</label>
 <?php endforeach ?>
 </div>
-<p class="napoveda">Výchozí volba pro přihlašovací stránku a nové uživatele. Každý si prostředí přepíná sám v horní liště.</p>
+<p class="napoveda"><?= e(t('Výchozí volba pro přihlašovací stránku a nové uživatele. Každý si prostředí přepíná sám v horní liště.')) ?></p>
 </fieldset>

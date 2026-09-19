@@ -23,7 +23,7 @@
 </div>
 <div class="dlazdice">
 <?php foreach ($pocty as $popis => $pocet): ?>
-	<div class="dlazdice-polozka"><strong><?= number_format($pocet, 0, ',', ' ') ?></strong><span><?= e($popis) ?></span></div>
+	<div class="dlazdice-polozka"><strong><?= number_format($pocet, 0, ',', ' ') ?></strong><span><?= e(t($popis)) ?></span></div>
 <?php endforeach ?>
 </div>
 <?php if ($posledni !== [] && isset($moduly['clanky'])): ?>

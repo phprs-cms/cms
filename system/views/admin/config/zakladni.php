@@ -1,28 +1,28 @@
 <?php /** Záložka Základní. Proměnné a funkce $pole viz vypis.php. */ ?>
 <fieldset>
-<legend>Web</legend>
+<legend><?= e(t('Web')) ?></legend>
 <?php
 $pole('nazev_webu', 'Název webu', 'text', '', 'maxlength="150" required');
 $pole('popis_webu', 'Popis webu', 'radky', 'Jedna až dvě věty – motto, popis pro vyhledávače a RSS.');
 $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění systému.');
 ?>
 <div class="radek">
-	<label for="jazyk_webu">Jazyk webu</label>
+	<label for="jazyk_webu"><?= e(t('Jazyk webu')) ?></label>
 	<div><select id="jazyk_webu" name="jazyk_webu">
 <?php foreach (PhpRS\Core\Jazyk::DOSTUPNE as $kod => [$nazevJazyka]): ?>
 		<option value="<?= e($kod) ?>"<?= $hodnoty['jazyk_webu'] === $kod ? ' selected' : '' ?>><?= e($nazevJazyka) ?></option>
 <?php endforeach ?>
 	</select>
-	<span class="napoveda">V tomto jazyce jsou texty šablony (Hledat, Celý článek, Komentáře…) a web se tak hlásí vyhledávačům.</span></div>
+	<span class="napoveda"><?= e(t('V tomto jazyce jsou texty šablony (Hledat, Celý článek, Komentáře…) a web se tak hlásí vyhledávačům.')) ?></span></div>
 </div>
 <?php if (PhpRS\Core\Rozsireni::je($app->settings(), 'jazyky')): ?>
 <div class="radek">
-	<span class="popisek">Další jazykové verze</span>
+	<span class="popisek"><?= e(t('Další jazykové verze')) ?></span>
 	<div class="volby">
 <?php foreach (PhpRS\Core\Jazyk::DOSTUPNE as $kod => [$nazevJazyka]): if ($kod === $hodnoty['jazyk_webu']) { continue; } ?>
 		<label><input type="checkbox" name="jazyky_dalsi[]" value="<?= e($kod) ?>"<?= in_array($kod, explode(',', $hodnoty['jazyky_dalsi']), true) ? ' checked' : '' ?>> <?= e($nazevJazyka) ?> <small>(/<?= e($kod) ?>/)</small></label><br>
 <?php endforeach ?>
-		<span class="napoveda">Každá verze má své rubriky, články a stránky. Jazyk se volí u rubriky – článek ho převezme. Překlad článku propojíte v jeho editoru.</span>
+		<span class="napoveda"><?= e(t('Každá verze má své rubriky, články a stránky. Jazyk se volí u rubriky – článek ho převezme. Překlad článku propojíte v jeho editoru.')) ?></span>
 	</div>
 </div>
 <?php else: ?>
@@ -30,16 +30,16 @@ $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění syst
 <?php endif ?>
 </fieldset>
 <fieldset>
-<legend>Články a čtenáři</legend>
+<legend><?= e(t('Články a čtenáři')) ?></legend>
 <?php
 $pole('pocet_clanku', 'Článků na stránku', 'cislo', '', 'min="1" max="100" style="width:90px"');
 $pole('povolit_komentare', 'Komentáře pod články', 'ano');
 ?>
 <div class="radek">
-	<label for="komentare_rezim">Nový komentář</label>
+	<label for="komentare_rezim"><?= e(t('Nový komentář')) ?></label>
 	<select id="komentare_rezim" name="komentare_rezim">
-		<option value="hned"<?= $hodnoty['komentare_rezim'] === 'hned' ? ' selected' : '' ?>>zveřejnit hned (podezřelé počkají na schválení)</option>
-		<option value="schvalovat"<?= $hodnoty['komentare_rezim'] === 'schvalovat' ? ' selected' : '' ?>>zveřejnit až po schválení redakcí</option>
+		<option value="hned"<?= $hodnoty['komentare_rezim'] === 'hned' ? ' selected' : '' ?>><?= e(t('zveřejnit hned (podezřelé počkají na schválení)')) ?></option>
+		<option value="schvalovat"<?= $hodnoty['komentare_rezim'] === 'schvalovat' ? ' selected' : '' ?>><?= e(t('zveřejnit až po schválení redakcí')) ?></option>
 	</select>
 </div>
 </fieldset>
@@ -52,7 +52,7 @@ $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
 </details>
 <?php if (PhpRS\Core\Rozsireni::je($app->settings(), 'ctenari')): ?>
 <details class="pokrocile">
-<summary>Čtenáři a zamčený obsah</summary>
+<summary><?= e(t('Čtenáři a zamčený obsah')) ?></summary>
 <?php
 $pole('ctenari_registrace', 'Povolit nové registrace', 'ano');
 $pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10" style="width:90px"');
@@ -64,12 +64,12 @@ $pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – napřík
 <input type="hidden" name="ctenari_registrace" value="<?= e($hodnoty['ctenari_registrace']) ?>"><input type="hidden" name="paywall_zdarma" value="<?= e($hodnoty['paywall_zdarma']) ?>"><input type="hidden" name="zamek_odstavcu" value="<?= e($hodnoty['zamek_odstavcu']) ?>"><input type="hidden" name="zamek_text" value="<?= e($hodnoty['zamek_text']) ?>">
 <?php endif ?>
 <details class="pokrocile">
-<summary>Sociální sítě</summary>
+<summary><?= e(t('Sociální sítě')) ?></summary>
 <?php foreach (PhpRS\Admin\Moduly\Konfigurace::SITE as $klic => $nazev) { $pole($klic, $nazev, 'url', '', 'placeholder="https://"'); } ?>
-<p class="napoveda">Vyplněné profily se zobrazí v patičce webu a předají se vyhledávačům.</p>
+<p class="napoveda"><?= e(t('Vyplněné profily se zobrazí v patičce webu a předají se vyhledávačům.')) ?></p>
 </details>
 <details class="pokrocile">
-<summary>Další možnosti</summary>
+<summary><?= e(t('Další možnosti')) ?></summary>
 <?php
 $pole('text_paticky', 'Text v patičce', 'text', 'Například vydavatel, ISSN nebo kontakt.', 'maxlength="300"');
 $pole('klicova_slova', 'Klíčová slova webu', 'text');

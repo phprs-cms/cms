@@ -10,19 +10,19 @@
  * @var int $stran
  */
 ?>
-<nav class="zalozky" aria-label="Stav komentářů">
-	<a href="<?= e($modul->url()) ?>"<?= $cekajici ? '' : ' class="aktivni"' ?>>Všechny</a>
+<nav class="zalozky" aria-label="<?= e(t('Stav komentářů')) ?>">
+	<a href="<?= e($modul->url()) ?>"<?= $cekajici ? '' : ' class="aktivni"' ?>><?= e(t('Všechny')) ?></a>
 	<a href="<?= e($modul->url('', ['stav' => 'cekajici'])) ?>"<?= $cekajici ? ' class="aktivni"' : '' ?>>Čekají na schválení (<?= $pocetCekajicich ?>)</a>
 </nav>
 <?php if ($komentare === []): ?>
-<p>Žádné komentáře.</p>
+<p><?= e(t('Žádné komentáře.')) ?></p>
 <?php else: ?>
 <form method="post" action="<?= e($modul->url('hromadne')) ?>">
 <?= $csrf ?>
 <input type="hidden" name="stav" value="<?= $cekajici ? 'cekajici' : '' ?>">
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th></th><th>Komentář</th><th>Autor</th><th>Článek</th><th>Datum</th><th>Stav</th></tr></thead>
+<thead><tr><th></th><th><?= e(t('Komentář')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Článek')) ?></th><th><?= e(t('Datum')) ?></th><th><?= e(t('Stav')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($komentare as $k): ?>
 <tr<?= $k['zobrazit'] ? '' : ' class="nevydany"' ?>>
@@ -37,10 +37,10 @@
 </tbody>
 </table>
 </div>
-<p class="media-hromadne">S označenými:
-	<button class="tl" type="submit" name="provest" value="schvalit">Schválit</button>
-	<button class="navigace" type="submit" name="provest" value="skryt">Skrýt</button>
-	<button class="navigace" type="submit" name="provest" value="smazat" data-potvrdit="Opravdu smazat označené komentáře? Smažou se i reakce na ně.">Smazat</button>
+<p class="media-hromadne"><?= e(t('S označenými:')) ?>
+	<button class="tl" type="submit" name="provest" value="schvalit"><?= e(t('Schválit')) ?></button>
+	<button class="navigace" type="submit" name="provest" value="skryt"><?= e(t('Skrýt')) ?></button>
+	<button class="navigace" type="submit" name="provest" value="smazat" data-potvrdit="<?= e(t('Opravdu smazat označené komentáře? Smažou se i reakce na ně.')) ?>"><?= e(t('Smazat')) ?></button>
 </p>
 </form>
 <?php if ($stran > 1): ?>

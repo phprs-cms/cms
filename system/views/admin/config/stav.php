@@ -22,15 +22,15 @@ $skupina = '';
 </table>
 </div>
 <fieldset>
-<legend>Pošta</legend>
-<p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>">Odeslat zkušební e-mail na adresu redakce</button></p>
+<legend><?= e(t('Pošta')) ?></legend>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>"><?= e(t('Odeslat zkušební e-mail na adresu redakce')) ?></button></p>
 </fieldset>
 <fieldset>
-<legend>Monitoring</legend>
+<legend><?= e(t('Monitoring')) ?></legend>
 <?php if ($hodnoty['stav_token'] !== ''): ?>
-<p>Stav ve formátu JSON pro dohledové nástroje (UptimeRobot, Zabbix…):<br><code><?= e($adresaWebu) ?>stav.json?token=<?= e($hodnoty['stav_token']) ?></code></p>
+<p><?= e(t('Stav ve formátu JSON pro dohledové nástroje (UptimeRobot, Zabbix…):')) ?><br><code><?= e($adresaWebu) ?>stav.json?token=<?= e($hodnoty['stav_token']) ?></code></p>
 <?php else: ?>
-<p>Dohledový nástroj může stav číst jako JSON. Nejprve vytvořte přístupový token.</p>
+<p><?= e(t('Dohledový nástroj může stav číst jako JSON. Nejprve vytvořte přístupový token.')) ?></p>
 <?php endif ?>
 <input type="hidden" name="stav_token" value="<?= e($hodnoty['stav_token']) ?>">
 <p><button class="navigace" type="submit" name="novy_token" value="1"><?= $hodnoty['stav_token'] !== '' ? 'Vytvořit nový token (starý přestane platit)' : 'Vytvořit token' ?></button></p>

@@ -26,10 +26,10 @@ $abs = fn (string $u): string => preg_match('#^https?://#i', $u) ? $u : rtrim($k
 <?php endif ?>
 		<a href="<?= e($koren . 'clanek/' . $c['seo_link']) ?>" style="font-size:22px;line-height:1.25;font-weight:bold;color:#14171f;text-decoration:none"><?= e($c['titulek']) ?></a>
 		<p style="margin:8px 0 0;font-size:16px;line-height:1.5;color:#3a3d45"><?= e(mb_strimwidth(trim(strip_tags($c['uvod'])), 0, 260, '…')) ?></p>
-		<p style="margin:8px 0 0;font-family:Arial,sans-serif;font-size:14px"><a href="<?= e($koren . 'clanek/' . $c['seo_link']) ?>" style="color:#1f4fe0;font-weight:bold">Číst článek →</a></p>
+		<p style="margin:8px 0 0;font-family:Arial,sans-serif;font-size:14px"><a href="<?= e($koren . 'clanek/' . $c['seo_link']) ?>" style="color:#1f4fe0;font-weight:bold"><?= e(t('Číst článek →')) ?></a></p>
 	</td></tr>
 <?php endforeach ?>
-	<tr><td style="padding:32px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#667085">Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu <?= e($web->get('nazev_webu')) ?>.<br><a href="<?= e($odhlasit) ?>" style="color:#667085">Odhlásit odběr</a></td></tr>
+	<tr><td style="padding:32px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#667085">Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu <?= e($web->get('nazev_webu')) ?>.<br><a href="<?= e($odhlasit) ?>" style="color:#667085"><?= e(t('Odhlásit odběr')) ?></a></td></tr>
 </table>
 </td></tr></table>
 </body></html>

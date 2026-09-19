@@ -1,13 +1,13 @@
 <?php /** Záložka Měření. */ ?>
 <fieldset>
-<legend>Návštěvnost</legend>
+<legend><?= e(t('Návštěvnost')) ?></legend>
 <?php
 $pole('statistika', 'Vestavěná statistika', 'ano', 'Návštěvy, nejčtenější články a zdroje návštěv v sekci Statistika. Bez cookies a bez souhlasu.');
 $pole('ga4_id', 'Google Analytics', 'text', 'Stačí ID měření ve tvaru G-XXXXXXXXXX. Spouští se až po souhlasu návštěvníka (záložka Soukromí a cookies).', 'placeholder="G-" maxlength="24"');
 ?>
 </fieldset>
 <details class="pokrocile"<?= $hodnoty['matomo_url'] . $hodnoty['plausible_domena'] . $hodnoty['kod_hlava'] !== '' ? ' open' : '' ?>>
-<summary>Další nástroje (Matomo, Plausible, vlastní kód)</summary>
+<summary><?= e(t('Další nástroje (Matomo, Plausible, vlastní kód)')) ?></summary>
 <?php
 $pole('matomo_url', 'Matomo – adresa', 'url', 'Adresa vaší instalace, např. https://statistiky.example.cz/', 'placeholder="https://"');
 $pole('matomo_id', 'Matomo – ID webu', 'cislo', '', 'min="0" style="width:110px"');

@@ -3,6 +3,10 @@
 (function () {
 	'use strict';
 
+	// překlad textů skriptů administrace: slovník window.PHPRS_PREKLAD dodá image/jazyky/admin-<kód>.js, čeština ho nemá
+	window.T = function (s) { return (window.PHPRS_PREKLAD || {})[s] || s; };
+	var T = window.T;
+
 	// Potvrzení nevratných akcí: data-potvrdit="text" na formuláři nebo tlačítku.
 	// Vlastní dialog místo window.confirm(), který vestavěné prohlížeče (např. v aplikacích) potichu potlačují.
 	var dialogPotvrzeni = null;
@@ -14,7 +18,7 @@
 		if (!dialogPotvrzeni) {
 			dialogPotvrzeni = document.createElement('dialog');
 			dialogPotvrzeni.className = 'potvrzeni';
-			dialogPotvrzeni.innerHTML = '<p></p><div><button type="button" class="tl" data-ano>Ano, provést</button> <button type="button" class="navigace" data-ne>Zrušit</button></div>';
+			dialogPotvrzeni.innerHTML = '<p></p><div><button type="button" class="tl" data-ano>' + T('Ano, provést') + '</button> <button type="button" class="navigace" data-ne>' + T('Zrušit') + '</button></div>';
 			document.body.appendChild(dialogPotvrzeni);
 			dialogPotvrzeni.querySelector('[data-ne]').addEventListener('click', function () { dialogPotvrzeni.close(); });
 		}
@@ -62,11 +66,11 @@
 			var data = new FormData();
 			data.append('_csrf', document.querySelector('input[name="_csrf"]').value);
 			data.append('poradi', JSON.stringify(poradi));
-			stavPoradi.textContent = 'Ukládám…';
+			stavPoradi.textContent = T('Ukládám…');
 			fetch(platno.getAttribute('data-url'), { method: 'POST', body: data, credentials: 'same-origin' })
 				.then(function (r) { return r.json(); })
-				.then(function (j) { stavPoradi.textContent = j.ok ? 'Pořadí uloženo.' : 'Pořadí se nepodařilo uložit.'; })
-				.catch(function () { stavPoradi.textContent = 'Pořadí se nepodařilo uložit.'; });
+				.then(function (j) { stavPoradi.textContent = j.ok ? T('Pořadí uloženo.') : T('Pořadí se nepodařilo uložit.'); })
+				.catch(function () { stavPoradi.textContent = T('Pořadí se nepodařilo uložit.'); });
 		};
 		// karta, před kterou se má tažený blok vložit (podle polohy kurzoru), nebo null = na konec
 		var kartaZa = function (seznam, x, y) {

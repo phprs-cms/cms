@@ -14,7 +14,7 @@ if ($dalsi === []) {
 }
 ?>
 <div class="radek">
-	<label for="jazyk">Jazyková verze</label>
+	<label for="jazyk"><?= e(t('Jazyková verze')) ?></label>
 	<div><select id="jazyk" name="jazyk">
 		<option value=""><?= e(Jazyk::DOSTUPNE[Jazyk::vychozi($app->settings())][0]) ?> (výchozí)</option>
 <?php foreach ($dalsi as $kod): ?>

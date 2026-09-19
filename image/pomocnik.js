@@ -8,6 +8,8 @@
 (function () {
 	'use strict';
 
+	var T = window.T || function (s) { return s; }; // překlad textů administrace (image/jazyky/admin-*.js)
+
 	var form = document.querySelector('form.formular-clanek');
 	if (!form) { return; }
 	var pole = function (id) { return form.querySelector('#' + id); };
@@ -39,8 +41,8 @@
 				if ((img.getAttribute('alt') || '').trim() !== '') { return; }
 				var radek = prvek('div', 'kontrola-obrazek');
 				var nahled = prvek('img'); nahled.src = img.getAttribute('src'); nahled.alt = '';
-				var vstup = prvek('input', 'textpole'); vstup.type = 'text'; vstup.maxLength = 200; vstup.placeholder = 'co je na obrázku vidět';
-				vstup.setAttribute('aria-label', 'Popis obrázku pro nevidomé čtenáře');
+				var vstup = prvek('input', 'textpole'); vstup.type = 'text'; vstup.maxLength = 200; vstup.placeholder = T('co je na obrázku vidět');
+				vstup.setAttribute('aria-label', T('Popis obrázku pro nevidomé čtenáře'));
 				var uloz = function () {
 					if (vstup.value.trim() === '') { return; }
 					var k = strom(pole(id).value);
@@ -60,32 +62,32 @@
 					});
 					radek.appendChild(ai);
 				}
-				nalezy.push(['Obrázek bez popisu – nevidomý čtenář ani vyhledávač neví, co na něm je. Popis doplňte a potvrďte Enterem:', radek]);
+				nalezy.push([T('Obrázek bez popisu – nevidomý čtenář ani vyhledávač neví, co na něm je. Popis doplňte a potvrďte Enterem:'), radek]);
 			});
 
 			var uroven = 1;
 			Array.prototype.forEach.call(koren.querySelectorAll('h2, h3, h4'), function (h) {
 				var u = parseInt(h.tagName.charAt(1), 10);
-				if (u > uroven + 1) { nalezy.push(['Mezititulek „' + h.textContent.trim().slice(0, 50) + '“ přeskakuje úroveň (H' + u + ' bez H' + (u - 1) + ' nad sebou). Čtečky podle úrovní skládají osnovu článku.']); }
-				if (h.textContent.trim() === '') { nalezy.push(['Prázdný mezititulek – smažte ho.']); }
+				if (u > uroven + 1) { nalezy.push(['Mezititulek „' + h.textContent.trim().slice(0, 50) + T('“ přeskakuje úroveň (H') + u + ' bez H' + (u - 1) + T(' nad sebou). Čtečky podle úrovní skládají osnovu článku.')]); }
+				if (h.textContent.trim() === '') { nalezy.push([T('Prázdný mezititulek – smažte ho.')]); }
 				uroven = u;
 			});
 			Array.prototype.forEach.call(koren.querySelectorAll('a'), function (a) {
 				var t = a.textContent.trim().toLowerCase();
 				if (/^(zde|tady|tu|sem|klikn[ěe]te( zde)?|více|vice|odkaz|link|here|click here)$/.test(t) || /^https?:\/\//.test(t)) {
-					nalezy.push(['Odkaz „' + a.textContent.trim().slice(0, 40) + '“ neříká, kam vede. Odkazujte slovy, která dávají smysl i sama o sobě.']);
+					nalezy.push(['Odkaz „' + a.textContent.trim().slice(0, 40) + T('“ neříká, kam vede. Odkazujte slovy, která dávají smysl i sama o sobě.')]);
 				}
 			});
-			Array.prototype.forEach.call(koren.querySelectorAll('table'), function (t) { if (!t.querySelector('th')) { nalezy.push(['Tabulka nemá záhlaví (buňky TH) – čtečka neumí říct, co který sloupec znamená.']); } });
-			Array.prototype.forEach.call(koren.querySelectorAll('iframe'), function (f) { if (!(f.getAttribute('title') || '').trim()) { nalezy.push(['Vložené video nebo rámec nemá název (atribut title).']); } });
+			Array.prototype.forEach.call(koren.querySelectorAll('table'), function (t) { if (!t.querySelector('th')) { nalezy.push([T('Tabulka nemá záhlaví (buňky TH) – čtečka neumí říct, co který sloupec znamená.')]); } });
+			Array.prototype.forEach.call(koren.querySelectorAll('iframe'), function (f) { if (!(f.getAttribute('title') || '').trim()) { nalezy.push([T('Vložené video nebo rámec nemá název (atribut title).')]); } });
 		});
-		if (pole('titulek').value.length > 110) { nalezy.push(['Titulek má přes 110 znaků – ve výsledcích hledání i na sítích se ořízne.']); }
-		if (pole('titulek').value.length > 12 && pole('titulek').value === pole('titulek').value.toUpperCase()) { nalezy.push(['Titulek psaný VERZÁLKAMI se špatně čte a čtečky ho mohou hláskovat.']); }
-		if (strom(pole('uvod').value).textContent.trim() === '') { nalezy.push(['Chybí perex – výpisy článků a sdílení na sítích ho potřebují.']); }
+		if (pole('titulek').value.length > 110) { nalezy.push([T('Titulek má přes 110 znaků – ve výsledcích hledání i na sítích se ořízne.')]); }
+		if (pole('titulek').value.length > 12 && pole('titulek').value === pole('titulek').value.toUpperCase()) { nalezy.push([T('Titulek psaný VERZÁLKAMI se špatně čte a čtečky ho mohou hláskovat.')]); }
+		if (strom(pole('uvod').value).textContent.trim() === '') { nalezy.push([T('Chybí perex – výpisy článků a sdílení na sítích ho potřebují.')]); }
 
 		panel.classList.toggle('kontrola-ok', nalezy.length === 0);
-		panel.querySelector('legend').textContent = 'Kontrola přístupnosti' + (nalezy.length ? ' (' + nalezy.length + ')' : '');
-		if (!nalezy.length) { vystup.appendChild(prvek('p', 'kontrola-vporadku', '✓ Obrázky mají popisy, nadpisy i odkazy jsou v pořádku.')); return; }
+		panel.querySelector('legend').textContent = T('Kontrola přístupnosti') + (nalezy.length ? ' (' + nalezy.length + ')' : '');
+		if (!nalezy.length) { vystup.appendChild(prvek('p', 'kontrola-vporadku', T('✓ Obrázky mají popisy, nadpisy i odkazy jsou v pořádku.'))); return; }
 		var ul = prvek('ul', 'kontrola-seznam');
 		nalezy.forEach(function (n) { var li = prvek('li', '', n[0]); if (n[1]) { li.appendChild(n[1]); } ul.appendChild(li); });
 		vystup.appendChild(ul);
@@ -113,7 +115,7 @@
 		if (!okno.open) { okno.showModal(); }
 		return obsah;
 	}
-	function oznam(text) { dialog('Asistent').appendChild(prvek('p', 'hlaska hlaska-chyba', text)); }
+	function oznam(text) { dialog(T('Asistent')).appendChild(prvek('p', 'hlaska hlaska-chyba', text)); }
 
 	function zeptejSe(ukol, dalsi) {
 		var data = new FormData();
@@ -123,17 +125,17 @@
 		Object.keys(dalsi || {}).forEach(function (k) { data.append(k, dalsi[k]); });
 		return fetch(asistentUrl, { method: 'POST', body: data, credentials: 'same-origin' })
 			.then(function (r) { return r.json(); })
-			.catch(function () { return { chyba: 'Spojení s asistentem selhalo. Zkuste to znovu.' }; });
+			.catch(function () { return { chyba: T('Spojení s asistentem selhalo. Zkuste to znovu.') }; });
 	}
 
 	/* úkol => [pole, popisek tlačítka, nadpis okna, jak návrh zapsat do pole] */
 	var UKOLY = {
-		titulky: ['titulek', 'Navrhnout', 'Návrhy titulku', function (n) { nastav('titulek', n); }],
-		perex: ['uvod', 'Navrhnout', 'Návrhy perexu', function (n) { nastav('uvod', '<p>' + esc(n) + '</p>'); }],
-		korektura: ['text', 'Korektura', 'Korektura', null],
-		shrnuti: ['shrnuti', 'Navrhnout', 'Shrnutí „Ve zkratce“', function (n) { nastav('shrnuti', n.replace(/^\s*[-•–]\s*/gm, '')); }],
-		seo: ['seo_popis', 'Navrhnout', 'Popis pro vyhledávače', function (n) { nastav('seo_popis', n); }],
-		stitky: ['stitky', 'Navrhnout', 'Návrh štítků', function (n) {
+		titulky: ['titulek', T('Navrhnout'), T('Návrhy titulku'), function (n) { nastav('titulek', n); }],
+		perex: ['uvod', T('Navrhnout'), T('Návrhy perexu'), function (n) { nastav('uvod', '<p>' + esc(n) + '</p>'); }],
+		korektura: ['text', T('Korektura'), T('Korektura'), null],
+		shrnuti: ['shrnuti', T('Navrhnout'), T('Shrnutí „Ve zkratce“'), function (n) { nastav('shrnuti', n.replace(/^\s*[-•–]\s*/gm, '')); }],
+		seo: ['seo_popis', T('Navrhnout'), T('Popis pro vyhledávače'), function (n) { nastav('seo_popis', n); }],
+		stitky: ['stitky', T('Navrhnout'), T('Návrh štítků'), function (n) {
 			var mam = pole('stitky').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
 			n.split(',').map(function (s) { return s.trim(); }).filter(Boolean).forEach(function (s) { if (mam.map(function (m) { return m.toLowerCase(); }).indexOf(s.toLowerCase()) === -1) { mam.push(s); } });
 			nastav('stitky', mam.join(', '));
@@ -147,18 +149,18 @@
 		j.navrhy.forEach(function (n) {
 			var radek = prvek('div', 'ai-navrh');
 			radek.appendChild(prvek('p', '', n));
-			var b = prvek('button', 'tl', 'Použít'); b.type = 'button';
+			var b = prvek('button', 'tl', T('Použít')); b.type = 'button';
 			b.addEventListener('click', function () { u[3](n); okno.close(); });
 			radek.appendChild(b);
 			obsah.appendChild(radek);
 		});
-		obsah.appendChild(prvek('p', 'napoveda', 'Návrh se jen vloží do pole – můžete ho dál upravit. Nic se neuloží, dokud článek neuložíte.'));
+		obsah.appendChild(prvek('p', 'napoveda', T('Návrh se jen vloží do pole – můžete ho dál upravit. Nic se neuloží, dokud článek neuložíte.')));
 	}
 
 	function ukazKorekturu(j) {
-		var obsah = dialog('Korektura');
+		var obsah = dialog(T('Korektura'));
 		if (j.chyba) { obsah.appendChild(prvek('p', 'hlaska hlaska-chyba', j.chyba)); return; }
-		if (!j.opravy.length) { obsah.appendChild(prvek('p', 'kontrola-vporadku', '✓ Asistent nenašel nic k opravě.')); return; }
+		if (!j.opravy.length) { obsah.appendChild(prvek('p', 'kontrola-vporadku', T('✓ Asistent nenašel nic k opravě.'))); return; }
 		var polozky = j.opravy.map(function (o) {
 			// oprava jde provést jen tam, kde se původní úsek v poli najde přesně (a nejde přes formátování)
 			var kde = ['titulek', 'uvod', 'text'].filter(function (id) { return pole(id).value.indexOf(id === 'titulek' ? o.puvodni : esc(o.puvodni)) !== -1; })[0];
@@ -166,12 +168,12 @@
 			var box = prvek('input'); box.type = 'checkbox'; box.checked = !!kde; box.disabled = !kde;
 			var text = prvek('span');
 			text.appendChild(prvek('del', '', o.puvodni)); text.appendChild(document.createTextNode(' → ')); text.appendChild(prvek('ins', '', o.oprava));
-			text.appendChild(prvek('small', '', (o.duvod ? ' ' + o.duvod : '') + (kde ? '' : ' – úsek prochází formátováním, opravte ho prosím ručně')));
+			text.appendChild(prvek('small', '', (o.duvod ? ' ' + o.duvod : '') + (kde ? '' : T(' – úsek prochází formátováním, opravte ho prosím ručně'))));
 			radek.appendChild(box); radek.appendChild(text);
 			obsah.appendChild(radek);
 			return { o: o, kde: kde, box: box };
 		});
-		var b = prvek('button', 'tl', 'Opravit označené'); b.type = 'button';
+		var b = prvek('button', 'tl', T('Opravit označené')); b.type = 'button';
 		b.addEventListener('click', function () {
 			var hodnoty = {};
 			polozky.forEach(function (p) {
@@ -190,9 +192,9 @@
 		var stitek = form.querySelector('label[for="' + u[0] + '"]');
 		if (!stitek || !pole(u[0])) { return; }
 		var b = prvek('button', 'ai-tl', '✦ ' + u[1]); b.type = 'button';
-		b.title = ukol === 'korektura' ? 'Asistent zkontroluje pravopis, překlepy a typografii' : 'Asistent navrhne znění podle textu článku';
+		b.title = ukol === 'korektura' ? T('Asistent zkontroluje pravopis, překlepy a typografii') : T('Asistent navrhne znění podle textu článku');
 		b.addEventListener('click', function () {
-			b.disabled = true; b.textContent = '✦ přemýšlím…';
+			b.disabled = true; b.textContent = T('✦ přemýšlím…');
 			zeptejSe(ukol).then(function (j) { if (ukol === 'korektura') { ukazKorekturu(j); } else { ukazNavrhy(ukol, j); } })
 				.finally(function () { b.disabled = false; b.textContent = '✦ ' + u[1]; });
 		});

@@ -20,7 +20,7 @@
  * @var list<array<string, mixed>> $revize
  */
 $dt = fn (?string $v): string => $v ? date('Y-m-d\TH:i', strtotime($v)) : '';
-$chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
+$chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e(t($chyby[$pole])) . '</span>' : '';
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled článků')) ?></a></p>
 
@@ -220,7 +220,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<label for="pristup"><?= e(t('Kdo smí číst')) ?></label>
 	<div><select id="pristup" name="pristup">
 <?php foreach (\PhpRS\Front\Ctenari::PRISTUP as $hodnota => $popis): ?>
-		<option value="<?= $hodnota ?>"<?= (int) $clanek['pristup'] === $hodnota ? ' selected' : '' ?>><?= e($popis) ?></option>
+		<option value="<?= $hodnota ?>"<?= (int) $clanek['pristup'] === $hodnota ? ' selected' : '' ?>><?= e(t($popis)) ?></option>
 <?php endforeach ?>
 	</select>
 	<span class="napoveda"><?= e(t('Ostatní uvidí perex, začátek textu a výzvu k přihlášení.')) ?></span></div>

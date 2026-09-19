@@ -60,10 +60,13 @@ $ikona = require __DIR__ . '/ikony.php';
 <h2><?= e($nadpis) ?></h2>
 <?php endif ?>
 <?php foreach ($hlasky as $hlaska): ?>
-<p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= e($hlaska['text']) ?></p>
+<p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= e(t($hlaska['text'])) ?></p>
 <?php endforeach ?>
 <?= $obsah ?>
 </main>
+<?php if (PhpRS\Core\Jazyk::kod() !== 'cs' && is_file(PHPRS_ROOT . '/image/jazyky/admin-' . PhpRS\Core\Jazyk::kod() . '.js')): ?>
+<script src="<?= e($app->url('image/jazyky/admin-' . PhpRS\Core\Jazyk::kod() . '.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>
+<?php endif ?>
 <script src="<?= e($app->url('image/admin.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>
 <script src="<?= e($app->url('image/editor.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" data-admin-url="<?= e($app->url('admin.php')) ?>" defer></script>
 </body>

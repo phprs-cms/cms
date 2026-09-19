@@ -33,7 +33,7 @@ final class TypyObsahu
         if ((int) $clanek['zive'] > 0) {
             $pred .= $this->ziveHtml($clanek);
         }
-        $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->sdileniHtml($clanek);
+        $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->autorHtml($clanek) . $this->sdileniHtml($clanek);
 
         return $clanek;
     }
@@ -95,6 +95,26 @@ final class TypyObsahu
         }
 
         return $html . '<button type="button" data-kopirovat="' . e($adresa) . '" data-hotovo="' . e(t('Zkopírováno')) . '">' . e(t('Kopírovat odkaz')) . '</button></aside>';
+    }
+
+    /**
+     * Medailonek autora pod článkem - jen když má autor vyplněných pár vět o sobě (Můj účet).
+     *
+     * @param array<string, mixed> $clanek
+     */
+    public function autorHtml(array $clanek): string
+    {
+        if (trim((string) ($clanek['autor_bio'] ?? '')) === '' || ($clanek['autor_jm'] ?? null) === null) {
+            return '';
+        }
+        $foto = (string) $clanek['autor_foto'];
+        $foto = $foto === '' ? '' : (preg_match('#^(https?:)?/#i', $foto) ? $foto : $this->app->request->basePath() . '/' . $foto);
+
+        return '<aside class="rs-autor" aria-label="' . e(t('O autorovi')) . '">'
+            . ($foto !== '' ? '<img src="' . e($foto) . '" alt="" width="72" height="72" loading="lazy">' : '')
+            . '<div><a class="rs-autor-jmeno" href="' . e($this->app->url('autor/' . (int) $clanek['autor'])) . '" rel="author">' . e($clanek['autor_jm']) . '</a>'
+            . ($clanek['autor_pozice'] !== '' ? '<span>' . e($clanek['autor_pozice']) . '</span>' : '')
+            . '<p>' . nl2br(e(trim((string) $clanek['autor_bio']))) . '</p></div></aside>';
     }
 
     /** Přehrávač podle adresy: soubor (audio/video), YouTube, Vimeo, Spotify. Cizí přehrávače se načtou až po kliknutí. */

@@ -737,4 +737,10 @@ return [
     'Bloky přidáváte a přesouváte přímo na webu.' => 'Add and move blocks right on the site.',
     'Nastavte e-mail redakce a poštu' => 'Set the newsroom e-mail and mail delivery',
     'Kam chodí upozornění a odkud web odesílá e-maily.' => 'Where notifications go and how the site sends e-mail.',
+    'Pozice v redakci' => 'Role in the newsroom',
+    'např. redaktorka kultury' => 'e.g. culture editor',
+    'Moje fotka' => 'My photo',
+    'Čtvercová fotka, stačí 300 × 300 px.' => 'A square photo, 300 × 300 px is enough.',
+    'Pár vět o mně' => 'A few sentences about me',
+    'Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.' => 'Shown as an author box under your articles and on your author page. What you cover, where you write from, your background.',
 ];

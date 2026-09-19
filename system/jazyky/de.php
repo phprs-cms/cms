@@ -159,4 +159,5 @@ return [
     'Sdílet…' => 'Teilen…',
     'Zkopírováno' => 'Kopiert',
     'Kopírovat odkaz' => 'Link kopieren',
+    'O autorovi' => 'Über den Autor',
 ];

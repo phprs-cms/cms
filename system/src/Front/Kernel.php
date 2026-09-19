@@ -279,13 +279,17 @@ final class Kernel
 
     private function autor(int $idu): Response
     {
-        $autor = $this->app->db()->one("SELECT idu, jmeno, url FROM {user} WHERE idu = ? AND blokovat = 0 AND jmeno <> ''", [$idu]);
+        $autor = $this->app->db()->one("SELECT idu, jmeno, url, pozice, foto, bio FROM {user} WHERE idu = ? AND blokovat = 0 AND jmeno <> ''", [$idu]);
         if ($autor === null) {
             return $this->nenalezeno();
         }
         $strana = max(1, $this->app->request->getInt('strana', 1));
         [$clanky, $celkem] = $this->clanky->odAutora($idu, $strana);
-        $hlavicka = ['nazev' => $autor['jmeno'], 'popis' => $autor['url'] !== '' ? '<p><a href="' . e($autor['url']) . '" rel="me noopener">' . e($autor['url']) . '</a></p>' : ''];
+        $foto = $autor['foto'] === '' ? '' : (preg_match('#^(https?:)?/#i', $autor['foto']) ? $autor['foto'] : $this->app->request->basePath() . '/' . $autor['foto']);
+        $hlavicka = ['nazev' => $autor['jmeno'], 'popis' => '<div class="rs-autor rs-autor-stranka">' . ($foto !== '' ? '<img src="' . e($foto) . '" alt="" width="96" height="96">' : '') . '<div>'
+            . ($autor['pozice'] !== '' ? '<span>' . e($autor['pozice']) . '</span>' : '')
+            . (trim((string) $autor['bio']) !== '' ? '<p>' . nl2br(e(trim((string) $autor['bio']))) . '</p>' : '')
+            . ($autor['url'] !== '' ? '<p><a href="' . e($autor['url']) . '" rel="me noopener">' . e($autor['url']) . '</a></p>' : '') . '</div></div>'];
 
         return $this->stranka($autor['jmeno'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'autor/' . $idu)), ['popis' => t('Články autora') . ' ' . $autor['jmeno']]);
     }

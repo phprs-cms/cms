@@ -16,6 +16,7 @@ final class Clanky
     private const string SELECT = "
         SELECT c.*, t.nazev AS tema_jm, t.seo_link AS tema_seo, t.obrazek AS tema_obr,
                NULLIF(u.jmeno, '') AS autor_jm, -- přihlašovací jméno se na webu neukazuje; bez vyplněného jména je autorem redakce
+               u.pozice AS autor_pozice, u.foto AS autor_foto, u.bio AS autor_bio, u.url AS autor_url,
                s.soubor_cla_sab AS sablona_soubor
         FROM {clanky} c
         JOIN {topic} t ON t.idt = c.tema

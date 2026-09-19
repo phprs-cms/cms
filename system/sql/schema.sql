@@ -30,6 +30,9 @@ CREATE TABLE rs_user (
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,
     jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyk administrace; '' = čeština
+    pozice         VARCHAR(100) NOT NULL DEFAULT '',      -- pozice v redakci (medailonek autora)
+    foto           VARCHAR(255) NOT NULL DEFAULT '',
+    bio            TEXT NULL,                             -- pár vět o autorovi
     PRIMARY KEY (idu),
     UNIQUE KEY uq_user (user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

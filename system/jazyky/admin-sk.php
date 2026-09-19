@@ -641,4 +641,10 @@ return [
     'Bloky přidáváte a přesouváte přímo na webu.' => 'Bloky pridávate a presúvate priamo na webe.',
     'Nastavte e-mail redakce a poštu' => 'Nastavte e-mail redakcie a poštu',
     'Kam chodí upozornění a odkud web odesílá e-maily.' => 'Kam chodia upozornenia a odkiaľ web odosiela e-maily.',
+    'Pozice v redakci' => 'Pozícia v redakcii',
+    'např. redaktorka kultury' => 'napr. redaktorka kultúry',
+    'Moje fotka' => 'Moja fotka',
+    'Čtvercová fotka, stačí 300 × 300 px.' => 'Štvorcová fotka, stačí 300 × 300 px.',
+    'Pár vět o mně' => 'Pár viet o mne',
+    'Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.' => 'Zobrazí sa ako medailónik pod vašimi článkami a na stránke autora. Čomu sa venujete, odkiaľ píšete, čo máte za sebou.',
 ];

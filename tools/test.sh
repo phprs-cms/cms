@@ -55,7 +55,7 @@ TOKEN=$(grep -o 'name="_csrf" value="[a-f0-9]*"' "$PRACE/odpoved" | head -1 | se
 kod=$(curl -s -b "$JAR" -c "$JAR" -o /dev/null -w '%{http_code}' -X POST "$B/admin.php" -d "_csrf=$TOKEN" -d user=admin -d password=spatne-heslo-123); [ "$kod" = 401 ] && echo "  ok     špatné heslo odmítnuto" || { echo "  CHYBA  špatné heslo: $kod"; CHYB=$((CHYB+1)); }
 kod=$(curl -s -b "$JAR" -c "$JAR" -o /dev/null -w '%{http_code}' -X POST "$B/admin.php" -d user=admin --data-urlencode "password=$HESLO"); [ "$kod" = 400 ] && echo "  ok     POST bez CSRF odmítnut" || { echo "  CHYBA  CSRF: $kod"; CHYB=$((CHYB+1)); }
 curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php" -d "_csrf=$TOKEN" -d user=admin --data-urlencode "password=$HESLO"
-"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('rozsireni','novinky,komentare,ankety,statistika,presmerovani,reklama,newsletter,ctenari') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('rozsireni','novinky,komentare,ankety,statistika,presmerovani,reklama,newsletter,ctenari,push,asistent') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
 over "přehled" 200 /admin.php "Přehled"
 for m in clanky "clanky&akce=novy" "clanky&akce=kalendar" intergal topic stranky news comment ankety stat reklama newsletter ctenari vzhled "bloky&schema=1" users presmerovani protokol; do over "modul $m" 200 "/admin.php?modul=$m"; done
 for z in zakladni vzhled seo mereni cookies rozsireni zalohy stav; do over "nastavení/$z" 200 "/admin.php?modul=config&zalozka=$z"; done
@@ -65,6 +65,8 @@ curl -s "$B/clanek/vitejte-v-phprs-3" | grep -q "rs-zamek" && echo "  ok     zam
 curl -s "$B/clanek/vitejte-v-phprs-3.md" | grep -q "admin.php" && { echo "  CHYBA  zamčený text uniká přes .md"; CHYB=$((CHYB+1)); } || echo "  ok     zamčený text neuniká přes .md"
 kod=$(curl -s -H "Cookie: phprs_ctenar=1.9999999999.podvrh" "$B/clanek/vitejte-v-phprs-3"); echo "$kod" | grep -q "rs-zamek" && echo "  ok     podvržená cookie čtenáře zámek neodemkne" || { echo "  CHYBA  podvržená cookie čtenáře odemkla článek"; CHYB=$((CHYB+1)); }
 "${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_clanky SET pristup = 0"
+for u in /sw.js /push.json /manifest.webmanifest; do over "$u" 200 "$u"; done
+kod=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"endpoint":"https://utocnik.example/x"}' "$B/push/odber"); [ "$kod" = 400 ] && echo "  ok     Web Push odmítne cizí adresu odběru" || { echo "  CHYBA  Web Push přijal cizí adresu: $kod"; CHYB=$((CHYB+1)); }
 over "neznámý modul" 403 "/admin.php?modul=neexistuje"
 over "vizuální editor bloků" 200 "/?upravit=1" "rs-nastaveni"
 kod=$(curl -s -o "$PRACE/odpoved" -w '%{http_code}' "$B/?upravit=1"); grep -q "rs-nastaveni" "$PRACE/odpoved" && { echo "  CHYBA  vizuální editor je vidět bez přihlášení"; CHYB=$((CHYB+1)); } || echo "  ok     vizuální editor jen pro přihlášené"

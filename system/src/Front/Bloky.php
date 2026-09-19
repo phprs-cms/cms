@@ -77,7 +77,7 @@ final class Bloky
 
     private function systemovy(string $zkratka, string $data, string $obsah): string
     {
-        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter', 'cte' => 'ctenari'][$zkratka] ?? '';
+        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter', 'cte' => 'ctenari', 'psh' => 'push'][$zkratka] ?? '';
         if (!Rozsireni::je($this->app->settings(), $rozsireni)) {
             return '';
         }
@@ -131,6 +131,9 @@ final class Bloky
                 . ($web->get('email_webu') !== '' ? '<br><a href="mailto:' . e($web->get('email_webu')) . '">' . e($web->get('email_webu')) . '</a>' : '') . '</p>',
             'nws' => (new Newsletter($this->app, $this->view))->formularHtml(),
             // stránka může být z cache, proto blok nerozlišuje přihlášeného - /ctenar ukáže přihlášení, nebo účet
+            // tlačítko oživí image/web.js; v prohlížeči bez podpory oznámení zůstane blok skrytý
+            'psh' => '<div class="rs-push" data-push hidden><p>' . e($obsah !== '' ? strip_tags($obsah) : 'Dáme vám vědět, když vyjde nový článek.') . '</p>'
+                . '<button type="button" class="rs-tl" data-push-tl>Zapnout oznámení</button><p class="rs-drobne" data-push-stav role="status"></p></div>',
             'cte' => '<p class="blok-ctenar"><a class="rs-tl" href="' . e($url('ctenar')) . '">Přihlášení / Můj účet</a></p>',
             default => '',
         };

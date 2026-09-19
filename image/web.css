@@ -44,3 +44,7 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .rs-stitek-zamek { display: inline-block; margin-left: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 99px; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; opacity: 0.75; }
 .clanek-text a.rs-tl, .blok a.rs-tl, a.rs-tl { color: #fff; text-decoration: none; }
 .clanek-text a.rs-tl-vedlejsi, .blok a.rs-tl-vedlejsi, a.rs-tl-vedlejsi { color: inherit; }
+
+/* ---------- oznámení v prohlížeči ---------- */
+.rs-push p { margin: 0 0 10px; }
+.rs-push .rs-drobne { margin-top: 8px; }

@@ -198,6 +198,10 @@ final class Seo
         // společné prvky článku (fotogalerie, prohlížečka fotek...) pro všechny šablony
         $verze = rawurlencode(PHPRS_VERSION);
         $h[] = '<link rel="stylesheet" href="' . e($this->app->url('image/web.css')) . '?v=' . $verze . '">';
+        $push = new \PhpRS\Core\Push($this->app->db(), $s);
+        if ($push->zapnuto() && $push->verejnyKlic() !== '') {
+            $h[] = '<link rel="manifest" href="' . e($this->app->url('manifest.webmanifest')) . '"><meta name="rs-push" content="' . e($push->verejnyKlic()) . '" data-koren="' . e($this->app->url('')) . '">';
+        }
         $h[] = '<script src="' . e($this->app->url('image/web.js')) . '?v=' . $verze . '" defer></script>';
         $h[] = '<style>@media (max-width: 760px) { .jen-pocitac { display: none !important; } } @media (min-width: 761px) { .jen-mobil { display: none !important; } }</style>';
         $h[] = $this->mereni();

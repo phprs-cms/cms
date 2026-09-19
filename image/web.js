@@ -51,4 +51,48 @@
 		if (seznam.indexOf(img) === -1) { seznam = [img]; }
 		otevri(seznam, seznam.indexOf(img));
 	});
+
+	/* ---------- oznámení o nových článcích (Web Push) ---------- */
+
+	var meta = document.querySelector('meta[name="rs-push"]');
+	var bloky = document.querySelectorAll('[data-push]');
+	if (meta && bloky.length && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
+		var koren = meta.getAttribute('data-koren');
+		var klic = meta.getAttribute('content');
+		var naBajty = function (b64) {
+			var t = atob((b64 + '===='.slice((b64.length + 3) % 4 + 1)).replace(/-/g, '+').replace(/_/g, '/'));
+			return Uint8Array.from(t, function (z) { return z.charCodeAt(0); });
+		};
+		var posli = function (cesta, odber) {
+			return fetch(koren + cesta, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(odber) });
+		};
+		var prekresli = function (odber, zprava) {
+			bloky.forEach(function (b) {
+				b.hidden = false;
+				b.querySelector('[data-push-tl]').textContent = odber ? 'Vypnout oznámení' : 'Zapnout oznámení';
+				b.querySelector('[data-push-tl]').classList.toggle('rs-tl-vedlejsi', !!odber);
+				b.querySelector('[data-push-stav]').textContent = zprava || (odber ? 'Oznámení jsou v tomto prohlížeči zapnutá.' : '');
+			});
+		};
+		navigator.serviceWorker.register(koren + 'sw.js', { scope: koren }).then(function (reg) {
+			reg.pushManager.getSubscription().then(function (odber) { prekresli(odber); });
+			bloky.forEach(function (b) {
+				b.querySelector('[data-push-tl]').addEventListener('click', function () {
+					reg.pushManager.getSubscription().then(function (odber) {
+						if (odber) {
+							return posli('push/zrusit', odber).then(function () { return odber.unsubscribe(); }).then(function () { prekresli(null, 'Oznámení jsou vypnutá.'); });
+						}
+						return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: naBajty(klic) }).then(function (novy) {
+							return posli('push/odber', novy).then(function (r) {
+								if (!r.ok) { return novy.unsubscribe().then(function () { prekresli(null, 'Oznámení se nepodařilo zapnout. Zkuste to později.'); }); }
+								prekresli(novy);
+							});
+						});
+					}).catch(function () {
+						prekresli(null, Notification.permission === 'denied' ? 'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.' : 'Oznámení se nepodařilo zapnout.');
+					});
+				});
+			});
+		}).catch(function () { /* bez service workeru zůstane blok skrytý */ });
+	}
 })();

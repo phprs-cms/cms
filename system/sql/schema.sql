@@ -156,6 +156,7 @@ CREATE TABLE rs_clanky (
     mn_hodnoceni   INT UNSIGNED NOT NULL DEFAULT 0,       -- počet hlasů
     zmeneno        DATETIME NULL,
     aktualizovano  DATETIME NULL,                         -- kdy byl vydaný článek podstatně doplněn
+    oznameno       DATETIME NULL,                         -- kdy systém vydání oznámil (webhook, IndexNow, Web Push); NULL = ještě ne
     zamek_kdo      INT UNSIGNED NULL,                     -- kdo má článek právě otevřený v editoru
     zamek_cas      DATETIME NULL,
     PRIMARY KEY (idc),
@@ -458,4 +459,18 @@ CREATE TABLE rs_ctenari (
     PRIMARY KEY (idct),
     UNIQUE KEY uq_ctenari_email (email),
     KEY ix_ctenari_token (token)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- ---------------------------------------------------------------------------
+-- Odběry oznámení Web Push (rozšíření Oznámení v prohlížeči)
+-- ---------------------------------------------------------------------------
+CREATE TABLE rs_push (
+    idp       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    endpoint  VARCHAR(700) NOT NULL,                      -- adresa u služby prohlížeče (Google, Mozilla, Apple, Microsoft)
+    otisk     CHAR(64) NOT NULL,                          -- sha256 adresy kvůli jedinečnosti
+    p256dh    VARCHAR(120) NOT NULL DEFAULT '',
+    auth      VARCHAR(40) NOT NULL DEFAULT '',
+    vytvoreno DATETIME NOT NULL,
+    PRIMARY KEY (idp),
+    UNIQUE KEY uq_push_otisk (otisk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

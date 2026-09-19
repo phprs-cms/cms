@@ -77,6 +77,11 @@ final class Settings
         'aktualizace_auto' => '1',    // bezpečnostní vydání instalovat automaticky
         'aktualizace_pokus' => '',    // verze, kterou už údržba na pozadí zkoušela / oznámila
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
+        'push_klic_verejny' => '',    // pár klíčů VAPID pro Web Push vznikne sám při prvním použití
+        'push_klic_soukromy' => '',
+        'push_zprava' => '',          // poslední oznámení (JSON) - čte ho service worker přes /push.json
+        'push_ukazatel' => '',        // kam až došla rozesílka posledního oznámení; "hotovo" = rozesláno
+        'oznameni_kontrola' => '0',   // kdy naposledy proběhla kontrola nově vydaných článků
         'ai_klic' => '',              // klíč Claude API pro AI asistenta v editoru (nikdy se nevypisuje zpět do formuláře)
         'ai_model' => 'claude-sonnet-5',
         'ads_txt' => '',

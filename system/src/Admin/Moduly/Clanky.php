@@ -207,11 +207,10 @@ final class Clanky extends Modul
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
         $this->ulozStitky($id, $r->post('stitky'));
-        if ($data['visible'] && empty($puvodni['visible'])) {
-            \PhpRS\Core\Webhook::clanekVydan($this->app, $id);
-        }
-        if ($data['visible'] && !$data['noindex'] && strtotime($data['datum']) <= time()) {
-            (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $data['seo_link']);
+        // nově vydaný článek se oznámí (webhook, IndexNow, Web Push); naplánovaný počká na svůj čas - viz Core\Oznameni
+        \PhpRS\Core\Oznameni::zpracuj($this->app);
+        if ($data['visible'] && !empty($puvodni['visible']) && !$data['noindex'] && strtotime($data['datum']) <= time()) {
+            (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $data['seo_link']); // úprava vydaného článku
         }
 
         $hlaska = 'Článek byl uložen.';
@@ -301,7 +300,7 @@ final class Clanky extends Modul
             return $this->zpet('Článek nelze vydat.', typ: 'chyba');
         }
         $this->db->update('clanky', ['visible' => 1, 'stav_redakce' => ''], ['idc' => $clanek['idc']]);
-        \PhpRS\Core\Webhook::clanekVydan($this->app, (int) $clanek['idc']);
+        \PhpRS\Core\Oznameni::zpracuj($this->app);
 
         return $this->zpet(strtotime($clanek['datum']) > time() ? 'Článek je naplánován na ' . datum($clanek['datum'], true) . '.' : 'Článek byl vydán.', '', ['stav' => 'koncepty']);
     }

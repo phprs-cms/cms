@@ -120,6 +120,12 @@ final class Kernel
 
             return $vysledek instanceof Response ? $vysledek : $this->stranka($vysledek[0], $vysledek[1], ['noindex' => true]);
         }
+        if (str_starts_with($path, '/push') || $path === '/manifest.webmanifest') {
+            $odpoved = $this->push($path);
+            if ($odpoved !== null) {
+                return $odpoved;
+            }
+        }
         if (str_starts_with($path, '/api/') && Rozsireni::je($this->app->settings(), 'api')) {
             return (new Api($this->app, $this->clanky))->handle($path);
         }
@@ -179,6 +185,46 @@ final class Kernel
         }
 
         return $this->nenalezeno();
+    }
+
+    /** Web Push: obsah posledního oznámení, přihlášení a zrušení odběru, manifest webové aplikace (kvůli iOS). */
+    private function push(string $path): ?Response
+    {
+        $web = $this->app->settings();
+        $push = new \PhpRS\Core\Push($this->app->db(), $web);
+        if (!$push->zapnuto()) {
+            return null;
+        }
+        $koren = $this->app->request->origin() . $this->app->url('');
+        $ikona = $web->get('favicon') === '' ? '' : (preg_match('#^https?://#i', $web->get('favicon')) ? $web->get('favicon') : rtrim($koren, '/') . '/' . ltrim($web->get('favicon'), '/'));
+        if ($path === '/push.json') {
+            return Response::json($push->zprava() + ['ikona' => $ikona]);
+        }
+        if ($path === '/manifest.webmanifest') {
+            return new Response((string) json_encode([
+                'name' => $web->get('nazev_webu'), 'short_name' => mb_substr($web->get('nazev_webu'), 0, 12), 'start_url' => $this->app->url(''), 'scope' => $this->app->url(''),
+                'display' => 'standalone', 'background_color' => '#ffffff', 'theme_color' => $web->get('brand_akcent') ?: '#ffffff',
+                'icons' => $ikona === '' ? [] : [['src' => $ikona, 'sizes' => '256x256', 'purpose' => 'any']],
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 200, ['Content-Type' => 'application/manifest+json; charset=utf-8']);
+        }
+        if ($this->app->request->isPost() && in_array($path, ['/push/odber', '/push/zrusit'], true)) {
+            $data = json_decode((string) file_get_contents('php://input', false, null, 0, 4000), true);
+            $endpoint = is_array($data) && is_string($data['endpoint'] ?? null) ? $data['endpoint'] : '';
+            $antispam = new \PhpRS\Core\Antispam($this->app->db(), $web);
+            if ($path === '/push/zrusit') {
+                $push->odhlas($endpoint);
+
+                return Response::json(['ok' => true]);
+            }
+            if ($antispam->pocet($this->app->request->ip(), 'push', 0, 60) >= 10 || !$push->prihlas($endpoint, (string) ($data['keys']['p256dh'] ?? ''), (string) ($data['keys']['auth'] ?? ''))) {
+                return Response::json(['ok' => false], 400);
+            }
+            $antispam->zapis($this->app->request->ip(), 'push', 0);
+
+            return Response::json(['ok' => true]);
+        }
+
+        return null;
     }
 
     private function autor(int $idu): Response

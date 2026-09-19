@@ -21,6 +21,19 @@
 	<a class="tl" href="<?= e($app->url('admin.php?modul=clanky&akce=novy')) ?>"><?= e(t('Napsat článek')) ?></a>
 <?php endif ?>
 </div>
+<?php if (!empty($pruvodce)): $hotovych = count(array_filter($pruvodce, fn (array $k): bool => $k['hotovo'])); ?>
+<section class="pruvodce" aria-label="<?= e(t('První kroky')) ?>">
+	<div class="pruvodce-hlava">
+		<h3><?= e(t('První kroky')) ?> <small><?= $hotovych ?> / <?= count($pruvodce) ?></small></h3>
+		<form method="post" action="<?= e($app->url('admin.php?akce=pruvodce_skryt')) ?>"><?= $app->session->csrfField() ?><button class="navigace" type="submit"><?= e(t('Skrýt')) ?></button></form>
+	</div>
+	<ol class="pruvodce-kroky">
+<?php foreach ($pruvodce as $k): ?>
+		<li class="<?= $k['hotovo'] ? 'hotovo' : '' ?>"><a href="<?= e($k['url']) ?>"><strong><?= e(t($k['nazev'])) ?></strong><span><?= e(t($k['popis'])) ?></span></a></li>
+<?php endforeach ?>
+	</ol>
+</section>
+<?php endif ?>
 <div class="dlazdice">
 <?php foreach ($pocty as $popis => $pocet): ?>
 	<div class="dlazdice-polozka"><strong><?= number_format($pocet, 0, ',', ' ') ?></strong><span><?= e(t($popis)) ?></span></div>

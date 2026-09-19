@@ -115,6 +115,11 @@ final class Kernel
 
             return Response::redirect($app->url('admin.php' . (preg_match('/^[a-z]+$/', $ident) ? '?modul=' . $ident : '')));
         }
+        if ($akce === 'pruvodce_skryt' && $request->isPost() && $app->auth()->isAdmin()) {
+            $app->settings()->set('pruvodce_skryt', '1');
+
+            return Response::redirect($app->url('admin.php'));
+        }
         if ($ident === '') {
             $nova = $app->auth()->isAdmin() ? (new \PhpRS\Core\Aktualizace($app->settings()))->stav()['nova'] : null;
             if ($nova !== null) {
@@ -193,6 +198,7 @@ final class Kernel
         $jen = $autori === null ? '' : ' AND autor IN (' . implode(',', $autori) . ')';
 
         return $data + [
+            'pruvodce' => $this->pruvodce(),
             'pocty' => [
                 'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
@@ -207,6 +213,31 @@ final class Kernel
                  ORDER BY COALESCE(c.zmeneno, c.datum) DESC LIMIT 6",
             ),
         ];
+    }
+
+    /**
+     * První kroky po instalaci: co už je hotové, se pozná z dat. Vidí je jen administrátor, dokud je neskryje nebo nesplní.
+     *
+     * @return list<array{nazev:string, popis:string, url:string, hotovo:bool}>
+     */
+    private function pruvodce(): array
+    {
+        $app = $this->app;
+        $s = $app->settings();
+        if (!$app->auth()->isAdmin() || $s->bool('pruvodce_skryt')) {
+            return [];
+        }
+        $db = $app->db();
+        $kroky = [
+            ['Dejte webu tvář', 'Šablona, logo, hlavní barva a písmo.', 'admin.php?modul=vzhled', $s->get('logo_webu') !== '' || $s->get('brand_akcent') !== ''],
+            ['Založte rubriky', 'Třeba Zprávy, Kultura, Sport – články se do nich řadí.', 'admin.php?modul=topic', (int) $db->value('SELECT COUNT(*) FROM {topic}') >= 2],
+            ['Napište první článek', 'Uvítací článek pak můžete smazat.', 'admin.php?modul=clanky&akce=novy', (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE seo_link <> 'vitejte-v-phprs-3'") >= 1],
+            ['Poskládejte si stránku', 'Bloky přidáváte a přesouváte přímo na webu.', '?upravit=1', (int) $db->value('SELECT COUNT(*) FROM {bloky}') !== 0 && (int) $db->value("SELECT COUNT(*) FROM {protokol} WHERE modul = 'bloky'") > 0],
+            ['Nastavte e-mail redakce a poštu', 'Kam chodí upozornění a odkud web odesílá e-maily.', 'admin.php?modul=config&zalozka=posta', $s->get('email_webu') !== '' && ($s->get('posta_rezim') === 'smtp' || $s->get('posta_od') !== '')],
+        ];
+        $vysledek = array_map(fn (array $k): array => ['nazev' => $k[0], 'popis' => $k[1], 'url' => $app->url($k[2]), 'hotovo' => (bool) $k[3]], $kroky);
+
+        return array_filter($vysledek, fn (array $k): bool => !$k['hotovo']) === [] ? [] : $vysledek;
     }
 
     private function login(): Response

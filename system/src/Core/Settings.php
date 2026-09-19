@@ -103,6 +103,7 @@ final class Settings
         'ai_klic' => '',              // klíč Claude API pro AI asistenta v editoru (nikdy se nevypisuje zpět do formuláře)
         'ai_model' => 'claude-sonnet-5',
         'ads_txt' => '',
+        'pruvodce_skryt' => '0',      // administrátor skryl první kroky na přehledu
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 

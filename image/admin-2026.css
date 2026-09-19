@@ -925,3 +925,18 @@ body.login {
 		max-height: none;
 	}
 }
+
+/* ---------- první kroky po instalaci (přehled) ---------- */
+.pruvodce { margin: 0 0 24px; padding: 18px 20px; border: 1px solid var(--linka); border-radius: var(--radius, 10px); background: var(--plocha); }
+.pruvodce-hlava { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.pruvodce-hlava h3 { margin: 0; font-size: 16px; }
+.pruvodce-hlava small { margin-left: 6px; font-weight: 400; color: var(--text-slaby); }
+.pruvodce-kroky { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: krok; }
+.pruvodce-kroky li { counter-increment: krok; }
+.pruvodce-kroky a { display: grid; gap: 3px; height: 100%; padding: 12px 14px 12px 44px; position: relative; border: 1px solid var(--linka); border-radius: 8px; color: inherit; text-decoration: none; }
+.pruvodce-kroky a::before { content: counter(krok); position: absolute; left: 12px; top: 12px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--akcent); color: var(--akcent); font-size: 12px; font-weight: 600; }
+.pruvodce-kroky a:hover { border-color: var(--akcent); }
+.pruvodce-kroky span { font-size: 12.5px; line-height: 1.4; color: var(--text-slaby); }
+.pruvodce-kroky .hotovo a { opacity: 0.6; }
+.pruvodce-kroky .hotovo a::before { content: "✓"; background: var(--akcent); color: #fff; }
+.pruvodce-kroky .hotovo strong { text-decoration: line-through; }

@@ -52,6 +52,26 @@
 		otevri(seznam, seznam.indexOf(img));
 	});
 
+	/* ---------- mobilní menu: pruh rubrik se na telefonu sbalí pod tlačítko ---------- */
+
+	var pruh = document.querySelector('nav.rubriky-lista');
+	if (pruh && pruh.children.length > 3 && window.matchMedia) {
+		var tlMenu = document.createElement('button');
+		tlMenu.type = 'button';
+		tlMenu.className = 'rs-menu-tl';
+		tlMenu.setAttribute('aria-expanded', 'false');
+		tlMenu.innerHTML = '<span aria-hidden="true"></span>' + (pruh.getAttribute('aria-label') || 'Menu');
+		pruh.id = pruh.id || 'rs-rubriky';
+		tlMenu.setAttribute('aria-controls', pruh.id);
+		pruh.parentNode.insertBefore(tlMenu, pruh);
+		document.documentElement.classList.add('rs-ma-menu');
+		tlMenu.addEventListener('click', function () {
+			var otevrit = tlMenu.getAttribute('aria-expanded') !== 'true';
+			tlMenu.setAttribute('aria-expanded', otevrit ? 'true' : 'false');
+			pruh.classList.toggle('rs-otevrene', otevrit);
+		});
+	}
+
 	/* ---------- sdílení článku: systémové sdílení (telefon) a kopírování odkazu ---------- */
 
 	document.querySelectorAll('[data-sdilet]').forEach(function (tl) {

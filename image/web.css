@@ -104,3 +104,23 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .rs-sdileni a:hover, .rs-sdileni button:hover, .clanek-text .rs-sdileni a:hover { border-color: var(--rs-akcent, #1f4fe0); color: var(--rs-akcent, #1f4fe0); }
 .rs-sdileni [hidden] { display: none; }
 @media print { .rs-sdileni, .rs-osnova, .rs-zamek { display: none; } }
+
+/* ---------- mobilní menu rubrik (tlačítko přidává image/web.js; bez JavaScriptu zůstává posuvný pruh) ---------- */
+.rs-menu-tl { display: none; }
+@media (max-width: 640px) {
+	.rs-ma-menu .rs-menu-tl { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 12px; padding: 11px 2px; border: 0; border-top: 1px solid rgb(128 128 128 / 0.4); border-bottom: 1px solid rgb(128 128 128 / 0.4); background: transparent; color: inherit; font: 700 13px/1 system-ui, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+	.rs-menu-tl span, .rs-menu-tl span::before, .rs-menu-tl span::after { display: block; width: 18px; height: 2px; background: currentColor; transition: transform 0.15s; }
+	.rs-menu-tl span { position: relative; }
+	.rs-menu-tl span::before, .rs-menu-tl span::after { content: ""; position: absolute; left: 0; }
+	.rs-menu-tl span::before { top: -6px; }
+	.rs-menu-tl span::after { top: 6px; }
+	.rs-menu-tl[aria-expanded="true"] span { background: transparent; }
+	.rs-menu-tl[aria-expanded="true"] span::before { transform: translateY(6px) rotate(45deg); }
+	.rs-menu-tl[aria-expanded="true"] span::after { transform: translateY(-6px) rotate(-45deg); }
+	.rs-ma-menu .hlavicka .obal { flex-wrap: wrap; }
+	.rs-ma-menu .rs-menu-tl { order: 90; flex: 0 0 100%; }
+	.rs-ma-menu nav.rubriky-lista { display: none; order: 91; }
+	.rs-ma-menu nav.rubriky-lista.rs-otevrene { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; flex: none; width: 100%; margin-top: 0; padding: 6px 0 10px; border: 0; white-space: normal; overflow: visible; }
+	.rs-ma-menu nav.rubriky-lista.rs-otevrene a { padding: 11px 2px; border-bottom: 1px solid rgb(128 128 128 / 0.25); }
+}
+@media (prefers-reduced-motion: reduce) { .rs-menu-tl span, .rs-menu-tl span::before, .rs-menu-tl span::after { transition: none; } }

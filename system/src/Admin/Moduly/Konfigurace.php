@@ -28,7 +28,7 @@ final class Konfigurace extends Modul
 
     public const array ZALOZKY = [
         'zakladni' => 'Základní', 'vzhled' => 'Administrace', 'seo' => 'SEO a GEO',
-        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
+        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'posta' => 'Pošta', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
     public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
@@ -55,6 +55,8 @@ final class Konfigurace extends Modul
             'plausible_domena' => 'vzor:/^([a-z0-9.-]{3,100})?$/', 'kod_hlava' => 'kod', 'statistika' => 'ano',
         ],
         'cookies' => ['cookies_rezim' => 'vyber:zadna|vestavena|externi', 'cookies_externi_kod' => 'kod', 'cookies_text' => 'radky', 'cookies_zasady_url' => 'text', 'kod_marketing' => 'kod', 'cookies_evidence' => 'ano'],
+        'posta' => ['posta_rezim' => 'vyber:mail|smtp', 'posta_od' => 'email', 'posta_odpoved' => 'email', 'smtp_host' => 'vzor:/^[A-Za-z0-9.-]{0,120}$/', 'smtp_port' => 'cislo:1:65535',
+            'smtp_sifrovani' => 'vyber:tls|ssl|zadne', 'smtp_uzivatel' => 'text', 'smtp_heslo' => 'tajne'],
         'rozsireni' => ['ai_klic' => 'tajne', 'ai_model' => 'vyber:' . \PhpRS\Core\Asistent::MODELY_KLICE],
         'zalohy' => ['zalohy_auto' => 'ano', 'aktualizace_auto' => 'ano', 'aktualizace_url' => 'url'],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
@@ -257,20 +259,16 @@ final class Konfigurace extends Modul
     {
         $komu = $this->app->settings()->get('email_webu');
         if (!$this->request->isPost() || $komu === '') {
-            return $this->zpet('Nejprve vyplňte E-mail redakce v záložce Základní.', '', ['zalozka' => 'stav'], 'chyba');
+            return $this->zpet('Nejprve vyplňte E-mail redakce v záložce Základní.', '', ['zalozka' => $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav'], 'chyba');
         }
         $web = $this->app->settings()->get('nazev_webu');
-        $ok = function_exists('mail') && @mail(
-            $komu,
-            '=?UTF-8?B?' . base64_encode('Zkušební zpráva z ' . $web) . '?=',
-            "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION,
-            "Content-Type: text/plain; charset=utf-8\r\nFrom: {$komu}",
-        );
+        $ok = \PhpRS\Core\Posta::odesli($this->app->settings(), $komu, 'Zkušební zpráva z ' . $web, "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION);
+        $zpet = $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav';
 
         return $this->zpet(
-            $ok ? "Zpráva byla předána k odeslání na {$komu}. Pokud nedorazí, zkontrolujte spam a nastavení pošty u hostingu." : 'Server zprávu odmítl odeslat (funkce mail() selhala).',
+            $ok ? "Zpráva byla předána k odeslání na {$komu}. Pokud nedorazí, zkontrolujte spam" . ($this->app->settings()->get('posta_rezim') === 'smtp' ? '.' : ' – nebo nastavte odesílání přes SMTP (Nastavení → Pošta).') : 'Odeslání selhalo: ' . \PhpRS\Core\Posta::$chyba,
             '',
-            ['zalozka' => 'stav'],
+            ['zalozka' => $zpet],
             $ok ? 'ok' : 'chyba',
         );
     }

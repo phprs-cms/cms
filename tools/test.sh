@@ -58,7 +58,7 @@ curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php" -d "_csrf=$TOKEN
 "${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('rozsireni','novinky,komentare,ankety,statistika,presmerovani,reklama,newsletter,ctenari,push,asistent,jazyky') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
 over "přehled" 200 /admin.php "Přehled"
 for m in clanky "clanky&akce=novy" "clanky&akce=kalendar" intergal topic stranky news comment ankety stat reklama newsletter ctenari vzhled "bloky&schema=1" users presmerovani protokol; do over "modul $m" 200 "/admin.php?modul=$m"; done
-for z in zakladni vzhled seo mereni cookies rozsireni zalohy stav; do over "nastavení/$z" 200 "/admin.php?modul=config&zalozka=$z"; done
+for z in zakladni vzhled seo mereni cookies posta rozsireni zalohy stav; do over "nastavení/$z" 200 "/admin.php?modul=config&zalozka=$z"; done
 over "účet čtenáře" 200 /ctenar "Jsem tu poprvé"
 "${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_clanky SET pristup = 1; INSERT INTO rs_config VALUES ('zamek_odstavcu','0') ON DUPLICATE KEY UPDATE hodnota='0'"
 curl -s "$B/clanek/vitejte-v-phprs-3" | grep -q "rs-zamek" && echo "  ok     zamčený článek ukazuje výzvu" || { echo "  CHYBA  zamčený článek je vidět bez přihlášení"; CHYB=$((CHYB+1)); }

@@ -157,6 +157,14 @@
 		prekresli();
 	}
 
+	// Obecné: volba s data-prepni="sekce:1" ukáže (nebo :0 skryje) část formuláře označenou data-sekce="sekce"
+	document.querySelectorAll('[data-prepni]').forEach(function (volba) {
+		volba.addEventListener('change', function () {
+			var p = volba.getAttribute('data-prepni').split(':');
+			document.querySelectorAll('[data-sekce="' + p[0] + '"]').forEach(function (s) { s.hidden = p[1] !== '1'; });
+		});
+	});
+
 	// Obecné: formulář s data-prepinac="pole" ukazuje jen řádky, jejichž data-pro obsahuje zvolenou hodnotu pole
 	document.querySelectorAll('form[data-prepinac]').forEach(function (form) {
 		var jmeno = form.getAttribute('data-prepinac');

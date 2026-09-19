@@ -101,8 +101,8 @@ final class Aktualizace
             }
         }
         $komu = $s->get('email_webu');
-        if ($komu !== '' && function_exists('mail')) {
-            @mail($komu, '=?UTF-8?B?' . base64_encode('phpRS: bezpečnostní aktualizace ' . $nova['verze']) . '?=', $vysledek . "\n\nZměny:\n- " . implode("\n- ", $nova['zmeny']) . "\n\n" . $s->get('nazev_webu'), "Content-Type: text/plain; charset=utf-8\r\nFrom: {$komu}");
+        if ($komu !== '') {
+            Posta::odesli($s, $komu, 'phpRS: bezpečnostní aktualizace ' . $nova['verze'], $vysledek . "\n\nZměny:\n- " . implode("\n- ", $nova['zmeny']) . "\n\n" . $s->get('nazev_webu'));
         }
     }
 

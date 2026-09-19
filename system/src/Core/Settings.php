@@ -79,6 +79,14 @@ final class Settings
         'aktualizace_auto' => '1',    // bezpečnostní vydání instalovat automaticky
         'aktualizace_pokus' => '',    // verze, kterou už údržba na pozadí zkoušela / oznámila
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
+        'posta_rezim' => 'mail',      // mail = funkce mail() serveru | smtp = vlastní SMTP server
+        'posta_od' => '',             // adresa odesílatele; prázdné = e-mail redakce
+        'posta_odpoved' => '',        // adresa pro odpovědi (Reply-To)
+        'smtp_host' => '',
+        'smtp_port' => '587',
+        'smtp_sifrovani' => 'tls',    // tls (STARTTLS, port 587) | ssl (port 465) | zadne
+        'smtp_uzivatel' => '',
+        'smtp_heslo' => '',           // typ "tajne": nikdy se nevypisuje zpět do formuláře
         'push_klic_verejny' => '',    // pár klíčů VAPID pro Web Push vznikne sám při prvním použití
         'push_klic_soukromy' => '',
         'push_zprava' => '',          // poslední oznámení (JSON) - čte ho service worker přes /push.json

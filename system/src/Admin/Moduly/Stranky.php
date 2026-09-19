@@ -55,12 +55,13 @@ final class Stranky extends Modul
             'v_menu' => (int) $r->postBool('v_menu'),
             'poradi' => max(0, min(65535, $r->postInt('poradi', 100))),
             'zmeneno' => date('Y-m-d H:i:s'),
+            'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
         $chyby = [];
         if ($data['titulek'] === '') {
             $chyby['titulek'] = 'Vyplňte název stránky.';
         }
-        if (in_array($data['seo_link'], self::VYHRAZENE, true)) {
+        if (in_array($data['seo_link'], self::VYHRAZENE, true) || isset(\PhpRS\Core\Jazyk::DOSTUPNE[$data['seo_link']])) {
             $chyby['seo_link'] = 'Tuto adresu používá systém, zvolte jinou.';
         } elseif ($this->db->value('SELECT ids FROM {stranky} WHERE seo_link = ? AND ids <> ?', [$data['seo_link'], $id]) !== null) {
             $chyby['seo_link'] = 'Stránka s touto adresou už existuje.';

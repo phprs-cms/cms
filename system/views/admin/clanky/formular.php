@@ -12,6 +12,8 @@
  * @var bool $smiVydavat
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var bool $asistent  AI asistent je zapnutý a má klíč
+ * @var bool $jazykyWebu  web má další jazykové verze
+ * @var string $original  adresa článku, jehož je tento překladem
  * @var array<int, string> $serialy
  * @var string $stitky  štítky oddělené čárkou
  * @var list<string> $vsechnyStitky
@@ -133,6 +135,17 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<span class="napoveda">Použije se ve výpisech a při sdílení na sociálních sítích.<?php if ($clanek['idc']): ?> <a href="<?= e($modul->app()->url('admin.php?modul=intergal&clanek=' . (int) $clanek['idc'])) ?>" target="_blank" rel="noopener">Média použitá v článku</a><?php endif ?></span>
 </div>
 </fieldset>
+
+<?php if ($jazykyWebu): ?>
+<details class="pokrocile"<?= $original !== '' ? ' open' : '' ?>>
+<summary>Překlad článku</summary>
+<div class="radek pres-celou">
+	<label for="preklad_z">Originál ve výchozím jazyce</label>
+	<input class="textpole siroke" type="text" id="preklad_z" name="preklad_z" value="<?= e($original) ?>" maxlength="255" placeholder="adresa nebo číslo původního článku">
+	<span class="napoveda">Vyplňte jen u článku v jiné jazykové verzi (jazyk určuje rubrika). Čtenář pak mezi jazyky přepne přímo na překlad a vyhledávače dostanou značky hreflang.</span>
+</div>
+</details>
+<?php endif ?>
 
 <fieldset class="kontrola" data-kontrola>
 <legend>Kontrola přístupnosti</legend>

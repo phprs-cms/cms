@@ -35,13 +35,14 @@ final class Konfigurace extends Modul
 
     /**
      * Pole jednotlivých záložek: klíč v rs_config => typ.
-     * text | tajne (klíč: nevypisuje se zpět, prázdné pole = beze změny) | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | vzor:/regex/
+     * text | tajne (klíč: nevypisuje se zpět, prázdné pole = beze změny) | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | seznam:a|b (zaškrtávací pole, ukládá se "a,b") | vzor:/regex/
      */
     private const array POLE = [
         'zakladni' => [
             'nazev_webu' => 'text', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
             'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
+            'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',
             'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'zamek_text' => 'text',
         ],
         'vzhled' => ['prostredi_admin' => 'vyber:retro|2026'],
@@ -96,6 +97,10 @@ final class Konfigurace extends Modul
         foreach (self::POLE[$zalozka] as $klic => $typ) {
             // "kod" se neořezává ani jinak neupravuje - je to HTML/JS vložené administrátorem
             $hodnota = $typ === 'kod' ? (string) ($_POST[$klic] ?? '') : $this->request->post($klic);
+            if (str_starts_with($typ, 'seznam:')) {
+                $nastaveni->set($klic, implode(',', array_intersect($this->request->postList($klic), explode('|', substr($typ, 7)))));
+                continue;
+            }
             if ($typ === 'tajne') {
                 if ($this->request->postBool($klic . '_smazat')) {
                     $nastaveni->set($klic, '');

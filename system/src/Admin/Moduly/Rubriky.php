@@ -24,11 +24,12 @@ final class Rubriky extends Modul
      *
      * @return list<array<string, mixed>>
      */
-    public static function strom(Db $db, bool $jenZobrazene = false): array
+    public static function strom(Db $db, bool $jenZobrazene = false, ?string $jazyk = null): array
     {
+        $kde = array_filter([$jenZobrazene ? 't.zobrazit = 1' : '', $jazyk !== null && preg_match('/^([a-z]{2})?$/', $jazyk) ? "t.jazyk = '{$jazyk}'" : '']);
         $vse = $db->all(
             'SELECT t.*, (SELECT COUNT(*) FROM {clanky} c WHERE c.tema = t.idt) AS pocet_clanku
-             FROM {topic} t' . ($jenZobrazene ? ' WHERE t.zobrazit = 1' : '') . '
+             FROM {topic} t' . ($kde !== [] ? ' WHERE ' . implode(' AND ', $kde) : '') . '
              ORDER BY t.hodnost DESC, t.nazev',
         );
         $deti = [];
@@ -79,6 +80,7 @@ final class Rubriky extends Modul
             'id_predka' => $r->postInt('id_predka') ?: null,
             'hodnost' => max(0, min(65535, $r->postInt('hodnost', 100))),
             'zobrazit' => (int) $r->postBool('zobrazit'),
+            'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
 
         $chyby = [];
@@ -99,6 +101,7 @@ final class Rubriky extends Modul
 
         if ($id > 0) {
             $this->db->update('topic', $data, ['idt' => $id]);
+            $this->db->run('UPDATE {clanky} SET jazyk = ? WHERE tema = ?', [$data['jazyk'], $id]); // články mají jazyk své rubriky
         } else {
             $this->db->insert('topic', $data);
         }

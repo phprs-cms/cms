@@ -20,6 +20,7 @@ final class Rozsireni
         'statistika' => ['Statistika', 'Vlastní měření návštěvnosti bez cookies.', true],
         'presmerovani' => ['Přesměrování', 'Správa přesměrování 301 ze starých adres.', true],
         'newsletter' => ['Newsletter', 'Přihlášení k odběru s potvrzením e-mailem a rozesílka výběru článků odběratelům.', false],
+        'jazyky' => ['Jazykové verze webu', 'Web ve více jazycích: každá další verze (/en/, /de/…) má své rubriky, články a stránky, přepínač jazyků a značky hreflang. Jazyky vyberete v Nastavení → Základní.', false],
         'push' => ['Oznámení v prohlížeči', 'Web Push: čtenář si jedním klepnutím zapne oznámení o nových článcích (blok Oznámení). Bez cizí služby a bez osobních údajů; po vydání článku se rozešle samo.', false],
         'ctenari' => ['Čtenáři a zamčený obsah', 'Registrace čtenářů, články jen pro přihlášené nebo pro předplatitele s ukázkou pro ostatní. Předplatné zapisuje administrátor ručně.', false],
         'api' => ['Veřejné API', 'Čtecí JSON API pro mobilní aplikaci nebo jiný web: /api/clanky, /api/clanky/<adresa>, /api/rubriky.', false],

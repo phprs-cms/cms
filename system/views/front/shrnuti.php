@@ -8,8 +8,8 @@ if ($body === []) {
     return;
 }
 ?>
-<aside class="ve-zkratce obal-uzky" aria-label="Ve zkratce">
-	<h2>Ve zkratce</h2>
+<aside class="ve-zkratce obal-uzky" aria-label="<?= e(t('Ve zkratce')) ?>">
+	<h2><?= e(t('Ve zkratce')) ?></h2>
 	<ul>
 <?php foreach ($body as $bod): ?>
 		<li><?= e($bod) ?></li>

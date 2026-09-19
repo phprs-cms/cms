@@ -218,6 +218,7 @@
 				el('summary', { text: 'Kdy a kde blok zobrazit' }),
 				pole('Stránky', vyber('zobrazit_kde', Object.keys(N.kde).map(function (k) { return [k, N.kde[k]]; }), b.zobrazit_kde)),
 				pole('Jen v rubrice', vyber('jen_rubrika', [[0, 've všech']].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), b.jen_rubrika || 0)),
+				N.jazyky.length ? pole('Jazyková verze', vyber('jen_jazyk', N.jazyky, b.jen_jazyk || '')) : null,
 				pole('Zařízení', vyber('zarizeni', Object.keys(N.zarizeni).map(function (k) { return [k, N.zarizeni[k]]; }), b.zarizeni)),
 				el('label', { class: 'rs-zaskrtnuti' }, [el('input', { type: 'checkbox', name: 'skryt', checked: !Number(b.zobrazit) }), ' Blok dočasně skrýt'])
 			]));
@@ -235,7 +236,7 @@
 				e.preventDefault();
 				var f = new FormData(form), odeslat = { idb: id, sys_funkce: typ, nazev: f.get('nazev'), zona: b.zona };
 				odeslat.typ = f.get('ukazat_nadpis') ? (f.get('vzhled') || 1) : 5;
-				odeslat.zobrazit_kde = f.get('zobrazit_kde'); odeslat.jen_rubrika = f.get('jen_rubrika'); odeslat.zarizeni = f.get('zarizeni');
+				odeslat.zobrazit_kde = f.get('zobrazit_kde'); odeslat.jen_rubrika = f.get('jen_rubrika'); odeslat.zarizeni = f.get('zarizeni'); odeslat.jen_jazyk = f.get('jen_jazyk') || '';
 				if (!f.get('skryt')) { odeslat.zobrazit = 1; }
 				['obsah', 'blok_rubrika', 'blok_pocet', 'data_sys'].forEach(function (k) { if (f.get(k) !== null) { odeslat[k] = f.get(k); } });
 				if (typ === 'men') {

@@ -86,6 +86,7 @@ CREATE TABLE rs_topic (
     id_predka INT UNSIGNED NULL,                          -- nadřazená rubrika (strom)
     hodnost   SMALLINT UNSIGNED NOT NULL DEFAULT 100,     -- pořadí mezi sourozenci, vyšší = výš
     zobrazit  BOOL NOT NULL DEFAULT 1,
+    jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyková verze; '' = výchozí jazyk webu
     PRIMARY KEY (idt),
     UNIQUE KEY uq_topic_seo (seo_link),
     CONSTRAINT fk_topic_predek FOREIGN KEY (id_predka) REFERENCES rs_topic (idt) ON DELETE SET NULL
@@ -159,7 +160,10 @@ CREATE TABLE rs_clanky (
     oznameno       DATETIME NULL,                         -- kdy systém vydání oznámil (webhook, IndexNow, Web Push); NULL = ještě ne
     zamek_kdo      INT UNSIGNED NULL,                     -- kdo má článek právě otevřený v editoru
     zamek_cas      DATETIME NULL,
+    jazyk          CHAR(2) NOT NULL DEFAULT '',            -- přebírá se z rubriky při uložení článku
+    preklad_z      INT UNSIGNED NULL,                      -- idc článku, jehož je tento překladem
     PRIMARY KEY (idc),
+    KEY ix_clanky_jazyk (jazyk, visible, datum),
     UNIQUE KEY uq_clanky_seo (seo_link),
     KEY ix_clanky_index (visible, zobr_na_indexu, priority, datum),
     KEY ix_clanky_tema (tema, visible, datum),
@@ -247,6 +251,7 @@ CREATE TABLE rs_bloky (
     jen_rubrika  INT UNSIGNED NULL,                       -- NULL = všude; jinak jen v rubrice a u jejích článků
     zarizeni     VARCHAR(10) NOT NULL DEFAULT 'vse',      -- vse | mobil | pocitac
     level_blok   INT UNSIGNED NULL,
+    jen_jazyk      CHAR(2) NOT NULL DEFAULT '',            -- '' = ve všech jazycích, 'vy' = jen ve výchozím, jinak kód jazyka
     PRIMARY KEY (idb),
     KEY ix_bloky_zona (zona, hodnost),
     CONSTRAINT fk_bloky_rubrika FOREIGN KEY (jen_rubrika) REFERENCES rs_topic (idt) ON DELETE SET NULL,
@@ -314,6 +319,7 @@ CREATE TABLE rs_stranky (
     v_menu   BOOL NOT NULL DEFAULT 1,                     -- odkaz v patičce / navigaci webu
     poradi   SMALLINT UNSIGNED NOT NULL DEFAULT 100,
     zmeneno  DATETIME NULL,
+    jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyková verze; '' = výchozí jazyk webu
     PRIMARY KEY (ids),
     UNIQUE KEY uq_stranky_seo (seo_link)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

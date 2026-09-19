@@ -24,12 +24,16 @@ final class Clanky
 
     private const string VYDANE = 'c.visible = 1 AND c.datum <= NOW()';
 
+    /** Podmínka "vydaný článek v jazyce právě zobrazené verze webu". */
+    private readonly string $vydane;
+
     /**
      * @param string $zaklad cesta k instalaci ("" nebo "/magazin") - doplňuje se před adresy obrázků z media/
      * @param (\Closure(array<string, mixed>): array<string, mixed>)|null $uprava poslední úprava článku před šablonou (zamčený obsah)
      */
     public function __construct(private readonly Db $db, private readonly Settings $settings, private readonly string $zaklad = '', private readonly ?\Closure $uprava = null)
     {
+        $this->vydane = self::VYDANE . " AND c.jazyk = '" . \PhpRS\Core\Jazyk::sloupecWebu() . "'";
     }
 
     /**
@@ -66,7 +70,7 @@ final class Clanky
     /** @return array{0: list<array<string, mixed>>, 1: int} články a jejich celkový počet */
     public function naHlavniStranku(int $strana, ?int $limit = null): array
     {
-        $where = self::VYDANE . ' AND c.zobr_na_indexu = 1';
+        $where = $this->vydane . ' AND c.zobr_na_indexu = 1';
         if ($this->settings->bool('hlidat_platnost')) {
             $where .= ' AND (c.datum_pl IS NULL OR c.datum_pl > NOW())';
         }
@@ -77,25 +81,25 @@ final class Clanky
     /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function zRubriky(int $idt, int $strana, ?int $limit = null): array
     {
-        return $this->vypis(self::VYDANE . ' AND c.tema = ?', [$idt], 'c.datum DESC, c.idc DESC', $strana, $limit);
+        return $this->vypis($this->vydane . ' AND c.tema = ?', [$idt], 'c.datum DESC, c.idc DESC', $strana, $limit);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} články vydané v měsíci "RRRR-MM" */
     public function zMesice(string $mesic, int $strana): array
     {
-        return $this->vypis(self::VYDANE . " AND DATE_FORMAT(c.datum, '%Y-%m') = ?", [$mesic], 'c.datum DESC, c.idc DESC', $strana);
+        return $this->vypis($this->vydane . " AND DATE_FORMAT(c.datum, '%Y-%m') = ?", [$mesic], 'c.datum DESC, c.idc DESC', $strana);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function odAutora(int $idu, int $strana): array
     {
-        return $this->vypis(self::VYDANE . ' AND c.autor = ?', [$idu], 'c.datum DESC, c.idc DESC', $strana);
+        return $this->vypis($this->vydane . ' AND c.autor = ?', [$idu], 'c.datum DESC, c.idc DESC', $strana);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function seStitkem(int $ids, int $strana): array
     {
-        return $this->vypis(self::VYDANE . ' AND EXISTS (SELECT 1 FROM {clanky_stitky} cs WHERE cs.idc = c.idc AND cs.ids = ?)', [$ids], 'c.datum DESC, c.idc DESC', $strana);
+        return $this->vypis($this->vydane . ' AND EXISTS (SELECT 1 FROM {clanky_stitky} cs WHERE cs.idc = c.idc AND cs.ids = ?)', [$ids], 'c.datum DESC, c.idc DESC', $strana);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
@@ -104,7 +108,7 @@ final class Clanky
         $like = '%' . addcslashes($q, '%_\\') . '%';
 
         return $this->vypis(
-            self::VYDANE . ' AND (c.titulek LIKE ? OR c.t_slova LIKE ? OR c.uvod LIKE ? OR c.text LIKE ?)',
+            $this->vydane . ' AND (c.titulek LIKE ? OR c.t_slova LIKE ? OR c.uvod LIKE ? OR c.text LIKE ?)',
             [$like, $like, $like, $like],
             'c.datum DESC, c.idc DESC',
             $strana,
@@ -132,7 +136,7 @@ final class Clanky
         }
 
         return $this->db->all(
-            'SELECT c.titulek, c.seo_link, c.datum FROM {clanky} c WHERE c.skupina_cl = ? AND c.idc <> ? AND ' . self::VYDANE . ' ORDER BY c.datum',
+            'SELECT c.titulek, c.seo_link, c.datum FROM {clanky} c WHERE c.skupina_cl = ? AND c.idc <> ? AND ' . $this->vydane . ' ORDER BY c.datum',
             [$clanek['skupina_cl'], $clanek['idc']],
         );
     }
@@ -141,7 +145,7 @@ final class Clanky
     public function nejctenejsi(int $pocet): array
     {
         return $this->db->all(
-            'SELECT c.titulek, c.seo_link, c.visit FROM {clanky} c WHERE ' . self::VYDANE . ' AND c.typ_clanku = 1 AND c.visit > 0 ORDER BY c.visit DESC LIMIT ?',
+            'SELECT c.titulek, c.seo_link, c.visit FROM {clanky} c WHERE ' . $this->vydane . ' AND c.typ_clanku = 1 AND c.visit > 0 ORDER BY c.visit DESC LIMIT ?',
             [$pocet],
         );
     }

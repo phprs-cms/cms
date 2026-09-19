@@ -7,6 +7,7 @@ namespace PhpRS\Front;
 use PhpRS\Admin\Moduly\Bloky as Nastaveni;
 use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
+use PhpRS\Core\Jazyk;
 use PhpRS\Core\Rozsireni;
 use PhpRS\Core\View;
 
@@ -44,6 +45,7 @@ final class Bloky
                 (int) $blok['zobrazit_kde'] === 1 && !$hlavniStranka => 'jen na hlavní stránce',
                 (int) $blok['zobrazit_kde'] === 2 && $hlavniStranka => 'všude kromě hlavní stránky',
                 $blok['jen_rubrika'] !== null && (int) $blok['jen_rubrika'] !== $rubrika => 'jen ve vybrané rubrice',
+                $blok['jen_jazyk'] !== '' && $blok['jen_jazyk'] !== (Jazyk::sloupecWebu() === '' ? 'vy' : Jazyk::sloupecWebu()) => 'jen v jiné jazykové verzi',
                 default => '',
             };
             if ($duvod !== '' && !$upravit) {
@@ -88,7 +90,7 @@ final class Bloky
         $pocet = max(1, min(50, (int) $data ?: 5));
 
         return match ($zkratka) {
-            'rub' => $this->view->render('blok_rub', ['rubriky' => Rubriky::strom($db, true), 'url' => $url]),
+            'rub' => $this->view->render('blok_rub', ['rubriky' => Rubriky::strom($db, true, Jazyk::sloupecWebu()), 'url' => $url]),
             'nov' => $this->view->render('blok_nov', [
                 'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() ORDER BY datum DESC, idn DESC LIMIT ?', [$web->int('pocet_novinek')]),
             ]),
@@ -105,22 +107,22 @@ final class Bloky
             'otv' => ($otvirak = $clanky->naHlavniStranku(1, 1)[0][0] ?? null) === null ? '' : $this->view->render('blok_otv', ['clanek' => $otvirak, 'url' => $url]),
             'sti' => $this->view->render('blok_sti', ['url' => $url, 'stitky' => $db->all(
                 'SELECT s.nazev, s.seo_link, COUNT(*) AS pocet FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids JOIN {clanky} c ON c.idc = cs.idc
-                 WHERE c.visible = 1 AND c.datum <= NOW() GROUP BY s.ids, s.nazev, s.seo_link ORDER BY pocet DESC, s.nazev LIMIT ?',
-                [$pocet],
+                 WHERE c.visible = 1 AND c.datum <= NOW() AND c.jazyk = ? GROUP BY s.ids, s.nazev, s.seo_link ORDER BY pocet DESC, s.nazev LIMIT ?',
+                [Jazyk::sloupecWebu(), $pocet],
             )]),
             'arc' => $this->view->render('blok_arc', ['url' => $url, 'mesice' => $db->all(
-                "SELECT DATE_FORMAT(datum, '%Y-%m') AS mesic, COUNT(*) AS pocet FROM {clanky} WHERE visible = 1 AND datum <= NOW() GROUP BY mesic ORDER BY mesic DESC LIMIT ?",
-                [$pocet],
+                "SELECT DATE_FORMAT(datum, '%Y-%m') AS mesic, COUNT(*) AS pocet FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND jazyk = ? GROUP BY mesic ORDER BY mesic DESC LIMIT ?",
+                [Jazyk::sloupecWebu(), $pocet],
             )]),
             'aut' => $this->view->render('blok_aut', ['url' => $url, 'autori' => $db->all(
                 "SELECT u.idu, IF(u.jmeno = '', u.user, u.jmeno) AS jmeno, COUNT(*) AS pocet FROM {user} u JOIN {clanky} c ON c.autor = u.idu
-                 WHERE c.visible = 1 AND c.datum <= NOW() GROUP BY u.idu, jmeno ORDER BY pocet DESC LIMIT ?",
-                [$pocet],
+                 WHERE c.visible = 1 AND c.datum <= NOW() AND c.jazyk = ? GROUP BY u.idu, jmeno ORDER BY pocet DESC LIMIT ?",
+                [Jazyk::sloupecWebu(), $pocet],
             )]),
             'men' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => self::odkazy($obsah)]),
             'str' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_map(
                 fn (array $st): array => [$st['titulek'], $st['seo_link']],
-                $db->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
+                $db->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]),
             )]),
             'soc' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_values(array_filter(array_map(
                 fn (string $klic, string $nazev): ?array => $web->get($klic) !== '' ? [$nazev, $web->get($klic)] : null,
@@ -132,9 +134,9 @@ final class Bloky
             'nws' => (new Newsletter($this->app, $this->view))->formularHtml(),
             // stránka může být z cache, proto blok nerozlišuje přihlášeného - /ctenar ukáže přihlášení, nebo účet
             // tlačítko oživí image/web.js; v prohlížeči bez podpory oznámení zůstane blok skrytý
-            'psh' => '<div class="rs-push" data-push hidden><p>' . e($obsah !== '' ? strip_tags($obsah) : 'Dáme vám vědět, když vyjde nový článek.') . '</p>'
-                . '<button type="button" class="rs-tl" data-push-tl>Zapnout oznámení</button><p class="rs-drobne" data-push-stav role="status"></p></div>',
-            'cte' => '<p class="blok-ctenar"><a class="rs-tl" href="' . e($url('ctenar')) . '">Přihlášení / Můj účet</a></p>',
+            'psh' => '<div class="rs-push" data-push hidden><p>' . e($obsah !== '' ? strip_tags($obsah) : t('Dáme vám vědět, když vyjde nový článek.')) . '</p>'
+                . '<button type="button" class="rs-tl" data-push-tl>' . e(t('Zapnout oznámení')) . '</button><p class="rs-drobne" data-push-stav role="status"></p></div>',
+            'cte' => '<p class="blok-ctenar"><a class="rs-tl" href="' . e($url('ctenar')) . '">' . e(t('Přihlášení / Můj účet')) . '</a></p>',
             default => '',
         };
     }

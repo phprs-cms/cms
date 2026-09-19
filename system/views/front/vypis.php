@@ -22,32 +22,32 @@
 </header>
 <?php elseif ($hledano !== null): ?>
 <header class="vypis-hlavicka">
-	<h1>Vyhledávání</h1>
+	<h1><?= e(t('Vyhledávání')) ?></h1>
 	<form class="hledani" method="get" action="<?= e($url('hledani')) ?>" role="search">
-		<input type="search" name="q" value="<?= e($hledano) ?>" minlength="3" maxlength="100" aria-label="Hledaný text" required>
-		<button type="submit">Hledat</button>
+		<input type="search" name="q" value="<?= e($hledano) ?>" minlength="3" maxlength="100" aria-label="<?= e(t('Hledaný text')) ?>" required>
+		<button type="submit"><?= e(t('Hledat')) ?></button>
 	</form>
 <?php if ($hledano !== ''): ?>
-	<p><?= mb_strlen($hledano) < 3 ? 'Zadejte alespoň 3 znaky.' : 'Nalezeno článků: ' . $celkem ?></p>
+	<p><?= mb_strlen($hledano) < 3 ? e(t('Zadejte alespoň 3 znaky.')) : e(t('Nalezeno článků')) . ': ' . $celkem ?></p>
 <?php endif ?>
 </header>
 <?php endif ?>
 
 <?php if ($nahledy === [] && $hledano === null): ?>
-<p>Zatím zde nejsou žádné články.</p>
+<p><?= e(t('Zatím zde nejsou žádné články.')) ?></p>
 <?php endif ?>
 <div class="vypis-seznam<?= $hlavni && $strana === 1 ? ' vypis-titulni' : '' ?>">
 <?= implode("\n", $nahledy) ?>
 </div>
 
 <?php if ($stran > 1): ?>
-<nav class="strankovani" aria-label="Stránkování">
+<nav class="strankovani" aria-label="<?= e(t('Stránkování')) ?>">
 <?php if ($strana > 1): ?>
-	<a href="<?= e($strankaUrl($strana - 1)) ?>" rel="prev">&laquo; novější</a>
+	<a href="<?= e($strankaUrl($strana - 1)) ?>" rel="prev">&laquo; <?= e(t('novější')) ?></a>
 <?php endif ?>
 	<span>strana <?= $strana ?> z <?= $stran ?></span>
 <?php if ($strana < $stran): ?>
-	<a href="<?= e($strankaUrl($strana + 1)) ?>" rel="next">starší &raquo;</a>
+	<a href="<?= e($strankaUrl($strana + 1)) ?>" rel="next"><?= e(t('starší')) ?> &raquo;</a>
 <?php endif ?>
 </nav>
 <?php endif ?>

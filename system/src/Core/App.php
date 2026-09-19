@@ -68,10 +68,25 @@ final class App
         return (bool) ($this->config['debug'] ?? false);
     }
 
-    /** Absolutní cesta v rámci instalace: url('admin.php') -> "/magazin/admin.php". */
+    /** Předpona jazykové verze webu ("en"); nastavuje Front\Kernel, když čtenář prochází /en/… */
+    public string $jazykPrefix = '';
+
+    /**
+     * Absolutní cesta v rámci instalace: url('admin.php') -> "/magazin/admin.php".
+     * V jazykové verzi dostanou adresy stránek webu předponu jazyka (url('clanek/x') -> "/en/clanek/x");
+     * soubory a služby (cokoli s příponou, api/, mcp, push/) zůstávají společné.
+     */
     public function url(string $path = ''): string
     {
-        return $this->request->basePath() . '/' . ltrim($path, '/');
+        $path = ltrim($path, '/');
+        if ($this->jazykPrefix !== '') {
+            $cesta = explode('?', $path, 2)[0];
+            if ((!str_contains($cesta, '.') || $cesta === 'rss.xml' || $cesta === 'feed.json') && !preg_match('#^(api/|mcp$|push/)#', $cesta)) {
+                $path = $this->jazykPrefix . ($path === '' ? '/' : '/' . $path);
+            }
+        }
+
+        return $this->request->basePath() . '/' . $path;
     }
 
     private function installErrorHandler(): void

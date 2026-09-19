@@ -163,7 +163,7 @@ final class Bloky extends Modul
 
         return $this->formular([
             'idb' => 0, 'nazev' => self::SYSTEMOVE[$sys] ?? '', 'obsah' => '', 'typ' => 1,
-            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0, 'data_sys' => $sys === 'rek' ? 'sloupec' : '', 'jen_rubrika' => null, 'zarizeni' => 'vse',
+            'sys_funkce' => isset(self::SYSTEMOVE[$sys]) ? $sys : '', 'zobrazit' => 1, 'zobrazit_kde' => 0, 'data_sys' => $sys === 'rek' ? 'sloupec' : '', 'jen_rubrika' => null, 'zarizeni' => 'vse', 'jen_jazyk' => '',
             'zona' => isset(self::ZONY[$zona]) ? $zona : 'prava',
         ]);
     }
@@ -223,6 +223,8 @@ final class Bloky extends Modul
             },
             'jen_rubrika' => $this->db->value('SELECT idt FROM {topic} WHERE idt = ?', [$r->postInt('jen_rubrika')]) !== null ? $r->postInt('jen_rubrika') : null,
             'zarizeni' => isset(self::ZARIZENI[$r->post('zarizeni')]) ? $r->post('zarizeni') : 'vse',
+            // '' = všechny jazykové verze, 'vy' = jen výchozí jazyk, jinak kód další verze
+            'jen_jazyk' => in_array($r->post('jen_jazyk'), ['vy', ...\PhpRS\Core\Jazyk::dalsi($this->app->settings())], true) ? $r->post('jen_jazyk') : '',
         ];
 
         return $data;

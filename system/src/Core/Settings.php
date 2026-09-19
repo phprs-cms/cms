@@ -26,6 +26,8 @@ final class Settings
         'soc_x' => '',
         'soc_youtube' => '',
         'soc_linkedin' => '',
+        'jazyk_webu' => 'cs',         // jazyk webu: texty šablon, <html lang>, strukturovaná data (Core\Jazyk)
+        'jazyky_dalsi' => '',         // další jazykové verze na /en/, /de/… (rozšíření Jazykové verze), kódy oddělené čárkou
         'layout' => 'default',
         'rozvrzeni' => 'tri',         // tri | dva | jeden | plna (Úprava bloků)
         'prostredi_admin' => 'retro', // výchozí vzhled administrace: retro | 2026

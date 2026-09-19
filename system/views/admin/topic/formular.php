@@ -44,6 +44,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<div><input class="textpole" type="number" id="hodnost" name="hodnost" value="<?= (int) $rubrika['hodnost'] ?>" min="0" max="65535" style="width:80px">
 	<span class="napoveda">Vyšší číslo = výš v seznamu rubrik.</span></div>
 </div>
+<?= $app->view->render('admin/jazyk_pole', ['app' => $app, 'hodnota' => (string) ($rubrika['jazyk'] ?? ''), 'napoveda' => 'Články v rubrice patří do této jazykové verze webu.']) ?>
 <div class="radek">
 	<span class="popisek">Zobrazit</span>
 	<div class="volby"><label><input type="checkbox" name="zobrazit" value="1"<?= $rubrika['zobrazit'] ? ' checked' : '' ?>> Ano, zobrazovat v seznamu rubrik</label></div>

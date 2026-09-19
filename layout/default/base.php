@@ -15,13 +15,15 @@
  * @var string $kanonicka
  * @var string $hlava  značky do <head> z Nastavení: ověření, strukturovaná data, měřicí kódy (vždy vypsat před </head>)
  * @var string $pata   cookie lišta a kódy před </body> (vždy vypsat)
+ * @var string $jazyk  kód jazyka zobrazené verze webu (cs, en…) pro <html lang>
+ * @var string $jazyky_html  hotový přepínač jazykových verzí; prázdný, má-li web jediný jazyk
  * @var list<array{titulek:string, seo_link:string}> $stranky  statické stránky do navigace
  * @var list<array<string, mixed>> $rubriky  viditelné rubriky jako strom (klíč "uroven") - pro navigaci v záhlaví
  */
 $nazevWebu = $web->get('nazev_webu');
 ?>
 <!doctype html>
-<html lang="cs">
+<html lang="<?= e($jazyk ?? 'cs') ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,6 +56,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php if ($web->get('popis_webu') !== ''): ?>
 		<p class="motto"><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
+		<?= $jazyky_html ?? '' ?>
 	</div>
 </header>
 <?php if ($zony['hlavicka'] !== ''): ?>
@@ -61,7 +64,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 <div class="obal stranka rozvrzeni-<?= e($rozvrzeni) ?><?= $zony['leva'] !== '' ? ' ma-levou' : '' ?><?= $zony['prava'] !== '' ? ' ma-pravou' : '' ?><?= $meta['typ'] === 'article' ? ' stranka-clanek' : '' ?>">
 <?php if ($zony['leva'] !== ''): ?>
-	<aside class="zona zona-leva" aria-label="Levý sloupec"><?= $zony['leva'] ?></aside>
+	<aside class="zona zona-leva" aria-label="<?= e(t('Levý sloupec')) ?>"><?= $zony['leva'] ?></aside>
 <?php endif ?>
 	<main id="obsah" class="hlavni">
 <?php if ($zony['nad'] !== ''): ?>
@@ -73,7 +76,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 	</main>
 <?php if ($zony['prava'] !== ''): ?>
-	<aside class="zona zona-prava" aria-label="Pravý sloupec"><?= $zony['prava'] ?></aside>
+	<aside class="zona zona-prava" aria-label="<?= e(t('Pravý sloupec')) ?>"><?= $zony['prava'] ?></aside>
 <?php endif ?>
 </div>
 <?php if ($zony['paticka'] !== ''): ?>
@@ -91,7 +94,7 @@ $site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $w
 <?php foreach ($site as $sit => $adresa): ?>
 		<a href="<?= e($adresa) ?>" rel="me noopener" target="_blank"><?= e($sit) ?></a>
 <?php endforeach ?>
-		&copy; <?= date('Y') ?> <?= e($nazevWebu) ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3
+		&copy; <?= date('Y') ?> <?= e($nazevWebu) ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; <?= e(t('běží na phpRS 3')) ?>
 	</div>
 </footer>
 <?= $pata ?>

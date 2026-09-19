@@ -95,7 +95,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
-            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'preklad_z' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
         ]);
     }
 
@@ -186,6 +186,11 @@ final class Clanky extends Modul
         if ($chyby !== []) {
             return $this->formular(['idc' => $id] + $data, $chyby);
         }
+        // jazyková verze se přebírá z rubriky; překlad se propojuje s článkem ve výchozím jazyce (adresa nebo číslo článku)
+        $data['jazyk'] = (string) $this->db->value('SELECT jazyk FROM {topic} WHERE idt = ?', [$data['tema']]);
+        $original = trim($r->post('preklad_z'));
+        $data['preklad_z'] = $original === '' || $data['jazyk'] === '' ? null
+            : ($this->db->value("SELECT idc FROM {clanky} WHERE (idc = ? OR seo_link = ?) AND jazyk = '' AND idc <> ?", [(int) $original, basename((string) parse_url($original, PHP_URL_PATH)), $id]) ?: null);
 
         if ($r->postBool('oznacit_aktualizaci') && $data['visible']) {
             $data['aktualizovano'] = date('Y-m-d H:i:s');
@@ -355,6 +360,8 @@ final class Clanky extends Modul
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
+            'jazykyWebu' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) !== [],
+            'original' => empty($clanek['preklad_z']) ? '' : (string) $this->db->value('SELECT seo_link FROM {clanky} WHERE idc = ?', [$clanek['preklad_z']]),
             'asistent' => (new \PhpRS\Core\Asistent($this->app->settings()))->pripraven(),
             'serialy' => $this->db->pairs('SELECT ids, nazev_skup FROM {skup_cl} ORDER BY nazev_skup'),
             'stitky' => $this->request->isPost() ? $this->request->post('stitky') : implode(', ', array_column(

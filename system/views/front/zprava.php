@@ -9,5 +9,5 @@
 ?>
 <article class="clanek clanek-cely">
 	<header class="clanek-hlavicka obal-uzky"><h1><?= e($nadpis) ?></h1></header>
-	<div class="clanek-text obal-uzky"><p><?= e($text) ?></p><p><a href="<?= e($url('')) ?>">Zpět na hlavní stránku</a></p></div>
+	<div class="clanek-text obal-uzky"><p><?= e($text) ?></p><p><a href="<?= e($url('')) ?>"><?= e(t('Zpět na hlavní stránku')) ?></a></p></div>
 </article>

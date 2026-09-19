@@ -33,7 +33,7 @@ $info = function () use ($clanek, $url): string {
 <?php endif ?>
 	<div class="perex"><?= $clanek['uvod'] ?></div>
 <?php if (!empty($clanek['aktualizovano'])): ?>
-	<p class="clanek-aktualizovano obal-uzky">Aktualizováno <?= e(datum($clanek['aktualizovano'], true)) ?></p>
+	<p class="clanek-aktualizovano obal-uzky"><?= e(t('Aktualizováno')) ?> <?= e(datum($clanek['aktualizovano'], true)) ?></p>
 <?php endif ?>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text"><?= $clanek['text'] ?></div>
@@ -43,13 +43,13 @@ $info = function () use ($clanek, $url): string {
 <?php endif ?>
 	<footer class="clanek-paticka">
 <?php if ($clanek['zdroj'] !== ''): ?>
-		<p>Zdroj: <?= e($clanek['zdroj']) ?></p>
+		<p><?= e(t('Zdroj')) ?>: <?= e($clanek['zdroj']) ?></p>
 <?php endif ?>
-		<p>Přečteno: <?= (int) $clanek['visit'] + 1 ?>x</p>
+		<p><?= e(t('Přečteno')) ?>: <?= (int) $clanek['visit'] + 1 ?>x</p>
 	</footer>
 <?php if ($souvisejici !== []): ?>
 	<aside class="souvisejici">
-		<h2>Související články</h2>
+		<h2><?= e(t('Související články')) ?></h2>
 		<ul>
 <?php foreach ($souvisejici as $s): ?>
 			<li><a href="<?= e($url('clanek/' . $s['seo_link'])) ?>"><?= e($s['titulek']) ?></a> <small><?= e(datum($s['datum'])) ?></small></li>
@@ -74,7 +74,7 @@ $info = function () use ($clanek, $url): string {
 <?php endif ?>
 	<div class="perex"><?= $clanek['uvod'] ?></div>
 <?php if ($rezim === 'nahled'): ?>
-	<p class="clanek-vice"><a href="<?= e($adresa) ?>" aria-label="Celý článek: <?= e($clanek['titulek']) ?>">Celý článek &raquo;</a></p>
+	<p class="clanek-vice"><a href="<?= e($adresa) ?>" aria-label="<?= e(t('Celý článek')) ?>: <?= e($clanek['titulek']) ?>"><?= e(t('Celý článek')) ?> &raquo;</a></p>
 <?php endif ?>
 </article>
 <?php endif ?>

@@ -6,6 +6,7 @@ namespace PhpRS\Front;
 
 use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
+use PhpRS\Core\Jazyk;
 use PhpRS\Core\Response;
 use PhpRS\Core\Rozsireni;
 use PhpRS\Core\View;
@@ -31,6 +32,18 @@ final class Kernel
 
     public function __construct(private readonly App $app)
     {
+        // po aktualizaci systému (i automatické) se databáze upraví hned při první návštěvě, ne až po přihlášení administrátora
+        if ($app->settings()->int('verze_db') < \PhpRS\Core\Migrace::posledni()) {
+            \PhpRS\Core\Migrace::proved($app->db(), $app->settings());
+        }
+        // jazyková verze: /en/clanek/x -> jazyk "en", cesta "/clanek/x"; adresy z $app->url() pak dostávají předponu samy
+        $jazyk = Jazyk::vychozi($app->settings());
+        if (preg_match('#^/([a-z]{2})(/.*)?$#', $app->request->path(), $m) && in_array($m[1], Jazyk::dalsi($app->settings()), true)) {
+            $jazyk = $m[1];
+            $app->jazykPrefix = $m[1];
+            $app->request->setPath($m[2] ?? '/');
+        }
+        Jazyk::nastavWeb($app->settings(), $jazyk);
         $layout = $app->settings()->get('layout');
         // náhled jiné šablony (?sablona=slozka) - jen přihlášenému administrátorovi, např. při tvorbě šablony přes Claude
         $nahled = $app->request->get('sablona');
@@ -152,7 +165,7 @@ final class Kernel
             $strana = max(1, $request->getInt('strana', 1));
             [$clanky, $celkem] = $this->clanky->zMesice($m[1], $strana);
             $mesice = [1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec'];
-            $nadpis = 'Archiv: ' . $mesice[(int) substr($m[1], 5)] . ' ' . substr($m[1], 0, 4);
+            $nadpis = t('Archiv') . ': ' . t($mesice[(int) substr($m[1], 5)]) . ' ' . substr($m[1], 0, 4);
 
             return $celkem === 0 ? $this->nenalezeno() : $this->stranka($nadpis, $this->view->render('vypis', ['rubrika' => ['nazev' => $nadpis, 'popis' => '']] + $this->proVypis($clanky, $celkem, $strana, 'archiv/' . $m[1])));
         }
@@ -179,7 +192,7 @@ final class Kernel
             return Response::json(['stav' => \PhpRS\Core\Stav::souhrn($kontroly), 'verze' => PHPRS_VERSION, 'cas' => date('c'), 'kontroly' => $kontroly]);
         }
 
-        $stranka = $this->app->db()->one('SELECT * FROM {stranky} WHERE seo_link = ? AND zobrazit = 1', [ltrim($path, '/')]);
+        $stranka = $this->app->db()->one('SELECT * FROM {stranky} WHERE seo_link = ? AND zobrazit = 1 AND jazyk = ?', [ltrim($path, '/'), Jazyk::sloupecWebu()]);
         if ($stranka !== null) {
             return $this->stranka($stranka['titulek'], $this->view->render('stranka', ['stranka' => $stranka]), ['popis' => $stranka['popis']]);
         }
@@ -237,7 +250,7 @@ final class Kernel
         [$clanky, $celkem] = $this->clanky->odAutora($idu, $strana);
         $hlavicka = ['nazev' => $autor['jmeno'], 'popis' => $autor['url'] !== '' ? '<p><a href="' . e($autor['url']) . '" rel="me noopener">' . e($autor['url']) . '</a></p>' : ''];
 
-        return $this->stranka($autor['jmeno'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'autor/' . $idu)), ['popis' => 'Články autora ' . $autor['jmeno']]);
+        return $this->stranka($autor['jmeno'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'autor/' . $idu)), ['popis' => t('Články autora') . ' ' . $autor['jmeno']]);
     }
 
     private function stitek(string $seo): Response
@@ -250,7 +263,7 @@ final class Kernel
         [$clanky, $celkem] = $this->clanky->seStitkem((int) $stitek['ids'], $strana);
         $hlavicka = ['nazev' => '#' . $stitek['nazev'], 'popis' => ''];
 
-        return $this->stranka('Štítek ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)));
+        return $this->stranka(t('Štítek') . ' ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)));
     }
 
     private function hlavniStranka(): Response
@@ -266,7 +279,7 @@ final class Kernel
 
     private function rubrika(string $seo): Response
     {
-        $rubrika = $this->app->db()->one('SELECT * FROM {topic} WHERE seo_link = ?', [$seo]);
+        $rubrika = $this->app->db()->one('SELECT * FROM {topic} WHERE seo_link = ? AND jazyk = ?', [$seo, Jazyk::sloupecWebu()]);
         if ($rubrika === null) {
             return $this->nenalezeno();
         }
@@ -286,6 +299,12 @@ final class Kernel
         $clanek = $this->clanky->podleSeo($seo, $nahled);
         if ($clanek === null || ((int) $clanek['typ_clanku'] === 2 && !$nahled)) {
             return $this->nenalezeno();
+        }
+        if ($clanek['jazyk'] !== Jazyk::sloupecWebu()) {
+            // článek patří do jiné jazykové verze, než ze které přišel požadavek
+            $this->app->jazykPrefix = in_array($clanek['jazyk'], Jazyk::dalsi($this->app->settings()), true) ? $clanek['jazyk'] : '';
+
+            return Response::redirect($this->app->url('clanek/' . $clanek['seo_link']) . ($nahled ? '?nahled=1' : ''), 301);
         }
         if (!$nahled) {
             $this->app->db()->run('UPDATE {clanky} SET visit = visit + 1 WHERE idc = ?', [$clanek['idc']]);
@@ -327,7 +346,7 @@ final class Kernel
         [$clanky, $celkem] = mb_strlen($q) >= 3 ? $this->clanky->hledej($q, $strana) : [[], 0];
 
         return $this->stranka(
-            'Vyhledávání',
+            t('Vyhledávání'),
             $this->view->render('vypis', ['hledano' => $q] + $this->proVypis($clanky, $celkem, $strana, 'hledani', ['q' => $q])),
             ['noindex' => true],
         );
@@ -357,7 +376,7 @@ final class Kernel
             return Response::redirect(preg_match('#^https?://#i', $cil['na_adresu']) ? $cil['na_adresu'] : $this->app->url($cil['na_adresu']), 301);
         }
 
-        return $this->stranka('Stránka nenalezena', $this->view->render('nenalezeno', ['url' => $this->app->url(...)]), ['noindex' => true], 404);
+        return $this->stranka(t('Stránka nenalezena'), $this->view->render('nenalezeno', ['url' => $this->app->url(...)]), ['noindex' => true], 404);
     }
 
     /**
@@ -387,6 +406,41 @@ final class Kernel
             'hlavni' => $cesta === '',
             'url' => $this->app->url(...),
         ];
+    }
+
+    /**
+     * Přepínač jazyků pro šablonu: kód => [název, adresa, je aktivní]. U článku vede na jeho překlad, jinak na úvod verze.
+     * Prázdné pole = web má jediný jazyk.
+     *
+     * @param array<string, mixed>|null $clanek
+     * @return array<string, array{nazev:string, url:string, aktivni:bool}>
+     */
+    private function jazyky(?array $clanek): array
+    {
+        $web = $this->app->settings();
+        $dalsi = Jazyk::dalsi($web);
+        if ($dalsi === []) {
+            return [];
+        }
+        $preklady = [];
+        if ($clanek !== null) {
+            $original = (int) ($clanek['preklad_z'] ?: $clanek['idc']);
+            $preklady = $this->app->db()->pairs('SELECT jazyk, seo_link FROM {clanky} WHERE (idc = ? OR preklad_z = ?) AND visible = 1 AND datum <= NOW()', [$original, $original]);
+        }
+        $koren = $this->app->request->basePath() . '/';
+        $vysledek = [];
+        foreach ([Jazyk::vychozi($web), ...$dalsi] as $kod) {
+            $sloupec = Jazyk::sloupec($web, $kod);
+            $predpona = $sloupec === '' ? '' : $sloupec . '/';
+            $vysledek[$kod] = [
+                'nazev' => Jazyk::DOSTUPNE[$kod][0],
+                'url' => $koren . $predpona . (isset($preklady[$sloupec]) ? 'clanek/' . $preklady[$sloupec] : ''),
+                'aktivni' => $kod === Jazyk::kod(),
+                'preklad' => isset($preklady[$sloupec]),
+            ];
+        }
+
+        return $vysledek;
     }
 
     /** Šablona článku: cla_<soubor>.php z layoutu; když chybí, použije se standardní. */
@@ -423,10 +477,12 @@ final class Kernel
             'obsah' => $obsah,
             'zony' => $bloky->zony(!empty($meta['hlavni']), $clanek !== null ? (int) $clanek['tema'] : ($meta['rubrika'] ?? null), $upravit),
             'rozvrzeni' => $bloky->rozvrzeni(),
-            'hlava' => $seo->hlava($titulek, $meta, $clanek),
+            'hlava' => $seo->hlava($titulek, $meta + ['jazyky' => $this->jazyky($clanek)], $clanek),
             'pata' => $upravit ? $this->view->render('vizual', ['app' => $this->app, 'rozvrzeni' => $bloky->rozvrzeni()]) : $seo->pata(),
-            'rubriky' => Rubriky::strom($this->app->db(), true),
-            'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 ORDER BY poradi, titulek'),
+            'rubriky' => Rubriky::strom($this->app->db(), true, Jazyk::sloupecWebu()),
+            'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]),
+            'jazyk' => Jazyk::kod(),
+            'jazyky_html' => ($jazyky = $this->jazyky($clanek)) === [] ? '' : $this->view->render('jazyky', ['jazyky' => $jazyky]),
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]);

@@ -6,6 +6,28 @@ $pole('nazev_webu', 'Název webu', 'text', '', 'maxlength="150" required');
 $pole('popis_webu', 'Popis webu', 'radky', 'Jedna až dvě věty – motto, popis pro vyhledávače a RSS.');
 $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění systému.');
 ?>
+<div class="radek">
+	<label for="jazyk_webu">Jazyk webu</label>
+	<div><select id="jazyk_webu" name="jazyk_webu">
+<?php foreach (PhpRS\Core\Jazyk::DOSTUPNE as $kod => [$nazevJazyka]): ?>
+		<option value="<?= e($kod) ?>"<?= $hodnoty['jazyk_webu'] === $kod ? ' selected' : '' ?>><?= e($nazevJazyka) ?></option>
+<?php endforeach ?>
+	</select>
+	<span class="napoveda">V tomto jazyce jsou texty šablony (Hledat, Celý článek, Komentáře…) a web se tak hlásí vyhledávačům.</span></div>
+</div>
+<?php if (PhpRS\Core\Rozsireni::je($app->settings(), 'jazyky')): ?>
+<div class="radek">
+	<span class="popisek">Další jazykové verze</span>
+	<div class="volby">
+<?php foreach (PhpRS\Core\Jazyk::DOSTUPNE as $kod => [$nazevJazyka]): if ($kod === $hodnoty['jazyk_webu']) { continue; } ?>
+		<label><input type="checkbox" name="jazyky_dalsi[]" value="<?= e($kod) ?>"<?= in_array($kod, explode(',', $hodnoty['jazyky_dalsi']), true) ? ' checked' : '' ?>> <?= e($nazevJazyka) ?> <small>(/<?= e($kod) ?>/)</small></label><br>
+<?php endforeach ?>
+		<span class="napoveda">Každá verze má své rubriky, články a stránky. Jazyk se volí u rubriky – článek ho převezme. Překlad článku propojíte v jeho editoru.</span>
+	</div>
+</div>
+<?php else: ?>
+<?php foreach (array_filter(explode(',', $hodnoty['jazyky_dalsi'])) as $kod): ?><input type="hidden" name="jazyky_dalsi[]" value="<?= e($kod) ?>"><?php endforeach ?>
+<?php endif ?>
 </fieldset>
 <fieldset>
 <legend>Články a čtenáři</legend>

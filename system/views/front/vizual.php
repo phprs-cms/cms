@@ -25,6 +25,7 @@ $nastaveni = [
     'rozvrzeni' => $rozvrzeni,
     'rozvrzeniVolby' => array_map(fn (array $r): array => ['nazev' => $r[0], 'popis' => $r[1]], Bloky::ROZVRZENI),
     'katalog' => $katalog,
+    'jazyky' => PhpRS\Core\Jazyk::dalsi($app->settings()) === [] ? [] : [['', 've všech jazycích'], ['vy', PhpRS\Core\Jazyk::DOSTUPNE[PhpRS\Core\Jazyk::vychozi($app->settings())][0]], ...array_map(fn (string $k): array => [$k, PhpRS\Core\Jazyk::DOSTUPNE[$k][0]], PhpRS\Core\Jazyk::dalsi($app->settings()))],
     'rubriky' => array_map(fn (array $r): array => ['id' => (int) $r['idt'], 'nazev' => str_repeat('– ', $r['uroven']) . $r['nazev']], Rubriky::strom($app->db())),
     'pozice' => array_diff_key(Reklama::POZICE, ['pod-clankem' => 1]),
     'kde' => Bloky::KDE,

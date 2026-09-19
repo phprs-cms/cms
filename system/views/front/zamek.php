@@ -9,10 +9,10 @@
  * @var bool $registrace
  */
 ?>
-<aside class="rs-zamek" aria-label="Zamčený obsah">
-	<strong><?= $predplatne ? 'Tento článek je pro předplatitele' : 'Pokračování je pro přihlášené čtenáře' ?></strong>
-	<p><?= e($text !== '' ? $text : ($predplatne ? 'Předplatné podporuje naši redakci. Děkujeme, že nás čtete.' : 'Registrace je zdarma a zabere minutu.')) ?></p>
+<aside class="rs-zamek" aria-label="<?= e(t('Zamčený obsah')) ?>">
+	<strong><?= e(t($predplatne ? 'Tento článek je pro předplatitele' : 'Pokračování je pro přihlášené čtenáře')) ?></strong>
+	<p><?= e($text !== '' ? $text : t($predplatne ? 'Předplatné podporuje naši redakci. Děkujeme, že nás čtete.' : 'Registrace je zdarma a zabere minutu.')) ?></p>
 <?php if (!$prihlasen): ?>
-	<p><a class="rs-tl" href="<?= e($ucet) ?>">Přihlásit se</a><?php if ($registrace): ?> <a class="rs-tl rs-tl-vedlejsi" href="<?= e($ucet) ?>">Zaregistrovat se</a><?php endif ?></p>
+	<p><a class="rs-tl" href="<?= e($ucet) ?>"><?= e(t('Přihlásit se')) ?></a><?php if ($registrace): ?> <a class="rs-tl rs-tl-vedlejsi" href="<?= e($ucet) ?>"><?= e(t('Zaregistrovat se')) ?></a><?php endif ?></p>
 <?php endif ?>
 </aside>

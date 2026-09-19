@@ -150,7 +150,7 @@ final class Ctenari
         $ctenar = $this->prihlaseny();
         $antispam = new Antispam($this->app->db(), $this->app->settings());
 
-        return [$ctenar === null ? 'Přihlášení čtenáře' : 'Můj účet', $view->render('ctenar', [
+        return [t($ctenar === null ? 'Přihlášení čtenáře' : 'Můj účet'), $view->render('ctenar', [
             'ctenar' => $ctenar,
             'predplatitel' => $this->jePredplatitel(),
             'akce' => $this->app->url('ctenar'),
@@ -254,7 +254,7 @@ final class Ctenari
             return Response::redirect($this->app->url('ctenar') . '?stav=heslo-zmeneno', 303);
         }
 
-        return ['Nové heslo', $view->render('ctenar_heslo', ['akce' => $this->app->url('ctenar/heslo/' . $token), 'chyba' => $r->isPost()])];
+        return [t('Nové heslo'), $view->render('ctenar_heslo', ['akce' => $this->app->url('ctenar/heslo/' . $token), 'chyba' => $r->isPost()])];
     }
 
     private function ulozUcet(): Response

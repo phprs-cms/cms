@@ -16,12 +16,14 @@
  * @var string $kanonicka
  * @var string $hlava  značky do <head> z Nastavení: ověření, strukturovaná data, měřicí kódy (vždy vypsat před </head>)
  * @var string $pata   cookie lišta a kódy před </body> (vždy vypsat)
+ * @var string $jazyk  kód jazyka zobrazené verze webu (cs, en…) pro <html lang>
+ * @var string $jazyky_html  hotový přepínač jazykových verzí; prázdný, má-li web jediný jazyk
  * @var list<array{titulek:string, seo_link:string}> $stranky  statické stránky do navigace
  */
 $nazevWebu = $web->get('nazev_webu');
 ?>
 <!doctype html>
-<html lang="cs">
+<html lang="<?= e($jazyk ?? 'cs') ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,18 +50,18 @@ $nazevWebu = $web->get('nazev_webu');
 <?= $hlava ?>
 </head>
 <body>
-<a class="preskocit" href="#obsah">Přeskočit na obsah</a>
+<a class="preskocit" href="#obsah"><?= e(t('Přeskočit na obsah')) ?></a>
 <header class="hlavicka">
 	<div class="obal">
 		<div class="hlavicka-lista">
 			<span class="dnes"><?= e(datum_slovy()) ?></span>
-			<span class="sluzby"><a href="<?= e($url('hledani')) ?>">Hledat</a><a href="<?= e($url('rss.xml')) ?>">RSS</a></span>
+			<span class="sluzby"><a href="<?= e($url('hledani')) ?>"><?= e(t('Hledat')) ?></a><a href="<?= e($url('rss.xml')) ?>">RSS</a><?= $jazyky_html ?? '' ?></span>
 		</div>
 		<a class="titul-listu" href="<?= e($url('')) ?>"><?php if ($web->get('logo_webu') !== ''): ?><img class="logo-obrazek" src="<?= e((preg_match('#^(https?:)?/#', $web->get('logo_webu')) ? '' : $url('')) . $web->get('logo_webu')) ?>" alt="<?= e($nazevWebu) ?>"><?php else: ?><?= e($nazevWebu) ?><?php endif ?></a>
 <?php if ($web->get('popis_webu') !== ''): ?>
 		<p class="motto"><?= e($web->get('popis_webu')) ?></p>
 <?php endif ?>
-		<nav class="rubriky-lista" aria-label="Rubriky">
+		<nav class="rubriky-lista" aria-label="<?= e(t('Rubriky')) ?>">
 <?php foreach ($rubriky as $r): if ($r['uroven'] > 0) { continue; } ?>
 			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"><?= e($r['nazev']) ?></a>
 <?php endforeach ?>
@@ -71,7 +73,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 <div class="obal stranka rozvrzeni-<?= e($rozvrzeni) ?><?= $zony['leva'] !== '' ? ' ma-levou' : '' ?><?= $zony['prava'] !== '' ? ' ma-pravou' : '' ?><?= $meta['typ'] === 'article' ? ' stranka-clanek' : '' ?>">
 <?php if ($zony['leva'] !== ''): ?>
-	<aside class="zona zona-leva" aria-label="Levý sloupec"><?= $zony['leva'] ?></aside>
+	<aside class="zona zona-leva" aria-label="<?= e(t('Levý sloupec')) ?>"><?= $zony['leva'] ?></aside>
 <?php endif ?>
 	<main id="obsah" class="hlavni">
 <?php if ($zony['nad'] !== ''): ?>
@@ -83,7 +85,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 	</main>
 <?php if ($zony['prava'] !== ''): ?>
-	<aside class="zona zona-prava" aria-label="Pravý sloupec"><?= $zony['prava'] ?></aside>
+	<aside class="zona zona-prava" aria-label="<?= e(t('Pravý sloupec')) ?>"><?= $zony['prava'] ?></aside>
 <?php endif ?>
 </div>
 <?php if ($zony['paticka'] !== ''): ?>
@@ -102,7 +104,7 @@ $site = array_filter(['Facebook' => $web->get('soc_facebook'), 'Instagram' => $w
 <?php foreach ($site as $sit => $adresa): ?>
 		<a href="<?= e($adresa) ?>" rel="me noopener" target="_blank"><?= e($sit) ?></a>
 <?php endforeach ?>
-		<span>&copy; <?= date('Y') ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; běží na phpRS 3</span>
+		<span>&copy; <?= date('Y') ?> &middot; <a href="<?= e($url('rss.xml')) ?>">RSS</a> &middot; <?= e(t('běží na phpRS 3')) ?></span>
 	</div>
 </footer>
 <?= $pata ?>

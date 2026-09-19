@@ -9,6 +9,6 @@ $nazvy = [1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'čer
 ?>
 <ul class="blok-clanky">
 <?php foreach ($mesice as $m): ?>
-	<li><a href="<?= e($url('archiv/' . $m['mesic'])) ?>"><?= e($nazvy[(int) substr($m['mesic'], 5)] . ' ' . substr($m['mesic'], 0, 4)) ?></a> <small>(<?= (int) $m['pocet'] ?>)</small></li>
+	<li><a href="<?= e($url('archiv/' . $m['mesic'])) ?>"><?= e(t($nazvy[(int) substr($m['mesic'], 5)]) . ' ' . substr($m['mesic'], 0, 4)) ?></a> <small>(<?= (int) $m['pocet'] ?>)</small></li>
 <?php endforeach ?>
 </ul>

@@ -20,6 +20,14 @@ final class Request
     ) {
     }
 
+    /** Cesta bez předpony jazykové verze ("/en/clanek/x" -> "/clanek/x"); nastavuje Front\Kernel. */
+    private ?string $cesta = null;
+
+    public function setPath(string $cesta): void
+    {
+        $this->cesta = '/' . trim($cesta, '/');
+    }
+
     public static function fromGlobals(): self
     {
         return new self($_GET, $_POST, $_SERVER, $_FILES);
@@ -116,6 +124,9 @@ final class Request
      */
     public function path(): string
     {
+        if ($this->cesta !== null) {
+            return $this->cesta;
+        }
         $fallback = $this->get('cesta');
         if ($fallback !== '') {
             return '/' . trim($fallback, '/');

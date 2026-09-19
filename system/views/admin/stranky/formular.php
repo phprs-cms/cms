@@ -27,6 +27,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<label for="popis">Popis pro vyhledávače</label>
 	<input class="textpole siroke" type="text" id="popis" name="popis" value="<?= e($stranka['popis']) ?>" maxlength="300">
 </div>
+<?= $app->view->render('admin/jazyk_pole', ['app' => $app, 'hodnota' => (string) ($stranka['jazyk'] ?? ''), 'napoveda' => '']) ?>
 <div class="radek">
 	<span class="popisek">Zobrazení</span>
 	<div class="volby">

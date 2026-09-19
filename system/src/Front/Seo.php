@@ -18,9 +18,13 @@ final class Seo
 
     private readonly string $web;
 
+    /** Kořen webu bez předpony jazykové verze. */
+    private readonly string $koren;
+
     public function __construct(private readonly App $app)
     {
         $this->web = $app->request->origin() . $app->url('');
+        $this->koren = $app->request->origin() . $app->request->basePath() . '/';
     }
 
     public function robotsTxt(): string
@@ -47,18 +51,22 @@ final class Seo
     public function sitemapXml(): string
     {
         $db = $this->app->db();
-        $url = fn (string $cesta, ?string $zmena = null, string $priorita = '0.5'): string => '<url><loc>' . e($this->web . $cesta) . '</loc>'
+        // mapa webu je jedna pro všechny jazykové verze: adresa dostane předponu podle jazyka záznamu
+        $url = fn (string $cesta, ?string $zmena = null, string $priorita = '0.5', string $jazyk = ''): string => '<url><loc>' . e($this->koren . ($jazyk !== '' ? $jazyk . '/' : '') . $cesta) . '</loc>'
             . ($zmena !== null ? '<lastmod>' . date('c', strtotime($zmena)) . '</lastmod>' : '') . '<priority>' . $priorita . '</priority></url>';
 
         $xml = [$url('', (string) $db->value('SELECT MAX(COALESCE(zmeneno, datum)) FROM {clanky} WHERE visible = 1 AND datum <= NOW()') ?: null, '1.0')];
-        foreach ($db->all('SELECT seo_link FROM {topic} WHERE zobrazit = 1') as $r) {
-            $xml[] = $url('rubrika/' . $r['seo_link'], null, '0.6');
+        foreach (\PhpRS\Core\Jazyk::dalsi($this->app->settings()) as $jazyk) {
+            $xml[] = $url('', null, '0.9', $jazyk);
         }
-        foreach ($db->all('SELECT seo_link, zmeneno FROM {stranky} WHERE zobrazit = 1') as $r) {
-            $xml[] = $url($r['seo_link'], $r['zmeneno'], '0.4');
+        foreach ($db->all('SELECT seo_link, jazyk FROM {topic} WHERE zobrazit = 1') as $r) {
+            $xml[] = $url('rubrika/' . $r['seo_link'], null, '0.6', $r['jazyk']);
         }
-        foreach ($db->all('SELECT seo_link, COALESCE(zmeneno, datum) AS zmena FROM {clanky} WHERE visible = 1 AND noindex = 0 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 45000') as $r) {
-            $xml[] = $url('clanek/' . $r['seo_link'], $r['zmena'], '0.8');
+        foreach ($db->all('SELECT seo_link, zmeneno, jazyk FROM {stranky} WHERE zobrazit = 1') as $r) {
+            $xml[] = $url($r['seo_link'], $r['zmeneno'], '0.4', $r['jazyk']);
+        }
+        foreach ($db->all('SELECT seo_link, jazyk, COALESCE(zmeneno, datum) AS zmena FROM {clanky} WHERE visible = 1 AND noindex = 0 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 45000') as $r) {
+            $xml[] = $url('clanek/' . $r['seo_link'], $r['zmena'], '0.8', $r['jazyk']);
         }
 
         return '<?xml version="1.0" encoding="utf-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n" . implode("\n", $xml) . "\n</urlset>\n";
@@ -69,8 +77,8 @@ final class Seo
     {
         $nazev = e($this->app->settings()->get('nazev_webu'));
         $xml = [];
-        foreach ($this->app->db()->all('SELECT titulek, seo_link, datum FROM {clanky} WHERE visible = 1 AND noindex = 0 AND typ_clanku = 1 AND datum <= NOW() AND datum > NOW() - INTERVAL 2 DAY ORDER BY datum DESC LIMIT 1000') as $c) {
-            $xml[] = '<url><loc>' . e($this->web . 'clanek/' . $c['seo_link']) . '</loc><news:news><news:publication><news:name>' . $nazev . '</news:name><news:language>cs</news:language></news:publication>'
+        foreach ($this->app->db()->all('SELECT titulek, seo_link, datum FROM {clanky} WHERE visible = 1 AND noindex = 0 AND typ_clanku = 1 AND datum <= NOW() AND datum > NOW() - INTERVAL 2 DAY AND jazyk = ? ORDER BY datum DESC LIMIT 1000', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $c) {
+            $xml[] = '<url><loc>' . e($this->web . 'clanek/' . $c['seo_link']) . '</loc><news:news><news:publication><news:name>' . $nazev . '</news:name><news:language>' . \PhpRS\Core\Jazyk::kod() . '</news:language></news:publication>'
                 . '<news:publication_date>' . date('c', strtotime($c['datum'])) . '</news:publication_date><news:title>' . e($c['titulek']) . '</news:title></news:news></url>';
         }
 
@@ -89,7 +97,7 @@ final class Seo
 
         return [
             'version' => 'https://jsonfeed.org/version/1.1', 'title' => $s->get('nazev_webu'), 'description' => $s->get('popis_webu'),
-            'home_page_url' => $this->web, 'feed_url' => $this->web . 'feed.json', 'language' => 'cs',
+            'home_page_url' => $this->web, 'feed_url' => $this->web . 'feed.json', 'language' => \PhpRS\Core\Jazyk::kod(),
             'items' => array_map(fn (array $c): array => array_filter([
                 'id' => 'clanek-' . $c['idc'], 'url' => $this->web . 'clanek/' . $c['seo_link'], 'title' => $c['titulek'],
                 'summary' => trim(strip_tags($c['uvod'])), 'content_html' => $c['uvod'] . $c['text'],
@@ -128,12 +136,12 @@ final class Seo
             array_push($radky, '> ' . str_replace("\n", ' ', $s->get('popis_webu')), '');
         }
         $radky[] = '## Rubriky';
-        foreach ($db->all('SELECT nazev, seo_link, popis FROM {topic} WHERE zobrazit = 1 ORDER BY hodnost DESC, nazev') as $r) {
+        foreach ($db->all('SELECT nazev, seo_link, popis FROM {topic} WHERE zobrazit = 1 AND jazyk = ? ORDER BY hodnost DESC, nazev', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $r) {
             $popis = trim(strip_tags($r['popis']));
             $radky[] = '- [' . $r['nazev'] . '](' . $this->web . 'rubrika/' . $r['seo_link'] . ')' . ($popis !== '' ? ': ' . $popis : '');
         }
         array_push($radky, '', '## Nejnovější články');
-        foreach ($db->all('SELECT titulek, seo_link, uvod FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 30') as $c) {
+        foreach ($db->all('SELECT titulek, seo_link, uvod FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 AND jazyk = ? ORDER BY datum DESC LIMIT 30', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $c) {
             $radky[] = '- [' . $c['titulek'] . '](' . $this->web . 'clanek/' . $c['seo_link'] . $md . '): ' . mb_strimwidth(trim(strip_tags($c['uvod'])), 0, 200, '…');
         }
 
@@ -184,6 +192,13 @@ final class Seo
         if (($meta['obrazek'] ?? '') === '' && $s->get('og_obrazek') !== '') {
             $h[] = '<meta property="og:image" content="' . e($this->absolutni($s->get('og_obrazek'))) . '">';
         }
+        // jazykové verze: hreflang u článku jen na existující překlady, jinde na úvod každé verze
+        foreach ($meta['jazyky'] ?? [] as $kod => $j) {
+            if ($clanek === null ? ($meta['hlavni'] ?? false) : $j['preklad']) {
+                $h[] = '<link rel="alternate" hreflang="' . e($kod) . '" href="' . e($this->app->request->origin() . $j['url']) . '">';
+            }
+        }
+        $h[] = '<meta property="og:locale" content="' . \PhpRS\Core\Jazyk::DOSTUPNE[\PhpRS\Core\Jazyk::kod()][1] . '">';
         if (($meta['popis'] ?? '') !== '') {
             $h[] = '<meta property="og:description" content="' . e($meta['popis']) . '">';
         }
@@ -286,7 +301,7 @@ final class Seo
         ]);
         if ($clanek === null) {
             return ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => $s->get('nazev_webu'), 'url' => $this->web,
-                'description' => $s->get('popis_webu'), 'inLanguage' => 'cs', 'publisher' => $vydavatel,
+                'description' => $s->get('popis_webu'), 'inLanguage' => \PhpRS\Core\Jazyk::kod(), 'publisher' => $vydavatel,
                 'potentialAction' => ['@type' => 'SearchAction', 'target' => $this->web . 'hledani?q={q}', 'query-input' => 'required name=q']];
         }
 
@@ -303,7 +318,7 @@ final class Seo
                 'articleSection' => $clanek['tema_jm'],
                 'keywords' => implode(', ', array_column($clanek['stitky'] ?? [], 'nazev')) ?: null,
                 'mainEntityOfPage' => $this->web . 'clanek/' . $clanek['seo_link'],
-                'inLanguage' => 'cs',
+                'inLanguage' => \PhpRS\Core\Jazyk::kod(),
                 // zamčený obsah: vyhledávače vědí, že nejde o maskování (cloaking)
                 'isAccessibleForFree' => (int) ($clanek['pristup'] ?? 0) > 0 ? 'False' : null,
                 'hasPart' => (int) ($clanek['pristup'] ?? 0) > 0 ? ['@type' => 'WebPageElement', 'isAccessibleForFree' => 'False', 'cssSelector' => '.clanek-text'] : null,

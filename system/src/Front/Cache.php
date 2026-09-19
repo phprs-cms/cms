@@ -73,6 +73,6 @@ final class Cache
             }
         }
 
-        return self::SLOZKA . '/' . md5($r->origin() . '|' . $r->path() . '|' . $r->getInt('strana', 1) . '|' . $s->get('layout') . '|' . $s->get('rozvrzeni')) . '.html';
+        return self::SLOZKA . '/' . md5($r->origin() . '|' . \PhpRS\Core\Jazyk::kod() . '|' . $r->path() . '|' . $r->getInt('strana', 1) . '|' . $s->get('layout') . '|' . $s->get('rozvrzeni')) . '.html';
     }
 }

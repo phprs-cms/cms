@@ -26,7 +26,7 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 	<figure class="clanek-foto"><img src="<?= e($clanek['obrazek']) ?>"<?= ($clanek['obrazek_srcset'] ?? '') !== '' ? ' srcset="' . e($clanek['obrazek_srcset']) . '" sizes="(max-width: 900px) 100vw, 900px"' : '' ?> alt=""></figure>
 <?php endif ?>
 <?php if (!empty($clanek['aktualizovano'])): ?>
-	<p class="clanek-aktualizovano obal-uzky">Aktualizováno <?= e(datum($clanek['aktualizovano'], true)) ?></p>
+	<p class="clanek-aktualizovano obal-uzky"><?= e(t('Aktualizováno')) ?> <?= e(datum($clanek['aktualizovano'], true)) ?></p>
 <?php endif ?>
 	<?= $clanek['shrnuti_html'] ?? '' ?>
 	<div class="clanek-text obal-uzky"><?= $clanek['text'] ?></div>
@@ -36,13 +36,13 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
 <?php endif ?>
 	<footer class="clanek-paticka obal-uzky">
 <?php if ($clanek['zdroj'] !== ''): ?>
-		<span>Zdroj: <?= e($clanek['zdroj']) ?></span>
+		<span><?= e(t('Zdroj')) ?>: <?= e($clanek['zdroj']) ?></span>
 <?php endif ?>
-		<span>Přečteno <?= (int) $clanek['visit'] + 1 ?>&times;</span>
+		<span><?= e(t('Přečteno')) ?> <?= (int) $clanek['visit'] + 1 ?>&times;</span>
 	</footer>
 <?php if ($souvisejici !== []): ?>
 	<aside class="souvisejici obal-uzky">
-		<h2>Čtěte dál</h2>
+		<h2><?= e(t('Čtěte dál')) ?></h2>
 		<ul>
 <?php foreach ($souvisejici as $s): ?>
 			<li><a href="<?= e($url('clanek/' . $s['seo_link'])) ?>"><?= e($s['titulek']) ?></a></li>

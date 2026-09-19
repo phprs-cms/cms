@@ -34,17 +34,26 @@ final class Migrace
     /** @return list<string> názvy právě provedených migrací */
     public static function proved(Db $db, Settings $settings): array
     {
-        $verze = max(1, $settings->int('verze_db'));
+        // zámek: migrace spouští administrace i web, dva souběžné požadavky nesmí tutéž změnu provést dvakrát
+        $zamek = 'phprs3_migrace_' . $db->prefix;
+        if ((int) $db->value('SELECT GET_LOCK(?, 15)', [$zamek]) !== 1) {
+            return [];
+        }
         $provedene = [];
-        foreach (self::soubory() as $cislo => $soubor) {
-            if ($cislo <= $verze) {
-                continue;
+        try {
+            $verze = max(1, (int) $db->value("SELECT hodnota FROM {config} WHERE promenna = 'verze_db'"));
+            foreach (self::soubory() as $cislo => $soubor) {
+                if ($cislo <= $verze) {
+                    continue;
+                }
+                foreach (self::prikazy((string) file_get_contents($soubor), $db->prefix) as $sql) {
+                    $db->pdo()->exec($sql);
+                }
+                $settings->set('verze_db', (string) $cislo);
+                $provedene[] = basename($soubor, '.sql');
             }
-            foreach (self::prikazy((string) file_get_contents($soubor), $db->prefix) as $sql) {
-                $db->pdo()->exec($sql);
-            }
-            $settings->set('verze_db', (string) $cislo);
-            $provedene[] = basename($soubor, '.sql');
+        } finally {
+            $db->run('SELECT RELEASE_LOCK(?)', [$zamek]);
         }
 
         return $provedene;
@@ -60,7 +69,8 @@ final class Migrace
         // názvy omezení musí být v databázi jedinečné - dostanou předponu také
         $sql = preg_replace('/\b((?:CONSTRAINT|DROP FOREIGN KEY)\s+)fk_/', '$1' . $prefix . 'fk_', $sql) ?? $sql;
         $sql = preg_replace('/\brs_(?=[a-z])/', $prefix, $sql) ?? $sql;
-        $prikazy = preg_split('/;[ \t]*(\r?\n|$)/', $sql) ?: [];
+        // příkaz končí středníkem na konci řádku; za středníkem smí být už jen komentář
+        $prikazy = preg_split('/;[ \t]*(--[^\n]*)?(\r?\n|$)/', $sql) ?: [];
 
         return array_values(array_filter(array_map(trim(...), $prikazy), function (string $prikaz): bool {
             return trim((string) preg_replace('/^\s*--.*$/m', '', $prikaz)) !== '';

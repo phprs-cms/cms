@@ -11,6 +11,12 @@ function e(string|int|float|null $value): string
     return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/** Překlad textu šablony do jazyka webu: t('Celý článek'), t('Strana %s z %s', 2, 5). Viz Core\Jazyk. */
+function t(string $text, string|int ...$hodnoty): string
+{
+    return PhpRS\Core\Jazyk::t($text, ...$hodnoty);
+}
+
 /** Převod textu na URL tvar: "Příliš žluťoučký kůň" -> "prilis-zlutoucky-kun". */
 function slugify(string $text, int $maxLength = 120): string
 {
@@ -44,6 +50,11 @@ function datum_slovy(string|\DateTimeInterface|null $value = null): string
     $dny = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
     $mesice = [1 => 'ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'];
     $dt = $value instanceof \DateTimeInterface ? $value : new \DateTimeImmutable($value ?? 'now');
+    // slovník jazyka může dát vlastní tvar data: klíč "datum_slovy" = formát pro date(), např. "l, F j, Y"
+    $format = t('datum_slovy');
+    if ($format !== 'datum_slovy') {
+        return preg_replace_callback('/[A-Za-zÀ-ž]{3,}/u', fn (array $m): string => t($m[0]), $dt->format($format)) ?? $dt->format($format);
+    }
 
-    return $dny[(int) $dt->format('w')] . ' ' . $dt->format('j') . '. ' . $mesice[(int) $dt->format('n')] . ' ' . $dt->format('Y');
+    return t($dny[(int) $dt->format('w')]) . ' ' . $dt->format('j') . '. ' . t($mesice[(int) $dt->format('n')]) . ' ' . $dt->format('Y');
 }

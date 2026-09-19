@@ -17,7 +17,7 @@
 <?php foreach ($odpovedi as $o): $procent = $celkem > 0 ? (int) round($o['pocitadlo'] / $celkem * 100) : 0; ?>
 	<div class="anketa-vysledek"><span><?= e($o['odpoved']) ?></span><span><?= $procent ?> %</span><i style="width:<?= $procent ?>%"></i></div>
 <?php endforeach ?>
-	<p><small>Hlasovalo: <?= $celkem ?><?= $anketa['uzavrena'] ? ' · anketa je uzavřena' : '' ?></small></p>
+	<p><small><?= e(t('Hlasovalo')) ?>: <?= $celkem ?><?= $anketa['uzavrena'] ? ' · ' . e(t('anketa je uzavřena')) : '' ?></small></p>
 <?php else: ?>
 	<form method="post" action="<?= e($akce) ?>">
 		<?= $pole ?>
@@ -26,7 +26,7 @@
 <?php foreach ($odpovedi as $o): ?>
 		<label class="anketa-volba"><input type="radio" name="ido" value="<?= (int) $o['ido'] ?>" required> <?= e($o['odpoved']) ?></label>
 <?php endforeach ?>
-		<p><button type="submit">Hlasovat</button></p>
+		<p><button type="submit"><?= e(t('Hlasovat')) ?></button></p>
 	</form>
 <?php endif ?>
 </div>

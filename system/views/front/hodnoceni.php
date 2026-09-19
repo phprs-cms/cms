@@ -9,17 +9,17 @@
  * @var string $pole
  */
 ?>
-<section class="hodnoceni obal-uzky" id="hodnoceni" aria-label="Hodnocení článku">
+<section class="hodnoceni obal-uzky" id="hodnoceni" aria-label="<?= e(t('Hodnocení článku')) ?>">
 <?php if ($clanek['mn_hodnoceni'] > 0): ?>
 	<p class="hodnoceni-vysledek"><span class="hvezdy" style="--hodnota:<?= number_format($prumer, 2, '.', '') ?>" aria-hidden="true">★★★★★</span> <?= number_format($prumer, 1, ',', '') ?> z 5 <small>(hodnoceno <?= (int) $clanek['mn_hodnoceni'] ?>×)</small></p>
 <?php endif ?>
 <?php if ($hlasoval): ?>
-	<p><small>Děkujeme za váš hlas.</small></p>
+	<p><small><?= e(t('Děkujeme za váš hlas.')) ?></small></p>
 <?php else: ?>
 	<form method="post" action="<?= e($akce) ?>" class="hodnoceni-formular">
 		<?= $pole ?>
 		<input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>">
-		<span>Ohodnoťte článek:</span>
+		<span><?= e(t('Ohodnoťte článek:')) ?></span>
 <?php for ($z = 1; $z <= 5; $z++): ?>
 		<button type="submit" name="znamka" value="<?= $z ?>" aria-label="<?= $z ?> z 5" title="<?= $z ?> z 5">★</button>
 <?php endfor ?>

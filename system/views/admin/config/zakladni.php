@@ -44,7 +44,7 @@ $pole('povolit_komentare', 'Komentáře pod články', 'ano');
 </div>
 </fieldset>
 <details class="pokrocile"<?= $hodnoty['udrzba'] === '1' ? ' open' : '' ?>>
-<summary>Režim údržby<?= $hodnoty['udrzba'] === '1' ? ' – ZAPNUTÝ' : '' ?></summary>
+<summary><?= e(t('Režim údržby')) ?><?= $hodnoty['udrzba'] === '1' ? ' – ' . e(t('ZAPNUTÝ')) : '' ?></summary>
 <?php
 $pole('udrzba', 'Web je dočasně mimo provoz', 'ano', 'Návštěvníci uvidí jen oznámení níže. Přihlášená redakce vidí web normálně.');
 $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');

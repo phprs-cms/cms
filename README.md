@@ -162,17 +162,19 @@ Hotovo:
   společná mapa webu, RSS/llms.txt/podcast pro každou verzi zvlášť.
 - **Typy obsahu:** živá reportáž (průběžné zápisy, čtenářům se načítají samy, `LiveBlogPosting`), přehrávač zvuku a videa (soubor,
   YouTube, Vimeo, Spotify – cizí přehrávač se načte až po kliknutí), podcastový kanál `/podcast.xml`, recenze s hodnocením v % (`Review`).
-- **Jazyk administrace** podle uživatele (Můj účet): čeština, slovenština, angličtina – menu, přehled, přihlášení, Můj účet a psaní
-  článků. Nastavení webu a ostatní moduly zůstávají česky (další obrazovky: obalit texty `t()` a doplnit `system/jazyky/admin-*.php`).
+- **Jazyk administrace** podle uživatele (Můj účet): čeština, slovenština, angličtina. Texty všech obrazovek jdou přes `t()` (slovníky
+  `system/jazyky/admin-*.php`), texty skriptů přes `T()` (`image/jazyky/admin-*.js`); hlášky skládané z proměnných a vizuální editor bloků
+  zůstávají česky.
+- **Pošta:** odesílání přes vlastní SMTP server (STARTTLS/SSL, přihlášení, opakované použití spojení při rozesílce) nebo funkcí `mail()`;
+  Nastavení → Pošta, adresa odesílatele, Reply-To, zkušební e-mail s čitelnou chybou.
+- **Měkký paywall:** N zamčených článků měsíčně zdarma pro kohokoli (podepsaná cookie, počítá se jen na stránce článku).
 - **Provoz:** migrace databáze se provedou i při první návštěvě webu (se zámkem), takže automatická aktualizace web nerozbije.
 
 Zbývá:
 
-- **Více webů z jedné instalace** – záměrně odloženo: šlo by proti jednoduchosti (jedna instalace = jeden web, další web = další kopie).
-- Doplatit překlad zbylých obrazovek administrace (Nastavení, Bloky, Média…) do angličtiny a slovenštiny.
-- Měkký paywall s počítadlem článků zdarma (dnes: ukázka prvních odstavců), platební brána pro předplatné.
-- Šifrovaný obsah Web Push zpráv (dnes se titulek stahuje z `/push.json`, což stačí a je jednodušší).
-- Download sekce (nízká priorita).
+- Platební brána pro předplatné, šifrovaný obsah Web Push zpráv, Download sekce (nízká priorita).
+- **Více webů z jedné instalace se dělat nebude** (rozhodnutí 2026-09-19) – jedna instalace = jeden web.
+- Další náměty po rešerši celého systému: `docs/NAVRHY.md`.
 
 ## Distribuce a podpora projektu
 

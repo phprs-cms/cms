@@ -55,10 +55,10 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <form class="nahravani" method="post" enctype="multipart/form-data" action="<?= e($modul->url('nahraj')) ?>" data-nahravani>
 	<?= $csrf ?>
 	<input type="hidden" name="sekce" value="<?= (int) ($aktivniSlozka['ids'] ?? 0) ?>">
-	<label for="soubory"><strong>Nahrát obrázky<?= $aktivniSlozka !== null ? ' do složky „' . e($aktivniSlozka['nazev']) . '“' : '' ?></strong> <?= e(t('– vyberte soubory, nebo je sem přetáhněte myší')) ?></label>
+	<label for="soubory"><strong><?= e(t('Nahrát obrázky')) ?><?= $aktivniSlozka !== null ? ' – ' . e($aktivniSlozka['nazev']) : '' ?></strong> <?= e(t('– vyberte soubory, nebo je sem přetáhněte myší')) ?></label>
 	<input type="file" id="soubory" name="soubory[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required>
 	<input class="tl" type="submit" value="<?= e(t('Nahraj')) ?>">
-	<span class="napoveda">JPG, PNG, WebP nebo GIF, nejvýše <?= e($limit) ?> na soubor. Velké fotografie se samy zmenší na <?= PhpRS\Core\Obrazky::MAX_STRANA ?> px a odstraní se z nich údaje o poloze.</span>
+	<span class="napoveda"><?= e(t('JPG, PNG, WebP nebo GIF, nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.', $limit, PhpRS\Core\Obrazky::MAX_STRANA)) ?></span>
 </form>
 
 <?php if ($obrazky === []): ?>

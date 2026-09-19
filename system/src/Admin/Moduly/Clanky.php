@@ -251,6 +251,9 @@ final class Clanky extends Modul
         if ($clanek === null) {
             return $this->chyba('Článek neexistuje nebo k němu nemáte přístup.', 404);
         }
+        if ($clanek['visible'] && !$this->app->auth()->smiVydavat()) {
+            return $this->chyba('Zápisy k vydanému článku může psát jen uživatel s právem vydávat.', 403);
+        }
         if ($this->request->isPost()) {
             if ($this->request->postInt('smazat') > 0) {
                 $this->db->delete('zive', ['idz' => $this->request->postInt('smazat'), 'idc' => $clanek['idc']]);

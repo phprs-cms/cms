@@ -39,7 +39,7 @@ final class Konfigurace extends Modul
      */
     private const array POLE = [
         'zakladni' => [
-            'nazev_webu' => 'text', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
+            'nazev_webu' => 'text', 'adresa_webu' => 'vzor:#^https?://[a-z0-9.-]+(:\d+)?$#i', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
             'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
             'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',

@@ -76,6 +76,11 @@ final class Kernel
             \PhpRS\Front\Cache::vymaz(); // každá změna v administraci zneplatní cache stránek webu
         }
         $akce = $request->get('akce');
+        // adresa webu: starší instalace ji ještě nemá - zapíše se podle adresy, na které pracuje přihlášený administrátor
+        if ($app->settings()->get('adresa_webu') === '' && $app->auth()->isAdmin()) {
+            $app->settings()->set('adresa_webu', $request->origin());
+        }
+        $request->setOrigin($app->settings()->get('adresa_webu'));
         // jazyk administrace: volba uživatele (Můj účet); přihlašovací stránka se řídí jazykem webu
         $jazyk = (string) ($app->auth()->user()['jazyk'] ?? '') ?: \PhpRS\Core\Jazyk::vychozi($app->settings());
         \PhpRS\Core\Jazyk::nastav(isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$jazyk]) ? $jazyk : 'cs', 'admin-');

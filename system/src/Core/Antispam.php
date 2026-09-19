@@ -76,7 +76,7 @@ final class Antispam
     }
 
     /** Do tabulky se neukládá IP adresa, jen její otisk. */
-    private static function otisk(string $ip): string
+    public static function otisk(string $ip): string
     {
         return substr(hash('sha256', 'phprs|' . $ip), 0, 40);
     }

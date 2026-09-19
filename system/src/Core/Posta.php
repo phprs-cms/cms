@@ -24,7 +24,7 @@ final class Posta
     {
         self::$chyba = '';
         $od = $web->get('posta_od') !== '' ? $web->get('posta_od') : $web->get('email_webu');
-        if ($od === '' || filter_var($komu, FILTER_VALIDATE_EMAIL) === false) {
+        if ($od === '' || filter_var($komu, FILTER_VALIDATE_EMAIL) === false || preg_match('/[\x00-\x20\x7F"<>]/', $komu)) {
             self::$chyba = $od === '' ? 'Není vyplněný e-mail redakce (Nastavení → Základní) ani adresa odesílatele.' : 'Adresa příjemce nemá platný tvar.';
 
             return false;

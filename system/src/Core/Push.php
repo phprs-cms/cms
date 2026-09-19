@@ -29,13 +29,26 @@ final class Push
     public function verejnyKlic(): string
     {
         if ($this->settings->get('push_klic_verejny') === '') {
+            // pár klíčů vzniká jednou; zámek brání tomu, aby dva souběžné požadavky uložily každý půlku jiného páru
+            if ((int) $this->db->value("SELECT GET_LOCK('phprs3_push_klice', 5)") !== 1) {
+                return '';
+            }
+            $ulozeny = (string) $this->db->value("SELECT hodnota FROM {config} WHERE promenna = 'push_klic_verejny'");
+            if ($ulozeny !== '') {
+                $this->db->run("SELECT RELEASE_LOCK('phprs3_push_klice')");
+
+                return $ulozeny;
+            }
             $par = openssl_pkey_new(['curve_name' => 'prime256v1', 'private_key_type' => OPENSSL_KEYTYPE_EC]);
             if ($par === false || !openssl_pkey_export($par, $pem)) {
+                $this->db->run("SELECT RELEASE_LOCK('phprs3_push_klice')");
+
                 return '';
             }
             $ec = openssl_pkey_get_details($par)['ec'];
             $this->settings->set('push_klic_soukromy', $pem);
             $this->settings->set('push_klic_verejny', self::b64("\x04" . str_pad($ec['x'], 32, "\0", STR_PAD_LEFT) . str_pad($ec['y'], 32, "\0", STR_PAD_LEFT)));
+            $this->db->run("SELECT RELEASE_LOCK('phprs3_push_klice')");
         }
 
         return $this->settings->get('push_klic_verejny');

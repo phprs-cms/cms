@@ -3,6 +3,7 @@
 <legend><?= e(t('Web')) ?></legend>
 <?php
 $pole('nazev_webu', 'Název webu', 'text', '', 'maxlength="150" required');
+$pole('adresa_webu', 'Adresa webu', 'url', 'Například https://www.mujmagazin.cz, bez lomítka na konci. Skládají se z ní odkazy v e-mailech, RSS, mapě webu a oznámeních. Po přestěhování na jinou doménu ji změňte.', 'required placeholder="https://"');
 $pole('popis_webu', 'Popis webu', 'radky', 'Jedna až dvě věty – motto, popis pro vyhledávače a RSS.');
 $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění systému.');
 ?>

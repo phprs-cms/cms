@@ -38,7 +38,7 @@ final class Auth
         // Zpomalení hádání hesel: nejvýše 10 pokusů z jedné IP za 15 minut
         $pokusu = (int) $this->db->value(
             "SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE",
-            [$ip],
+            [Antispam::otisk($ip)],
         );
         if ($pokusu >= 10) {
             return 'Příliš mnoho pokusů o přihlášení. Zkuste to znovu za 15 minut.';
@@ -46,20 +46,26 @@ final class Auth
 
         $user = $this->db->one('SELECT * FROM {user} WHERE user = ?', [$login]);
         // Hash se ověřuje i pro neexistujícího uživatele, aby se z doby odezvy nedalo poznat, že účet neexistuje
-        $hash = $user['password'] ?? '$2y$10$usesomesillystringforsaltuOoa0UjXp8xQ3o2FTJmj0pZxOTDYcn5m';
+        $hash = $user['password'] ?? '$2y$12$6C4TPEcYRJ/rRw6iWsrlxu0aH1i91pzK/8KiwqEW3Pa6sTj89Q3Zu';
         $ok = password_verify($password, $hash) && $user !== null;
 
         if (!$ok) {
-            $this->db->insert('kontrola_ip', ['ip_adresa' => $ip, 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+            $this->db->insert('kontrola_ip', ['ip_adresa' => Antispam::otisk($ip), 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
             if ($user !== null) {
+                // po 10 chybách v řadě se účet zamkne na 15 minut - ne natrvalo, jinak by kdokoli mohl redakci vyřadit z provozu
                 $chyb = (int) $user['pocet_chyb'] + 1;
-                $this->db->update('user', ['pocet_chyb' => $chyb, 'blokovat' => (int) ($chyb >= self::MAX_CHYB || $user['blokovat'])], ['idu' => $user['idu']]);
+                $this->db->update('user', $chyb >= self::MAX_CHYB
+                    ? ['pocet_chyb' => 0, 'zamceno_do' => date('Y-m-d H:i:s', time() + 900)]
+                    : ['pocet_chyb' => $chyb], ['idu' => $user['idu']]);
             }
 
             return 'Chybné jméno nebo heslo.';
         }
         if ($user['blokovat']) {
             return 'Účet je zablokován. Obraťte se na administrátora.';
+        }
+        if ($user['zamceno_do'] !== null && strtotime($user['zamceno_do']) > time()) {
+            return 'Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.';
         }
 
         if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
@@ -94,14 +100,14 @@ final class Auth
         if (!$this->cekaNaKod()) {
             return 'Přihlášení vypršelo, začněte prosím znovu.';
         }
-        $pokusu = (int) $this->db->value("SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE", [$ip]);
+        $pokusu = (int) $this->db->value("SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE", [Antispam::otisk($ip)]);
         if ($pokusu >= 10) {
             return 'Příliš mnoho pokusů. Zkuste to znovu za 15 minut.';
         }
         $user = $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [(int) $this->session->get('idu_ceka')['idu']]);
         $zalozni = $user === null ? null : Totp::pouzijZalozni($user['totp_zalozni'], $kod);
         if ($user === null || (!Totp::over($user['totp_tajemstvi'], $kod) && $zalozni === null)) {
-            $this->db->insert('kontrola_ip', ['ip_adresa' => $ip, 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+            $this->db->insert('kontrola_ip', ['ip_adresa' => Antispam::otisk($ip), 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
 
             return 'Kód není správný.';
         }
@@ -126,6 +132,10 @@ final class Auth
     public function user(): ?array
     {
         if ($this->user === false) {
+            // bez cookie session není kdo by byl přihlášený - a session se kvůli dotazu nezakládá (web zůstává cachovatelný)
+            if (!isset($_COOKIE['phprs3'])) {
+                return $this->user = null;
+            }
             $id = $this->session->get('idu');
             $this->user = is_int($id)
                 ? $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [$id])

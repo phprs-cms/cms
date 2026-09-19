@@ -95,6 +95,7 @@ final class Interakce
         ]);
         $this->antispam->zapis($r->ip(), 'komentar', 0);
         self::prepocitej($db, (int) $clanek['idc']);
+        Cache::vymaz(); // až po skutečném zápisu - odmítnutý spam nesmí držet cache studenou
 
         return $zpet($zobrazit ? 'ok' : 'ceka');
     }
@@ -137,6 +138,7 @@ final class Interakce
             && !isset($_COOKIE['phprs_h' . $idc]) && $this->antispam->pocet($r->ip(), 'hodnoceni', $idc, 60 * 24 * 30) === 0;
         if ($smi) {
             $db->run('UPDATE {clanky} SET hodnoceni = hodnoceni + ?, mn_hodnoceni = mn_hodnoceni + 1 WHERE idc = ?', [$znamka, $idc]);
+            Cache::vymaz();
             $this->antispam->zapis($r->ip(), 'hodnoceni', $idc);
         }
         $odpoved = Response::redirect($this->app->url('clanek/' . $clanek['seo_link'] . '?hodnoceni=' . ($smi ? 'ok' : 'uz') . '#hodnoceni'), 303);
@@ -175,6 +177,7 @@ final class Interakce
         if ($odpoved !== null && $this->antispam->over($r, 'anketa-' . $ida) === null
             && !isset($_COOKIE['phprs_a' . $ida]) && $this->antispam->pocet($r->ip(), 'anketa', $ida, 60 * 24 * 30) === 0) {
             $db->run('UPDATE {odpovedi} SET pocitadlo = pocitadlo + 1 WHERE ido = ?', [$odpoved['ido']]);
+            Cache::vymaz();
             $this->antispam->zapis($r->ip(), 'anketa', $ida);
         }
         setcookie('phprs_a' . $ida, '1', ['expires' => time() + 86400 * 30, 'path' => '/', 'samesite' => 'Lax', 'httponly' => true]);

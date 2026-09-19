@@ -139,4 +139,8 @@ return [
     'Hodnocení redakce' => 'Hodnotenie redakcie',
     'Čtete %s. z %s článků, které máte tento měsíc zdarma.' => 'Čítate %s. z %s článkov, ktoré máte tento mesiac zadarmo.',
     'Tento měsíc jste už přečetli všech %s článků zdarma.' => 'Tento mesiac ste už prečítali všetkých %s článkov zadarmo.',
+    'Poslali jsme vám e-mail. Registraci dokončíte kliknutím na odkaz v něm a nastavením hesla.' => 'Poslali sme vám e-mail. Registráciu dokončíte kliknutím na odkaz v ňom a nastavením hesla.',
+    'Zadejte platný e-mail.' => 'Zadajte platný e-mail.',
+    'Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.' => 'Pošleme vám e-mail s odkazom, na ktorom si nastavíte heslo. Účet môžete kedykoľvek sami zmazať.',
+    'Příliš mnoho hledání za sebou. Zkuste to prosím za chvíli.' => 'Príliš veľa hľadaní za sebou. Skúste to prosím o chvíľu.',
 ];

@@ -59,7 +59,7 @@ final class Api
     private function json(mixed $data, int $status = 200): Response
     {
         return new Response((string) json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), $status, [
-            'Content-Type' => 'application/json; charset=utf-8', 'Access-Control-Allow-Origin' => '*', 'Cache-Control' => 'public, max-age=60',
+            'Content-Type' => 'application/json; charset=utf-8', 'Access-Control-Allow-Origin' => '*', 'Cache-Control' => isset($_COOKIE[Ctenari::COOKIE]) ? 'private, no-store' : 'public, max-age=60',
         ]);
     }
 }

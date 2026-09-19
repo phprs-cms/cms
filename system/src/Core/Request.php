@@ -23,6 +23,19 @@ final class Request
     /** Cesta bez předpony jazykové verze ("/en/clanek/x" -> "/clanek/x"); nastavuje Front\Kernel. */
     private ?string $cesta = null;
 
+    /**
+     * Adresa webu z Nastavení (adresa_webu). Hlavičce Host se nedá věřit - kdo ji podvrhne, dostal by svou doménu
+     * do odkazů v e-mailech (nové heslo!), do webhooku i do oznámení. Nastavují oba kernely hned po startu.
+     */
+    private ?string $origin = null;
+
+    public function setOrigin(string $adresa): void
+    {
+        if (preg_match('#^https?://[a-z0-9.-]+(:\d+)?$#i', $adresa)) {
+            $this->origin = $adresa;
+        }
+    }
+
     public function setPath(string $cesta): void
     {
         $this->cesta = '/' . trim($cesta, '/');
@@ -102,6 +115,9 @@ final class Request
     /** Schéma a doména bez koncového lomítka: "https://www.example.cz". */
     public function origin(): string
     {
+        if ($this->origin !== null) {
+            return $this->origin;
+        }
         $host = (string) ($this->server['HTTP_HOST'] ?? 'localhost');
         if (!preg_match('/^[a-z0-9.\-]+(:\d+)?$/i', $host)) {
             $host = 'localhost';

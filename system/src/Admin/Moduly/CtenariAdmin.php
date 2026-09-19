@@ -27,7 +27,9 @@ final class CtenariAdmin extends Modul
         $kde = $q === '' ? '1 = 1' : '(email LIKE ? OR jmeno LIKE ?)';
         $like = '%' . addcslashes($q, '%_\\') . '%';
         if ($this->request->get('format') === 'csv') {
-            $radky = array_map(fn (array $c): string => implode(';', [$c['email'], str_replace(';', ',', $c['jmeno']), $c['vytvoren'], (string) $c['predplatne_do']]), $this->db->all('SELECT * FROM {ctenari} WHERE potvrzen = 1 ORDER BY email'));
+            // hodnoty od čtenářů: bez konců řádků a bez možnosti spustit vzorec v tabulkovém programu (= + - @)
+            $bunka = fn (string $v): string => '"' . str_replace('"', '""', preg_replace('/^[=+\-@\t]/', "'$0", str_replace(["\r", "\n"], ' ', $v)) ?? '') . '"';
+            $radky = array_map(fn (array $c): string => implode(';', [$bunka($c['email']), $bunka($c['jmeno']), $c['vytvoren'], (string) $c['predplatne_do']]), $this->db->all('SELECT * FROM {ctenari} WHERE potvrzen = 1 ORDER BY email'));
 
             return new Response("email;jmeno;registrace;predplatne_do\n" . implode("\n", $radky), 200, ['Content-Type' => 'text/csv; charset=utf-8', 'Content-Disposition' => 'attachment; filename="ctenari.csv"']);
         }

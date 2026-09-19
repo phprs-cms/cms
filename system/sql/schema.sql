@@ -24,6 +24,7 @@ CREATE TABLE rs_user (
     pravo_vydavat  BOOL NOT NULL DEFAULT 0,
     blokovat       BOOL NOT NULL DEFAULT 0,
     pocet_chyb     SMALLINT UNSIGNED NOT NULL DEFAULT 0,  -- neúspěšná přihlášení v řadě
+    zamceno_do     DATETIME NULL,                         -- dočasný zámek po 10 chybných přihlášeních
     prostredi      VARCHAR(10)  NOT NULL DEFAULT '',      -- vzhled administrace: retro | 2026; prázdné = výchozí z konfigurace
     totp_tajemstvi VARCHAR(64)  NOT NULL DEFAULT '',      -- dvoufázové přihlášení (TOTP); prázdné = vypnuté
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
@@ -170,7 +171,9 @@ CREATE TABLE rs_clanky (
     PRIMARY KEY (idc),
     KEY ix_clanky_jazyk (jazyk, visible, datum),
     UNIQUE KEY uq_clanky_seo (seo_link),
-    KEY ix_clanky_index (visible, zobr_na_indexu, priority, datum),
+    KEY ix_clanky_index (jazyk, visible, zobr_na_indexu, priority, datum),
+    KEY ix_clanky_oznameno (oznameno, visible, datum),
+    KEY ix_clanky_datum (datum),
     KEY ix_clanky_tema (tema, visible, datum),
     KEY ix_clanky_autor (autor),
     FULLTEXT KEY ft_clanky (titulek, uvod, text, t_slova),

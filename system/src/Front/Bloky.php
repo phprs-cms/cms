@@ -115,8 +115,8 @@ final class Bloky
                 [Jazyk::sloupecWebu(), $pocet],
             )]),
             'aut' => $this->view->render('blok_aut', ['url' => $url, 'autori' => $db->all(
-                "SELECT u.idu, IF(u.jmeno = '', u.user, u.jmeno) AS jmeno, COUNT(*) AS pocet FROM {user} u JOIN {clanky} c ON c.autor = u.idu
-                 WHERE c.visible = 1 AND c.datum <= NOW() AND c.jazyk = ? GROUP BY u.idu, jmeno ORDER BY pocet DESC LIMIT ?",
+                "SELECT u.idu, u.jmeno, COUNT(*) AS pocet FROM {user} u JOIN {clanky} c ON c.autor = u.idu
+                 WHERE u.jmeno <> '' AND c.visible = 1 AND c.datum <= NOW() AND c.jazyk = ? GROUP BY u.idu, jmeno ORDER BY pocet DESC LIMIT ?",
                 [Jazyk::sloupecWebu(), $pocet],
             )]),
             'men' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => self::odkazy($obsah)]),

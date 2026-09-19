@@ -346,10 +346,10 @@ final class Seo
                 'inLanguage' => \PhpRS\Core\Jazyk::kod(),
                 'coverageStartTime' => (int) ($clanek['zive'] ?? 0) > 0 ? date('c', strtotime($clanek['datum'])) : null,
                 'coverageEndTime' => (int) ($clanek['zive'] ?? 0) === 2 ? date('c', strtotime($clanek['zmeneno'] ?? $clanek['datum'])) : null,
-                'liveBlogUpdate' => (int) ($clanek['zive'] ?? 0) > 0 ? array_map(fn (array $z): array => [
+                'liveBlogUpdate' => (int) ($clanek['zive'] ?? 0) > 0 && empty($clanek['zamceno']) ? array_map(fn (array $z): array => [
                     '@type' => 'BlogPosting', 'headline' => mb_strimwidth(trim(strip_tags($z['text'])), 0, 110, '…'), 'datePublished' => date('c', strtotime($z['cas'])), 'articleBody' => trim(strip_tags($z['text'])),
                 ], $this->app->db()->all('SELECT cas, text FROM {zive} WHERE idc = ? ORDER BY idz DESC LIMIT 50', [$clanek['idc']])) ?: null : null,
-                'associatedMedia' => ($clanek['medium_url'] ?? '') !== '' ? ['@type' => preg_match('#\.(mp3|m4a|ogg|oga|wav|aac)$|spotify#i', $clanek['medium_url']) ? 'AudioObject' : 'VideoObject', 'name' => $clanek['titulek'],
+                'associatedMedia' => ($clanek['medium_url'] ?? '') !== '' && empty($clanek['zamceno']) ? ['@type' => preg_match('#\.(mp3|m4a|ogg|oga|wav|aac)$|spotify#i', $clanek['medium_url']) ? 'AudioObject' : 'VideoObject', 'name' => $clanek['titulek'],
                     'description' => $meta['popis'] ?? $clanek['titulek'], 'uploadDate' => date('c', strtotime($clanek['datum'])), 'contentUrl' => $this->absolutni($clanek['medium_url']),
                     'thumbnailUrl' => $clanek['obrazek'] !== '' ? $this->absolutni($clanek['obrazek']) : null] : null,
                 // zamčený obsah: vyhledávače vědí, že nejde o maskování (cloaking)

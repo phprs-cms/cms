@@ -30,10 +30,14 @@ final class Kernel
     private readonly Clanky $clanky;
     private readonly ?Ctenari $ctenari;
 
+    /** Požadovaná stránka výpisu je až za jeho koncem - odpoví se 404. */
+    private bool $zaKoncem = false;
+
     public function __construct(private readonly App $app)
     {
+        $app->request->setOrigin($app->settings()->get('adresa_webu'));
         // po aktualizaci systému (i automatické) se databáze upraví hned při první návštěvě, ne až po přihlášení administrátora
-        if ($app->settings()->int('verze_db') < \PhpRS\Core\Migrace::posledni()) {
+        if ($app->settings()->int('verze_db') < PHPRS_VERZE_DB) {
             \PhpRS\Core\Migrace::proved($app->db(), $app->settings());
         }
         // jazyková verze: /en/clanek/x -> jazyk "en", cesta "/clanek/x"; adresy z $app->url() pak dostávají předponu samy
@@ -103,7 +107,7 @@ final class Kernel
             return new Response($seo->sitemapNewsXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
         if ($path === '/feed.json') {
-            [$clanky] = $this->clanky->naHlavniStranku(1, 20);
+            [$clanky] = $this->clanky->naHlavniStranku(1, 20, true);
 
             return new Response(json_encode($seo->jsonFeed($clanky), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 200, ['Content-Type' => 'application/feed+json; charset=utf-8']);
         }
@@ -114,7 +118,9 @@ final class Kernel
         if ($path === '/souhlas' && $request->isPost()) {
             // evidence souhlasu s cookies: bez IP adresy, jen náhodný identifikátor z cookie návštěvníka
             $kategorie = implode(',', array_intersect(explode(',', $request->post('kategorie')), ['analytika', 'marketing'])) ?: 'nic';
-            if ($this->app->settings()->bool('cookies_evidence') && preg_match('/^[a-f0-9]{32}$/', $request->post('id'))) {
+            $antispam = new \PhpRS\Core\Antispam($this->app->db(), $this->app->settings());
+            if ($this->app->settings()->bool('cookies_evidence') && preg_match('/^[a-f0-9]{32}$/', $request->post('id')) && $antispam->pocet($request->ip(), 'souhlas', 0, 60) < 20) {
+                $antispam->zapis($request->ip(), 'souhlas', 0);
                 $this->app->db()->insert('souhlasy', ['id_souhlasu' => $request->post('id'), 'cas' => date('Y-m-d H:i:s'), 'kategorie' => $kategorie]);
             }
 
@@ -166,7 +172,6 @@ final class Kernel
         }
         if ($request->isPost() && in_array($path, ['/komentar', '/hodnoceni', '/anketa'], true)) {
             $interakce = new Interakce($this->app, $this->view);
-            Cache::vymaz();
 
             return match ($path) {
                 '/komentar' => $interakce->ulozKomentar(),
@@ -255,7 +260,7 @@ final class Kernel
 
     private function autor(int $idu): Response
     {
-        $autor = $this->app->db()->one("SELECT idu, IF(jmeno = '', user, jmeno) AS jmeno, url FROM {user} WHERE idu = ? AND blokovat = 0", [$idu]);
+        $autor = $this->app->db()->one("SELECT idu, jmeno, url FROM {user} WHERE idu = ? AND blokovat = 0 AND jmeno <> ''", [$idu]);
         if ($autor === null) {
             return $this->nenalezeno();
         }
@@ -363,6 +368,14 @@ final class Kernel
     private function hledani(): Response
     {
         $q = mb_substr($this->app->request->get('q'), 0, 100);
+        // hledání je nejdražší dotaz webu a necachuje se: nejvýš 30 hledání za minutu z jedné adresy
+        $antispam = new \PhpRS\Core\Antispam($this->app->db(), $this->app->settings());
+        if (mb_strlen($q) >= 3) {
+            if ($antispam->pocet($this->app->request->ip(), 'hledani', 0, 1) >= 30) {
+                return new Response(t('Příliš mnoho hledání za sebou. Zkuste to prosím za chvíli.'), 429, ['Content-Type' => 'text/plain; charset=utf-8', 'Retry-After' => '60']);
+            }
+            $antispam->zapis($this->app->request->ip(), 'hledani', 0);
+        }
         $strana = max(1, $this->app->request->getInt('strana', 1));
         [$clanky, $celkem] = mb_strlen($q) >= 3 ? $this->clanky->hledej($q, $strana) : [[], 0];
 
@@ -407,6 +420,7 @@ final class Kernel
      */
     private function proVypis(array $clanky, int $celkem, int $strana, string $cesta, array $parametry = []): array
     {
+        $this->zaKoncem = $strana > 1 && $clanky === [];
         // "poradi" (od nuly) dovoluje layoutu vysázet první článek výpisu jinak - jako otvírák
         $nahledy = array_map(fn (array $clanek, int $poradi): string => $this->view->render($this->sablonaClanku($clanek), [
             'clanek' => $clanek,
@@ -479,6 +493,11 @@ final class Kernel
      */
     private function stranka(string $titulek, string $obsah, array $meta = [], int $status = 200): Response
     {
+        if ($this->zaKoncem) {
+            $this->zaKoncem = false;
+
+            return $this->nenalezeno();
+        }
         $web = $this->app->settings();
         $bloky = new Bloky($this->app, $this->view);
         $seo = new Seo($this->app);
@@ -491,6 +510,7 @@ final class Kernel
             Statistika::zaznamenej($this->app, $clanek === null ? null : (int) $clanek['idc']);
         }
 
+        $jazyky = $this->jazyky($clanek);
         $html = $this->view->render('base', [
             'web' => $web,
             'titulek' => $titulek,
@@ -498,12 +518,12 @@ final class Kernel
             'obsah' => $obsah,
             'zony' => $bloky->zony(!empty($meta['hlavni']), $clanek !== null ? (int) $clanek['tema'] : ($meta['rubrika'] ?? null), $upravit),
             'rozvrzeni' => $bloky->rozvrzeni(),
-            'hlava' => $seo->hlava($titulek, $meta + ['jazyky' => $this->jazyky($clanek)], $clanek),
+            'hlava' => $seo->hlava($titulek, $meta + ['jazyky' => $jazyky], $clanek),
             'pata' => $upravit ? $this->view->render('vizual', ['app' => $this->app, 'rozvrzeni' => $bloky->rozvrzeni()]) : $seo->pata(),
             'rubriky' => Rubriky::strom($this->app->db(), true, Jazyk::sloupecWebu()),
             'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]),
             'jazyk' => Jazyk::kod(),
-            'jazyky_html' => ($jazyky = $this->jazyky($clanek)) === [] ? '' : $this->view->render('jazyky', ['jazyky' => $jazyky]),
+            'jazyky_html' => $jazyky === [] ? '' : $this->view->render('jazyky', ['jazyky' => $jazyky]),
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]);

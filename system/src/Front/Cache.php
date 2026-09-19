@@ -47,6 +47,14 @@ final class Cache
             @mkdir(self::SLOZKA, 0775, true);
         }
         @file_put_contents($soubor, json_encode(['idc' => $idc]) . "\n" . $html, LOCK_EX);
+        if (random_int(1, 100) === 1) {
+            // občasný úklid: prošlé soubory by jinak mizely jen při změně v administraci
+            foreach (glob(self::SLOZKA . '/*.html') ?: [] as $stary) {
+                if (filemtime($stary) < time() - self::PLATNOST) {
+                    @unlink($stary);
+                }
+            }
+        }
     }
 
     public static function vymaz(): void
@@ -68,7 +76,7 @@ final class Cache
             return null;
         }
         foreach (array_keys($_COOKIE) as $cookie) {
-            if ($cookie === 'phprs3' || str_starts_with((string) $cookie, 'phprs_h') || str_starts_with((string) $cookie, 'phprs_a') || str_starts_with((string) $cookie, 'phprs_c')) {
+            if ($cookie === 'phprs3' || str_starts_with((string) $cookie, 'phprs_h') || str_starts_with((string) $cookie, 'phprs_a') || $cookie === Ctenari::COOKIE) {
                 return null;
             }
         }

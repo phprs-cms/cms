@@ -13,14 +13,14 @@
  * @var callable(string): string $url
  */
 $zpravy = [
-    'poslano' => ['ok', 'Poslali jsme vám e-mail. Registraci dokončíte kliknutím na odkaz v něm.'],
+    'poslano' => ['ok', 'Poslali jsme vám e-mail. Registraci dokončíte kliknutím na odkaz v něm a nastavením hesla.'],
     'heslo-poslano' => ['ok', 'Pokud u nás tento e-mail má účet, poslali jsme na něj odkaz pro nastavení nového hesla.'],
     'vitejte' => ['ok', 'Registrace je dokončená. Vítejte!'],
     'heslo-zmeneno' => ['ok', 'Heslo je změněné a jste přihlášeni.'],
     'ulozeno' => ['ok', 'Uloženo.'],
     'smazano' => ['ok', 'Váš účet i všechny údaje o něm jsme smazali.'],
     'spatne' => ['chyba', 'E-mail nebo heslo nesouhlasí.'],
-    'udaje' => ['chyba', 'Zadejte platný e-mail a heslo aspoň o 8 znacích.'],
+    'udaje' => ['chyba', 'Zadejte platný e-mail.'],
     'heslo-chyba' => ['chyba', 'Stávající heslo nesouhlasí, nebo je nové kratší než 8 znaků.'],
     'pomalu' => ['chyba', 'Formulář se nepodařilo ověřit. Počkejte pár vteřin a zkuste to znovu.'],
     'zavreno' => ['chyba', 'Nové registrace jsou teď vypnuté.'],
@@ -55,9 +55,8 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 			<?= $skryte ?><input type="hidden" name="akce" value="registrace">
 			<label><?= e(t('E-mail')) ?> <input type="email" name="email" required autocomplete="email" maxlength="190"></label>
 			<label><?= e(t('Jméno')) ?> <small><?= e(t('(nepovinné)')) ?></small> <input type="text" name="jmeno" autocomplete="name" maxlength="80"></label>
-			<label><?= e(t('Heslo')) ?> <small><?= e(t('(aspoň 8 znaků)')) ?></small> <input type="password" name="heslo" required minlength="8" autocomplete="new-password"></label>
 			<button type="submit"><?= e(t('Zaregistrovat se zdarma')) ?></button>
-			<p class="rs-drobne"><?= e(t('Pošleme vám e-mail s potvrzovacím odkazem. Účet můžete kdykoli sami smazat.')) ?></p>
+			<p class="rs-drobne"><?= e(t('Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.')) ?></p>
 		</form>
 <?php endif ?>
 	</div>

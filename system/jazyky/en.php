@@ -150,4 +150,8 @@ return [
     'Hodnocení redakce' => 'Our rating',
     'Čtete %s. z %s článků, které máte tento měsíc zdarma.' => 'This is article %s of %s you can read for free this month.',
     'Tento měsíc jste už přečetli všech %s článků zdarma.' => 'You have read all %s free articles this month.',
+    'Poslali jsme vám e-mail. Registraci dokončíte kliknutím na odkaz v něm a nastavením hesla.' => 'We have sent you an e-mail. Click the link in it and set a password to finish your registration.',
+    'Zadejte platný e-mail.' => 'Enter a valid e-mail address.',
+    'Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.' => 'We will send you an e-mail with a link where you set your password. You can delete your account at any time.',
+    'Příliš mnoho hledání za sebou. Zkuste to prosím za chvíli.' => 'Too many searches in a row. Please try again in a moment.',
 ];

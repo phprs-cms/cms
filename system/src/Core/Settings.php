@@ -12,6 +12,7 @@ final class Settings
     /** Výchozí hodnoty; zároveň seznam všech známých proměnných. */
     public const array DEFAULTS = [
         'nazev_webu' => 'Můj magazín',
+        'adresa_webu' => '',          // https://www.example.cz - z ní se skládají odkazy v e-mailech, kanálech a oznámeních (ne z hlavičky Host)
         'popis_webu' => '',
         'klicova_slova' => '',
         'email_webu' => '',

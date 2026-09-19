@@ -83,6 +83,14 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **AI asistent** (`Core\Asistent`): klíč `ai_klic` je typ `tajne` – do HTML jde jen jeho konec. Odpověď modelu je nedůvěryhodný vstup
   (jen řetězce bez HTML). Modely: `Asistent::MODELY`.
 
+- **Adresa webu je nastavení `adresa_webu`, ne hlavička Host.** Absolutní adresy (e-maily, RSS, mapa webu, webhook, push) ber vždy
+  z `$app->request->origin()` – oba kernely do něj po startu dosadí nastavenou adresu. Nikdy nečti `HTTP_HOST` přímo.
+- **Výpisy článků nenačítají dlouhé texty** (`Front\Clanky::SLOUPCE_VYPISU`): nový sloupec `rs_clanky`, který má být vidět ve výpisu,
+  doplň i tam. Nová migrace = zvýšit `PHPRS_VERZE_DB` v `system/bootstrap.php` (hlídá `tools/test.sh`).
+- **`Auth::user()` nesmí na webu založit session** anonymnímu návštěvníkovi (vypnula by cache). `Cache::vymaz()` volej až po skutečném zápisu.
+- **Pošta** jde vždy přes `Core\Posta::odesli()` (SMTP nebo mail() podle Nastavení → Pošta), nikdy přímo `mail()`.
+- Čtenář se registruje bez hesla; heslo nastavuje až z odkazu v e-mailu (`/ctenar/heslo/<token>`) – neměnit zpět na heslo v prvním kroku.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

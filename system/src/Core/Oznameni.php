@@ -43,6 +43,7 @@ final class Oznameni
             if ($db->run('UPDATE {clanky} SET oznameno = NOW() WHERE idc = ? AND oznameno IS NULL', [$c['idc']])->rowCount() === 0) {
                 continue;
             }
+            \PhpRS\Front\Cache::vymaz(); // naplánovaný článek právě vyšel - hlavní stránka z cache ho ještě nezná
             if ($c['noindex'] || (int) $db->value('SELECT datum < NOW() - INTERVAL 2 DAY FROM {clanky} WHERE idc = ?', [$c['idc']]) === 1) {
                 continue;
             }

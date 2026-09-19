@@ -76,6 +76,19 @@ $pole('text_paticky', 'Text v patičce', 'text', 'Například vydavatel, ISSN ne
 $pole('klicova_slova', 'Klíčová slova webu', 'text');
 $pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50" style="width:90px"');
 $pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
+$pole('sdileni', 'Odkazy pro sdílení pod článkem', 'ano', 'Facebook, X, LinkedIn, WhatsApp, e-mail a kopírování odkazu – bez cizích skriptů.');
+$pole('osnova_clanku', 'Obsah článku z mezititulků', 'ano', 'U článků s aspoň třemi mezititulky se nad textem zobrazí klikací osnova.');
+$pole('souvisejici_auto', 'Související články automaticky', 'ano', 'Když článek není dílem seriálu, vyberou se podobné podle štítků a rubriky.');
+?>
+<div class="radek">
+	<label for="upozorneni_komentare"><?= e(t('E-mail redakci o komentářích')) ?></label>
+	<select id="upozorneni_komentare" name="upozorneni_komentare">
+		<option value="schvaleni"<?= $hodnoty['upozorneni_komentare'] === 'schvaleni' ? ' selected' : '' ?>><?= e(t('když komentář čeká na schválení')) ?></option>
+		<option value="vse"<?= $hodnoty['upozorneni_komentare'] === 'vse' ? ' selected' : '' ?>><?= e(t('při každém novém komentáři')) ?></option>
+		<option value="nic"<?= $hodnoty['upozorneni_komentare'] === 'nic' ? ' selected' : '' ?>><?= e(t('neposílat')) ?></option>
+	</select>
+</div>
+<?php
 $pole('hlidat_platnost', 'Stahovat články z hlavní stránky', 'ano', 'Článek po svém „datu stažení“ zmizí z hlavní stránky; v rubrice zůstane.');
 $pole('webhook_url', 'Webhook po vydání článku', 'url', 'Adresa ze služby Make, Zapier, IFTTT nebo n8n. Po vydání článku na ni systém pošle titulek, perex, adresu a obrázek – služba je pak sama sdílí na Facebook, X, Mastodon, do Slacku apod.', 'placeholder="https://"');
 $pole('cache_stranek', 'Cache stránek', 'ano', 'Hotové stránky se čtenářům podávají z paměti – web je rychlejší a vydrží nápor. Nechte zapnuté.');

@@ -26,6 +26,14 @@ $skupina = '';
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>"><?= e(t('Odeslat zkušební e-mail na adresu redakce')) ?></button></p>
 </fieldset>
 <fieldset>
+<legend><?= e(t('Úlohy na pozadí (cron)')) ?></legend>
+<p><?= e(t('Naplánované články, oznámení a zálohy se spouštějí při návštěvách webu. Web s menší návštěvností je zpřesní, když tuto adresu zavoláte každých 5 minut cronem hostingu:')) ?></p>
+<?php if ($ulohyToken !== ''): ?>
+<p><code>*/5 * * * * curl -s "<?= e($adresaWebu) ?>ulohy?token=<?= e($ulohyToken) ?>" &gt; /dev/null</code></p>
+<?php endif ?>
+<p><button class="navigace" type="submit" name="novy_token_ulohy" value="1"><?= e(t($ulohyToken !== '' ? 'Vytvořit novou adresu (stará přestane platit)' : 'Vytvořit adresu pro cron')) ?></button></p>
+</fieldset>
+<fieldset>
 <legend><?= e(t('Monitoring')) ?></legend>
 <?php if ($hodnoty['stav_token'] !== ''): ?>
 <p><?= e(t('Stav ve formátu JSON pro dohledové nástroje (UptimeRobot, Zabbix…):')) ?><br><code><?= e($adresaWebu) ?>stav.json?token=<?= e($hodnoty['stav_token']) ?></code></p>

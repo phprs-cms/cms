@@ -24,15 +24,77 @@ final class TypyObsahu
     public function dopln(array $clanek): array
     {
         if (!empty($clanek['zamceno'])) {
+            $clanek['text'] .= $this->sdileniHtml($clanek);
+
             return $clanek;
         }
+        $clanek['text'] = $this->sOsnovou((string) $clanek['text']);
         $pred = self::prehravac((string) $clanek['medium_url'], $this->app->request->basePath(), (string) $clanek['titulek']);
         if ((int) $clanek['zive'] > 0) {
             $pred .= $this->ziveHtml($clanek);
         }
-        $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek);
+        $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->sdileniHtml($clanek);
 
         return $clanek;
+    }
+
+    /**
+     * Osnova dlouhého článku: od tří mezititulků H2 dostanou nadpisy kotvy a před text se vloží obsah.
+     * Kotvy se hodí i samy o sobě - jde odkázat na konkrétní část článku.
+     */
+    public function sOsnovou(string $html): string
+    {
+        if (!$this->app->settings()->bool('osnova_clanku') || substr_count($html, '<h2') < 3) {
+            return $html;
+        }
+        $polozky = [];
+        $pouzite = [];
+        $html = preg_replace_callback('#<h2\b([^>]*)>(.*?)</h2>#is', function (array $m) use (&$polozky, &$pouzite): string {
+            $text = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5));
+            if ($text === '' || str_contains($m[1], ' id=')) {
+                return $m[0];
+            }
+            $id = $zaklad = slugify($text, 60);
+            for ($i = 2; isset($pouzite[$id]); $i++) {
+                $id = $zaklad . '-' . $i;
+            }
+            $pouzite[$id] = true;
+            $polozky[] = '<li><a href="#' . e($id) . '">' . e($text) . '</a></li>';
+
+            return '<h2' . $m[1] . ' id="' . e($id) . '">' . $m[2] . '</h2>';
+        }, $html) ?? $html;
+
+        return count($polozky) < 3 ? $html
+            : '<nav class="rs-osnova" aria-label="' . e(t('Obsah článku')) . '"><strong>' . e(t('Obsah článku')) . '</strong><ol>' . implode('', $polozky) . '</ol></nav>' . $html;
+    }
+
+    /**
+     * Sdílení článku: obyčejné odkazy bez cizích skriptů; na telefonu tlačítko systémového sdílení (image/web.js).
+     *
+     * @param array<string, mixed> $clanek
+     */
+    public function sdileniHtml(array $clanek): string
+    {
+        if (!$this->app->settings()->bool('sdileni')) {
+            return '';
+        }
+        $adresa = $this->app->request->origin() . $this->app->url('clanek/' . $clanek['seo_link']);
+        $u = rawurlencode($adresa);
+        $t = rawurlencode((string) $clanek['titulek']);
+        $site = [
+            'Facebook' => 'https://www.facebook.com/sharer/sharer.php?u=' . $u,
+            'X' => 'https://x.com/intent/post?url=' . $u . '&text=' . $t,
+            'LinkedIn' => 'https://www.linkedin.com/sharing/share-offsite/?url=' . $u,
+            'WhatsApp' => 'https://wa.me/?text=' . $t . '%20' . $u,
+            'E-mail' => 'mailto:?subject=' . $t . '&body=' . $u,
+        ];
+        $html = '<aside class="rs-sdileni" aria-label="' . e(t('Sdílet článek')) . '"><span>' . e(t('Sdílet')) . '</span>'
+            . '<button type="button" data-sdilet data-adresa="' . e($adresa) . '" data-titulek="' . e((string) $clanek['titulek']) . '" hidden>' . e(t('Sdílet…')) . '</button>';
+        foreach ($site as $nazev => $odkaz) {
+            $html .= '<a href="' . e($odkaz) . '"' . ($nazev === 'E-mail' ? '' : ' target="_blank" rel="noopener nofollow"') . '>' . e($nazev) . '</a>';
+        }
+
+        return $html . '<button type="button" data-kopirovat="' . e($adresa) . '" data-hotovo="' . e(t('Zkopírováno')) . '">' . e(t('Kopírovat odkaz')) . '</button></aside>';
     }
 
     /** Přehrávač podle adresy: soubor (audio/video), YouTube, Vimeo, Spotify. Cizí přehrávače se načtou až po kliknutí. */

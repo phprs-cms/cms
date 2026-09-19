@@ -96,11 +96,33 @@ final class Interakce
         $this->antispam->zapis($r->ip(), 'komentar', 0);
         self::prepocitej($db, (int) $clanek['idc']);
         Cache::vymaz(); // až po skutečném zápisu - odmítnutý spam nesmí držet cache studenou
+        $this->upozorniRedakci($clanek, $od, $obsah, $zobrazit);
 
         return $zpet($zobrazit ? 'ok' : 'ceka');
     }
 
     /** Počet zveřejněných komentářů článku (rs_clanky.kom). */
+    /**
+     * E-mail redakci o novém komentáři. Nejvýš jeden za 10 minut - při náporu (nebo spamu) stačí vědět, že je co schvalovat.
+     *
+     * @param array<string, mixed> $clanek
+     */
+    private function upozorniRedakci(array $clanek, string $od, string $obsah, bool $zverejnen): void
+    {
+        $web = $this->app->settings();
+        $rezim = $web->get('upozorneni_komentare');
+        if ($web->get('email_webu') === '' || $rezim === 'nic' || ($rezim === 'schvaleni' && $zverejnen) || time() - $web->int('upozorneni_cas') < 600) {
+            return;
+        }
+        $web->set('upozorneni_cas', (string) time());
+        $ceka = (int) $this->app->db()->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0');
+        \PhpRS\Core\Posta::odesli($web, $web->get('email_webu'), ($zverejnen ? 'Nový komentář' : 'Komentář čeká na schválení') . ' – ' . $web->get('nazev_webu'),
+            "Článek: {$clanek['titulek']}\nOd: {$od}\n\n" . mb_strimwidth($obsah, 0, 600, '…') . "\n\n"
+            . ($ceka > 0 ? "Ke schválení čeká komentářů: {$ceka}\n" : '')
+            . 'Správa komentářů: ' . $this->app->request->origin() . $this->app->request->basePath() . "/admin.php?modul=comment\n\n"
+            . "Další upozornění přijde nejdřív za 10 minut. Vypnete je v Nastavení → Základní.\n");
+    }
+
     public static function prepocitej(\PhpRS\Core\Db $db, int $idc): void
     {
         $db->run('UPDATE {clanky} SET kom = (SELECT COUNT(*) FROM {komentare} WHERE clanek = ? AND zobrazit = 1) WHERE idc = ?', [$idc, $idc]);

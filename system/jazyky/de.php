@@ -153,4 +153,10 @@ return [
     'Zadejte platný e-mail.' => 'Geben Sie eine gültige E-Mail-Adresse ein.',
     'Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.' => 'Wir senden Ihnen eine E-Mail mit einem Link, über den Sie Ihr Passwort festlegen. Sie können Ihr Konto jederzeit selbst löschen.',
     'Příliš mnoho hledání za sebou. Zkuste to prosím za chvíli.' => 'Zu viele Suchanfragen hintereinander. Bitte versuchen Sie es gleich noch einmal.',
+    'Obsah článku' => 'Inhalt',
+    'Sdílet článek' => 'Artikel teilen',
+    'Sdílet' => 'Teilen',
+    'Sdílet…' => 'Teilen…',
+    'Zkopírováno' => 'Kopiert',
+    'Kopírovat odkaz' => 'Link kopieren',
 ];

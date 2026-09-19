@@ -143,4 +143,9 @@ return [
     'Zadejte platný e-mail.' => 'Zadajte platný e-mail.',
     'Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.' => 'Pošleme vám e-mail s odkazom, na ktorom si nastavíte heslo. Účet môžete kedykoľvek sami zmazať.',
     'Příliš mnoho hledání za sebou. Zkuste to prosím za chvíli.' => 'Príliš veľa hľadaní za sebou. Skúste to prosím o chvíľu.',
+    'Sdílet článek' => 'Zdieľať článok',
+    'Sdílet' => 'Zdieľať',
+    'Sdílet…' => 'Zdieľať…',
+    'Zkopírováno' => 'Skopírované',
+    'Kopírovat odkaz' => 'Kopírovať odkaz',
 ];

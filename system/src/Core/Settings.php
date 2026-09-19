@@ -42,6 +42,12 @@ final class Settings
         'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
+        'sdileni' => '1',             // odkazy pro sdílení pod článkem
+        'osnova_clanku' => '1',       // obsah článku z mezititulků (od tří H2)
+        'souvisejici_auto' => '1',    // související články podle štítků a rubriky, když článek není v seriálu
+        'upozorneni_komentare' => 'schvaleni', // e-mail redakci: schvaleni (čeká na schválení) | vse | nic
+        'upozorneni_cas' => '0',
+        'ulohy_token' => '',          // tajná část adresy /ulohy pro cron
         'ctenari_registrace' => '1',  // čtenáři se mohou sami registrovat (rozšíření Čtenáři)
         'zamek_odstavcu' => '2',      // kolik odstavců zamčeného článku vidí nepřihlášený jako ukázku
         'paywall_zdarma' => '0',      // měkký paywall: kolik zamčených článků měsíčně smí číst kdokoli zdarma (0 = vypnuto)

@@ -52,6 +52,25 @@
 		otevri(seznam, seznam.indexOf(img));
 	});
 
+	/* ---------- sdílení článku: systémové sdílení (telefon) a kopírování odkazu ---------- */
+
+	document.querySelectorAll('[data-sdilet]').forEach(function (tl) {
+		if (!navigator.share) { return; }
+		tl.hidden = false;
+		tl.addEventListener('click', function () {
+			navigator.share({ title: tl.getAttribute('data-titulek'), url: tl.getAttribute('data-adresa') }).catch(function () { /* čtenář sdílení zavřel */ });
+		});
+	});
+	document.addEventListener('click', function (e) {
+		var tl = e.target.closest && e.target.closest('[data-kopirovat]');
+		if (!tl || !navigator.clipboard) { return; }
+		var puvodni = tl.textContent;
+		navigator.clipboard.writeText(tl.getAttribute('data-kopirovat')).then(function () {
+			tl.textContent = tl.getAttribute('data-hotovo');
+			setTimeout(function () { tl.textContent = puvodni; }, 2000);
+		});
+	});
+
 	/* ---------- přehrávač cizí služby se vloží až po kliknutí ---------- */
 
 	document.addEventListener('click', function (e) {

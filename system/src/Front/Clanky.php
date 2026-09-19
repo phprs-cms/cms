@@ -161,6 +161,23 @@ final class Clanky
         );
     }
 
+    /**
+     * Podobné články: nejdřív podle počtu společných štítků, potom novější ze stejné rubriky.
+     *
+     * @param array<string, mixed> $clanek
+     * @return list<array<string, mixed>>
+     */
+    public function podobne(array $clanek, int $pocet = 4): array
+    {
+        return $this->db->all(
+            'SELECT c.titulek, c.seo_link, c.datum, COUNT(cs.ids) AS shoda
+             FROM {clanky} c LEFT JOIN {clanky_stitky} cs ON cs.idc = c.idc AND cs.ids IN (SELECT ids FROM {clanky_stitky} WHERE idc = ?)
+             WHERE ' . $this->vydane . ' AND c.idc <> ? AND c.typ_clanku = 1 AND (c.tema = ? OR cs.ids IS NOT NULL) AND c.datum > NOW() - INTERVAL 2 YEAR
+             GROUP BY c.idc, c.titulek, c.seo_link, c.datum ORDER BY shoda DESC, c.datum DESC LIMIT ?',
+            [$clanek['idc'], $clanek['idc'], $clanek['tema'], $pocet],
+        );
+    }
+
     /** @return list<array<string, mixed>> */
     public function nejctenejsi(int $pocet): array
     {

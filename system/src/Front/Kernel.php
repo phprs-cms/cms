@@ -200,6 +200,25 @@ final class Kernel
                 ? $this->nenalezeno()
                 : new Response($seo->clanekMarkdown($clanek), 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'X-Robots-Tag' => 'noindex']);
         }
+        if ($path === '/ulohy') {
+            // úlohy na pozadí pro cron: weby s malou návštěvností tak vydají naplánovaný článek a rozešlou oznámení včas
+            $token = $this->app->settings()->get('ulohy_token');
+            if ($token === '' || !hash_equals($token, $request->get('token'))) {
+                return new Response("Neplatný token.\n", 403, ['Content-Type' => 'text/plain; charset=utf-8']);
+            }
+            $hotovo = [];
+            try {
+                \PhpRS\Core\Oznameni::zpracuj($this->app);
+                $hotovo[] = 'oznameni';
+                $hotovo[] = 'push:' . (new \PhpRS\Core\Push($this->app->db(), $this->app->settings()))->rozesli();
+                \PhpRS\Core\Zaloha::automaticka($this->app->db(), $this->app->settings());
+                $hotovo[] = 'zalohy';
+            } catch (\Throwable $e) {
+                $hotovo[] = 'chyba: ' . $e->getMessage();
+            }
+
+            return new Response('OK ' . date('c') . ' ' . implode(', ', $hotovo) . "\n", 200, ['Content-Type' => 'text/plain; charset=utf-8', 'Cache-Control' => 'no-store']);
+        }
         if ($path === '/stav.json') {
             $token = $this->app->settings()->get('stav_token');
             if ($token === '' || !hash_equals($token, $request->get('token'))) {
@@ -353,7 +372,8 @@ final class Kernel
             'rezim' => 'cely',
             'poradi' => 0,
             'url' => $this->app->url(...),
-            'souvisejici' => $this->clanky->zeSkupiny($clanek),
+            // díly seriálu mají přednost; jinak se související články vyberou samy podle štítků a rubriky
+            'souvisejici' => $this->clanky->zeSkupiny($clanek) ?: ($this->app->settings()->bool('souvisejici_auto') ? $this->clanky->podobne($clanek) : []),
         ]);
 
         return $this->stranka($clanek['seo_titulek'] !== '' ? $clanek['seo_titulek'] : $clanek['titulek'], $obsah, [

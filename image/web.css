@@ -88,3 +88,4 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .rs-recenze-text strong { font-size: 18px; }
 .rs-recenze-pruh { height: 6px; margin-top: 4px; border-radius: 3px; background: rgb(128 128 128 / 0.25); overflow: hidden; }
 .rs-recenze-pruh i { display: block; height: 100%; background: var(--rs-akcent, #1f4fe0); }
+.rs-paywall-info { margin: 1.5em 0; padding: 10px 14px; border-left: 4px solid var(--rs-akcent, #1f4fe0); background: rgb(128 128 128 / 0.1); font: 14px/1.4 system-ui, sans-serif; }

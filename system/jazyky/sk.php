@@ -137,4 +137,6 @@ return [
     'Reportáž skončila' => 'Reportáž sa skončila',
     'Hodnocení' => 'Hodnotenie',
     'Hodnocení redakce' => 'Hodnotenie redakcie',
+    'Čtete %s. z %s článků, které máte tento měsíc zdarma.' => 'Čítate %s. z %s článkov, ktoré máte tento mesiac zadarmo.',
+    'Tento měsíc jste už přečetli všech %s článků zdarma.' => 'Tento mesiac ste už prečítali všetkých %s článkov zadarmo.',
 ];

@@ -7,11 +7,15 @@
  * @var string $text      vlastní text výzvy z Nastavení
  * @var string $ucet      adresa přihlášení s návratem na článek
  * @var bool $registrace
+ * @var array{precteno:int, limit:int, vycerpano:bool}|null $zdarma  stav měkkého paywallu
  */
 ?>
 <aside class="rs-zamek" aria-label="<?= e(t('Zamčený obsah')) ?>">
 	<strong><?= e(t($predplatne ? 'Tento článek je pro předplatitele' : 'Pokračování je pro přihlášené čtenáře')) ?></strong>
 	<p><?= e($text !== '' ? $text : t($predplatne ? 'Předplatné podporuje naši redakci. Děkujeme, že nás čtete.' : 'Registrace je zdarma a zabere minutu.')) ?></p>
+<?php if ($zdarma !== null && $zdarma['vycerpano']): ?>
+	<p><small><?= e(t('Tento měsíc jste už přečetli všech %s článků zdarma.', $zdarma['limit'])) ?></small></p>
+<?php endif ?>
 <?php if (!$prihlasen): ?>
 	<p><a class="rs-tl" href="<?= e($ucet) ?>"><?= e(t('Přihlásit se')) ?></a><?php if ($registrace): ?> <a class="rs-tl rs-tl-vedlejsi" href="<?= e($ucet) ?>"><?= e(t('Zaregistrovat se')) ?></a><?php endif ?></p>
 <?php endif ?>

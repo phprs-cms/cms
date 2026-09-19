@@ -147,4 +147,6 @@ return [
     'Reportáž skončila' => 'Der Liveticker ist beendet',
     'Hodnocení' => 'Bewertung',
     'Hodnocení redakce' => 'Bewertung der Redaktion',
+    'Čtete %s. z %s článků, které máte tento měsíc zdarma.' => 'Dies ist Artikel %s von %s, die Sie diesen Monat kostenlos lesen können.',
+    'Tento měsíc jste už přečetli všech %s článků zdarma.' => 'Sie haben diesen Monat bereits alle %s kostenlosen Artikel gelesen.',
 ];

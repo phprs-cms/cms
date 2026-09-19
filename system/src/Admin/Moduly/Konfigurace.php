@@ -43,7 +43,7 @@ final class Konfigurace extends Modul
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
             'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
             'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',
-            'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'zamek_text' => 'text',
+            'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'paywall_zdarma' => 'cislo:0:50', 'zamek_text' => 'text',
         ],
         'vzhled' => ['prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [

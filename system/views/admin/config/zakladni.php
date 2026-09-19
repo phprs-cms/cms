@@ -56,11 +56,12 @@ $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
 <?php
 $pole('ctenari_registrace', 'Povolit nové registrace', 'ano');
 $pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10" style="width:90px"');
+$pole('paywall_zdarma', 'Článků zdarma měsíčně', 'cislo', 'Měkký paywall: tolik zamčených článků si každý měsíc přečte kdokoli bez přihlášení, potom uvidí výzvu. 0 = vypnuto. Počítá se v prohlížeči čtenáře, vyhledávače vidí články celé.', 'min="0" max="50" style="width:90px"');
 $pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – například proč se registrovat nebo jak získat předplatné.', 'maxlength="300"');
 ?>
 </details>
 <?php else: ?>
-<input type="hidden" name="ctenari_registrace" value="<?= e($hodnoty['ctenari_registrace']) ?>"><input type="hidden" name="zamek_odstavcu" value="<?= e($hodnoty['zamek_odstavcu']) ?>"><input type="hidden" name="zamek_text" value="<?= e($hodnoty['zamek_text']) ?>">
+<input type="hidden" name="ctenari_registrace" value="<?= e($hodnoty['ctenari_registrace']) ?>"><input type="hidden" name="paywall_zdarma" value="<?= e($hodnoty['paywall_zdarma']) ?>"><input type="hidden" name="zamek_odstavcu" value="<?= e($hodnoty['zamek_odstavcu']) ?>"><input type="hidden" name="zamek_text" value="<?= e($hodnoty['zamek_text']) ?>">
 <?php endif ?>
 <details class="pokrocile">
 <summary>Sociální sítě</summary>

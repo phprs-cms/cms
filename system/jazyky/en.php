@@ -148,4 +148,6 @@ return [
     'Reportáž skončila' => 'Live coverage has ended',
     'Hodnocení' => 'Rating',
     'Hodnocení redakce' => 'Our rating',
+    'Čtete %s. z %s článků, které máte tento měsíc zdarma.' => 'This is article %s of %s you can read for free this month.',
+    'Tento měsíc jste už přečetli všech %s článků zdarma.' => 'You have read all %s free articles this month.',
 ];

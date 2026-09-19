@@ -43,6 +43,7 @@ final class Settings
         'povolit_hodnoceni' => '1',
         'ctenari_registrace' => '1',  // čtenáři se mohou sami registrovat (rozšíření Čtenáři)
         'zamek_odstavcu' => '2',      // kolik odstavců zamčeného článku vidí nepřihlášený jako ukázku
+        'paywall_zdarma' => '0',      // měkký paywall: kolik zamčených článků měsíčně smí číst kdokoli zdarma (0 = vypnuto)
         'zamek_text' => '',           // vlastní text výzvy pod ukázkou
         'statistika' => '1',          // vlastní měření návštěvnosti bez cookies
         'tajny_klic' => '',           // vznikne sám; podepisuje formuláře čtenářů a solí otisky statistiky

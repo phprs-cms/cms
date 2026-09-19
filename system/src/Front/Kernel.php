@@ -139,6 +139,7 @@ final class Kernel
         if (preg_match('#^/zive/(\d+)\.json$#', $path, $m)) {
             // průběžné načítání nových zápisů živé reportáže (image/web.js)
             $clanek = $this->app->db()->one('SELECT idc, zive, pristup FROM {clanky} WHERE idc = ? AND visible = 1 AND datum <= NOW() AND zive > 0', [(int) $m[1]]);
+            $this->ctenari?->meritClanek(true); // čtenář s článkem zdarma (měkký paywall) má nárok i na průběžné zápisy
             if ($clanek === null || ($this->ctenari !== null && !$this->ctenari->smiCist($clanek))) {
                 return Response::json(['html' => '', 'bezi' => false], 404);
             }
@@ -308,7 +309,9 @@ final class Kernel
     private function clanek(string $seo): Response
     {
         $nahled = $this->app->request->get('nahled') === '1' && $this->app->auth()->user() !== null;
+        $this->ctenari?->meritClanek(true); // měkký paywall se počítá jen tady, ne ve výpisech
         $clanek = $this->clanky->podleSeo($seo, $nahled);
+        $this->ctenari?->meritClanek(false);
         if ($clanek === null || ((int) $clanek['typ_clanku'] === 2 && !$nahled)) {
             return $this->nenalezeno();
         }
@@ -327,6 +330,11 @@ final class Kernel
         $clanek['faq_html'] = $casti->render('faq', ['faq' => Seo::faq($clanek['faq'])]);
         if (!empty($clanek['zamceno'])) {
             $clanek['text'] .= $this->ctenari->zamekHtml($clanek, $this->view);
+        }
+        $zdarma = $this->ctenari?->stavZdarma();
+        if ($zdarma !== null && !$zdarma['vycerpano']) {
+            $clanek['text'] .= '<p class="rs-paywall-info">' . e(t('Čtete %s. z %s článků, které máte tento měsíc zdarma.', $zdarma['precteno'], $zdarma['limit']))
+                . ' <a href="' . e($this->app->url('ctenar')) . '">' . e(t('Přihlásit se')) . '</a></p>';
         }
         $clanek = (new TypyObsahu($this->app))->dopln($clanek); // přehrávač, živá reportáž, hodnocení recenze
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
@@ -499,7 +507,9 @@ final class Kernel
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]);
-        if ($status === 200 && empty($meta['noindex']) && $this->app->request->get('nahled') === '') {
+        // zamčený článek s měkkým paywallem se liší podle čtenáře (počítadlo v cookie) - do společné cache nepatří
+        $mereny = $clanek !== null && (int) ($clanek['pristup'] ?? 0) > 0 && $web->int('paywall_zdarma') > 0;
+        if ($status === 200 && empty($meta['noindex']) && $this->app->request->get('nahled') === '' && !$mereny) {
             Cache::uloz($this->app, $html, $clanek === null ? null : (int) $clanek['idc']);
         }
 

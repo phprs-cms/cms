@@ -22,11 +22,16 @@ use PhpRS\Core\View;
 final class Ctenari
 {
     public const string COOKIE = 'phprs_ctenar';
+    public const string COOKIE_CTENO = 'phprs_cteno';
     public const array PRISTUP = [0 => 'Všichni', 1 => 'Jen přihlášení čtenáři', 2 => 'Jen předplatitelé'];
     private const int PLATNOST = 60 * 86400;
 
     /** @var array<string, mixed>|false|null */
     private array|false|null $ctenar = null;
+    private bool $meri = false;
+
+    /** @var array{precteno:int, limit:int, vycerpano:bool}|null */
+    private ?array $stavZdarma = null;
 
     public function __construct(private readonly App $app)
     {
@@ -60,11 +65,58 @@ final class Ctenari
     /** Smí návštěvník číst celý článek? Redakce přihlášená v administraci vidí vše. */
     public function smiCist(array $clanek): bool
     {
-        return match (true) {
+        $smi = match (true) {
             (int) $clanek['pristup'] === 0, $this->app->auth()->user() !== null => true,
             (int) $clanek['pristup'] === 1 => $this->prihlaseny() !== null,
             default => $this->jePredplatitel(),
         };
+
+        return $smi || ($this->meri && $this->zdarma((int) $clanek['idc']));
+    }
+
+    /** Měkký paywall se počítá jen na stránce článku, ne ve výpisech - Kernel ho zapíná kolem načtení článku. */
+    public function meritClanek(bool $ano): void
+    {
+        $this->meri = $ano;
+    }
+
+    /** Kolik zamčených článků zdarma už čtenář tento měsíc otevřel a kolik jich má; null = měkký paywall je vypnutý nebo se nepoužil. */
+    public function stavZdarma(): ?array
+    {
+        return $this->stavZdarma;
+    }
+
+    /**
+     * Měkký paywall: pár zamčených článků měsíčně zdarma. Počítá podepsaná cookie phprs_cteno (měsíc + čísla článků);
+     * kdo ji smaže, začíná znovu - to je u měkkého paywallu záměr, ne chyba. Vyhledávače cookie neposílají a vidí celý text.
+     */
+    private function zdarma(int $idc): bool
+    {
+        $limit = $this->app->settings()->int('paywall_zdarma');
+        if ($limit <= 0) {
+            return false;
+        }
+        $mesic = date('Ym');
+        $prectene = [];
+        $casti = explode('.', (string) ($_COOKIE[self::COOKIE_CTENO] ?? ''));
+        if (count($casti) === 3 && $casti[0] === $mesic && hash_equals($this->podpis('cteno.' . $casti[0] . '.' . $casti[1]), $casti[2])) {
+            $prectene = array_slice(array_map(intval(...), array_filter(explode('-', $casti[1]), ctype_digit(...))), 0, 50);
+        }
+        if (!in_array($idc, $prectene, true)) {
+            if (count($prectene) >= $limit) {
+                $this->stavZdarma = ['precteno' => count($prectene), 'limit' => $limit, 'vycerpano' => true];
+
+                return false;
+            }
+            $prectene[] = $idc;
+            $seznam = implode('-', $prectene);
+            setcookie(self::COOKIE_CTENO, $mesic . '.' . $seznam . '.' . $this->podpis('cteno.' . $mesic . '.' . $seznam), [
+                'expires' => time() + 40 * 86400, 'path' => $this->app->request->basePath() . '/', 'secure' => $this->app->request->isHttps(), 'httponly' => true, 'samesite' => 'Lax',
+            ]);
+        }
+        $this->stavZdarma = ['precteno' => count($prectene), 'limit' => $limit, 'vycerpano' => false];
+
+        return true;
     }
 
     /**
@@ -106,6 +158,7 @@ final class Ctenari
             'text' => $this->app->settings()->get('zamek_text'),
             'ucet' => $this->app->url('ctenar') . '?zpet=' . rawurlencode('clanek/' . $clanek['seo_link']),
             'registrace' => $this->app->settings()->bool('ctenari_registrace'),
+            'zdarma' => $this->stavZdarma,
         ]);
     }
 

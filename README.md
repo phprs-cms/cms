@@ -168,6 +168,11 @@ Hotovo:
 - **Pošta:** odesílání přes vlastní SMTP server (STARTTLS/SSL, přihlášení, opakované použití spojení při rozesílce) nebo funkcí `mail()`;
   Nastavení → Pošta, adresa odesílatele, Reply-To, zkušební e-mail s čitelnou chybou.
 - **Měkký paywall:** N zamčených článků měsíčně zdarma pro kohokoli (podepsaná cookie, počítá se jen na stránce článku).
+- **Článek pro čtenáře:** odkazy pro sdílení (bez cizích skriptů, na telefonu systémové sdílení), osnova z mezititulků s kotvami,
+  automatické související články podle štítků a rubriky, medailonek autora (pozice, fotka, pár vět – Můj účet), tabulky v editoru,
+  přehrávač z adresy videa vložené na samostatný řádek, mobilní menu rubrik.
+- **Redakce a provoz:** e-mail redakci o komentářích (nejvýš jednou za 10 minut), adresa pro cron `/ulohy?token=…` (Stav systému),
+  „První kroky" po instalaci na přehledu administrace.
 - **Provoz:** migrace databáze se provedou i při první návštěvě webu (se zámkem), takže automatická aktualizace web nerozbije.
 
 Zbývá:

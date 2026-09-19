@@ -28,7 +28,7 @@ final class TypyObsahu
 
             return $clanek;
         }
-        $clanek['text'] = $this->sOsnovou((string) $clanek['text']);
+        $clanek['text'] = $this->sOsnovou($this->vlozeneAdresy((string) $clanek['text']));
         $pred = self::prehravac((string) $clanek['medium_url'], $this->app->request->basePath(), (string) $clanek['titulek']);
         if ((int) $clanek['zive'] > 0) {
             $pred .= $this->ziveHtml($clanek);
@@ -36,6 +36,23 @@ final class TypyObsahu
         $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->autorHtml($clanek) . $this->sdileniHtml($clanek);
 
         return $clanek;
+    }
+
+    /**
+     * Odstavec, ve kterém je jen adresa videa nebo podcastu (YouTube, Vimeo, Spotify), se na webu promění v přehrávač.
+     * Redaktor tak video vloží prostým vložením adresy na samostatný řádek.
+     */
+    public function vlozeneAdresy(string $html): string
+    {
+        if (!preg_match('#youtu|vimeo\.com|spotify\.com#i', $html)) {
+            return $html;
+        }
+
+        return preg_replace_callback('#<p>\s*(?:<a\b[^>]*href="(https?://[^"]+)"[^>]*>[^<]*</a>|(https?://[^\s<]+))\s*(?:<br\s*/?>)?\s*</p>#i', function (array $m): string {
+            $prehravac = self::prehravac(html_entity_decode($m[1] !== '' ? $m[1] : $m[2]), '', '', true);
+
+            return $prehravac !== '' && !str_contains($prehravac, '<audio') && !str_contains($prehravac, '<video') ? $prehravac : $m[0];
+        }, $html) ?? $html;
     }
 
     /**
@@ -118,7 +135,7 @@ final class TypyObsahu
     }
 
     /** Přehrávač podle adresy: soubor (audio/video), YouTube, Vimeo, Spotify. Cizí přehrávače se načtou až po kliknutí. */
-    public static function prehravac(string $url, string $zaklad, string $titulek): string
+    public static function prehravac(string $url, string $zaklad, string $titulek, bool $jenZname = false): string
     {
         if ($url === '') {
             return '';
@@ -137,6 +154,9 @@ final class TypyObsahu
             (bool) preg_match('#open\.spotify\.com/(episode|show|track)/([A-Za-z0-9]+)#', $url, $m) => 'https://open.spotify.com/embed/' . $m[1] . '/' . $m[2],
             default => '',
         };
+        if ($vlozit === '' && $jenZname) {
+            return '';
+        }
         if ($vlozit === '') {
             return '<p class="rs-medium-odkaz"><a class="rs-tl" href="' . e($adresa) . '" rel="noopener">▶ ' . e(t('Přehrát')) . '</a></p>';
         }

@@ -184,6 +184,10 @@
 		['„citace“', T('Citace'), function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
 		[T('obrázek'), T('Vložit obrázek z médií'), null, 'velky'],
 		['galerie', T('Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku'), 'galerie', 'velky'],
+		[T('tabulka'), T('Vložit tabulku 3 × 3 se záhlavím; řádky a sloupce pak přidáte tlačítky nad tabulkou'), function () {
+			var radek = function (tag) { return '<tr><' + tag + '><br></' + tag + '><' + tag + '><br></' + tag + '><' + tag + '><br></' + tag + '></tr>'; };
+			prikaz('insertHTML', '<table><thead>' + radek('th') + '</thead><tbody>' + radek('td') + radek('td') + '</tbody></table><p><br></p>');
+		}, 'velky'],
 		['—', T('Oddělovací čára'), function () { prikaz('insertHorizontalRule'); }, 'velky'],
 		['Tx', T('Odstranit formátování'), function () { prikaz('removeFormat'); prikaz('unlink'); }]
 	];
@@ -269,6 +273,41 @@
 		pole.classList.add('editor-pole');
 		zPole();
 		prikaz('defaultParagraphSeparator', 'p');
+
+		// úpravy tabulky: lišta se ukáže, když je kurzor v tabulce
+		var tabLista = document.createElement('div');
+		tabLista.className = 'editor-tabulka-lista';
+		tabLista.hidden = true;
+		var bunka = function () {
+			var uzel = window.getSelection().anchorNode;
+			uzel = uzel && (uzel.nodeType === 1 ? uzel : uzel.parentElement);
+			var b = uzel && uzel.closest('td, th');
+			return b && plocha.contains(b) ? b : null;
+		};
+		[[T('+ řádek'), function (b) {
+			var novy = b.parentNode.cloneNode(true);
+			Array.prototype.forEach.call(novy.children, function (c) { var td = document.createElement('td'); td.innerHTML = '<br>'; c.replaceWith(td); });
+			var telo = b.closest('table').querySelector('tbody') || b.closest('table');
+			if (b.parentNode.parentNode.tagName === 'THEAD') { telo.prepend(novy); } else { b.parentNode.after(novy); }
+		}], [T('+ sloupec'), function (b) {
+			var i = b.cellIndex;
+			Array.prototype.forEach.call(b.closest('table').rows, function (r) { var c = document.createElement(r.cells[i].tagName); c.innerHTML = '<br>'; r.cells[i].after(c); });
+		}], [T('− řádek'), function (b) {
+			var t = b.closest('table');
+			if (t.rows.length > 1) { b.parentNode.remove(); } else { t.remove(); }
+		}], [T('− sloupec'), function (b) {
+			var i = b.cellIndex, t = b.closest('table');
+			if (t.rows[0].cells.length > 1) { Array.prototype.forEach.call(t.rows, function (r) { r.deleteCell(i); }); } else { t.remove(); }
+		}], [T('smazat tabulku'), function (b) { b.closest('table').remove(); }]].forEach(function (a) {
+			var tl = document.createElement('button');
+			tl.type = 'button';
+			tl.textContent = a[0];
+			tl.addEventListener('mousedown', function (e) { e.preventDefault(); });
+			tl.addEventListener('click', function () { var b = bunka(); if (b) { a[1](b); doPole(); tabLista.hidden = !bunka(); } });
+			tabLista.appendChild(tl);
+		});
+		lista.after(tabLista);
+		document.addEventListener('selectionchange', function () { tabLista.hidden = zdroj || !bunka(); });
 
 		plocha.addEventListener('input', doPole);
 		plocha.addEventListener('blur', doPole);

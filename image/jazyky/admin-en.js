@@ -1,5 +1,13 @@
 /* phpRS 3 - překlad textů skriptů administrace (en). Klíčem je český text ze skriptů (funkce T()). */
 window.PHPRS_PREKLAD = {
+	"tabulka": "table",
+	"Vložit tabulku 3 × 3 se záhlavím; řádky a sloupce pak přidáte tlačítky nad tabulkou": "Insert a 3 × 3 table with a header; add rows and columns with the buttons above the table",
+	"+ řádek": "+ row",
+	"+ sloupec": "+ column",
+	"− řádek": "− row",
+	"− sloupec": "− column",
+	"smazat tabulku": "delete table",
+
 	" slov": " words",
 	"Nahrání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.": "Upload failed. Check your connection and try again.",
 	"Odstavec": "Paragraph",

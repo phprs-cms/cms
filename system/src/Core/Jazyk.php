@@ -25,10 +25,14 @@ final class Jazyk
     /** @var array<string, string> */
     private static array $slovnik = [];
 
-    public static function nastav(string $kod): void
+    /** Jazyky, do kterých je přeložená administrace (slovník system/jazyky/admin-<kód>.php). */
+    public const array ADMINISTRACE = ['cs' => 'Čeština', 'sk' => 'Slovenčina', 'en' => 'English'];
+
+    /** @param string $sada "" = texty webu, "admin-" = texty administrace */
+    public static function nastav(string $kod, string $sada = ''): void
     {
         self::$kod = isset(self::DOSTUPNE[$kod]) ? $kod : 'cs';
-        $soubor = PHPRS_SYSTEM . '/jazyky/' . self::$kod . '.php';
+        $soubor = PHPRS_SYSTEM . '/jazyky/' . $sada . self::$kod . '.php';
         self::$slovnik = self::$kod !== 'cs' && is_file($soubor) ? require $soubor : [];
     }
 

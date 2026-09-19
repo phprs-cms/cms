@@ -16,7 +16,7 @@ $css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 $ikona = require __DIR__ . '/ikony.php';
 ?>
 <!doctype html>
-<html lang="cs">
+<html lang="<?= e(PhpRS\Core\Jazyk::kod()) ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,29 +30,29 @@ $ikona = require __DIR__ . '/ikony.php';
 <?php if ($user !== null): ?>
 <header class="hlavicka">
 	<a class="znacka" href="<?= e($app->url('admin.php')) ?>"><span class="znacka-znak">RS</span><span>php<b>RS</b></span></a>
-	<button class="menu-prepinac" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+	<button class="menu-prepinac" type="button" aria-expanded="false" aria-controls="menu"><?= e(t('Menu')) ?></button>
 	<ul class="menu rammodry-vypln" id="menu">
-		<li class="menu-prehled<?= $aktivni === '' ? ' aktivni' : '' ?>"><a href="<?= e($app->url('admin.php')) ?>"><?= $ikona('prehled') ?>Přehled</a></li>
+		<li class="menu-prehled<?= $aktivni === '' ? ' aktivni' : '' ?>"><a href="<?= e($app->url('admin.php')) ?>"><?= $ikona('prehled') ?><?= e(t('Přehled')) ?></a></li>
 <?php $skupina = ''; foreach ($moduly as $ident => $class): ?>
 <?php if ($class::SKUPINA !== $skupina): $skupina = $class::SKUPINA; ?>
-		<li class="menu-skupina" aria-hidden="true"><?= e($skupina) ?></li>
+		<li class="menu-skupina" aria-hidden="true"><?= e(t($skupina)) ?></li>
 <?php endif ?>
-		<li<?= $ident === $aktivni ? ' class="aktivni"' : '' ?>><a href="<?= e($app->url('admin.php?modul=' . $ident)) ?>"<?= $ident === $aktivni ? ' aria-current="page"' : '' ?>><?= $ikona($class::IKONA) ?><?= e($prostredi === 'retro' && $class::NAZEV_RETRO !== '' ? $class::NAZEV_RETRO : $class::NAZEV) ?></a></li>
+		<li<?= $ident === $aktivni ? ' class="aktivni"' : '' ?>><a href="<?= e($app->url('admin.php?modul=' . $ident)) ?>"<?= $ident === $aktivni ? ' aria-current="page"' : '' ?>><?= $ikona($class::IKONA) ?><?= e($prostredi === 'retro' && $class::NAZEV_RETRO !== '' ? $class::NAZEV_RETRO : t($class::NAZEV)) ?></a></li>
 <?php endforeach ?>
-		<li class="menu-web"><a href="<?= e($app->url('')) ?>" target="_blank" rel="noopener"><?= $ikona('web') ?>Zobrazit web</a></li>
-		<li class="menu-logout"><form method="post" action="<?= e($app->url('admin.php?akce=logout')) ?>"><?= $app->session->csrfField() ?><button type="submit"><?= $ikona('odhlasit') ?><?= $prostredi === 'retro' ? 'Logout' : 'Odhlásit se' ?></button></form></li>
+		<li class="menu-web"><a href="<?= e($app->url('')) ?>" target="_blank" rel="noopener"><?= $ikona('web') ?><?= e(t('Zobrazit web')) ?></a></li>
+		<li class="menu-logout"><form method="post" action="<?= e($app->url('admin.php?akce=logout')) ?>"><?= $app->session->csrfField() ?><button type="submit"><?= $ikona('odhlasit') ?><?= $prostredi === 'retro' ? 'Logout' : e(t('Odhlásit se')) ?></button></form></li>
 	</ul>
 </header>
 <div class="loginprouzek">
 	<form class="prepinac-prostredi" method="post" action="<?= e($app->url('admin.php?akce=prostredi' . ($aktivni !== '' ? '&modul=' . rawurlencode($aktivni) : ''))) ?>">
 		<?= $app->session->csrfField() ?>
-		<span>prostředí:</span>
+		<span><?= e(t('prostředí:')) ?></span>
 <?php foreach (PhpRS\Admin\Kernel::PROSTREDI as $klic => $nazev): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
 		<button type="submit" name="prostredi" value="<?= e($klic) ?>"<?= $klic === $prostredi ? ' class="aktivni" aria-pressed="true"' : ' aria-pressed="false"' ?>><?= e($klic) ?></button>
 <?php endforeach ?>
 	</form>
-	<button class="tema-prepinac" type="button" data-tema-prepinac title="Světlý / tmavý režim" aria-label="Přepnout světlý a tmavý režim"><?= $ikona('tema') ?></button>
-	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="Můj účet"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
+	<button class="tema-prepinac" type="button" data-tema-prepinac title="<?= e(t('Světlý / tmavý režim')) ?>" aria-label="<?= e(t('Přepnout světlý a tmavý režim')) ?>"><?= $ikona('tema') ?></button>
+	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
 </div>
 <?php endif ?>
 <main class="obsah">

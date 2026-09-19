@@ -76,6 +76,9 @@ final class Kernel
             \PhpRS\Front\Cache::vymaz(); // každá změna v administraci zneplatní cache stránek webu
         }
         $akce = $request->get('akce');
+        // jazyk administrace: volba uživatele (Můj účet); přihlašovací stránka se řídí jazykem webu
+        $jazyk = (string) ($app->auth()->user()['jazyk'] ?? '') ?: \PhpRS\Core\Jazyk::vychozi($app->settings());
+        \PhpRS\Core\Jazyk::nastav(isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$jazyk]) ? $jazyk : 'cs', 'admin-');
         if ($app->auth()->user() === null) {
             return $this->login();
         }
@@ -159,7 +162,7 @@ final class Kernel
 
         return Response::html($app->view->render('admin/layout', [
             'app' => $app,
-            'nadpis' => $nadpis,
+            'nadpis' => t($nadpis),
             'obsah' => $obsah,
             'moduly' => $app->auth()->user() !== null ? $this->moduly() : [],
             'aktivni' => $app->request->get('modul'),

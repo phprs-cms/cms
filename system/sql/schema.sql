@@ -28,6 +28,7 @@ CREATE TABLE rs_user (
     totp_tajemstvi VARCHAR(64)  NOT NULL DEFAULT '',      -- dvoufázové přihlášení (TOTP); prázdné = vypnuté
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,
+    jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyk administrace; '' = čeština
     PRIMARY KEY (idu),
     UNIQUE KEY uq_user (user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

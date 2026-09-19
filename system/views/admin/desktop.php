@@ -13,12 +13,12 @@
 <?php if ($prostredi === 'retro'): ?>
 <img class="logo" src="<?= e($app->url('image/phprs_logo.svg')) ?>" width="420" height="150" alt="phpRS - redakční a informační systém">
 <p class="verze">verze <?= e(PHPRS_VERSION) ?></p>
-<p class="verze">Retro prostředí je vzpomínka na původní phpRS Jiřího Lukáše (2001–2007). Do současnosti vás vrátí přepínač „2026“ vpravo nahoře.</p>
+<p class="verze"><?= e(t('Retro prostředí je vzpomínka na původní phpRS Jiřího Lukáše (2001–2007). Do současnosti vás vrátí přepínač „2026“ vpravo nahoře.')) ?></p>
 <?php else: ?>
 <div class="prehled-hlavicka">
-	<h2>Přehled</h2>
+	<h2><?= e(t('Přehled')) ?></h2>
 <?php if (isset($moduly['clanky'])): ?>
-	<a class="tl" href="<?= e($app->url('admin.php?modul=clanky&akce=novy')) ?>">Napsat článek</a>
+	<a class="tl" href="<?= e($app->url('admin.php?modul=clanky&akce=novy')) ?>"><?= e(t('Napsat článek')) ?></a>
 <?php endif ?>
 </div>
 <div class="dlazdice">
@@ -27,10 +27,10 @@
 <?php endforeach ?>
 </div>
 <?php if ($posledni !== [] && isset($moduly['clanky'])): ?>
-<h3>Naposledy upravené články</h3>
+<h3><?= e(t('Naposledy upravené články')) ?></h3>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th>Titulek</th><th>Rubrika</th><th>Datum vydání</th><th>Vydán</th><th>Čteno</th></tr></thead>
+<thead><tr><th><?= e(t('Titulek')) ?></th><th><?= e(t('Rubrika')) ?></th><th><?= e(t('Datum vydání')) ?></th><th><?= e(t('Vydán')) ?></th><th><?= e(t('Čteno')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($posledni as $c): ?>
 <tr<?= $c['visible'] ? '' : ' class="nevydany"' ?>>

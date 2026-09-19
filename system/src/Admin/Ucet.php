@@ -33,7 +33,8 @@ final class Ucet
                         $hlaska = ['chyba', 'E-mail nemá platný tvar.'];
                         break;
                     }
-                    $db->update('user', ['jmeno' => mb_substr($r->post('jmeno'), 0, 100), 'email' => mb_substr($r->post('email'), 0, 190), 'url' => mb_substr($r->post('url'), 0, 255)], ['idu' => $user['idu']]);
+                    $db->update('user', ['jmeno' => mb_substr($r->post('jmeno'), 0, 100), 'email' => mb_substr($r->post('email'), 0, 190), 'url' => mb_substr($r->post('url'), 0, 255),
+                        'jazyk' => isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$r->post('jazyk')]) && $r->post('jazyk') !== 'cs' ? $r->post('jazyk') : ''], ['idu' => $user['idu']]);
                     $hlaska = ['ok', 'Údaje byly uloženy.'];
                     break;
                 case 'heslo':

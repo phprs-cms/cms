@@ -10,6 +10,7 @@
  * @var array<int, string> $autori
  * @var array<int, string> $sablony
  * @var bool $smiVydavat
+ * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var array<int, string> $serialy
  * @var string $stitky  štítky oddělené čárkou
  * @var list<string> $vsechnyStitky
@@ -167,6 +168,17 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<label for="seo_popis">Popis pro vyhledávače</label>
 	<div><input class="textpole siroke" type="text" id="seo_popis" name="seo_popis" value="<?= e($clanek['seo_popis']) ?>" maxlength="320" placeholder="prázdné = začátek perexu"></div>
 </div>
+<?php if ($ctenari): ?>
+<div class="radek">
+	<label for="pristup">Kdo smí číst</label>
+	<div><select id="pristup" name="pristup">
+<?php foreach (\PhpRS\Front\Ctenari::PRISTUP as $hodnota => $popis): ?>
+		<option value="<?= $hodnota ?>"<?= (int) $clanek['pristup'] === $hodnota ? ' selected' : '' ?>><?= e($popis) ?></option>
+<?php endforeach ?>
+	</select>
+	<span class="napoveda">Ostatní uvidí perex, začátek textu a výzvu k přihlášení.</span></div>
+</div>
+<?php endif ?>
 <div class="radek">
 	<label for="datum_pl">Stáhnout z hlavní stránky</label>
 	<div><input class="textpole" type="datetime-local" id="datum_pl" name="datum_pl" value="<?= e($dt($clanek['datum_pl'])) ?>">

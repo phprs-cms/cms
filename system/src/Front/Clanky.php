@@ -24,8 +24,11 @@ final class Clanky
 
     private const string VYDANE = 'c.visible = 1 AND c.datum <= NOW()';
 
-    /** @param string $zaklad cesta k instalaci ("" nebo "/magazin") - doplňuje se před adresy obrázků z media/ */
-    public function __construct(private readonly Db $db, private readonly Settings $settings, private readonly string $zaklad = '')
+    /**
+     * @param string $zaklad cesta k instalaci ("" nebo "/magazin") - doplňuje se před adresy obrázků z media/
+     * @param (\Closure(array<string, mixed>): array<string, mixed>)|null $uprava poslední úprava článku před šablonou (zamčený obsah)
+     */
+    public function __construct(private readonly Db $db, private readonly Settings $settings, private readonly string $zaklad = '', private readonly ?\Closure $uprava = null)
     {
     }
 
@@ -52,7 +55,7 @@ final class Clanky
             }
         }
 
-        return $clanek;
+        return $this->uprava === null ? $clanek : ($this->uprava)($clanek);
     }
 
     public function naStranku(): int

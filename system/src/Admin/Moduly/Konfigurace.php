@@ -42,6 +42,7 @@ final class Konfigurace extends Modul
             'nazev_webu' => 'text', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
             'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
+            'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'zamek_text' => 'text',
         ],
         'vzhled' => ['prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [
@@ -187,18 +188,20 @@ final class Konfigurace extends Modul
         }
         $komentare = $this->db->all('SELECT k.idk, k.datum, k.od, k.od_mail, k.od_ip, k.obsah, c.titulek AS clanek FROM {komentare} k JOIN {clanky} c ON c.idc = k.clanek WHERE k.od_mail = ?', [$email]);
         $odber = $this->db->one('SELECT email, prihlasen, potvrzen FROM {odberatele} WHERE email = ?', [$email]);
+        $ucet = $this->db->one('SELECT email, jmeno, vytvoren, naposledy, potvrzen, predplatne_do FROM {ctenari} WHERE email = ?', [$email]);
         if ($this->request->post('gdpr_co') === 'smazat') {
             $clanky = array_unique(array_column($this->db->all('SELECT clanek FROM {komentare} WHERE od_mail = ?', [$email]), 'clanek'));
             $this->db->delete('komentare', ['od_mail' => $email]);
             $this->db->delete('odberatele', ['email' => $email]);
+            $this->db->delete('ctenari', ['email' => $email]);
             foreach ($clanky as $idc) {
                 \PhpRS\Front\Interakce::prepocitej($this->db, (int) $idc);
             }
 
-            return $this->zpet('Smazáno: komentářů ' . count($komentare) . ', odběr newsletteru ' . ($odber !== null ? 'ano' : 'ne') . '.', '', ['zalozka' => 'cookies']);
+            return $this->zpet('Smazáno: komentářů ' . count($komentare) . ', odběr newsletteru ' . ($odber !== null ? 'ano' : 'ne') . ', účet čtenáře ' . ($ucet !== null ? 'ano' : 'ne') . '.', '', ['zalozka' => 'cookies']);
         }
 
-        return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
+        return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber, 'ucet_ctenare' => $ucet], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
             'Content-Type' => 'application/json; charset=utf-8', 'Content-Disposition' => 'attachment; filename="osobni-udaje.json"',
         ]);
     }

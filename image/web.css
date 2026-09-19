@@ -1,0 +1,46 @@
+/* phpRS 3 - společné styly webu pro všechny šablony (fotogalerie, prohlížečka fotek a další prvky článku).
+ * Barvy a písma bere z identity webu (--rs-akcent), šablona je může přebít ve vlastním style.css. */
+
+/* ---------- fotogalerie v článku ---------- */
+figure.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 1.8em 0; }
+figure.galerie img { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3; object-fit: cover; cursor: zoom-in; border-radius: 2px; }
+figure.galerie img:first-child { grid-column: span 2; grid-row: span 2; }
+figure.galerie figcaption { grid-column: 1 / -1; }
+.clanek-text figure:not(.galerie) img { cursor: zoom-in; }
+
+/* ---------- prohlížečka fotek ---------- */
+.rs-prohlizecka { position: fixed; inset: 0; z-index: 9000; grid-template-rows: minmax(0, 1fr) auto; width: 100vw; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(10 10 12 / 0.96); color: #fff; }
+.rs-prohlizecka[open] { display: grid; }
+.rs-prohlizecka::backdrop { background: #000; }
+.rs-prohlizecka img { align-self: center; justify-self: center; max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; }
+.rs-prohlizecka p { margin: 0; padding: 10px 70px 16px; min-height: 22px; text-align: center; font: 14px/1.4 system-ui, sans-serif; color: #d6d6da; }
+.rs-prohlizecka button { position: absolute; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; background: rgb(255 255 255 / 0.12); color: #fff; font: 24px/1 system-ui, sans-serif; cursor: pointer; }
+.rs-prohlizecka button:hover, .rs-prohlizecka button:focus-visible { background: var(--rs-akcent, #1f4fe0); outline: none; }
+.rs-prohlizecka [data-zavrit] { top: 14px; right: 14px; }
+.rs-prohlizecka [data-krok="-1"] { left: 14px; top: 50%; translate: 0 -50%; }
+.rs-prohlizecka [data-krok="1"] { right: 14px; top: 50%; translate: 0 -50%; }
+.rs-prohlizecka [hidden] { display: none; }
+@media (max-width: 600px) { figure.galerie { grid-template-columns: repeat(3, 1fr); } .rs-prohlizecka p { padding: 8px 14px 14px; } }
+
+/* ---------- účet čtenáře a zamčený obsah ---------- */
+.rs-ucet-sloupce { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px; }
+.rs-formular { display: grid; align-content: start; gap: 12px; margin: 0 0 24px; font: 15px/1.4 system-ui, sans-serif; }
+.rs-formular h2 { margin: 0 0 4px; font-size: 20px; }
+.rs-formular label { display: grid; gap: 4px; font-weight: 600; }
+.rs-formular label small { font-weight: 400; opacity: 0.7; }
+.rs-formular input[type=email], .rs-formular input[type=text], .rs-formular input[type=password] { padding: 10px 12px; border: 1px solid rgb(128 128 128 / 0.5); border-radius: 4px; background: #fff; color: #111; font: inherit; font-weight: 400; }
+.rs-formular button, .rs-tl { display: inline-block; justify-self: start; padding: 10px 18px; border: 1px solid var(--rs-akcent, #1f4fe0); border-radius: 4px; background: var(--rs-akcent, #1f4fe0); color: #fff; font: 600 15px/1.2 system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+.rs-formular button.rs-tl-vedlejsi, .rs-tl.rs-tl-vedlejsi { background: transparent; color: inherit; border-color: rgb(128 128 128 / 0.6); }
+.rs-formular details { font-size: 14px; }
+.rs-formular details[open] { display: grid; gap: 10px; }
+.rs-formular summary { cursor: pointer; }
+.rs-drobne { margin: 0; font-size: 13px; opacity: 0.75; }
+.rs-zprava { padding: 12px 14px; border-left: 4px solid #15803d; background: rgb(21 128 61 / 0.1); font: 15px/1.4 system-ui, sans-serif; }
+.rs-zprava-chyba { border-color: #b3261e; background: rgb(179 38 30 / 0.1); }
+.rs-ukazka { position: relative; max-height: 14em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 35%, transparent); mask-image: linear-gradient(#000 35%, transparent); }
+.rs-zamek { margin: 8px 0 32px; padding: 24px; border: 1px solid rgb(128 128 128 / 0.35); border-top: 4px solid var(--rs-akcent, #1f4fe0); border-radius: 4px; text-align: center; font: 16px/1.5 system-ui, sans-serif; }
+.rs-zamek strong { display: block; font-size: 20px; }
+.rs-zamek p { margin: 8px 0 0; }
+.rs-stitek-zamek { display: inline-block; margin-left: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 99px; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; opacity: 0.75; }
+.clanek-text a.rs-tl, .blok a.rs-tl, a.rs-tl { color: #fff; text-decoration: none; }
+.clanek-text a.rs-tl-vedlejsi, .blok a.rs-tl-vedlejsi, a.rs-tl-vedlejsi { color: inherit; }

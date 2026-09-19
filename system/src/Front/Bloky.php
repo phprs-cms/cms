@@ -77,7 +77,7 @@ final class Bloky
 
     private function systemovy(string $zkratka, string $data, string $obsah): string
     {
-        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter'][$zkratka] ?? '';
+        $rozsireni = ['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter', 'cte' => 'ctenari'][$zkratka] ?? '';
         if (!Rozsireni::je($this->app->settings(), $rozsireni)) {
             return '';
         }
@@ -130,6 +130,8 @@ final class Bloky
             'kon' => $web->get('email_webu') === '' && $web->get('text_paticky') === '' ? '' : '<p class="blok-kontakt">' . nl2br(e($web->get('text_paticky')))
                 . ($web->get('email_webu') !== '' ? '<br><a href="mailto:' . e($web->get('email_webu')) . '">' . e($web->get('email_webu')) . '</a>' : '') . '</p>',
             'nws' => (new Newsletter($this->app, $this->view))->formularHtml(),
+            // stránka může být z cache, proto blok nerozlišuje přihlášeného - /ctenar ukáže přihlášení, nebo účet
+            'cte' => '<p class="blok-ctenar"><a class="rs-tl" href="' . e($url('ctenar')) . '">Přihlášení / Můj účet</a></p>',
             default => '',
         };
     }

@@ -10,7 +10,7 @@ use PhpRS\Admin\Moduly\Reklama;
 use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\Rozsireni;
 
-$vypnute = array_keys(array_filter(['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter'], fn (string $r): bool => !Rozsireni::je($app->settings(), $r)));
+$vypnute = array_keys(array_filter(['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter', 'cte' => 'ctenari'], fn (string $r): bool => !Rozsireni::je($app->settings(), $r)));
 $katalog = [];
 foreach (Bloky::KATALOG as $skupina => $typy) {
     foreach ($typy as $typ => [$nazev, $popis, $ikona]) {

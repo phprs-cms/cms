@@ -39,6 +39,9 @@ final class Settings
         'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
+        'ctenari_registrace' => '1',  // čtenáři se mohou sami registrovat (rozšíření Čtenáři)
+        'zamek_odstavcu' => '2',      // kolik odstavců zamčeného článku vidí nepřihlášený jako ukázku
+        'zamek_text' => '',           // vlastní text výzvy pod ukázkou
         'statistika' => '1',          // vlastní měření návštěvnosti bez cookies
         'tajny_klic' => '',           // vznikne sám; podepisuje formuláře čtenářů a solí otisky statistiky
         'aktivni_anketa' => '0',

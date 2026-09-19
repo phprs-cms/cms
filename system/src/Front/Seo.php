@@ -195,6 +195,10 @@ final class Seo
             $h[] = '<script type="application/ld+json">' . json_encode($this->strukturovanaData($titulek, $meta, $clanek), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . '</script>';
         }
         $h[] = Identita::hlava($s, $this->app->request->basePath());
+        // společné prvky článku (fotogalerie, prohlížečka fotek...) pro všechny šablony
+        $verze = rawurlencode(PHPRS_VERSION);
+        $h[] = '<link rel="stylesheet" href="' . e($this->app->url('image/web.css')) . '?v=' . $verze . '">';
+        $h[] = '<script src="' . e($this->app->url('image/web.js')) . '?v=' . $verze . '" defer></script>';
         $h[] = '<style>@media (max-width: 760px) { .jen-pocitac { display: none !important; } } @media (min-width: 761px) { .jen-mobil { display: none !important; } }</style>';
         $h[] = $this->mereni();
         if (trim($s->get('kod_hlava')) !== '') {
@@ -296,6 +300,9 @@ final class Seo
                 'keywords' => implode(', ', array_column($clanek['stitky'] ?? [], 'nazev')) ?: null,
                 'mainEntityOfPage' => $this->web . 'clanek/' . $clanek['seo_link'],
                 'inLanguage' => 'cs',
+                // zamčený obsah: vyhledávače vědí, že nejde o maskování (cloaking)
+                'isAccessibleForFree' => (int) ($clanek['pristup'] ?? 0) > 0 ? 'False' : null,
+                'hasPart' => (int) ($clanek['pristup'] ?? 0) > 0 ? ['@type' => 'WebPageElement', 'isAccessibleForFree' => 'False', 'cssSelector' => '.clanek-text'] : null,
             ]),
             ...($this->faqData($clanek)),
             ['@type' => 'BreadcrumbList', 'itemListElement' => [

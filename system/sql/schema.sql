@@ -146,6 +146,7 @@ CREATE TABLE rs_clanky (
     seo_titulek    VARCHAR(255) NOT NULL DEFAULT '',      -- vlastní <title>, prázdné = titulek článku
     seo_popis      VARCHAR(320) NOT NULL DEFAULT '',      -- vlastní meta description, prázdné = z perexu
     noindex        BOOL NOT NULL DEFAULT 0,
+    pristup        TINYINT UNSIGNED NOT NULL DEFAULT 0,   -- 0 všichni | 1 přihlášení čtenáři | 2 předplatitelé
     shrnuti        TEXT NULL,                             -- blok "Ve zkratce": jeden bod na řádek
     faq            TEXT NULL,                             -- otázky a odpovědi: otázka, pod ní odpověď, prázdný řádek
     povolit_kom    BOOL NOT NULL DEFAULT 1,
@@ -438,4 +439,23 @@ CREATE TABLE rs_newsletter (
     posledni  INT UNSIGNED NOT NULL DEFAULT 0,            -- ido posledního obslouženého odběratele
     pocet     INT UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (idn)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- ---------------------------------------------------------------------------
+-- Čtenáři (rozšíření Čtenáři a uzamčený obsah)
+-- ---------------------------------------------------------------------------
+CREATE TABLE rs_ctenari (
+    idct         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email        VARCHAR(190) NOT NULL,
+    jmeno        VARCHAR(80) NOT NULL DEFAULT '',
+    heslo        VARCHAR(255) NOT NULL,
+    token        CHAR(32) NOT NULL,                       -- potvrzení e-mailu a obnova hesla
+    token_cas    DATETIME NULL,                           -- kdy byl odeslán odkaz pro obnovu hesla (platí 2 hodiny)
+    potvrzen     BOOL NOT NULL DEFAULT 0,
+    predplatne_do DATE NULL,                              -- do kdy má čtenář předplatné; zapisuje administrátor
+    vytvoren     DATETIME NOT NULL,
+    naposledy    DATETIME NULL,
+    PRIMARY KEY (idct),
+    UNIQUE KEY uq_ctenari_email (email),
+    KEY ix_ctenari_token (token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

@@ -29,6 +29,7 @@ final class Kernel
         Moduly\Komentare::class,
         Moduly\Ankety::class,
         Moduly\NewsletterAdmin::class,
+        Moduly\CtenariAdmin::class,
         Moduly\Statistika::class,
         Moduly\Reklama::class,
         Moduly\Vzhled::class,

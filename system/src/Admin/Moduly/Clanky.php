@@ -95,7 +95,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
-            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
         ]);
     }
 
@@ -161,6 +161,7 @@ final class Clanky extends Modul
             'seo_titulek' => mb_substr($r->post('seo_titulek'), 0, 255),
             'seo_popis' => mb_substr($r->post('seo_popis'), 0, 320),
             'noindex' => (int) $r->postBool('noindex'),
+            'pristup' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari') ? min(2, max(0, $r->postInt('pristup'))) : (int) ($puvodni['pristup'] ?? 0),
             'shrnuti' => $r->post('shrnuti'),
             'faq' => $r->post('faq'),
             'zmeneno' => date('Y-m-d H:i:s'),
@@ -316,6 +317,7 @@ final class Clanky extends Modul
             'autori' => $autori,
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
+            'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
             'serialy' => $this->db->pairs('SELECT ids, nazev_skup FROM {skup_cl} ORDER BY nazev_skup'),
             'stitky' => $this->request->isPost() ? $this->request->post('stitky') : implode(', ', array_column(
                 $this->db->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [(int) $clanek['idc']]),

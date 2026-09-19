@@ -21,6 +21,7 @@ $cesty = [
     'reklama' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15l2.2-6 2.3 6M7.8 13h3M14 9v6h1.5a3 3 0 0 0 0-6z"/>',
     'rozsireni' => '<path d="M10 3h4v4h4a1 1 0 0 1 1 1v3h-2a2 2 0 1 0 0 4h2v3a1 1 0 0 1-1 1h-4v-2a2 2 0 1 0-4 0v2H6a1 1 0 0 1-1-1v-4H3v-4h2V8a1 1 0 0 1 1-1h4z"/>',
     'protokol' => '<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
+    'ctenari' => '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/><path d="M17 3.5l1 2 2 .3-1.5 1.4.4 2-1.9-1-1.9 1 .4-2L14 5.800l2-.3z" stroke-width="1.2"/>',
     'newsletter' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
     'identita' => '<circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.2"/><circle cx="12" cy="7.5" r="1.2"/><circle cx="15.5" cy="10" r="1.2"/><path d="M12 21a3 3 0 0 1 0-6h2a2.5 2.5 0 0 0 2.5-2.5"/>',
     'web' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',

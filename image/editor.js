@@ -79,7 +79,9 @@
 
 	var okno = null;
 
-	function vyberObrazek(zpetne) {
+	// vice = true: klepnutím se obrázky označují a vloží se najednou jako fotogalerie
+	function vyberObrazek(zpetne, vice) {
+		var vybrane = [];
 		if (!okno) {
 			okno = document.createElement('dialog');
 			okno.className = 'galerie-okno';
@@ -90,6 +92,7 @@
 				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.</p><div class="galerie-mrizka"></div>';
 			document.body.appendChild(okno);
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
+			okno.querySelector('[data-vlozit]').addEventListener('click', function () { okno.close(); okno.zpetne(okno.vybrane.slice()); });
 			okno.querySelector('select').addEventListener('change', function () { nacti(this.value); });
 			okno.querySelector('input[type=file]').addEventListener('change', function () {
 				nahraj(this.files).then(function (nove) { nove.reverse().forEach(function (o) { pridej(o, true); }); });
@@ -109,7 +112,14 @@
 			b.innerHTML = '<img loading="lazy" alt=""><span></span>';
 			b.firstChild.src = o.nahled;
 			b.lastChild.textContent = o.nazev || 'bez názvu';
-			b.addEventListener('click', function () { okno.close(); okno.zpetne(o); });
+			b.addEventListener('click', function () {
+				if (!okno.vice) { okno.close(); okno.zpetne(o); return; }
+				var i = okno.vybrane.indexOf(o);
+				if (i === -1) { okno.vybrane.push(o); } else { okno.vybrane.splice(i, 1); }
+				b.classList.toggle('vybrana', i === -1);
+				b.setAttribute('aria-pressed', i === -1 ? 'true' : 'false');
+				okno.oznac();
+			});
 			if (nahoru) { mrizka.prepend(b); } else { mrizka.appendChild(b); }
 		}
 		// filtr: "" = vše, "clanek" = obrázky tohoto článku, číslo = složka (0 = nezařazené)
@@ -129,6 +139,18 @@
 			});
 		}
 		okno.zpetne = zpetne;
+		okno.vice = !!vice;
+		okno.vybrane = vybrane;
+		okno.oznac = function () {
+			var tl = okno.querySelector('[data-vlozit]');
+			tl.hidden = !okno.vice;
+			tl.disabled = okno.vybrane.length < 2;
+			tl.textContent = okno.vybrane.length < 2 ? 'Označte aspoň 2 fotky' : 'Vložit galerii (' + okno.vybrane.length + ')';
+		};
+		okno.oznac();
+		okno.querySelector('.napoveda').textContent = vice
+			? 'Klepnutím označte fotky v pořadí, v jakém mají jít za sebou. Soubory sem můžete i přetáhnout.'
+			: 'Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.';
 		okno.showModal();
 		nacti(okno.querySelector('select').value || '');
 	}
@@ -137,6 +159,13 @@
 		var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
 		return '<figure><img src="' + e(o.url) + '" alt="' + e(o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">'
 			+ (o.popis ? '<figcaption>' + e(o.popis) + '</figcaption>' : '') + '</figure><p><br></p>';
+	}
+
+	function htmlGalerie(obrazky) {
+		var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
+		return '<figure class="galerie">' + obrazky.map(function (o) {
+			return '<img src="' + e(o.url) + '" alt="' + e(o.popis || o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">';
+		}).join('') + '</figure><p><br></p>';
 	}
 
 	/* ---------- editor ---------- */
@@ -151,7 +180,8 @@
 		['• seznam', 'Odrážkový seznam', function () { prikaz('insertUnorderedList'); }],
 		['1. seznam', 'Číslovaný seznam', function () { prikaz('insertOrderedList'); }, 'velky'],
 		['„citace“', 'Citace', function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
-		['obrázek', 'Vložit obrázek z galerie', null, 'velky'],
+		['obrázek', 'Vložit obrázek z médií', null, 'velky'],
+		['galerie', 'Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku', 'galerie', 'velky'],
 		['—', 'Oddělovací čára', function () { prikaz('insertHorizontalRule'); }, 'velky'],
 		['Tx', 'Odstranit formátování', function () { prikaz('removeFormat'); prikaz('unlink'); }]
 	];
@@ -190,14 +220,14 @@
 			var slov = (plocha.innerText.trim().match(/\S+/g) || []).length;
 			stav.firstChild.textContent = slov + ' slov' + (maly ? '' : ' · čtení asi ' + Math.max(1, Math.round(slov / 200)) + ' min');
 		}
-		function vlozObrazek() {
+		function vlozObrazek(galerie) {
 			var rozsah = window.getSelection().rangeCount ? window.getSelection().getRangeAt(0).cloneRange() : null;
 			vyberObrazek(function (o) {
 				plocha.focus();
 				if (rozsah && plocha.contains(rozsah.startContainer)) { window.getSelection().removeAllRanges(); window.getSelection().addRange(rozsah); }
-				prikaz('insertHTML', htmlObrazku(o));
+				prikaz('insertHTML', galerie ? htmlGalerie(o) : htmlObrazku(o));
 				doPole();
-			});
+			}, galerie);
 		}
 
 		TLACITKA.forEach(function (t) {
@@ -209,7 +239,7 @@
 			if (t[0] === 'B') { b.style.fontWeight = 'bold'; }
 			if (t[0] === 'I') { b.style.fontStyle = 'italic'; }
 			b.addEventListener('mousedown', function (e) { e.preventDefault(); });
-			b.addEventListener('click', function () { if (zdroj) { return; } plocha.focus(); (t[2] || vlozObrazek)(); doPole(); });
+			b.addEventListener('click', function () { if (zdroj) { return; } plocha.focus(); if (typeof t[2] === 'function') { t[2](); } else { vlozObrazek(t[2] === 'galerie'); } doPole(); });
 			lista.appendChild(b);
 		});
 		var html = document.createElement('button');

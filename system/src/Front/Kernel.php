@@ -27,6 +27,7 @@ final class Kernel
 {
     private readonly View $view;
     private readonly Clanky $clanky;
+    private readonly ?Ctenari $ctenari;
 
     public function __construct(private readonly App $app)
     {
@@ -41,7 +42,8 @@ final class Kernel
         }
         // šablona se hledá nejdřív v layoutu webu, potom mezi systémovými - layout tak může přepsat cokoli
         $this->view = new View([PHPRS_ROOT . '/layout/' . $layout, PHPRS_SYSTEM . '/views/front']);
-        $this->clanky = new Clanky($app->db(), $app->settings(), $app->request->basePath());
+        $this->ctenari = Rozsireni::je($app->settings(), 'ctenari') ? new Ctenari($app) : null;
+        $this->clanky = new Clanky($app->db(), $app->settings(), $app->request->basePath(), $this->ctenari === null ? null : $this->ctenari->zamkni(...));
     }
 
     public function handle(): Response
@@ -112,6 +114,11 @@ final class Kernel
 
                 return $this->stranka($nadpis, $this->view->render('zprava', ['nadpis' => $nadpis, 'text' => $text, 'url' => $this->app->url(...)]), ['noindex' => true]);
             }
+        }
+        if ($this->ctenari !== null && ($path === '/ctenar' || str_starts_with($path, '/ctenar/'))) {
+            $vysledek = $this->ctenari->handle($path, $this->view);
+
+            return $vysledek instanceof Response ? $vysledek : $this->stranka($vysledek[0], $vysledek[1], ['noindex' => true]);
         }
         if (str_starts_with($path, '/api/') && Rozsireni::je($this->app->settings(), 'api')) {
             return (new Api($this->app, $this->clanky))->handle($path);
@@ -241,6 +248,9 @@ final class Kernel
         $casti = new View([PHPRS_SYSTEM . '/views/front']);
         $clanek['shrnuti_html'] = $casti->render('shrnuti', ['body' => array_values(array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: [])))]);
         $clanek['faq_html'] = $casti->render('faq', ['faq' => Seo::faq($clanek['faq'])]);
+        if (!empty($clanek['zamceno'])) {
+            $clanek['text'] .= $this->ctenari->zamekHtml($clanek, $this->view);
+        }
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
         $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem');
         $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);

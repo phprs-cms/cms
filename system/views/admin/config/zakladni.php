@@ -28,6 +28,18 @@ $pole('udrzba', 'Web je dočasně mimo provoz', 'ano', 'Návštěvníci uvidí j
 $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
 ?>
 </details>
+<?php if (PhpRS\Core\Rozsireni::je($app->settings(), 'ctenari')): ?>
+<details class="pokrocile">
+<summary>Čtenáři a zamčený obsah</summary>
+<?php
+$pole('ctenari_registrace', 'Povolit nové registrace', 'ano');
+$pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10" style="width:90px"');
+$pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – například proč se registrovat nebo jak získat předplatné.', 'maxlength="300"');
+?>
+</details>
+<?php else: ?>
+<input type="hidden" name="ctenari_registrace" value="<?= e($hodnoty['ctenari_registrace']) ?>"><input type="hidden" name="zamek_odstavcu" value="<?= e($hodnoty['zamek_odstavcu']) ?>"><input type="hidden" name="zamek_text" value="<?= e($hodnoty['zamek_text']) ?>">
+<?php endif ?>
 <details class="pokrocile">
 <summary>Sociální sítě</summary>
 <?php foreach (PhpRS\Admin\Moduly\Konfigurace::SITE as $klic => $nazev) { $pole($klic, $nazev, 'url', '', 'placeholder="https://"'); } ?>

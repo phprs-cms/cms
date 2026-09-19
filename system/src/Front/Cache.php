@@ -68,7 +68,7 @@ final class Cache
             return null;
         }
         foreach (array_keys($_COOKIE) as $cookie) {
-            if ($cookie === 'phprs3' || str_starts_with((string) $cookie, 'phprs_h') || str_starts_with((string) $cookie, 'phprs_a')) {
+            if ($cookie === 'phprs3' || str_starts_with((string) $cookie, 'phprs_h') || str_starts_with((string) $cookie, 'phprs_a') || str_starts_with((string) $cookie, 'phprs_c')) {
                 return null;
             }
         }

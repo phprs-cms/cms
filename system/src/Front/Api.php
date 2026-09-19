@@ -45,7 +45,7 @@ final class Api
             $c = $this->clanky->podleSeo($m[1]);
 
             return $c === null ? $this->json(['chyba' => 'Článek neexistuje.'], 404) : $this->json($strucne($c) + [
-                'uvod_html' => $c['uvod'], 'text_html' => $c['text'], 'aktualizovano' => $c['aktualizovano'] ? date('c', strtotime($c['aktualizovano'])) : null,
+                'uvod_html' => $c['uvod'], 'text_html' => $c['text'], 'zamceno' => !empty($c['zamceno']), 'aktualizovano' => $c['aktualizovano'] ? date('c', strtotime($c['aktualizovano'])) : null,
                 'stitky' => array_column($this->app->db()->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ?', [$c['idc']]), 'nazev'),
             ]);
         }

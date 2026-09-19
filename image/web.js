@@ -52,6 +52,38 @@
 		otevri(seznam, seznam.indexOf(img));
 	});
 
+	/* ---------- přehrávač cizí služby se vloží až po kliknutí ---------- */
+
+	document.addEventListener('click', function (e) {
+		var tl = e.target.closest && e.target.closest('[data-vlozit]');
+		if (!tl) { return; }
+		var ram = document.createElement('iframe');
+		ram.src = tl.getAttribute('data-vlozit');
+		ram.title = tl.getAttribute('data-titulek') || '';
+		ram.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+		ram.allowFullscreen = true;
+		ram.loading = 'lazy';
+		tl.replaceWith(ram);
+	});
+
+	/* ---------- živá reportáž: nové zápisy se načítají samy ---------- */
+
+	var zive = document.querySelector('[data-zive]');
+	if (zive) {
+		var nacti = function () {
+			if (document.hidden) { return; }
+			var prvni = zive.querySelector('[data-zapis]');
+			fetch(zive.getAttribute('data-zive') + '?od=' + (prvni ? prvni.getAttribute('data-zapis') : 0), { cache: 'no-store' })
+				.then(function (r) { return r.json(); })
+				.then(function (j) {
+					if (j.html) { zive.querySelector('.rs-zive-zapisy').insertAdjacentHTML('afterbegin', j.html); }
+					if (!j.bezi) { clearInterval(casovac); }
+				}).catch(function () { /* další pokus za chvíli */ });
+		};
+		var casovac = setInterval(nacti, 30000);
+		document.addEventListener('visibilitychange', nacti);
+	}
+
 	/* ---------- oznámení o nových článcích (Web Push) ---------- */
 
 	var meta = document.querySelector('meta[name="rs-push"]');

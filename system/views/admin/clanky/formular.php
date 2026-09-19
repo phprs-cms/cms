@@ -136,6 +136,34 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </div>
 </fieldset>
 
+<details class="pokrocile"<?= $clanek['medium_url'] !== '' || (int) $clanek['zive'] > 0 || $clanek['recenze_hodnoceni'] !== null ? ' open' : '' ?>>
+<summary>Podcast, video, živě, recenze</summary>
+<div class="radek pres-celou">
+	<label for="medium_url">Zvuk nebo video</label>
+	<input class="textpole siroke" type="text" id="medium_url" name="medium_url" value="<?= e($clanek['medium_url']) ?>" maxlength="255" placeholder="adresa MP3/MP4, YouTube, Vimeo nebo Spotify">
+	<span class="napoveda">Nad textem článku se zobrazí přehrávač. Epizody se zvukovým souborem najdou podcastové aplikace na adrese <code>/podcast.xml</code>.</span>
+</div>
+<div class="radek pres-celou">
+	<label for="zive">Živá reportáž</label>
+	<select id="zive" name="zive">
+		<option value="0">ne – běžný článek</option>
+		<option value="1"<?= (int) $clanek['zive'] === 1 ? ' selected' : '' ?>>běží – zápisy se čtenářům načítají samy</option>
+		<option value="2"<?= (int) $clanek['zive'] === 2 ? ' selected' : '' ?>>skončila – zápisy zůstávají</option>
+	</select>
+<?php if ($clanek['idc'] && (int) $clanek['zive'] > 0): ?>
+	<a class="tl" href="<?= e($modul->url('zive', ['id' => (int) $clanek['idc']])) ?>">Psát zápisy reportáže</a>
+<?php else: ?>
+	<span class="napoveda">Po uložení se tu objeví tlačítko pro psaní průběžných zápisů.</span>
+<?php endif ?>
+</div>
+<div class="radek pres-celou">
+	<label for="recenze_hodnoceni">Recenze – hodnocení v %</label>
+	<input class="textpole" type="number" id="recenze_hodnoceni" name="recenze_hodnoceni" value="<?= e($clanek['recenze_hodnoceni'] === null ? '' : (string) $clanek['recenze_hodnoceni']) ?>" min="0" max="100" style="width:90px" placeholder="–">
+	<input class="textpole siroke" type="text" name="recenze_predmet" value="<?= e($clanek['recenze_predmet']) ?>" maxlength="160" placeholder="co hodnotíte – název filmu, knihy, výrobku…" aria-label="Co hodnotíte">
+	<span class="napoveda">Vyplněné hodnocení se zobrazí pod textem a předá vyhledávačům.</span>
+</div>
+</details>
+
 <?php if ($jazykyWebu): ?>
 <details class="pokrocile"<?= $original !== '' ? ' open' : '' ?>>
 <summary>Překlad článku</summary>

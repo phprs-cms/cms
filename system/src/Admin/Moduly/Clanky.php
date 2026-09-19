@@ -95,7 +95,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
-            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'preklad_z' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'preklad_z' => null, 'medium_url' => '', 'zive' => 0, 'recenze_predmet' => '', 'recenze_hodnoceni' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
         ]);
     }
 
@@ -161,6 +161,10 @@ final class Clanky extends Modul
             'seo_titulek' => mb_substr($r->post('seo_titulek'), 0, 255),
             'seo_popis' => mb_substr($r->post('seo_popis'), 0, 320),
             'noindex' => (int) $r->postBool('noindex'),
+            'medium_url' => mb_substr(trim($r->post('medium_url')), 0, 255),
+            'zive' => min(2, max(0, $r->postInt('zive'))),
+            'recenze_predmet' => mb_substr($r->post('recenze_predmet'), 0, 160),
+            'recenze_hodnoceni' => $r->post('recenze_hodnoceni') === '' ? null : min(100, max(0, $r->postInt('recenze_hodnoceni'))),
             'pristup' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari') ? min(2, max(0, $r->postInt('pristup'))) : (int) ($puvodni['pristup'] ?? 0),
             'shrnuti' => $r->post('shrnuti'),
             'faq' => $r->post('faq'),
@@ -238,6 +242,32 @@ final class Clanky extends Modul
         }
 
         return Response::json(['ok' => $clanek !== null]);
+    }
+
+    /** Živá reportáž: rychlé psaní průběžných zápisů k článku. */
+    protected function akceZive(): Response
+    {
+        $clanek = $this->nacti($this->request->isPost() ? $this->request->postInt('idc') : $this->request->getInt('id'));
+        if ($clanek === null) {
+            return $this->chyba('Článek neexistuje nebo k němu nemáte přístup.', 404);
+        }
+        if ($this->request->isPost()) {
+            if ($this->request->postInt('smazat') > 0) {
+                $this->db->delete('zive', ['idz' => $this->request->postInt('smazat'), 'idc' => $clanek['idc']]);
+            } elseif ($this->request->post('stav') !== '') {
+                $this->db->update('clanky', ['zive' => $this->request->post('stav') === 'ukoncit' ? 2 : 1, 'zmeneno' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
+            } elseif (trim(strip_tags($this->request->post('text'), '<img><iframe>')) !== '') {
+                $this->db->insert('zive', ['idc' => $clanek['idc'], 'cas' => date('Y-m-d H:i:s'), 'text' => $this->request->post('text'), 'dulezite' => (int) $this->request->postBool('dulezite'), 'autor' => $this->app->auth()->id()]);
+                $this->db->update('clanky', ['zmeneno' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
+            }
+
+            return Response::redirect($this->url('zive', ['id' => (int) $clanek['idc']]));
+        }
+
+        return $this->view('zive', 'Živá reportáž', [
+            'clanek' => $clanek,
+            'zapisy' => $this->db->all("SELECT z.*, IF(u.jmeno = '' OR u.jmeno IS NULL, u.user, u.jmeno) AS autor_jm FROM {zive} z LEFT JOIN {user} u ON u.idu = z.autor WHERE z.idc = ? ORDER BY z.idz DESC", [$clanek['idc']]),
+        ]);
     }
 
     /**

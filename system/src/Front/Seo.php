@@ -72,6 +72,31 @@ final class Seo
         return '<?xml version="1.0" encoding="utf-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n" . implode("\n", $xml) . "\n</urlset>\n";
     }
 
+    /** Podcastový kanál (RSS 2.0 + iTunes): články se zvukovým souborem, pro Apple Podcasts, Spotify a další aplikace. */
+    public function podcastXml(): string
+    {
+        $s = $this->app->settings();
+        $epizody = $this->app->db()->all(
+            "SELECT titulek, seo_link, uvod, datum, medium_url, obrazek FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND pristup = 0 AND jazyk = ?
+             AND (medium_url LIKE '%.mp3' OR medium_url LIKE '%.m4a' OR medium_url LIKE '%.ogg' OR medium_url LIKE '%.oga' OR medium_url LIKE '%.wav' OR medium_url LIKE '%.aac') ORDER BY datum DESC LIMIT 300",
+            [\PhpRS\Core\Jazyk::sloupecWebu()],
+        );
+        $obal = $s->get('og_obrazek') !== '' ? $s->get('og_obrazek') : $s->get('logo_webu');
+        $xml = '<?xml version="1.0" encoding="utf-8"?>' . "\n" . '<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"><channel>'
+            . '<title>' . e($s->get('nazev_webu')) . '</title><link>' . e($this->web) . '</link><description>' . e($s->get('popis_webu') ?: $s->get('nazev_webu')) . '</description>'
+            . '<language>' . \PhpRS\Core\Jazyk::kod() . '</language><itunes:author>' . e($s->get('nazev_webu')) . '</itunes:author><itunes:explicit>false</itunes:explicit>'
+            . ($obal !== '' ? '<itunes:image href="' . e($this->absolutni($obal)) . '"/>' : '') . "\n";
+        foreach ($epizody as $e) {
+            $soubor = preg_match('#^(https?:)?//#i', $e['medium_url']) ? null : PHPRS_ROOT . '/' . ltrim((string) parse_url($e['medium_url'], PHP_URL_PATH), '/');
+            $typ = ['mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4', 'aac' => 'audio/aac', 'wav' => 'audio/wav'][strtolower(pathinfo((string) parse_url($e['medium_url'], PHP_URL_PATH), PATHINFO_EXTENSION))] ?? 'audio/ogg';
+            $xml .= '<item><title>' . e($e['titulek']) . '</title><link>' . e($this->web . 'clanek/' . $e['seo_link']) . '</link><guid isPermaLink="true">' . e($this->web . 'clanek/' . $e['seo_link']) . '</guid>'
+                . '<pubDate>' . date('r', strtotime($e['datum'])) . '</pubDate><description>' . e(trim(strip_tags($e['uvod']))) . '</description>'
+                . '<enclosure url="' . e($this->absolutni($e['medium_url'])) . '" length="' . ($soubor !== null && is_file($soubor) ? filesize($soubor) : 0) . '" type="' . $typ . '"/></item>' . "\n";
+        }
+
+        return $xml . "</channel></rss>\n";
+    }
+
     /** Google News sitemap: články za poslední dva dny. */
     public function sitemapNewsXml(): string
     {
@@ -307,7 +332,7 @@ final class Seo
 
         return ['@context' => 'https://schema.org', '@graph' => [
             array_filter([
-                '@type' => 'NewsArticle',
+                '@type' => (int) ($clanek['zive'] ?? 0) > 0 ? 'LiveBlogPosting' : 'NewsArticle',
                 'headline' => mb_substr($clanek['titulek'], 0, 110),
                 'description' => $meta['popis'] ?? '',
                 'image' => $clanek['obrazek'] !== '' ? [$this->absolutni($clanek['obrazek'])] : null,
@@ -319,10 +344,24 @@ final class Seo
                 'keywords' => implode(', ', array_column($clanek['stitky'] ?? [], 'nazev')) ?: null,
                 'mainEntityOfPage' => $this->web . 'clanek/' . $clanek['seo_link'],
                 'inLanguage' => \PhpRS\Core\Jazyk::kod(),
+                'coverageStartTime' => (int) ($clanek['zive'] ?? 0) > 0 ? date('c', strtotime($clanek['datum'])) : null,
+                'coverageEndTime' => (int) ($clanek['zive'] ?? 0) === 2 ? date('c', strtotime($clanek['zmeneno'] ?? $clanek['datum'])) : null,
+                'liveBlogUpdate' => (int) ($clanek['zive'] ?? 0) > 0 ? array_map(fn (array $z): array => [
+                    '@type' => 'BlogPosting', 'headline' => mb_strimwidth(trim(strip_tags($z['text'])), 0, 110, '…'), 'datePublished' => date('c', strtotime($z['cas'])), 'articleBody' => trim(strip_tags($z['text'])),
+                ], $this->app->db()->all('SELECT cas, text FROM {zive} WHERE idc = ? ORDER BY idz DESC LIMIT 50', [$clanek['idc']])) ?: null : null,
+                'associatedMedia' => ($clanek['medium_url'] ?? '') !== '' ? ['@type' => preg_match('#\.(mp3|m4a|ogg|oga|wav|aac)$|spotify#i', $clanek['medium_url']) ? 'AudioObject' : 'VideoObject', 'name' => $clanek['titulek'],
+                    'description' => $meta['popis'] ?? $clanek['titulek'], 'uploadDate' => date('c', strtotime($clanek['datum'])), 'contentUrl' => $this->absolutni($clanek['medium_url']),
+                    'thumbnailUrl' => $clanek['obrazek'] !== '' ? $this->absolutni($clanek['obrazek']) : null] : null,
                 // zamčený obsah: vyhledávače vědí, že nejde o maskování (cloaking)
                 'isAccessibleForFree' => (int) ($clanek['pristup'] ?? 0) > 0 ? 'False' : null,
                 'hasPart' => (int) ($clanek['pristup'] ?? 0) > 0 ? ['@type' => 'WebPageElement', 'isAccessibleForFree' => 'False', 'cssSelector' => '.clanek-text'] : null,
             ]),
+            ...(($clanek['recenze_hodnoceni'] ?? null) !== null && $clanek['recenze_predmet'] !== '' ? [[
+                '@type' => 'Review', 'itemReviewed' => ['@type' => 'Thing', 'name' => $clanek['recenze_predmet']],
+                'reviewRating' => ['@type' => 'Rating', 'ratingValue' => (int) $clanek['recenze_hodnoceni'], 'bestRating' => 100, 'worstRating' => 0],
+                'author' => $clanek['autor_jm'] !== null ? ['@type' => 'Person', 'name' => $clanek['autor_jm']] : $vydavatel, 'publisher' => $vydavatel,
+                'url' => $this->web . 'clanek/' . $clanek['seo_link'],
+            ]] : []),
             ...($this->faqData($clanek)),
             ['@type' => 'BreadcrumbList', 'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => $s->get('nazev_webu'), 'item' => $this->web],
@@ -366,7 +405,7 @@ final class Seo
             return $adresa;
         }
 
-        return str_starts_with($adresa, '/') ? $this->app->request->origin() . $adresa : $this->web . $adresa;
+        return str_starts_with($adresa, '/') ? $this->app->request->origin() . $adresa : $this->koren . $adresa;
     }
 
     /** Jednoduchý převod HTML článku na Markdown - nadpisy, odstavce, seznamy, odkazy, citace, obrázky. */

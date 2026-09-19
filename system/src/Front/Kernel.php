@@ -96,6 +96,9 @@ final class Kernel
         if ($path === '/sitemap.xml') {
             return new Response($seo->sitemapXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
+        if ($path === '/podcast.xml') {
+            return new Response($seo->podcastXml(), 200, ['Content-Type' => 'application/rss+xml; charset=utf-8']);
+        }
         if ($path === '/sitemap-news.xml') {
             return new Response($seo->sitemapNewsXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
@@ -132,6 +135,15 @@ final class Kernel
             $vysledek = $this->ctenari->handle($path, $this->view);
 
             return $vysledek instanceof Response ? $vysledek : $this->stranka($vysledek[0], $vysledek[1], ['noindex' => true]);
+        }
+        if (preg_match('#^/zive/(\d+)\.json$#', $path, $m)) {
+            // průběžné načítání nových zápisů živé reportáže (image/web.js)
+            $clanek = $this->app->db()->one('SELECT idc, zive, pristup FROM {clanky} WHERE idc = ? AND visible = 1 AND datum <= NOW() AND zive > 0', [(int) $m[1]]);
+            if ($clanek === null || ($this->ctenari !== null && !$this->ctenari->smiCist($clanek))) {
+                return Response::json(['html' => '', 'bezi' => false], 404);
+            }
+
+            return Response::json(['html' => (new TypyObsahu($this->app))->ziveHtml($clanek, max(1, $request->getInt('od'))), 'bezi' => (int) $clanek['zive'] === 1]);
         }
         if (str_starts_with($path, '/push') || $path === '/manifest.webmanifest') {
             $odpoved = $this->push($path);
@@ -316,6 +328,7 @@ final class Kernel
         if (!empty($clanek['zamceno'])) {
             $clanek['text'] .= $this->ctenari->zamekHtml($clanek, $this->view);
         }
+        $clanek = (new TypyObsahu($this->app))->dopln($clanek); // přehrávač, živá reportáž, hodnocení recenze
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
         $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem');
         $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);

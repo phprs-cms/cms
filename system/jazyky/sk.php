@@ -128,4 +128,13 @@ return [
     'středa' => 'streda',
     'čtvrtek' => 'štvrtok',
     'pátek' => 'piatok',
+    'Přehrát' => 'Prehrať',
+    'Přehrát zvuk' => 'Prehrať zvuk',
+    'Přehrát video' => 'Prehrať video',
+    'Obsah se načte ze služby' => 'Obsah sa načíta zo služby',
+    'Živě' => 'Naživo',
+    'stránka se doplňuje sama' => 'stránka sa dopĺňa sama',
+    'Reportáž skončila' => 'Reportáž sa skončila',
+    'Hodnocení' => 'Hodnotenie',
+    'Hodnocení redakce' => 'Hodnotenie redakcie',
 ];

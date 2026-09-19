@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpRS\Front;
+
+use PhpRS\Core\App;
+
+/**
+ * Typy obsahu nad běžným článkem: přehrávač zvuku či videa, živá reportáž a recenze s hodnocením.
+ * Hotové HTML se vkládá do textu článku (přehrávač a reportáž před text, hodnocení za něj), takže
+ * šablony webu o typech obsahu nemusí nic vědět; vzhled je v image/web.css.
+ */
+final class TypyObsahu
+{
+    public function __construct(private readonly App $app)
+    {
+    }
+
+    /**
+     * @param array<string, mixed> $clanek
+     * @return array<string, mixed>
+     */
+    public function dopln(array $clanek): array
+    {
+        if (!empty($clanek['zamceno'])) {
+            return $clanek;
+        }
+        $pred = self::prehravac((string) $clanek['medium_url'], $this->app->request->basePath(), (string) $clanek['titulek']);
+        if ((int) $clanek['zive'] > 0) {
+            $pred .= $this->ziveHtml($clanek);
+        }
+        $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek);
+
+        return $clanek;
+    }
+
+    /** Přehrávač podle adresy: soubor (audio/video), YouTube, Vimeo, Spotify. Cizí přehrávače se načtou až po kliknutí. */
+    public static function prehravac(string $url, string $zaklad, string $titulek): string
+    {
+        if ($url === '') {
+            return '';
+        }
+        $adresa = preg_match('#^(https?:)?/#i', $url) ? $url : $zaklad . '/' . $url;
+        $pripona = strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+        if (in_array($pripona, ['mp3', 'm4a', 'ogg', 'oga', 'wav', 'aac'], true)) {
+            return '<figure class="rs-medium rs-medium-zvuk"><audio controls preload="none" src="' . e($adresa) . '"></audio></figure>';
+        }
+        if (in_array($pripona, ['mp4', 'webm', 'm4v'], true)) {
+            return '<figure class="rs-medium"><video controls preload="metadata" playsinline src="' . e($adresa) . '"></video></figure>';
+        }
+        $vlozit = match (true) {
+            (bool) preg_match('#(?:youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|live/|embed/)|youtu\.be/)([A-Za-z0-9_-]{11})#', $url, $m) => 'https://www.youtube-nocookie.com/embed/' . $m[1] . '?autoplay=1',
+            (bool) preg_match('#vimeo\.com/(?:video/)?(\d+)#', $url, $m) => 'https://player.vimeo.com/video/' . $m[1] . '?autoplay=1&dnt=1',
+            (bool) preg_match('#open\.spotify\.com/(episode|show|track)/([A-Za-z0-9]+)#', $url, $m) => 'https://open.spotify.com/embed/' . $m[1] . '/' . $m[2],
+            default => '',
+        };
+        if ($vlozit === '') {
+            return '<p class="rs-medium-odkaz"><a class="rs-tl" href="' . e($adresa) . '" rel="noopener">▶ ' . e(t('Přehrát')) . '</a></p>';
+        }
+        $zvuk = str_contains($vlozit, 'spotify');
+
+        // přehrávač cizí služby se vloží až po kliknutí: do té doby se k ní nic neposílá (soukromí, rychlost)
+        return '<figure class="rs-medium' . ($zvuk ? ' rs-medium-zvuk' : '') . '"><button type="button" class="rs-medium-spustit" data-vlozit="' . e($vlozit) . '" data-titulek="' . e($titulek) . '">'
+            . '<span aria-hidden="true">▶</span> ' . e(t($zvuk ? 'Přehrát zvuk' : 'Přehrát video')) . '<small>' . e(t('Obsah se načte ze služby')) . ' ' . e((string) parse_url($vlozit, PHP_URL_HOST)) . '</small></button></figure>';
+    }
+
+    /**
+     * Zápisy živé reportáže, nejnovější nahoře.
+     *
+     * @param array<string, mixed> $clanek
+     */
+    public function ziveHtml(array $clanek, int $odId = 0): string
+    {
+        $zapisy = $this->app->db()->all('SELECT * FROM {zive} WHERE idc = ? AND idz > ? ORDER BY cas DESC, idz DESC LIMIT 300', [$clanek['idc'], $odId]);
+        $html = '';
+        foreach ($zapisy as $z) {
+            $html .= '<article class="rs-zapis' . ($z['dulezite'] ? ' rs-zapis-dulezity' : '') . '" data-zapis="' . (int) $z['idz'] . '"><time datetime="' . e(date('c', strtotime($z['cas']))) . '">'
+                . e(date('G:i', strtotime($z['cas']))) . (date('Y-m-d', strtotime($z['cas'])) !== date('Y-m-d') ? ' <small>' . e(datum($z['cas'])) . '</small>' : '') . '</time><div>' . $z['text'] . '</div></article>';
+        }
+        if ($odId > 0) {
+            return $html; // jen nové zápisy pro průběžné načítání
+        }
+        $bezi = (int) $clanek['zive'] === 1;
+
+        return '<section class="rs-zive" aria-label="' . e(t('Živá reportáž')) . '"' . ($bezi ? ' data-zive="' . e($this->app->url('zive/' . (int) $clanek['idc'] . '.json')) . '"' : '') . '>'
+            . '<p class="rs-zive-stav">' . ($bezi ? '<span class="rs-zive-tecka" aria-hidden="true"></span> ' . e(t('Živě')) . ' · ' . e(t('stránka se doplňuje sama')) : e(t('Reportáž skončila'))) . '</p>'
+            . '<div class="rs-zive-zapisy" aria-live="polite">' . $html . '</div></section>';
+    }
+
+    /** @param array<string, mixed> $clanek */
+    public static function recenzeHtml(array $clanek): string
+    {
+        if ($clanek['recenze_hodnoceni'] === null) {
+            return '';
+        }
+        $procent = max(0, min(100, (int) $clanek['recenze_hodnoceni']));
+
+        return '<aside class="rs-recenze" aria-label="' . e(t('Hodnocení')) . '"><div class="rs-recenze-cislo"><strong>' . $procent . '</strong><span>%</span></div><div class="rs-recenze-text">'
+            . '<span>' . e(t('Hodnocení redakce')) . '</span>' . ($clanek['recenze_predmet'] !== '' ? '<strong>' . e($clanek['recenze_predmet']) . '</strong>' : '')
+            . '<div class="rs-recenze-pruh" role="img" aria-label="' . $procent . ' %"><i style="width:' . $procent . '%"></i></div></div></aside>';
+    }
+}

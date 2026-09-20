@@ -23,7 +23,7 @@ $info = function () use ($clanek, $url): string {
 };
 ?>
 <?php if ($rezim === 'cely'): ?>
-<article class="clanek clanek-cely">
+<article class="clanek clanek-cely<?= preg_match('/^[a-z0-9-]+$/', (string) ($clanek['sablona_soubor'] ?? '')) ? ' sablona-' . $clanek['sablona_soubor'] : '' ?>">
 	<header>
 		<?= $info() ?>
 		<h1><?= e($clanek['titulek']) ?></h1>

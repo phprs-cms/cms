@@ -735,4 +735,5 @@ return [
     'neděle' => 'nedeľa',
     'Další články na webu' => 'Ďalšie články na webe',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Tento e-mail dostávate, pretože ste sa prihlásili na odber noviniek z webu %s.',
+    'Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.' => 'Dlhé čítanie: väčšie písmo a výrazný úvodný obrázok. Fotoreportáž: fotky cez celú šírku textu. Rozhovor: tučný odsek je otázka.',
 ];

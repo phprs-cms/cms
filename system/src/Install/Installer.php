@@ -166,6 +166,9 @@ final class Installer
             }
             $db->insert('levely', ['nazev_levelu' => 'Základní', 'hodnota' => 0, 'zakladni' => 1]);
             $sablona = $db->insert('cla_sab', ['nazev_cla_sab' => 'Standardní', 'soubor_cla_sab' => 'standard']);
+            foreach (['dlouhe-cteni' => 'Dlouhé čtení', 'fotoreportaz' => 'Fotoreportáž', 'rozhovor' => 'Rozhovor'] as $soubor => $nazevSablony) {
+                $db->insert('cla_sab', ['nazev_cla_sab' => $nazevSablony, 'soubor_cla_sab' => $soubor]);
+            }
 
             $bloky = [['leva', 'Rubriky', 'rub', 200], ['leva', 'Vyhledávání', 'hle', 100], ['prava', 'Novinky', 'nov', 200], ['prava', 'Nejčtenější články', 'nej', 100]];
             foreach ($bloky as [$zona, $nazev, $sys, $hodnost]) {

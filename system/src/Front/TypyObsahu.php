@@ -28,6 +28,10 @@ final class TypyObsahu
 
             return $clanek;
         }
+        if (($clanek['sablona_soubor'] ?? '') === 'rozhovor') {
+            // šablona Rozhovor: odstavec, který je celý tučně, je otázka
+            $clanek['text'] = preg_replace('#<p>(\s*<(strong|b)>(?:(?!</?(?:strong|b|p)\b).)*</\2>\s*)</p>#is', '<p class="rs-otazka">$1</p>', (string) $clanek['text']) ?? $clanek['text'];
+        }
         $slov = count(preg_split('/\s+/u', trim(strip_tags((string) $clanek['text'])), -1, PREG_SPLIT_NO_EMPTY) ?: []);
         $clanek['text'] = $this->sOsnovou($this->vlozeneAdresy((string) $clanek['text']));
         $pred = self::prehravac((string) $clanek['medium_url'], $this->app->request->basePath(), (string) $clanek['titulek']);
@@ -36,7 +40,8 @@ final class TypyObsahu
         }
         if ($slov >= 400 && $this->app->settings()->bool('doba_cteni')) {
             // od dvou minut čtení výš; 200 slov za minutu je běžné tempo čtení na obrazovce
-            $pred = '<p class="rs-cteni" data-prubeh>' . e(t('Čtení na %s min', (int) round($slov / 200))) . '</p>' . $pred;
+            // div, ne odstavec: šablony dávají prvnímu odstavci textu iniciálu
+            $pred = '<div class="rs-cteni" data-prubeh>' . e(t('Čtení na %s min', (int) round($slov / 200))) . '</div>' . $pred;
         }
         $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->autorHtml($clanek) . $this->sdileniHtml($clanek);
 
@@ -163,7 +168,7 @@ final class TypyObsahu
             return '';
         }
         if ($vlozit === '') {
-            return '<p class="rs-medium-odkaz"><a class="rs-tl" href="' . e($adresa) . '" rel="noopener">▶ ' . e(t('Přehrát')) . '</a></p>';
+            return '<div class="rs-medium-odkaz"><a class="rs-tl" href="' . e($adresa) . '" rel="noopener">▶ ' . e(t('Přehrát')) . '</a></div>';
         }
         $zvuk = str_contains($vlozit, 'spotify');
 

@@ -180,6 +180,9 @@ Hotovo:
 - **Redakční nástroje:** Titulní strana (ruční pořadí článků nahoře na hlavní stránce přetažením), Štítky a témata (přejmenování,
   sloučení, stránka tématu s úvodem a obrázkem), porovnání verzí článku („co se změnilo"), dialog odkazu s hledáním vlastních článků,
   přehled s grafem návštěvnosti za 14 dní a frontou práce.
+- **Newsletter:** automatický výběr nových článků (týdně/denně), naplánované odeslání na pozadí, souhrnná statistika otevření
+  a prokliků bez sledování jednotlivců, šablona s logem a barvou webu.
+- **Šablony článku:** Standardní, Dlouhé čtení, Fotoreportáž, Rozhovor – fungují ve všech třech layoutech.
 - **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
 - **Testy:** `php tools/testy.php` – jednotkové testy jádra bez databáze (součást `tools/test.sh`).
 - **Redakce a provoz:** e-mail redakci o komentářích (nejvýš jednou za 10 minut), adresa pro cron `/ulohy?token=…` (Stav systému),

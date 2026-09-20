@@ -842,4 +842,5 @@ return [
     'neděle' => 'Sunday',
     'Další články na webu' => 'More articles on the site',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'You are receiving this e-mail because you subscribed to news from %s.',
+    'Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.' => 'Long read: larger type and a prominent lead image. Photo story: photos across the full text width. Interview: a bold paragraph is a question.',
 ];

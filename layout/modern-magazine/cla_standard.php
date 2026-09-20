@@ -15,7 +15,7 @@ $podpis = '<p class="podpis">' . ($clanek['autor_jm'] !== null ? '<span>' . e($c
     . '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e(datum($clanek['datum'])) . '</time></p>';
 ?>
 <?php if ($rezim === 'cely'): ?>
-<article class="clanek-cely">
+<article class="clanek-cely<?= preg_match('/^[a-z0-9-]+$/', (string) ($clanek['sablona_soubor'] ?? '')) ? ' sablona-' . $clanek['sablona_soubor'] : '' ?>">
 	<header class="clanek-hlavicka obal-uzky">
 		<?= $rubrika ?>
 		<h1><?= e($clanek['titulek']) ?></h1>

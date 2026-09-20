@@ -14,7 +14,7 @@ $rubrika = '<a class="clanek-rubrika" href="' . e($url('rubrika/' . $clanek['tem
 $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e(datum($clanek['datum'])) . '</time>';
 ?>
 <?php if ($rezim === 'cely'): ?>
-<article class="clanek clanek-cely">
+<article class="clanek clanek-cely<?= preg_match('/^[a-z0-9-]+$/', (string) ($clanek['sablona_soubor'] ?? '')) ? ' sablona-' . $clanek['sablona_soubor'] : '' ?>">
 	<header class="clanek-hlavicka">
 		<?= $rubrika ?>
 		<h1><?= e($clanek['titulek']) ?></h1>

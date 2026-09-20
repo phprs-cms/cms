@@ -99,6 +99,10 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Tmavý režim webu:** šablona má na konci `style.css` blok `@media (prefers-color-scheme: dark) { :root[data-tmavy] { … } }` a `base.php`
   dává `<html data-tmavy>` podle nastavení `tmavy_rezim`. Barvy v šablonách proto piš přes proměnné, ne natvrdo.
 
+- **Šablony článku** (Dlouhé čtení, Fotoreportáž, Rozhovor) jsou varianty: `cla_standard.php` dává `<article>` třídu
+  `sablona-<soubor>` a vzhled je v `image/web.css`. Nová šablona layoutu musí tu třídu vypsat také. Co vkládáš před text článku,
+  nesmí být `<p>` – šablony dávají prvnímu odstavci iniciálu.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

@@ -247,6 +247,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 		<option value="<?= (int) $ids ?>"<?= (int) $clanek['sablona'] === (int) $ids ? ' selected' : '' ?>><?= e($nazev) ?></option>
 <?php endforeach ?>
 	</select>
+	<span class="napoveda"><?= e(t('Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.')) ?></span>
 </div>
 <?php else: ?>
 <input type="hidden" name="sablona" value="<?= (int) (array_key_first($sablony) ?? 0) ?>">

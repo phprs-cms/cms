@@ -1,7 +1,6 @@
 <?php
 /**
  * Rámec administrace: menu, login proužek, nadpis sekce, hlášky, obsah.
- * HTML je pro obě prostředí stejné; vzhled určuje stylesheet (image/admin.css = retro, image/admin-2026.css).
  *
  * @var PhpRS\Core\App $app
  * @var string $nadpis
@@ -10,9 +9,7 @@
  * @var string $aktivni
  * @var array<string, mixed>|null $user
  * @var list<array{typ:string, text:string}> $hlasky
- * @var string $prostredi  retro | 2026
  */
-$css = $prostredi === '2026' ? 'image/admin-2026.css' : 'image/admin.css';
 $ikona = require __DIR__ . '/ikony.php';
 
 // paleta příkazů (Ctrl/⌘+K): jen to, kam přihlášený smí – seznam modulů už je podle práv
@@ -55,10 +52,10 @@ if ($user !== null) {
 <meta name="robots" content="noindex, nofollow">
 <script src="<?= e($app->url('image/tema.js')) ?>?v=<?= e(PHPRS_VERSION) ?>"></script>
 <title><?= $nadpis !== '' ? e($nadpis) . ' - ' : '' ?>phpRS admin rozhraní</title>
-<link rel="stylesheet" href="<?= e($app->url($css)) ?>?v=<?= e(PHPRS_VERSION) ?>">
+<link rel="stylesheet" href="<?= e($app->url('image/admin.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 <link rel="stylesheet" href="<?= e($app->url('image/editor.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>
-<body class="prostredi-<?= e($prostredi) ?>">
+<body>
 <?php if ($user !== null): ?>
 <header class="hlavicka">
 	<a class="znacka" href="<?= e($app->url('admin.php')) ?>"><span class="znacka-znak">RS</span><span>php<b>RS</b></span></a>
@@ -69,20 +66,13 @@ if ($user !== null) {
 <?php if ($class::SKUPINA !== $skupina): $skupina = $class::SKUPINA; ?>
 		<li class="menu-skupina" aria-hidden="true"><?= e(t($skupina)) ?></li>
 <?php endif ?>
-		<li<?= $ident === $aktivni ? ' class="aktivni"' : '' ?>><a href="<?= e($app->url('admin.php?modul=' . $ident)) ?>"<?= $ident === $aktivni ? ' aria-current="page"' : '' ?>><?= $ikona($class::IKONA) ?><?= e($prostredi === 'retro' && $class::NAZEV_RETRO !== '' ? $class::NAZEV_RETRO : t($class::NAZEV)) ?></a></li>
+		<li<?= $ident === $aktivni ? ' class="aktivni"' : '' ?>><a href="<?= e($app->url('admin.php?modul=' . $ident)) ?>"<?= $ident === $aktivni ? ' aria-current="page"' : '' ?>><?= $ikona($class::IKONA) ?><?= e(t($class::NAZEV)) ?></a></li>
 <?php endforeach ?>
 		<li class="menu-web"><a href="<?= e($app->url('')) ?>" target="_blank" rel="noopener"><?= $ikona('web') ?><?= e(t('Zobrazit web')) ?></a></li>
-		<li class="menu-logout"><form method="post" action="<?= e($app->url('admin.php?akce=logout')) ?>"><?= $app->session->csrfField() ?><button type="submit"><?= $ikona('odhlasit') ?><?= $prostredi === 'retro' ? 'Logout' : e(t('Odhlásit se')) ?></button></form></li>
+		<li class="menu-logout"><form method="post" action="<?= e($app->url('admin.php?akce=logout')) ?>"><?= $app->session->csrfField() ?><button type="submit"><?= $ikona('odhlasit') ?><?= e(t('Odhlásit se')) ?></button></form></li>
 	</ul>
 </header>
 <div class="loginprouzek">
-	<form class="prepinac-prostredi" method="post" action="<?= e($app->url('admin.php?akce=prostredi' . ($aktivni !== '' ? '&modul=' . rawurlencode($aktivni) : ''))) ?>">
-		<?= $app->session->csrfField() ?>
-		<span><?= e(t('prostředí:')) ?></span>
-<?php foreach (PhpRS\Admin\Kernel::PROSTREDI as $klic => $nazev): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
-		<button type="submit" name="prostredi" value="<?= e($klic) ?>"<?= $klic === $prostredi ? ' class="aktivni" aria-pressed="true"' : ' aria-pressed="false"' ?>><?= e($klic) ?></button>
-<?php endforeach ?>
-	</form>
 	<button class="paleta-spustit" type="button" data-paleta title="<?= e(t('Rychlé hledání a příkazy')) ?>"><span><?= e(t('Hledat…')) ?></span> <kbd>Ctrl K</kbd></button>
 	<button class="tema-prepinac" type="button" data-tema-prepinac title="<?= e(t('Světlý / tmavý režim')) ?>" aria-label="<?= e(t('Přepnout světlý a tmavý režim')) ?>"><?= $ikona('tema') ?></button>
 	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>

@@ -9,10 +9,6 @@
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e($chyby[$pole]) . '</span>' : '';
 $splneno = !in_array(false, array_column($pozadavky, 'ok'), true);
 $nahledy = require __DIR__ . '/nahledy.php';
-$prostredi = [
-    '2026' => ['phpRS 2026', 'Moderní, minimalistické a responzivní prostředí s postranním menu a přehledem redakce.'],
-    'retro' => ['phpRS retro', 'Pro zábavu a pro pamětníky: vzhled původního phpRS z let 2001–2007 – modré menu, šedá tlačítka, Verdana.'],
-];
 ?>
 <!doctype html>
 <html lang="cs">
@@ -28,7 +24,7 @@ $prostredi = [
 <header class="uvod">
 	<div class="znacka">php<b>RS</b><sup>3</sup></div>
 	<h1>Instalace redakčního systému</h1>
-	<p>Pět krátkých kroků a váš magazín běží. Vše lze později změnit v administraci.</p>
+	<p>Čtyři krátké kroky a váš magazín běží. Vše lze později změnit v administraci.</p>
 </header>
 
 <section class="krok">
@@ -76,22 +72,7 @@ $prostredi = [
 </section>
 
 <section class="krok">
-	<h2><span>4</span> Prostředí administrace</h2>
-	<p>Stejné funkce, dva vzhledy. Každý autor si mezi nimi přepíná jedním kliknutím přímo v administraci.</p>
-	<div class="volby" role="radiogroup" aria-label="Prostředí administrace">
-<?php foreach ($prostredi as $klic => [$nazev, $popis]): $klic = (string) $klic; // klíč '2026' je v PHP int ?>
-		<label class="volba">
-			<input type="radio" name="prostredi" value="<?= e($klic) ?>"<?= $data['prostredi'] === $klic ? ' checked' : '' ?>>
-			<?= $nahledy[$klic] ?>
-			<strong><?= e($nazev) ?></strong>
-			<span><?= e($popis) ?></span>
-		</label>
-<?php endforeach ?>
-	</div>
-</section>
-
-<section class="krok">
-	<h2><span>5</span> Šablona webu</h2>
+	<h2><span>4</span> Šablona webu</h2>
 	<p>Jak uvidí magazín čtenáři.</p>
 	<div class="volby" role="radiogroup" aria-label="Šablona webu">
 <?php foreach ($layouty as $slozka => $l): ?>

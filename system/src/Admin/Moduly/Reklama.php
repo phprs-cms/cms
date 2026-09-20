@@ -16,7 +16,6 @@ final class Reklama extends Modul
 {
     public const string IDENT = 'reklama';
     public const string NAZEV = 'Reklama';
-    public const string NAZEV_RETRO = 'Reklamní systém';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'reklama';
     public const string ROZSIRENI = 'reklama';

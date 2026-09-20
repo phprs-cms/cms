@@ -14,7 +14,6 @@ final class Novinky extends Modul
 {
     public const string IDENT = 'news';
     public const string NAZEV = 'Novinky';
-    public const string NAZEV_RETRO = 'Editace novinek';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'novinky';
     public const string ROZSIRENI = 'novinky';

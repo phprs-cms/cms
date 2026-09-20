@@ -16,7 +16,6 @@ final class Bloky extends Modul
 {
     public const string IDENT = 'bloky';
     public const string NAZEV = 'Bloky a rozvržení';
-    public const string NAZEV_RETRO = 'Úprava bloků';
     public const string SKUPINA = 'Vzhled';
     public const string IKONA = 'bloky';
 

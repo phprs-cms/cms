@@ -1034,4 +1034,7 @@ return [
     'Upozornění chodí na e-mail uvedený výše. Bez e-mailu žádná nechodí.' => 'Notifications go to the e-mail above. Without an e-mail none are sent.',
     'Kde získat předplatné' => 'Where to get a subscription',
     'Stránka webu (např. /predplatne) nebo platební odkaz (https://…). U článků pro předplatitele a v účtu čtenáře se ukáže tlačítko „Získat předplatné“. Bez vyplnění čtenář neví, jak se předplatitelem stát.' => 'A page of the site (e.g. /subscribe) or a payment link (https://…). Subscriber-only articles and the reader account will show a “Get a subscription” button. Without it the reader has no way of knowing how to become a subscriber.',
+    'Přihlášení do administrace' => 'Sign in to the administration',
+    'Ověřit kód' => 'Verify code',
+    'Přihlásit se' => 'Sign in',
 ];

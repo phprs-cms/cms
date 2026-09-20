@@ -5,9 +5,7 @@ Hlásí se k odkazu českého [phpRS](https://phprs.net/) (Jiří Lukáš, 2001�
 přebírá jeho jednoduchost, zaměření na články a rubriky a české názvosloví v databázi.
 
 **Není to nová verze starého phpRS a nejde na ni přejít.** Data ze starého phpRS 2 se nepřevádějí, staré adresy
-se nepřesměrovávají a žádná stará funkce se kvůli kompatibilitě nedrží. Jedinou vzpomínkou je prostředí
-administrace „phpRS retro" – pro zábavu přepínatelný vzhled původního systému (modré menu, šedá tlačítka,
-Verdana) nad úplně stejnými funkcemi, jaké má moderní prostředí „phpRS 2026".
+se nepřesměrovávají a žádná stará funkce se kvůli kompatibilitě nedrží.
 
 Co je uvnitř: PDO a připravené dotazy všude, `password_hash`, CSRF ochrana, InnoDB s cizími klíči, utf8mb4,
 hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné globální proměnné, žádný framework.
@@ -64,13 +62,11 @@ náhled / krátký / celý; `$poradi === 0` je první článek titulní strany),
 jiným názvem. Layout může přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
 Layouty nepoužívají externí písma ani skripty (GDPR, rychlost).
 
-### Prostředí administrace
+### Vzhled administrace
 
-Administrace má dva vzhledy nad **stejným HTML**: `phpRS retro` (`image/admin.css`, podoba phpRS 2.8) a
-`phpRS 2026` (`image/admin-2026.css`, moderní, responzivní, světlý i tmavý režim). Výchozí se volí při
-instalaci a v Konfiguraci, každý autor si přepíná sám v horní liště (`rs_user.prostredi`). Nové šablony
-administrace proto pište jen s existujícími třídami (`.formular .radek`, `table.vypis`, `.tl`,
-`a.navigace`…) a bez vložených barev – pak fungují v obou prostředích.
+Administrace má jeden vzhled (`image/admin.css`): postranní menu, responzivní rozvržení, světlý i tmavý režim.
+Nové šablony administrace pište s existujícími třídami (`.formular .radek`, `table.vypis`, `.tl`,
+`a.navigace`…) a bez vložených barev – pak fungují ve světlém i tmavém režimu.
 
 ## Stav
 

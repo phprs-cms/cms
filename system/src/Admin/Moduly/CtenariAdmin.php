@@ -15,7 +15,6 @@ final class CtenariAdmin extends Modul
 {
     public const string IDENT = 'ctenari';
     public const string NAZEV = 'Čtenáři';
-    public const string NAZEV_RETRO = 'Čtenáři';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'ctenari';
     public const string ROZSIRENI = 'ctenari';

@@ -19,7 +19,6 @@ final class Clanky extends Modul
 {
     public const string IDENT = 'clanky';
     public const string NAZEV = 'Články';
-    public const string NAZEV_RETRO = 'Editace článků';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'clanek';
 

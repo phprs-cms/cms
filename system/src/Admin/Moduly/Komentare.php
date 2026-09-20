@@ -15,7 +15,6 @@ final class Komentare extends Modul
 {
     public const string IDENT = 'comment';
     public const string NAZEV = 'Komentáře';
-    public const string NAZEV_RETRO = 'Komentáře';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'komentare';
     public const string ROZSIRENI = 'komentare';

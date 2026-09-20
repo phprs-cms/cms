@@ -15,7 +15,6 @@ final class Rubriky extends Modul
 {
     public const string IDENT = 'topic';
     public const string NAZEV = 'Rubriky';
-    public const string NAZEV_RETRO = 'Úprava rubrik';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'rubriky';
 

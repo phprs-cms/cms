@@ -1,20 +1,14 @@
 <?php
 /**
  * Úvodní obrazovka administrace.
- * Retro: jako v originále jen menu a logo. 2026: přehled redakce.
+ * Přehled redakce: první kroky, počty, fronta práce, návštěvnost.
  *
  * @var PhpRS\Core\App $app
- * @var string $prostredi
  * @var array<string, class-string<PhpRS\Admin\Modul>> $moduly
- * @var array<string, int> $pocty      jen 2026
- * @var list<array<string, mixed>> $posledni  jen 2026
+ * @var array<string, int> $pocty
+ * @var list<array<string, mixed>> $posledni
  */
 ?>
-<?php if ($prostredi === 'retro'): ?>
-<img class="logo" src="<?= e($app->url('image/phprs_logo.svg')) ?>" width="420" height="150" alt="phpRS - redakční a informační systém">
-<p class="verze">verze <?= e(PHPRS_VERSION) ?></p>
-<p class="verze"><?= e(t('Retro prostředí je vzpomínka na původní phpRS Jiřího Lukáše (2001–2007). Do současnosti vás vrátí přepínač „2026“ vpravo nahoře.')) ?></p>
-<?php else: ?>
 <div class="prehled-hlavicka">
 	<h2><?= e(t('Přehled')) ?></h2>
 <?php if (isset($moduly['clanky'])): ?>
@@ -93,4 +87,3 @@
 </div>
 <?php endif ?>
 <p class="verze">phpRS <?= e(PHPRS_VERSION) ?></p>
-<?php endif ?>

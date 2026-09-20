@@ -32,7 +32,6 @@ final class Settings
         'jazyky_dalsi' => '',         // další jazykové verze na /en/, /de/… (rozšíření Jazykové verze), kódy oddělené čárkou
         'layout' => 'default',
         'rozvrzeni' => 'tri',         // tri | dva | jeden | plna (Úprava bloků)
-        'prostredi_admin' => 'retro', // výchozí vzhled administrace: retro | 2026
         'pocet_clanku' => '7',        // článků na hlavní stránce
         'pocet_novinek' => '3',
         'hlidat_platnost' => '1',     // po datu stažení článek zmizí z hlavní stránky

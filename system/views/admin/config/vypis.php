@@ -7,7 +7,6 @@
  * @var string $zalozka
  * @var array<string, string> $hodnoty
  * @var array<string, array{nazev:string, popis:string, rozvrzeni:string}> $layouty
- * @var array<string, string> $prostredi
  * @var list<array{skupina:string, nazev:string, stav:string, info:string}> $kontroly
  * @var string $adresaWebu
  * @var list<string> $zapnutaRozsireni

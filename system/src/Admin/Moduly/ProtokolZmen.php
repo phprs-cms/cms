@@ -12,7 +12,6 @@ final class ProtokolZmen extends Modul
 {
     public const string IDENT = 'protokol';
     public const string NAZEV = 'Protokol změn';
-    public const string NAZEV_RETRO = 'Protokol změn';
     public const string SKUPINA = 'Správa';
     public const string IKONA = 'protokol';
     public const bool JEN_ADMIN = true;

@@ -36,7 +36,7 @@ final class Installer
         $data = [
             'db_host' => 'localhost', 'db_port' => '3306', 'db_name' => '', 'db_user' => '', 'db_password' => '', 'db_prefix' => 'rs_',
             'nazev_webu' => 'Můj magazín', 'user' => 'admin', 'jmeno' => '', 'email' => '',
-            'prostredi' => '2026', 'layout' => 'default',
+            'layout' => 'default',
         ];
         $chyby = [];
 
@@ -91,9 +91,6 @@ final class Installer
         }
         if ($d['email'] !== '' && filter_var($d['email'], FILTER_VALIDATE_EMAIL) === false) {
             $chyby['email'] = 'E-mail nemá platný tvar.';
-        }
-        if (!in_array($d['prostredi'], ['retro', '2026'], true)) {
-            $d['prostredi'] = 'retro';
         }
         if (!isset(Layouty::seznam()[$d['layout']])) {
             $d['layout'] = 'default';
@@ -156,11 +153,10 @@ final class Installer
                 'email' => $d['email'],
                 'admin' => Auth::ADMIN,
                 'pravo_vydavat' => 1,
-                'prostredi' => $d['prostredi'],
             ]);
 
             \PhpRS\Core\Hledani::dopln($db);
-            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'adresa_webu' => $this->request->origin(), 'email_webu' => $d['email'], 'layout' => $d['layout'], 'rozvrzeni' => Layouty::seznam()[$d['layout']]['rozvrzeni'], 'prostredi_admin' => $d['prostredi'], 'verze_db' => (string) Migrace::posledni()];
+            $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'adresa_webu' => $this->request->origin(), 'email_webu' => $d['email'], 'layout' => $d['layout'], 'rozvrzeni' => Layouty::seznam()[$d['layout']]['rozvrzeni'], 'verze_db' => (string) Migrace::posledni()];
             foreach ($nastaveni as $klic => $hodnota) {
                 $db->insert('config', ['promenna' => $klic, 'hodnota' => $hodnota]);
             }
@@ -170,13 +166,12 @@ final class Installer
                 $db->insert('cla_sab', ['nazev_cla_sab' => $nazevSablony, 'soubor_cla_sab' => $soubor]);
             }
 
-            $bloky = [['leva', 'Rubriky', 'rub', 200], ['leva', 'Vyhledávání', 'hle', 100], ['prava', 'Novinky', 'nov', 200], ['prava', 'Nejčtenější články', 'nej', 100]];
+            $bloky = [['leva', 'Rubriky', 'rub', 200], ['leva', 'Vyhledávání', 'hle', 100], ['prava', 'Nejčtenější články', 'nej', 200]]; // Novinky a Ankety jsou rozšíření, která si web zapne sám
             foreach ($bloky as [$zona, $nazev, $sys, $hodnost]) {
                 $db->insert('bloky', ['nazev' => $nazev, 'obsah' => '', 'sys_funkce' => $sys, 'hodnost' => $hodnost, 'zona' => $zona]);
             }
 
             $rubrika = $db->insert('topic', ['nazev' => 'Aktuality', 'seo_link' => 'aktuality', 'popis' => '']);
-            $db->insert('news', ['titulek' => 'Web běží na phpRS 3', 'informace' => 'Instalace proběhla úspěšně.', 'datum' => date('Y-m-d H:i:s')]);
             $db->insert('clanky', [
                 'seo_link' => 'vitejte-v-phprs-3',
                 'titulek' => 'Vítejte v phpRS 3',

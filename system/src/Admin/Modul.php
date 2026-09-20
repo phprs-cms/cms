@@ -23,9 +23,6 @@ abstract class Modul
     /** Titulek v menu. */
     public const string NAZEV = '';
 
-    /** Titulek v menu retro prostředí - původní název modulu z phpRS 2. */
-    public const string NAZEV_RETRO = '';
-
     /** Skupina v menu: Obsah | Vzhled | Správa. */
     public const string SKUPINA = 'Obsah';
 

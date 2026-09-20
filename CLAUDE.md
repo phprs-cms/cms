@@ -11,16 +11,12 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   starého phpRS: nepřevádějí se data, nepřesměrovávají staré adresy, nedrží se žádný sloupec ani funkce „kvůli
   2.x". Zůstává jednoduchost, zaměření na magazíny, české názvy tabulek/sloupců (`rs_clanky.titulek`…) a
   identifikátory modulů, protože tak už systém je postavený. Ovládání musí být srozumitelné člověku, který
-  phpRS nikdy neviděl. **Retro prostředí je jen vtipná pocta** – skin nad stejným HTML, nic víc; nepřidávej
-  kvůli němu žádné chování. Původní zdroják a screenshoty (`../phprs-original-reference/`) slouží jen jako
-  vizuální předloha retro skinu.
-- **Vzhled prostředí 2026** vychází z referenčního screenshotu uživatele (čistý styl à la Clockhaus):
+  phpRS nikdy neviděl. **Retro prostředí administrace bylo 2026-09-20 na pokyn uživatele celé odstraněno** –
+  nevracej ho, neodkazuj na něj a nepřidávej žádný „skin původního phpRS“.
+- **Vzhled administrace** (jediný, `image/admin.css`) vychází z referenčního screenshotu uživatele (čistý styl à la Clockhaus):
   seskupené menu s čárovými ikonami (`views/admin/ikony.php`), podklad #F7F7F8, bílé karty s jemnou linkou,
-  výrazné nadpisy, avatar a přepínač světlý/tmavý vpravo nahoře. Retro je jen skin téhož HTML a ukazuje
-  původní názvy modulů (`NAZEV_RETRO`).
-- **Dvě prostředí administrace nad jedním HTML** (retro `image/admin.css`, 2026 `image/admin-2026.css`).
-  Každá změna šablon administrace se musí zkontrolovat v obou; nové třídy doplnit do obou stylesheetů.
-  Pozor: klíč pole `'2026'` je v PHP int – při porovnání přetypovat na string.
+  výrazné nadpisy, avatar a přepínač světlý/tmavý vpravo nahoře. Každou změnu šablon administrace zkontroluj ve světlém
+  i tmavém režimu a v šířce telefonu.
 - **Identita webu** (`Front\Identita`, modul `vzhled`): šablony berou hlavní barvu a písma z proměnných `--rs-akcent`,
   `--rs-pismo-titulky`, `--rs-pismo-text` s vlastní výchozí hodnotou (`--akcent: var(--rs-akcent, #326891)`). Nová šablona
   je musí použít také. Žádná externí písma – jen sady v `Identita::PISMA_*`.

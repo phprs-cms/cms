@@ -1034,4 +1034,7 @@ return [
     'Upozornění chodí na e-mail uvedený výše. Bez e-mailu žádná nechodí.' => 'Benachrichtigungen gehen an die oben angegebene E-Mail-Adresse. Ohne E-Mail-Adresse werden keine verschickt.',
     'Kde získat předplatné' => 'Wo man ein Abonnement bekommt',
     'Stránka webu (např. /predplatne) nebo platební odkaz (https://…). U článků pro předplatitele a v účtu čtenáře se ukáže tlačítko „Získat předplatné“. Bez vyplnění čtenář neví, jak se předplatitelem stát.' => 'Eine Seite der Website (z. B. /abo) oder ein Zahlungslink (https://…). Bei Artikeln für Abonnenten und im Leserkonto erscheint die Schaltfläche „Abonnement abschließen“. Ohne diese Angabe erfährt der Leser nicht, wie er Abonnent wird.',
+    'Přihlášení do administrace' => 'Anmeldung zur Administration',
+    'Ověřit kód' => 'Code prüfen',
+    'Přihlásit se' => 'Anmelden',
 ];

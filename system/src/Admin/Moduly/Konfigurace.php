@@ -21,13 +21,12 @@ final class Konfigurace extends Modul
 {
     public const string IDENT = 'config';
     public const string NAZEV = 'Nastavení';
-    public const string NAZEV_RETRO = 'Konfigurace';
     public const string SKUPINA = 'Správa';
     public const string IKONA = 'nastaveni';
     public const bool JEN_ADMIN = true;
 
     public const array ZALOZKY = [
-        'zakladni' => 'Základní', 'vzhled' => 'Administrace', 'seo' => 'SEO a GEO',
+        'zakladni' => 'Základní', 'seo' => 'SEO a GEO',
         'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'posta' => 'Pošta', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
@@ -45,7 +44,6 @@ final class Konfigurace extends Modul
             'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',
             'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'paywall_zdarma' => 'cislo:0:50', 'zamek_text' => 'text', 'predplatne_url' => 'text',
         ],
-        'vzhled' => ['prostredi_admin' => 'vyber:retro|2026'],
         'seo' => [
             'indexovani' => 'ano', 'schema_org' => 'ano', 'og_obrazek' => 'text', 'overeni_google' => 'vzor:/^[A-Za-z0-9_-]{0,100}$/',
             'overeni_bing' => 'vzor:/^[A-Za-z0-9]{0,64}$/', 'robots_extra' => 'radky', 'ai_crawlery' => 'vyber:povolit|zakazat', 'llms_txt' => 'ano', 'markdown_clanky' => 'ano', 'indexnow' => 'ano',
@@ -79,7 +77,6 @@ final class Konfigurace extends Modul
             'zalozka' => $zalozka,
             'hodnoty' => $hodnoty + ['layout' => $nastaveni->get('layout')],
             'layouty' => Layouty::seznam(),
-            'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
             'vzdalenaStav' => $nastaveni->get('zaloha_vzdalena_stav'),
             'ulohyToken' => $nastaveni->get('ulohy_token'),

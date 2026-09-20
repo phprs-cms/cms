@@ -14,7 +14,6 @@ final class Ankety extends Modul
 {
     public const string IDENT = 'ankety';
     public const string NAZEV = 'Ankety';
-    public const string NAZEV_RETRO = 'Editace anket';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'ankety';
     public const string ROZSIRENI = 'ankety';

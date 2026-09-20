@@ -14,9 +14,9 @@ final class Rozsireni
 {
     /** klíč => [název, popis, zapnuto ve výchozím stavu] */
     public const array SEZNAM = [
-        'novinky' => ['Novinky', 'Krátké zprávy redakce v bloku Novinky.', true],
+        'novinky' => ['Novinky', 'Krátké zprávy redakce v bloku Novinky.', false],
         'komentare' => ['Komentáře a hodnocení', 'Diskuse pod články s moderací a antispamem, hodnocení článků hvězdičkami.', true],
-        'ankety' => ['Ankety', 'Anketa v bloku na webu, jeden hlas na čtenáře.', true],
+        'ankety' => ['Ankety', 'Anketa v bloku na webu, jeden hlas na čtenáře.', false],
         'statistika' => ['Statistika', 'Vlastní měření návštěvnosti bez cookies.', true],
         'presmerovani' => ['Přesměrování', 'Správa přesměrování 301 ze starých adres.', true],
         'newsletter' => ['Newsletter', 'Přihlášení k odběru s potvrzením e-mailem a rozesílka výběru článků odběratelům.', false],

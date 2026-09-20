@@ -15,7 +15,6 @@ final class Stranky extends Modul
 {
     public const string IDENT = 'stranky';
     public const string NAZEV = 'Stránky';
-    public const string NAZEV_RETRO = 'Stránky';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'stranky';
 

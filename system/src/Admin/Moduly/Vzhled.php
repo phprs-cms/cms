@@ -16,7 +16,6 @@ final class Vzhled extends Modul
 {
     public const string IDENT = 'vzhled';
     public const string NAZEV = 'Identita webu';
-    public const string NAZEV_RETRO = 'Identita webu';
     public const string SKUPINA = 'Vzhled';
     public const string IKONA = 'identita';
     public const bool JEN_ADMIN = true;

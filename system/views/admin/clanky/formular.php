@@ -1,6 +1,6 @@
 <?php
 /**
- * Editor článku: vlevo text, vpravo nastavení (v retro prostředí pod sebou).
+ * Editor článku: vlevo text, vpravo nastavení (na úzké obrazovce pod sebou).
  *
  * @var PhpRS\Admin\Moduly\Clanky $modul
  * @var string $csrf

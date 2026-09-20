@@ -89,6 +89,9 @@ Vizuální editor bloků a editor článku byly prověřeny dříve (včetně op
 - **2 – HOTOVO:** e-mail těm, kdo smějí vydávat (a nejsou omezeni na jinou rubriku), když článek přejde na „Ke korektuře“; e-mail autorovi
   při vydání a při vrácení do konceptu, v jazyce jeho administrace. Vypíná se v Můj účet (sloupec `rs_user.upozorneni`, migrace 0037).
 - **4 – HOTOVO:** volby titulní strany vidí a ukládá jen ten, kdo smí vydávat (vynuceno i na serveru).
+- **9 – HOTOVO 2026-09-20 (rozhodnutí uživatele):** Novinky a Ankety jsou u nových instalací vypnuté a zapínají se v Rozšíření; instalátor už nezakládá
+  ukázkovou novinku ani blok Novinky. Stávající weby na výchozí sadě si ji migrací 0039 zapíší výslovně, nic jim nezmizí.
+- **Retro prostředí administrace odstraněno** (rozhodnutí uživatele 2026-09-20): jeden vzhled, instalace má čtyři kroky místo pěti.
 - **5 – HOTOVO zčásti:** výběr autora se skryje, když není z čeho vybírat; poznámka pro redakci jen ve vícečlenné redakci;
   dlaždice „Komentáře ke schválení“ jen s přístupem ke komentářům. Seriál zůstal na místě.
 

@@ -41,25 +41,8 @@ final class Kernel
         Moduly\Konfigurace::class,
     ];
 
-    /**
-     * Vzhledy administrace: stejné HTML, jiný stylesheet (image/admin.css a image/admin-2026.css).
-     * Retro je pocta původnímu phpRS (Jiří Lukáš, 2001-2007), jehož vývoj skončil - žádnou starou funkci nenese.
-     */
-    public const array PROSTREDI = ['retro' => 'phpRS retro', '2026' => 'phpRS 2026'];
-
     public function __construct(public readonly App $app)
     {
-    }
-
-    /** Prostředí přihlášeného uživatele; když si žádné nezvolil (a na přihlašovací stránce), platí výchozí z Konfigurace. */
-    public function prostredi(): string
-    {
-        $volba = (string) ($this->app->auth()->user()['prostredi'] ?? '');
-        if (!isset(self::PROSTREDI[$volba])) {
-            $volba = $this->app->settings()->get('prostredi_admin');
-        }
-
-        return isset(self::PROSTREDI[$volba]) ? $volba : 'retro';
     }
 
     public function handle(): Response
@@ -110,13 +93,6 @@ final class Kernel
         $ident = $request->get('modul');
         if ($akce === 'ucet') {
             return (new Ucet($this))->handle();
-        }
-        if ($akce === 'prostredi' && $request->isPost()) {
-            if (isset(self::PROSTREDI[$request->post('prostredi')])) {
-                $app->db()->update('user', ['prostredi' => $request->post('prostredi')], ['idu' => $app->auth()->id()]);
-            }
-
-            return Response::redirect($app->url('admin.php' . (preg_match('/^[a-z]+$/', $ident) ? '?modul=' . $ident : '')));
         }
         if ($akce === 'pruvodce_skryt' && $request->isPost() && $app->auth()->isAdmin()) {
             $app->settings()->set('pruvodce_skryt', '1');
@@ -181,21 +157,17 @@ final class Kernel
             'aktivni' => $app->request->get('modul'),
             'user' => $app->auth()->user(),
             'hlasky' => $app->session->takeFlashes(),
-            'prostredi' => $this->prostredi(),
         ]), $status);
     }
 
     /**
-     * Data úvodní obrazovky. Retro ukazuje jen logo jako originál, prostředí 2026 přehled redakce.
+     * Data úvodní obrazovky: přehled redakce.
      *
      * @return array<string, mixed>
      */
     private function desktop(): array
     {
-        $data = ['app' => $this->app, 'prostredi' => $this->prostredi(), 'moduly' => $this->moduly()];
-        if ($data['prostredi'] === 'retro') {
-            return $data;
-        }
+        $data = ['app' => $this->app, 'moduly' => $this->moduly()];
         $db = $this->app->db();
         $jen = $this->app->auth()->articleScope();      // pro dotazy bez aliasu
         $jenC = $this->app->auth()->articleScope('c.');  // pro dotazy s aliasem c
@@ -276,7 +248,6 @@ final class Kernel
             'chyba' => $chyba,
             'login' => $app->request->post('user'),
             'kod' => $app->auth()->cekaNaKod(),
-            'prostredi' => $this->prostredi(),
         ]), $chyba === null ? 200 : 401);
     }
 }

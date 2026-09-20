@@ -16,7 +16,6 @@ final class Autori extends Modul
 {
     public const string IDENT = 'users';
     public const string NAZEV = 'Uživatelé';
-    public const string NAZEV_RETRO = 'Editace autorů';
     public const string SKUPINA = 'Správa';
     public const string IKONA = 'uzivatele';
     public const bool JEN_ADMIN = true;

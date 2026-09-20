@@ -15,7 +15,6 @@ final class Stitky extends Modul
 {
     public const string IDENT = 'stitky';
     public const string NAZEV = 'Štítky a témata';
-    public const string NAZEV_RETRO = 'Štítky';
     public const string SKUPINA = 'Obsah';
     public const string IKONA = 'stitky';
 

@@ -16,7 +16,6 @@ final class Presmerovani extends Modul
 {
     public const string IDENT = 'presmerovani';
     public const string NAZEV = 'Přesměrování';
-    public const string NAZEV_RETRO = 'Přesměrování';
     public const string SKUPINA = 'Správa';
     public const string IKONA = 'presmerovani';
     public const string ROZSIRENI = 'presmerovani';

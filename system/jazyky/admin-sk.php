@@ -916,4 +916,7 @@ return [
     'Upozornění chodí na e-mail uvedený výše. Bez e-mailu žádná nechodí.' => 'Upozornenia chodia na e-mail uvedený vyššie. Bez e-mailu žiadne nechodia.',
     'Kde získat předplatné' => 'Kde získať predplatné',
     'Stránka webu (např. /predplatne) nebo platební odkaz (https://…). U článků pro předplatitele a v účtu čtenáře se ukáže tlačítko „Získat předplatné“. Bez vyplnění čtenář neví, jak se předplatitelem stát.' => 'Stránka webu (napr. /predplatne) alebo platobný odkaz (https://…). Pri článkoch pre predplatiteľov a v účte čitateľa sa ukáže tlačidlo „Získať predplatné“. Bez vyplnenia čitateľ nevie, ako sa stať predplatiteľom.',
+    'Přihlášení do administrace' => 'Prihlásenie do administrácie',
+    'Ověřit kód' => 'Overiť kód',
+    'Přihlásit se' => 'Prihlásiť sa',
 ];

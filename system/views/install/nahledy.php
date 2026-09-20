@@ -7,23 +7,15 @@
 $svg = fn (string $obsah): string => '<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' . $obsah . '</svg>';
 
 return [
-    'retro' => $svg(
+    'minimal' => $svg(
         '<rect width="240" height="150" fill="#fff"/>'
-        . '<rect x="50" y="8" width="140" height="26" fill="#AAD5FF" stroke="#0000FF" stroke-width="2"/>'
-        . '<g fill="#0000FF"><rect x="58" y="14" width="18" height="3"/><rect x="82" y="14" width="18" height="3"/><rect x="106" y="14" width="18" height="3"/><rect x="130" y="14" width="18" height="3"/><rect x="154" y="14" width="18" height="3"/><rect x="58" y="24" width="18" height="3"/><rect x="82" y="24" width="18" height="3"/><rect x="106" y="24" width="18" height="3"/></g>'
-        . '<rect y="40" width="240" height="8" fill="#AAD5FF"/><rect y="48" width="240" height="2" fill="#0000FF"/>'
-        . '<text x="120" y="98" text-anchor="middle" font-family="Verdana,Arial" font-size="30" font-weight="bold" font-style="italic" fill="#1F4FE0">phpRS</text>'
-        . '<rect x="70" y="108" width="100" height="12" rx="6" fill="#D7EBFF" stroke="#0000FF"/>'
-    ),
-    '2026' => $svg(
-        '<rect width="240" height="150" fill="#F6F7F9"/>'
-        . '<rect width="58" height="150" fill="#fff"/><rect x="58" width="1" height="150" fill="#E4E7EC"/>'
-        . '<rect x="8" y="9" width="26" height="6" rx="2" fill="#1F4FE0"/>'
-        . '<rect x="6" y="28" width="46" height="10" rx="3" fill="#EEF2FF"/><g fill="#CDD2DB"><rect x="10" y="46" width="34" height="4" rx="2"/><rect x="10" y="58" width="38" height="4" rx="2"/><rect x="10" y="70" width="30" height="4" rx="2"/><rect x="10" y="82" width="36" height="4" rx="2"/></g>'
-        . '<rect x="59" width="181" height="22" fill="#fff"/><rect x="59" y="22" width="181" height="1" fill="#E4E7EC"/><rect x="190" y="7" width="40" height="8" rx="4" fill="#F0F2F5"/>'
-        . '<rect x="72" y="34" width="50" height="7" rx="2" fill="#14171F"/><rect x="192" y="32" width="36" height="11" rx="3" fill="#1F4FE0"/>'
-        . '<g fill="#fff" stroke="#E4E7EC"><rect x="72" y="52" width="46" height="28" rx="4"/><rect x="126" y="52" width="46" height="28" rx="4"/><rect x="180" y="52" width="46" height="28" rx="4"/><rect x="72" y="90" width="154" height="48" rx="4"/></g>'
-        . '<g fill="#E4E7EC"><rect x="80" y="102" width="138" height="1"/><rect x="80" y="114" width="138" height="1"/><rect x="80" y="126" width="138" height="1"/></g>'
+        . '<rect x="92" y="14" width="56" height="8" rx="1" fill="#1B1B1F"/><rect x="100" y="27" width="40" height="3" fill="#C9CAD1"/>'
+        . '<rect x="70" y="38" width="100" height="1" fill="#E6E6EA"/>'
+        . '<rect x="70" y="48" width="18" height="3" fill="#2F5BEA"/><rect x="70" y="55" width="100" height="7" rx="1" fill="#1B1B1F"/><rect x="70" y="66" width="86" height="3" fill="#C9CAD1"/>'
+        . '<rect x="70" y="76" width="100" height="1" fill="#E6E6EA"/>'
+        . '<rect x="70" y="84" width="14" height="3" fill="#2F5BEA"/><rect x="70" y="91" width="72" height="6" rx="1" fill="#1B1B1F"/><rect x="70" y="101" width="66" height="3" fill="#C9CAD1"/><rect x="148" y="84" width="22" height="18" rx="2" fill="#DADCE3"/>'
+        . '<rect x="70" y="112" width="100" height="1" fill="#E6E6EA"/>'
+        . '<rect x="70" y="120" width="16" height="3" fill="#2F5BEA"/><rect x="70" y="127" width="80" height="6" rx="1" fill="#1B1B1F"/>'
     ),
     'default' => $svg(
         '<rect width="240" height="150" fill="#fff"/>'

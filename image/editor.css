@@ -1,5 +1,5 @@
 /* phpRS 3.0 - editor článků, galerie a nahrávání.
- * Společné pro obě prostředí; barvy a zaoblení bere z proměnných --ed-*, které definuje admin.css / admin-2026.css.
+ * Barvy a zaoblení bere z proměnných --ed-*, které definuje image/admin.css.
  */
 
 .editor { border: 1px solid var(--ed-linka); border-radius: var(--ed-radius); background: var(--ed-plocha); }

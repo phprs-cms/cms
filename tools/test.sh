@@ -38,7 +38,7 @@ php "$KOREN/tools/testy.php" || CHYB=$((CHYB+1))
 echo "== instalace"
 HESLO="Test-$(date +%s)-heslo"
 curl -s -o "$PRACE/odpoved" -X POST "$B/install.php" --data-urlencode "db_host=$DB_HOST" -d "db_port=$DB_PORT" -d "db_name=$DB_NAME" -d "db_user=$DB_USER" --data-urlencode "db_password=$DB_PASS" -d db_prefix=rs_ \
-  --data-urlencode "nazev_webu=Testovací magazín" -d user=admin -d jmeno=Tester -d email= --data-urlencode "password=$HESLO" --data-urlencode "password2=$HESLO" -d prostredi=2026 -d layout=classic-newspaper
+  --data-urlencode "nazev_webu=Testovací magazín" -d user=admin -d jmeno=Tester -d email= --data-urlencode "password=$HESLO" --data-urlencode "password2=$HESLO" -d layout=classic-newspaper
 grep -q "Hotovo, magazín běží" "$PRACE/odpoved" || { echo "  CHYBA  instalace selhala"; sed 's/<[^>]*>//g' "$PRACE/odpoved" | grep -v '^\s*$' | head -20; exit 1; }
 echo "  ok     instalace"
 

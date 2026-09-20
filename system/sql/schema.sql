@@ -25,7 +25,6 @@ CREATE TABLE rs_user (
     blokovat       BOOL NOT NULL DEFAULT 0,
     pocet_chyb     SMALLINT UNSIGNED NOT NULL DEFAULT 0,  -- neúspěšná přihlášení v řadě
     zamceno_do     DATETIME NULL,                         -- dočasný zámek po 10 chybných přihlášeních
-    prostredi      VARCHAR(10)  NOT NULL DEFAULT '',      -- vzhled administrace: retro | 2026; prázdné = výchozí z konfigurace
     totp_tajemstvi VARCHAR(64)  NOT NULL DEFAULT '',      -- dvoufázové přihlášení (TOTP); prázdné = vypnuté
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,

@@ -15,7 +15,6 @@ final class NewsletterAdmin extends Modul
 {
     public const string IDENT = 'newsletter';
     public const string NAZEV = 'Newsletter';
-    public const string NAZEV_RETRO = 'Poštovní centrum';
     public const string SKUPINA = 'Čtenáři';
     public const string IKONA = 'newsletter';
     public const string ROZSIRENI = 'newsletter';

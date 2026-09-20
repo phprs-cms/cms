@@ -86,7 +86,9 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 44, 45, 46, 47, 48, 49.
+Hotovo: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49.
+
+K bodu 42: místo rozmazaného náhledu (stovky bajtů v HTML na každý obrázek) dostává obrázek převládající barvu jako podklad a rozměry `width`/`height` – obojí doplňuje `Front\ObrazkyHtml` do hotového HTML, takže to platí ve všech šablonách. Skutečný rozmazaný náhled by šel přidat stejnou cestou.
 
 K bodu 34: novinky a ankety mají pole Jazyková verze; odběratel newsletteru nese jazyk webu, na kterém se přihlásil, a vydání (ruční i automatické) jde jen odběratelům svého jazyka – jazyk ručního vydání se odvodí z vybraných článků. Štítky jsou společné, ale výpisy i blok počítají jen články dané verze. E-mail se skládá v jazyce vydání (`Jazyk::docasne()`).
 

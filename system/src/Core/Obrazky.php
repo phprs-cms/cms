@@ -155,6 +155,27 @@ final class Obrazky
      *
      * @param string $cesta cesta od kořene webu bez úvodního lomítka (media/2026/09/foto.jpg)
      */
+    /** Převládající barva obrázku jako #rrggbb (průměr přes celou plochu); null, když soubor nejde načíst. */
+    public static function barva(string $soubor): ?string
+    {
+        $typ = is_file($soubor) ? @getimagesize($soubor) : false;
+        $obr = match ($typ[2] ?? 0) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($soubor),
+            IMAGETYPE_PNG => @imagecreatefrompng($soubor),
+            IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($soubor) : false,
+            default => false,
+        };
+        if ($obr === false) {
+            return null;
+        }
+        $bod = imagecreatetruecolor(1, 1);
+        imagefill($bod, 0, 0, imagecolorallocate($bod, 255, 255, 255)); // průhledné PNG na bílém podkladu
+        imagecopyresampled($bod, $obr, 0, 0, 0, 0, 1, 1, imagesx($obr), imagesy($obr));
+        $rgb = imagecolorat($bod, 0, 0);
+
+        return sprintf('#%02x%02x%02x', ($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, $rgb & 0xFF);
+    }
+
     public static function srcset(string $cesta, string $zaklad): string
     {
         if (!preg_match('#^(media/\d{4}/\d{2}/[a-z0-9-]+?)(-1200|-nahled)?\.(jpg|png|webp)$#', $cesta, $m)) {

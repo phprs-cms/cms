@@ -237,9 +237,11 @@ CREATE TABLE rs_imggal_obr (
     nahl_poloha VARCHAR(255) NOT NULL DEFAULT '',
     nahl_width  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
     nahl_height SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    barva       CHAR(7) NOT NULL DEFAULT '',               -- převládající barva (#rrggbb) jako podklad před načtením; '' = nespočítáno, '-' = nejde zjistit
     datum       DATETIME NOT NULL,
     PRIMARY KEY (ido),
     KEY ix_imggal_datum (datum),
+    KEY ix_imggal_poloha (obr_poloha),
     KEY ix_imggal_sekce (sekce),
     CONSTRAINT fk_imggal_sekce FOREIGN KEY (sekce) REFERENCES rs_imggal_sekce (ids) ON DELETE SET NULL,
     CONSTRAINT fk_imggal_vlastnik FOREIGN KEY (vlastnik) REFERENCES rs_user (idu) ON DELETE SET NULL

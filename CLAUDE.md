@@ -113,6 +113,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **E-mail čtenáři se skládá v jazyce příjemce, ne toho, kdo ho spustil:** obal vykreslení do `Jazyk::docasne($kod, fn)` (viz `Rozesilka::posli()`);
   texty e-mailů patří do slovníků webu (`en/sk/de.php`), ne administrace. Sloupec `jazyk` mají i novinky, ankety, odběratelé a vydání newsletteru.
 
+- **Rozměry a barvu podkladu obrázků** doplňuje `Front\ObrazkyHtml::dopln()` do hotového HTML stránky (podle `rs_imggal_obr`); šablony je psát nemusí.
+  V CSS šablon proto u obrázků s pevnou výškou počítej s atributem `height` – `image/web.css` má `:where(img[width][height]) { height: auto }` s nulovou vahou.
+
 - **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
   v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.
 

@@ -611,6 +611,7 @@ final class Kernel
             'url' => $this->app->url(...),
             'kanonicka' => $this->app->request->origin() . $this->app->url(ltrim($this->app->request->path(), '/')),
         ]);
+        $html = ObrazkyHtml::dopln($this->app->db(), $html); // rozměry a barva podkladu obrázků – méně poskakování stránky
         // zamčený článek s měkkým paywallem se liší podle čtenáře (počítadlo v cookie) - do společné cache nepatří
         $mereny = $clanek !== null && (int) ($clanek['pristup'] ?? 0) > 0 && $web->int('paywall_zdarma') > 0;
         if ($status === 200 && empty($meta['noindex']) && $this->app->request->get('nahled') === '' && !$mereny) {

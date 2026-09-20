@@ -152,6 +152,7 @@ Hotovo:
 - **Vložení ze sítí adresou:** adresa příspěvku (X, Instagram, Facebook, TikTok, Mastodon) nebo videa na samostatném řádku se na webu promění ve vložený rámec, který se načte až po kliknutí čtenáře.
 - **Jazykové verze do hloubky:** vlastní jazyk mají i novinky, ankety a newsletter – odběratel dostává vydání v jazyce verze webu, na které se přihlásil, a e-mail je celý v tomto jazyce.
 - **Paleta příkazů:** Ctrl/⌘+K v administraci – skok do sekce, rychlé akce (nový článek, nastavení pošty…) a hledání článku k úpravě, bez diakritiky.
+- **Méně poskakování stránky:** obrázky z Médií dostávají na webu samy rozměry a převládající barvu jako podklad, než se načtou.
   a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající

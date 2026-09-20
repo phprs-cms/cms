@@ -210,6 +210,17 @@ try {
 }
 over('Jazyk::docasne: jazyk se vrátí i po výjimce', PhpRS\Core\Jazyk::kod(), 'cs');
 
+/* ---------- převládající barva obrázku ---------- */
+if (function_exists('imagecreatetruecolor')) {
+    $docasny = tempnam(sys_get_temp_dir(), 'rs') . '.png';
+    $platno = imagecreatetruecolor(40, 20);
+    imagefill($platno, 0, 0, imagecolorallocate($platno, 200, 30, 60));
+    imagepng($platno, $docasny);
+    over('Obrazky::barva: jednobarevný obrázek', PhpRS\Core\Obrazky::barva($docasny), '#c81e3c');
+    unlink($docasny);
+    over('Obrazky::barva: chybějící soubor', PhpRS\Core\Obrazky::barva($docasny), null);
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

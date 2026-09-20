@@ -72,7 +72,7 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   všech šablonách včetně cizích. `Front\TypyObsahu` vkládá hotové HTML přímo do textu článku; layouty se kvůli nim nemění.
 - **Texty šablon webu jdou přes `t('Česky')`** (`Core\Jazyk`, slovníky `system/jazyky/<kód>.php`, klíčem je český text). Nový text
   v layoutu nebo `views/front/` = obalit `t()` + doplnit do slovníků en/sk/de. Administrace má vlastní slovníky `admin-<kód>.php`
-  (přeložené jen hlavní obrazovky). Hodnoty formulářů (`value` skrytých polí a tlačítek s `name`) se NIKDY nepřekládají.
+  (čeština, slovenština, angličtina, němčina – nový text doplň do všech tří slovníků). Hodnoty formulářů (`value` skrytých polí a tlačítek s `name`) se NIKDY nepřekládají.
 - **Jazykové verze:** sloupec `jazyk` ('' = výchozí jazyk webu) mají rubriky, stránky a články (článek ho přebírá z rubriky při uložení);
   `Jazyk::sloupecWebu()` je hodnota pro dotazy webu. `App::url()` přidává předponu `/en/` jen adresám bez přípony – soubory, `api/`,
   `mcp`, `push/` jsou společné. Každý nový dotaz na webu, který vypisuje obsah, musí filtrovat podle jazyka.
@@ -122,6 +122,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 
 - **Vizuální editor bloků mluví jazykem administrace přihlášeného**, ne jazykem zobrazené verze webu: texty ve `vizual.js` obaluj `T()`
   (slovník `image/jazyky/admin-<kód>.js`), texty posílané z PHP překládá `$ta()` ve `views/front/vizual.php` ze slovníku `admin-<kód>.php`.
+
+- **Administrace má Content-Security-Policy `script-src 'self'`** (posílá ji `admin.php` spolu s `no-store` a HSTS): žádné inline `<script>` ani `onclick=`/`onchange=`
+  v šablonách administrace – chování patří do `image/admin.js` přes `data-` atributy (`data-odeslat-pri-zmene`, `data-ukaz-heslo`, `data-auto-odeslat`…). Hlídá `tools/testy.php`.
 
 - **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
   v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.

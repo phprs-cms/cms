@@ -36,7 +36,7 @@
 		<form method="post" action="<?= e($modul->url('predplatne')) ?>" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
 			<?= $csrf ?><input type="hidden" name="idct" value="<?= (int) $c['idct'] ?>">
 			<span class="stitek stitek-<?= $plati ? 'vydano' : 'koncept' ?>"><?= $plati ? 'do ' . e(datum($c['predplatne_do'])) : ($c['predplatne_do'] !== null ? 'skončilo' : 'nemá') ?></span>
-			<select name="volba" aria-label="<?= e(t('Změna předplatného')) ?>" onchange="this.form.submit()">
+			<select name="volba" aria-label="<?= e(t('Změna předplatného')) ?>" data-odeslat-pri-zmene>
 				<option value=""><?= e(t('změnit…')) ?></option>
 				<option value="1"><?= e(t('+ 1 měsíc')) ?></option>
 				<option value="3"><?= e(t('+ 3 měsíce')) ?></option>

@@ -154,6 +154,8 @@ Hotovo:
 - **Jazykové verze do hloubky:** vlastní jazyk mají i novinky, ankety a newsletter – odběratel dostává vydání v jazyce verze webu, na které se přihlásil, a e-mail je celý v tomto jazyce.
 - **Paleta příkazů:** Ctrl/⌘+K v administraci – skok do sekce, rychlé akce (nový článek, nastavení pošty…) a hledání článku k úpravě, bez diakritiky.
 - **Méně poskakování stránky:** obrázky z Médií dostávají na webu samy rozměry a převládající barvu jako podklad, než se načtou.
+- **Administrace česky, slovensky, anglicky a německy** (volba v Můj účet), včetně vizuálního editoru bloků.
+- **Zabezpečení administrace:** Content-Security-Policy bez inline skriptů, zákaz ukládání do mezipaměti, HSTS na HTTPS; chybné pokusy se počítají i na účet (heslo, kód 2FA, účet čtenáře).
   a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající

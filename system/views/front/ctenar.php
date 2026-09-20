@@ -24,6 +24,7 @@ $zpravy = [
     'ulozeno' => ['ok', 'Uloženo.'],
     'smazano' => ['ok', 'Váš účet i všechny údaje o něm jsme smazali.'],
     'spatne' => ['chyba', 'E-mail nebo heslo nesouhlasí.'],
+    'zamceno' => ['chyba', 'Příliš mnoho chybných pokusů. Zkuste to znovu za 15 minut, nebo si nechte poslat přihlašovací odkaz e-mailem.'],
     'udaje' => ['chyba', 'Zadejte platný e-mail.'],
     'heslo-chyba' => ['chyba', 'Stávající heslo nesouhlasí, nebo je nové kratší než 8 znaků.'],
     'pomalu' => ['chyba', 'Formulář se nepodařilo ověřit. Počkejte pár vteřin a zkuste to znovu.'],

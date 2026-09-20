@@ -895,4 +895,8 @@ return [
     'Hlavička (široký pruh, např. 970×210)' => 'Hlavička (široký pruh, napr. 970×210)',
     'Pod článkem (zobrazuje se automaticky)' => 'Pod článkom (zobrazuje sa automaticky)',
     'Patička (široký pruh)' => 'Pätička (široký pruh)',
+    'Celkový počet článků:' => 'Celkový počet článkov:',
+    'připnuto' => 'pripnuté',
+    'vydáno' => 'vydané',
+    'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti' => 'systém odosiela X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrácia navyše Content-Security-Policy a zákaz ukladania do medzipamäte',
 ];

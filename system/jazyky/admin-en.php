@@ -1010,4 +1010,11 @@ return [
     'Hlavička (široký pruh, např. 970×210)' => 'Header (wide strip, e.g. 970×210)',
     'Pod článkem (zobrazuje se automaticky)' => 'Below the article (shown automatically)',
     'Patička (široký pruh)' => 'Footer (wide strip)',
+    'Vydané' => 'Published',
+    'Schválené' => 'Approved',
+    'Celkový počet článků:' => 'Total number of articles:',
+    'připnuto' => 'pinned',
+    'koncept' => 'draft',
+    'vydáno' => 'published',
+    'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti' => 'the system sends X-Content-Type-Options, Referrer-Policy and X-Frame-Options; the administration also sends a Content-Security-Policy and forbids caching',
 ];

@@ -194,4 +194,5 @@ return [
     'Odhlásit odběr' => 'Unsubscribe',
     'Číst článek →' => 'Read article →',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'You are receiving this e-mail because you subscribed to news from %s.',
+    'Příliš mnoho chybných pokusů. Zkuste to znovu za 15 minut, nebo si nechte poslat přihlašovací odkaz e-mailem.' => 'Too many failed attempts. Try again in 15 minutes, or have a sign-in link sent to your e-mail.',
 ];

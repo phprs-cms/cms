@@ -53,7 +53,7 @@ if ($user !== null) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<script>try { var t = localStorage.getItem('phprs3-tema'); if (t) { document.documentElement.setAttribute('data-tema', t); } } catch (e) {}</script>
+<script src="<?= e($app->url('image/tema.js')) ?>?v=<?= e(PHPRS_VERSION) ?>"></script>
 <title><?= $nadpis !== '' ? e($nadpis) . ' - ' : '' ?>phpRS admin rozhraní</title>
 <link rel="stylesheet" href="<?= e($app->url($css)) ?>?v=<?= e(PHPRS_VERSION) ?>">
 <link rel="stylesheet" href="<?= e($app->url('image/editor.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">

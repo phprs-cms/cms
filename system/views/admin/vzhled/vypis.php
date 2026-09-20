@@ -94,7 +94,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 <div class="identita-ukazka" data-ukazka>
 	<span class="identita-ukazka-rubrika"><?= e(t('Kultura')) ?></span>
 	<h3><?= e($hodnoty['nazev_webu']) ?>: titulek článku vypadá takto</h3>
-	<p><?= e(t('Takhle bude vypadat běžný text článku. Obsahuje i')) ?> <a href="#" onclick="return false"><?= e(t('odkaz v hlavní barvě')) ?></a> <?= e(t('a dost slov na to, abyste posoudili čitelnost zvoleného písma.')) ?></p>
+	<p><?= e(t('Takhle bude vypadat běžný text článku. Obsahuje i')) ?> <a href="#" data-neklikat><?= e(t('odkaz v hlavní barvě')) ?></a> <?= e(t('a dost slov na to, abyste posoudili čitelnost zvoleného písma.')) ?></p>
 	<span class="identita-ukazka-tlacitko"><?= e(t('Tlačítko')) ?></span>
 </div>
 <p class="napoveda"><?= e(t('Ukázka je orientační – skutečný výsledek uvidíte po uložení na webu.')) ?></p>

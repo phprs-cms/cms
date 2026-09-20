@@ -245,6 +245,16 @@ foreach ($kdeVznika as $skript => $slozky) {
     over($skript . ': každý hledaný data-atribut někde vzniká', $chybi, []);
 }
 
+/* ---------- administrace má Content-Security-Policy bez 'unsafe-inline': žádné inline skripty ani obsluhy událostí ---------- */
+$inline = [];
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PHPRS_ROOT . '/system/views/admin', FilesystemIterator::SKIP_DOTS)) as $soubor) {
+    $zdroj = (string) file_get_contents($soubor->getPathname());
+    if (preg_match('#<script(?![^>]*\bsrc=)(?![^>]*type="application/json")[^>]*>|\son(?:click|change|input|submit|load|error|key\w+|mouse\w+)="#i', $zdroj)) {
+        $inline[] = substr($soubor->getPathname(), strlen(PHPRS_ROOT) + 1);
+    }
+}
+over('šablony administrace neobsahují inline skripty (CSP)', $inline, []);
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

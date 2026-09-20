@@ -159,7 +159,10 @@ final class Kernel
         if ($this->ctenari !== null && ($path === '/ctenar' || str_starts_with($path, '/ctenar/'))) {
             $vysledek = $this->ctenari->handle($path, $this->view);
 
-            return $vysledek instanceof Response ? $vysledek : $this->stranka($vysledek[0], $vysledek[1], ['noindex' => true]);
+            $odpoved = $vysledek instanceof Response ? $vysledek : $this->stranka($vysledek[0], $vysledek[1], ['noindex' => true]);
+
+            // účet čtenáře (e-mail, předplatné, odkazy s tokenem) nepatří do mezipaměti prohlížeče ani proxy
+            return new Response($odpoved->body, $odpoved->status, $odpoved->headers + ['Cache-Control' => 'no-store, private']);
         }
         if (preg_match('#^/zive/(\d+)\.json$#', $path, $m)) {
             // průběžné načítání nových zápisů živé reportáže (image/web.js)

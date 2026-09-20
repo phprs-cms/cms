@@ -193,4 +193,5 @@ return [
     'Odhlásit odběr' => 'Newsletter abbestellen',
     'Číst článek →' => 'Artikel lesen →',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Sie erhalten diese E-Mail, weil Sie den Newsletter von %s abonniert haben.',
+    'Příliš mnoho chybných pokusů. Zkuste to znovu za 15 minut, nebo si nechte poslat přihlašovací odkaz e-mailem.' => 'Zu viele Fehlversuche. Versuchen Sie es in 15 Minuten erneut oder lassen Sie sich einen Anmeldelink per E-Mail schicken.',
 ];

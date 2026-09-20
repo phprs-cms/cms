@@ -13,9 +13,9 @@
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na newsletter')) ?></a></p>
 <?php else: ?>
 <p class="hlaska">Rozesílám „<?= e($vydani['predmet']) ?>“: odesláno <?= (int) $vydani['pocet'] ?>, zbývá <?= $zbyva ?>. Nechte stránku otevřenou.</p>
-<form method="post" action="<?= e($modul->url('rozeslat', ['id' => $vydani['idn']])) ?>" id="davka">
+<form method="post" action="<?= e($modul->url('rozeslat', ['id' => $vydani['idn']])) ?>" id="davka" data-auto-odeslat="1200">
 	<?= $csrf ?>
 	<p><button class="tl" type="submit"><?= e(t('Pokračovat')) ?></button></p>
 </form>
-<script>setTimeout(function () { document.getElementById('davka').submit(); }, 1200);</script>
+
 <?php endif ?>

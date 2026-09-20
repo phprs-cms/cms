@@ -108,12 +108,25 @@ final class Auth
             return 'Příliš mnoho pokusů. Zkuste to znovu za 15 minut.';
         }
         $user = $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [(int) $this->session->get('idu_ceka')['idu']]);
+        if ($user !== null && $user['zamceno_do'] !== null && strtotime($user['zamceno_do']) > time()) {
+            $this->session->remove('idu_ceka');
+
+            return 'Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.';
+        }
         $zalozni = $user === null ? null : Totp::pouzijZalozni($user['totp_zalozni'], $kod);
         if ($user === null || (!Totp::over($user['totp_tajemstvi'], $kod) && $zalozni === null)) {
             $this->db->insert('kontrola_ip', ['ip_adresa' => Antispam::otisk($ip), 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+            if ($user !== null) {
+                // chybné kódy se počítají na účet, ne jen na IP adresu: kdo zná heslo, nesmí kódy zkoušet z mnoha adres
+                $chyb = (int) $user['pocet_chyb'] + 1;
+                $this->db->update('user', $chyb >= self::MAX_CHYB
+                    ? ['pocet_chyb' => 0, 'zamceno_do' => date('Y-m-d H:i:s', time() + 900)]
+                    : ['pocet_chyb' => $chyb], ['idu' => $user['idu']]);
+            }
 
             return 'Kód není správný.';
         }
+        $this->db->update('user', ['pocet_chyb' => 0], ['idu' => $user['idu']]);
         if ($zalozni !== null) {
             $this->db->update('user', ['totp_zalozni' => $zalozni], ['idu' => $user['idu']]);
         }

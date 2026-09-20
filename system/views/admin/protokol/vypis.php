@@ -13,7 +13,7 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 ?>
 <form method="get" action="<?= e($app->url('admin.php')) ?>" class="stred smltxt">
 	<input type="hidden" name="modul" value="protokol">
-	<label><?= e(t('Uživatel:')) ?> <select name="kdo" onchange="this.form.submit()"><option value="0"><?= e(t('všichni')) ?></option>
+	<label><?= e(t('Uživatel:')) ?> <select name="kdo" data-odeslat-pri-zmene><option value="0"><?= e(t('všichni')) ?></option>
 <?php foreach ($uzivatele as $idu => $jmeno): ?>
 		<option value="<?= (int) $idu ?>"<?= $kdo === (int) $idu ? ' selected' : '' ?>><?= e($jmeno) ?></option>
 <?php endforeach ?>

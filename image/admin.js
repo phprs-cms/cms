@@ -243,6 +243,23 @@
 			if (zmeneno) { e.preventDefault(); e.returnValue = ''; }
 		});
 	});
+	/* ---------- drobné obsluhy místo inline skriptů (administrace má Content-Security-Policy bez 'unsafe-inline') ---------- */
+
+	document.addEventListener('change', function (e) {
+		var prvek = e.target;
+		if (prvek.hasAttribute && prvek.hasAttribute('data-odeslat-pri-zmene') && prvek.form) { prvek.form.submit(); }
+		if (prvek.hasAttribute && prvek.hasAttribute('data-ukaz-heslo')) {
+			var heslo = document.getElementById(prvek.getAttribute('data-ukaz-heslo'));
+			if (heslo) { heslo.type = prvek.checked ? 'text' : 'password'; }
+		}
+	});
+	document.addEventListener('click', function (e) {
+		if (e.target.closest && e.target.closest('[data-neklikat]')) { e.preventDefault(); }
+	});
+	// rozesílka newsletteru po dávkách: formulář se odešle sám
+	var autoOdeslat = document.querySelector('form[data-auto-odeslat]');
+	if (autoOdeslat) { setTimeout(function () { autoOdeslat.submit(); }, parseInt(autoOdeslat.getAttribute('data-auto-odeslat'), 10) || 1200); }
+
 	/* ---------- paleta příkazů: Ctrl/⌘+K – sekce, rychlé akce a hledání článku ---------- */
 
 	var paleta = document.getElementById('paleta');

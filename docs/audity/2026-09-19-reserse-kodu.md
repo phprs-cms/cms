@@ -18,8 +18,8 @@ Prověřeno a v pořádku: podpisy cookie čtenáře a paywallu, ochrana návrat
 
 ## Bezpečnost – zbývá (doporučení)
 
-- CSP pro `admin.php`, HSTS na HTTPS, `Cache-Control: no-store` pro administraci a `/ctenar`.
-- Limit chybných pokusů i na účet čtenáře a na krok TOTP (dnes jen na IP).
+- ✔ HOTOVO 2026-09-20: CSP pro `admin.php` (bez `'unsafe-inline'` u skriptů – inline skripty a obsluhy událostí přesunuty do souborů, hlídá `tools/testy.php`), HSTS na HTTPS, `Cache-Control: no-store` pro administraci a `/ctenar`.
+- ✔ HOTOVO 2026-09-20: limit chybných pokusů i na účet – krok TOTP počítá chyby do `pocet_chyb` a zamyká účet na 15 minut; přihlášení čtenáře má limit 10 chybných hesel za 15 minut na e-mail (i neexistující, aby hláška neprozradila registrované adresy). Obojí ověřeno naživo.
 - Po změně hesla administrátora obnovit session a nabídnout zrušení tokenů MCP (tokeny nemají platnost a obcházejí 2FA).
 - Pravidla pro nginx (tam `.htaccess` neplatí): zakázat `/system`, `/storage`, `/tools`, `config.php`. Instalátor podmínit jednorázovým souborem.
 - `X-Forwarded-Proto` důvěřovat jen s volbou v `config.php`. GIF při nahrání překódovat po snímcích. Zámek kolem automatické aktualizace.

@@ -39,7 +39,7 @@ $role = [
 <div class="radek">
 	<label for="password"><?= $autor['idu'] ? 'Nové heslo' : 'Heslo' ?></label>
 	<div><input class="textpole" type="password" id="password" name="password" size="30" minlength="10" autocomplete="new-password"<?= $autor['idu'] ? '' : ' required' ?>>
-	<label style="font-weight:normal"><input type="checkbox" onchange="document.getElementById('password').type = this.checked ? 'text' : 'password'"> <?= e(t('zobrazit')) ?></label><?= $chyba('password') ?>
+	<label style="font-weight:normal"><input type="checkbox" data-ukaz-heslo="password"> <?= e(t('zobrazit')) ?></label><?= $chyba('password') ?>
 	<span class="napoveda">Alespoň 10 znaků.<?= $autor['idu'] ? ' Nechte prázdné, pokud heslo neměníte.' : ' Uživatel si ho pak změní v nabídce Můj účet.' ?></span></div>
 </div>
 

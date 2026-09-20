@@ -51,7 +51,7 @@ final class Stav
         $pridej('Bezpečnost', 'Instalátor', !is_file(PHPRS_ROOT . '/install.php') ? 'ok' : 'varovani', is_file(PHPRS_ROOT . '/install.php') ? 'soubor install.php je stále na serveru - smažte ho' : 'install.php je odstraněn');
         $pridej('Bezpečnost', 'HTTPS', $app->request->isHttps() ? 'ok' : 'varovani', $app->request->isHttps() ? 'web běží na šifrovaném spojení' : 'web neběží na HTTPS - přihlašovací údaje putují nešifrovaně');
         $pridej('Bezpečnost', 'Ladicí režim', !$app->debug(), $app->debug() ? 'v config.php je debug = true; na ostrém webu vypněte' : 'vypnutý');
-        $pridej('Bezpečnost', 'Bezpečnostní hlavičky', 'ok', 'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options');
+        $pridej('Bezpečnost', 'Bezpečnostní hlavičky', 'ok', 'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti');
         $bez2fa = (int) $db->value("SELECT COUNT(*) FROM {user} WHERE admin = 2 AND blokovat = 0 AND totp_tajemstvi = ''");
         $pridej('Bezpečnost', 'Dvoufázové přihlášení administrátorů', $bez2fa === 0 ? 'ok' : 'varovani', $bez2fa === 0 ? 'mají ho všichni administrátoři' : "{$bez2fa} administrátor(ů) ho nemá - zapíná se v nabídce Můj účet (avatar vpravo nahoře)");
         $slabi = (int) $db->value('SELECT COUNT(*) FROM {user} WHERE blokovat = 1');

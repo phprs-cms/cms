@@ -26,7 +26,7 @@ final class Jazyk
     private static array $slovnik = [];
 
     /** Jazyky, do kterých je přeložená administrace (slovník system/jazyky/admin-<kód>.php). */
-    public const array ADMINISTRACE = ['cs' => 'Čeština', 'sk' => 'Slovenčina', 'en' => 'English'];
+    public const array ADMINISTRACE = ['cs' => 'Čeština', 'sk' => 'Slovenčina', 'en' => 'English', 'de' => 'Deutsch'];
 
     /** @param string $sada "" = texty webu, "admin-" = texty administrace */
     public static function nastav(string $kod, string $sada = ''): void

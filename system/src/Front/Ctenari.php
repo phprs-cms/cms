@@ -263,10 +263,19 @@ final class Ctenari
         if (($chyba = $this->overFormular()) !== null) {
             return $chyba;
         }
-        $ctenar = $this->app->db()->one('SELECT * FROM {ctenari} WHERE email = ? AND potvrzen = 1', [mb_strtolower(trim($r->post('email')))]);
+        $email = mb_strtolower(trim($r->post('email')));
+        // limit na účet, ne jen na IP adresu: 10 chybných hesel za 15 minut. Počítá se podle e-mailu bez ohledu na to,
+        // zda účet existuje - hláška tak neprozradí, které e-maily jsou registrované. Přihlášení odkazem z e-mailu funguje dál.
+        $antispam = new Antispam($this->app->db(), $this->app->settings());
+        if ($antispam->pocet('ctenar:' . $email, 'ctenar-heslo', 0, 15) >= 10) {
+            return $this->na('zamceno');
+        }
+        $ctenar = $this->app->db()->one('SELECT * FROM {ctenari} WHERE email = ? AND potvrzen = 1', [$email]);
         // hash se ověřuje i pro neexistující účet, aby doba odpovědi neprozradila, které e-maily jsou registrované
         $hash = $ctenar['heslo'] ?? '$2y$12$.rGL5BCVuy.khmu9ByuEeuXls/1.SsuwX7g78BdiBRuq./37G0q1q';
         if (!password_verify($r->post('heslo'), $hash) || $ctenar === null) {
+            $antispam->zapis('ctenar:' . $email, 'ctenar-heslo', 0);
+
             return $this->na('spatne');
         }
         $this->prihlas((int) $ctenar['idct']);

@@ -51,7 +51,7 @@ for u in /rss.xml /feed.json /sitemap.xml /sitemap-news.xml /robots.txt /llms.tx
 over "neexistující stránka" 404 /tohle-neexistuje
 over "system/ není přístupný" 403 /system/sql/schema.sql
 over "config.php není přístupný" 403 /config.php
-for l in default modern-magazine; do
+for l in default minimal classic-newspaper modern-magazine; do
   "${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_config SET hodnota='$l' WHERE promenna='layout'"; over "šablona $l" 200 /; over "šablona $l – článek" 200 /clanek/vitejte-v-phprs-3
 done
 

@@ -19,7 +19,7 @@ use PhpRS\Front\Layouty;
 final class Nastroje
 {
     /** Šablony dodávané se systémem - přepsala by je aktualizace, proto se upravují jen jejich kopie. */
-    private const array VESTAVENE_SABLONY = ['default', 'classic-newspaper', 'modern-magazine'];
+    private const array VESTAVENE_SABLONY = ['default', 'classic-newspaper', 'modern-magazine', 'minimal'];
 
     public function __construct(private readonly App $app)
     {

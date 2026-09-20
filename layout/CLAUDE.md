@@ -6,7 +6,7 @@ Pracuješ ve složce šablon redakčního systému phpRS 3. **Upravovat smíš j
 ## Co se nedělá
 
 - Neupravuj `system/`, `admin.php`, `index.php`, `install.php`, `image/` ani vestavěné šablony `default`,
-  `classic-newspaper` a `modern-magazine`. Aktualizace systému je přepíše a Stav systému takový zásah hlásí
+  `classic-newspaper`, `modern-magazine` a `minimal`. Aktualizace systému je přepíše a Stav systému takový zásah hlásí
   jako porušené jádro.
 - Nepřidávej do CMS vlastní funkce, moduly, tabulky ani úpravy databáze. Systém má být pro všechny stejný
   a aktualizovatelný. Chybí-li funkce, patří jako námět autorům phpRS – ne do kódu jedné instalace.

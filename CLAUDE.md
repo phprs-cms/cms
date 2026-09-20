@@ -116,6 +116,10 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Rozměry a barvu podkladu obrázků** doplňuje `Front\ObrazkyHtml::dopln()` do hotového HTML stránky (podle `rs_imggal_obr`); šablony je psát nemusí.
   V CSS šablon proto u obrázků s pevnou výškou počítej s atributem `height` – `image/web.css` má `:where(img[width][height]) { height: auto }` s nulovou vahou.
 
+- **Skript nesmí hledat `[data-…]` prvek, který nikde nevzniká** – tak byl od zavedení fotogalerie rozbitý dialog Médií v editoru (chybělo tlačítko
+  `data-vlozit`, první otevření spadlo). Hlídá to statická kontrola v `tools/testy.php`; po úpravě dialogů v `editor.js` je vždy otevři v prohlížeči.
+  Atribut `hidden` platí i na tlačítkách díky `[hidden] { display: none !important }` v `image/editor.css`.
+
 - **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
   v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.
 

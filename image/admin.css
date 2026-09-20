@@ -500,3 +500,11 @@ body.login h1 b {
 
 /* popisky zaskrtavatek vedle tlacitek (Ziva reportaz aj.) drzi velikost pisma retro prostredi */
 .tlacitka label { font-size: 11px; }
+
+/* administrace na telefonu: Ulozit porad po ruce, foceni primo do clanku */
+.galerie-vyfotit { display: none; }
+@media (pointer: coarse) { .galerie-vyfotit { display: inline-block; } }
+@media (max-width: 860px) {
+	.formular-clanek { padding-bottom: 50px; }
+	.formular-clanek .ulozit-lista { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; margin: 0; padding: 6px 8px; border-top: 2px solid var(--modra); background-color: var(--modra-svetla); text-align: center; }
+}

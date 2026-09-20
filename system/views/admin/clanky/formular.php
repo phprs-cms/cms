@@ -90,7 +90,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endif ?>
 	</div>
 </div>
-<p class="tlacitka">
+<p class="tlacitka ulozit-lista">
 	<button class="tl" type="submit" name="po_ulozeni" value="vypis"><?= e(t('Uložit')) ?></button>
 	<button class="tl" type="submit" name="po_ulozeni" value="zustat"><?= e(t('Uložit a pokračovat')) ?></button>
 <?php if ($clanek['idc']): ?>

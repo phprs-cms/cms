@@ -89,6 +89,9 @@
 			okno.className = 'galerie-okno';
 			okno.innerHTML = '<div class="galerie-okno-hlava"><strong>' + T('Média') + '</strong>'
 				+ '<label class="tl">' + T('Nahrát nový') + '<input type="file" multiple hidden></label>'
+				// na telefonu a tabletu: vyfotit přímo do článku (tlačítko ukazuje CSS jen na dotykových zařízeních)
+				+ '<label class="navigace galerie-vyfotit">' + T('Vyfotit') + '<input type="file" accept="image/*" capture="environment" hidden></label>'
+				+ '<button type="button" class="tl" data-vlozit hidden></button>' // „Vložit galerii (n)“ – jen při výběru více fotek
 				+ '<button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div>'
 				+ '<div class="galerie-okno-filtr"><select aria-label="Složka"></select></div>'
 				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.</p><div class="galerie-mrizka"></div>';
@@ -96,10 +99,10 @@
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
 			okno.querySelector('[data-vlozit]').addEventListener('click', function () { okno.close(); okno.zpetne(okno.vybrane.slice()); });
 			okno.querySelector('select').addEventListener('change', function () { nacti(this.value); });
-			okno.querySelector('input[type=file]').addEventListener('change', function () {
+			Array.prototype.forEach.call(okno.querySelectorAll('input[type=file]'), function (vstup) { vstup.addEventListener('change', function () {
 				nahraj(this.files).then(function (nove) { nove.reverse().forEach(function (o) { pridej(o, true); }); });
 				this.value = '';
-			});
+			}); });
 			okno.addEventListener('dragover', function (e) { e.preventDefault(); });
 			okno.addEventListener('drop', function (e) {
 				e.preventDefault();

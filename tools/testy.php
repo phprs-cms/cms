@@ -221,6 +221,30 @@ if (function_exists('imagecreatetruecolor')) {
     over('Obrazky::barva: chybějící soubor', PhpRS\Core\Obrazky::barva($docasny), null);
 }
 
+/* ---------- skripty: nesmí hledat prvek (data-atribut), který nikde nevzniká – tak se rozbil dialog Médií ---------- */
+$kdeVznika = [
+    'image/editor.js' => ['system/views/admin'], 'image/admin.js' => ['system/views/admin', 'system/src/Admin'], 'image/pomocnik.js' => ['system/views/admin'],
+    'image/vizual.js' => ['system/views/front', 'system/src/Front'], 'image/web.js' => ['system/views/front', 'system/src/Front', 'layout'],
+];
+foreach ($kdeVznika as $skript => $slozky) {
+    $zdroj = (string) file_get_contents(PHPRS_ROOT . '/' . $skript);
+    preg_match_all('/querySelector(?:All)?\(\'\[(data-[a-z0-9-]+)\]\'\)/', $zdroj, $odkazy);
+    $bezHledani = (string) preg_replace('/(querySelector(All)?|closest|matches)\([^)]*\)/', '', $zdroj);
+    $chybi = [];
+    foreach (array_unique($odkazy[1]) as $atribut) {
+        $vSablonach = false;
+        foreach ($slozky as $slozka) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PHPRS_ROOT . '/' . $slozka, FilesystemIterator::SKIP_DOTS)) as $soubor) {
+                $vSablonach = $vSablonach || str_contains((string) file_get_contents($soubor->getPathname()), $atribut);
+            }
+        }
+        if (!$vSablonach && !preg_match('/[\s"\']' . preg_quote($atribut, '/') . '[\s>="\']/', $bezHledani) && !str_contains($bezHledani, "setAttribute('" . $atribut . "'")) {
+            $chybi[] = $atribut;
+        }
+    }
+    over($skript . ': každý hledaný data-atribut někde vzniká', $chybi, []);
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

@@ -97,5 +97,6 @@ window.PHPRS_PREKLAD = {
 	"Zahodit": "Zahodiť",
 	"Nic takového tu není.": "Nič také tu nie je.",
 	"článek": "článok",
-	"článek – nevydaný": "článok – nevydaný"
+	"článek – nevydaný": "článok – nevydaný",
+	"Vyfotit": "Odfotiť"
 };

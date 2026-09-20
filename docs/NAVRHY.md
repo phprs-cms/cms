@@ -86,7 +86,9 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49, 51.
+Hotovo: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49, 50, 51.
+
+K bodu 50: editor článku má na telefonu plovoucí lištu Uložit / Uložit a pokračovat / Náhled, menší titulek a v dialogu Médií tlačítko Vyfotit (fotoaparát, jen na dotykových zařízeních). Titulek zůstává jednořádkové pole – dlouhý se na telefonu posouvá.
 
 K bodu 42: místo rozmazaného náhledu (stovky bajtů v HTML na každý obrázek) dostává obrázek převládající barvu jako podklad a rozměry `width`/`height` – obojí doplňuje `Front\ObrazkyHtml` do hotového HTML, takže to platí ve všech šablonách. Skutečný rozmazaný náhled by šel přidat stejnou cestou.
 

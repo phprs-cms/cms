@@ -1054,3 +1054,26 @@ body.login {
 .paleta-nic { padding: 14px 12px; color: var(--text-slaby); }
 .paleta-napoveda { margin: 0; padding: 8px 14px; border-top: 1px solid var(--linka); color: var(--text-slaby); font-size: 12px; }
 @media (max-width: 720px) { .paleta-spustit span { display: none; } }
+
+/* administrace na telefonu: Uložit je pořád po ruce, titulek se vejde, focení přímo do článku */
+.galerie-vyfotit { display: none; }
+@media (pointer: coarse) { .galerie-vyfotit { display: inline-block; } }
+@media (max-width: 860px) {
+	.formular-clanek { padding-bottom: 76px; }
+	.formular-clanek .ulozit-lista {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 40;
+		display: flex;
+		gap: 8px;
+		margin: 0;
+		padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+		border-top: 1px solid var(--linka);
+		background: var(--plocha);
+		box-shadow: 0 -6px 18px rgba(15, 17, 21, 0.08);
+	}
+	.formular-clanek .ulozit-lista .tl { flex: 1; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+	.formular-clanek .titulek-pole { font-size: 17px !important; letter-spacing: -0.01em; } /* !important kvůli základnímu pravidlu .titulek-pole */
+}

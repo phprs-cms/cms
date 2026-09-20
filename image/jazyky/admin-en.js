@@ -110,5 +110,6 @@ window.PHPRS_PREKLAD = {
 	"Zahodit": "Discard",
 	"Nic takového tu není.": "Nothing like that here.",
 	"článek": "article",
-	"článek – nevydaný": "article – unpublished"
+	"článek – nevydaný": "article – unpublished",
+	"Vyfotit": "Take a photo"
 };

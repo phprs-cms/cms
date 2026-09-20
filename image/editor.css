@@ -44,7 +44,9 @@ button.galerie-polozka:hover, button.galerie-polozka:focus-visible { border-colo
 
 .galerie-okno { width: min(920px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 18px; border: 1px solid var(--ed-linka); border-radius: var(--ed-radius); background: var(--ed-plocha); color: var(--ed-text); }
 .galerie-okno::backdrop { background: rgb(0 0 0 / 0.5); }
-.galerie-okno-hlava { display: flex; align-items: center; gap: 10px; }
+/* atribut hidden musí platit i na prvcích, kterým třída nastavuje display (tlačítka .tl, .navigace) */
+[hidden] { display: none !important; }
+.galerie-okno-hlava { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .galerie-okno-hlava strong { margin-right: auto; font-size: 16px; }
 .galerie-okno-hlava label.tl { margin: 0; }
 .galerie-okno .napoveda { font-size: 12px; color: var(--ed-text-slaby); }

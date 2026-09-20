@@ -73,8 +73,10 @@ final class Kernel
             ]), 400);
         }
 
-        if ($request->isPost()) {
-            \PhpRS\Front\Cache::vymaz(); // každá změna v administraci zneplatní cache stránek webu
+        // každá změna v administraci zneplatní cache stránek webu; průběžné požadavky editoru (zámek článku, rozepsaný
+        // stav, asistent) web nemění - kdyby cache mazaly, při psaní článku by byla pořád studená
+        if ($request->isPost() && !in_array($request->get('akce'), ['zamek', 'koncept', 'asistent'], true)) {
+            \PhpRS\Front\Cache::vymaz();
         }
         $akce = $request->get('akce');
         // adresa webu: starší instalace ji ještě nemá - zapíše se podle adresy, na které pracuje přihlášený administrátor

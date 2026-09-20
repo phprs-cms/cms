@@ -413,20 +413,47 @@
 		function uloz() {
 			var data = { cas: Date.now(), pole: {} };
 			pole.forEach(function (p) { if (p.type === 'checkbox' || p.type === 'radio') { if (p.checked) { data.pole[p.name] = p.value; } else if (p.type === 'checkbox') { data.pole[p.name] = null; } } else { data.pole[p.name] = p.value; } });
-			try { localStorage.setItem(klic, JSON.stringify(data)); } catch (e) { return; }
+			try { localStorage.setItem(klic, JSON.stringify(data)); } catch (e) { /* prohlížeč úložiště nedovolil - zbývá server */ }
 			editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen v prohlížeči ') + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); });
+			posledniData = data;
+			if (!casovacServer) { casovacServer = setTimeout(ulozNaServer, 15000); }
+		}
+		// na server jde rozepsaný stav nejvýš jednou za 15 vteřin: dá se v něm pokračovat z jiného zařízení
+		var urlKonceptu = form.getAttribute('data-koncept-url'), casovacServer = null, posledniData = null;
+		function ulozNaServer() {
+			casovacServer = null;
+			if (!urlKonceptu || !posledniData) { return; }
+			var fd = new FormData();
+			fd.append('_csrf', CSRF);
+			fd.append('idc', String(ID_CLANKU || 0));
+			fd.append('pole', JSON.stringify(posledniData.pole));
+			fetch(urlKonceptu, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
+				if (j.ok) { editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen i na serveru ') + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); }); }
+			}).catch(function () { /* bez spojení zůstává kopie v prohlížeči */ });
+		}
+		function zahodNaServeru() {
+			if (!urlKonceptu) { return; }
+			var fd = new FormData();
+			fd.append('_csrf', CSRF);
+			fd.append('idc', String(ID_CLANKU || 0));
+			fetch(urlKonceptu, { method: 'POST', body: fd, credentials: 'same-origin' }).catch(function () { /* nic */ });
 		}
 		form.addEventListener('input', function () { clearTimeout(casovac); casovac = setTimeout(uloz, 1500); });
 		form.addEventListener('submit', function () { clearTimeout(casovac); try { localStorage.removeItem(klic); } catch (e) { /* nic */ } });
 
 		var ulozene = null;
 		try { ulozene = JSON.parse(localStorage.getItem(klic) || 'null'); } catch (e) { /* nic */ }
+		// novější z obou kopií: prohlížeč tohoto zařízení, nebo server (psaní z jiného zařízení)
+		var zeServeru = null;
+		try { zeServeru = JSON.parse((document.getElementById('koncept-server') || {}).textContent || 'null'); } catch (e) { /* nic */ }
+		var jeZeServeru = !!(zeServeru && zeServeru.pole && (!ulozene || !ulozene.cas || zeServeru.cas > ulozene.cas));
+		if (jeZeServeru) { ulozene = zeServeru; }
 		if (!ulozene || !ulozene.pole || Date.now() - ulozene.cas > 14 * 86400000) { return; }
 		var lisiSe = pole.some(function (p) { return (p.tagName === 'TEXTAREA' || p.type === 'text') && ulozene.pole[p.name] !== undefined && ulozene.pole[p.name] !== p.value; });
 		if (!lisiSe) { return; }
 		var lista = document.createElement('p');
 		lista.className = 'hlaska';
-		lista.innerHTML = T('V prohlížeči je neuložená rozepsaná verze z ') + new Date(ulozene.cas).toLocaleString('cs-CZ') + '. <button type="button" class="navigace">Obnovit ji</button> <button type="button" class="navigace">Zahodit</button>';
+		lista.innerHTML = T(jeZeServeru ? 'Na serveru je neuložená rozepsaná verze z ' : 'V prohlížeči je neuložená rozepsaná verze z ') + new Date(ulozene.cas).toLocaleString('cs-CZ') + '. <button type="button" class="navigace">Obnovit ji</button> <button type="button" class="navigace">Zahodit</button>';
 		form.parentNode.insertBefore(lista, form);
 		lista.children[0].addEventListener('click', function () {
 			pole.forEach(function (p) {
@@ -437,7 +464,7 @@
 			document.querySelectorAll('[data-obrazek]').forEach(function (p) { p.dispatchEvent(new Event('change')); });
 			lista.remove();
 		});
-		lista.children[1].addEventListener('click', function () { try { localStorage.removeItem(klic); } catch (e) { /* nic */ } lista.remove(); });
+		lista.children[1].addEventListener('click', function () { try { localStorage.removeItem(klic); } catch (e) { /* nic */ } zahodNaServeru(); lista.remove(); });
 	}
 
 	/* ---------- pole "Hlavní obrázek" ---------- */

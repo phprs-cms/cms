@@ -539,3 +539,12 @@ CREATE TABLE rs_nenalezeno (
     naposledy DATETIME NOT NULL,
     PRIMARY KEY (cesta)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- Rozepsané články uložené na serveru (pokračování z jiného zařízení)
+CREATE TABLE rs_clanky_koncepty (
+    kdo  INT UNSIGNED NOT NULL,
+    idc  INT UNSIGNED NOT NULL DEFAULT 0,
+    cas  DATETIME NOT NULL,
+    data MEDIUMTEXT NOT NULL,                             -- JSON {název pole formuláře: hodnota}
+    PRIMARY KEY (kdo, idc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

@@ -1,5 +1,8 @@
 /* phpRS 3 - překlad textů skriptů administrace (sk). Klíčem je český text ze skriptů (funkce T()). */
 window.PHPRS_PREKLAD = {
+	"rozepsaný text uložen i na serveru ": "rozpísaný text uložený aj na serveri ",
+	"Na serveru je neuložená rozepsaná verze z ": "Na serveri je neuložená rozpísaná verzia z ",
+
 	"nebo": "alebo",
 	"…nebo najděte vlastní článek": "…alebo nájdite vlastný článok",
 	"část titulku": "časť titulku",

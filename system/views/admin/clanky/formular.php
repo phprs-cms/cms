@@ -12,6 +12,7 @@
  * @var bool $smiVydavat
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var bool $asistent  AI asistent je zapnutý a má klíč
+ * @var array{cas:string, data:string}|null $konceptServer  rozepsaný stav uložený na serveru (z jiného zařízení)
  * @var bool $jazykyWebu  web má další jazykové verze
  * @var string $original  adresa článku, jehož je tento překladem
  * @var array<int, string> $serialy
@@ -24,7 +25,10 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled článků')) ?></a></p>
 
-<form class="formular formular-clanek" method="post" action="<?= e($modul->url('uloz')) ?>" data-koncept="clanek-<?= (int) $clanek['idc'] ?>"<?= $asistent ? ' data-asistent="' . e($modul->url('asistent')) . '"' : '' ?>>
+<?php if (!empty($konceptServer)): ?>
+<script type="application/json" id="koncept-server"><?= json_encode(['cas' => strtotime($konceptServer['cas']) * 1000, 'pole' => json_decode($konceptServer['data'], true)], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
+<?php endif ?>
+<form class="formular formular-clanek" method="post" action="<?= e($modul->url('uloz')) ?>" data-koncept="clanek-<?= (int) $clanek['idc'] ?>" data-koncept-url="<?= e($modul->url('koncept')) ?>"<?= $asistent ? ' data-asistent="' . e($modul->url('asistent')) . '"' : '' ?>>
 <?= $csrf ?>
 <input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>">
 

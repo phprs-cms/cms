@@ -216,6 +216,8 @@ final class Clanky extends Modul
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
         \PhpRS\Core\Hledani::indexuj($this->db, $id);
+        // uložený článek ruší rozepsaný stav na serveru (u nového článku je veden pod číslem 0)
+        $this->db->run('DELETE FROM {clanky_koncepty} WHERE kdo = ? AND idc IN (0, ?)', [$auth->id(), $id]);
         $this->ulozStitky($id, $r->post('stitky'));
         // nově vydaný článek se oznámí (webhook, IndexNow, Web Push); naplánovaný počká na svůj čas - viz Core\Oznameni
         \PhpRS\Core\Oznameni::zpracuj($this->app);
@@ -272,6 +274,34 @@ final class Clanky extends Modul
             'pripnute' => $this->db->all("SELECT {$sloupce} FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE {$vydane} AND c.priority > 0 ORDER BY c.priority DESC, c.datum DESC"),
             'dalsi' => $this->db->all("SELECT {$sloupce} FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE {$vydane} AND c.priority = 0 ORDER BY c.datum DESC LIMIT 30"),
         ]);
+    }
+
+    /**
+     * Průběžné ukládání rozepsaného článku na server (image/editor.js). Neukládá článek - jen stav formuláře
+     * přihlášeného uživatele, aby v psaní mohl pokračovat jinde. POST bez pole "pole" rozepsaný stav smaže.
+     */
+    protected function akceKoncept(): Response
+    {
+        if (!$this->request->isPost()) {
+            return Response::json(['ok' => false], 405);
+        }
+        $idc = $this->request->postInt('idc');
+        if ($idc > 0 && $this->nacti($idc) === null) {
+            return Response::json(['ok' => false], 404);
+        }
+        $ja = $this->app->auth()->id();
+        $data = (string) ($_POST['pole'] ?? '');
+        if ($data === '' || strlen($data) > 3_000_000 || !is_array(json_decode($data, true))) {
+            $this->db->delete('clanky_koncepty', ['kdo' => $ja, 'idc' => $idc]);
+
+            return Response::json(['ok' => true, 'smazano' => true]);
+        }
+        $this->db->run('INSERT INTO {clanky_koncepty} (kdo, idc, cas, data) VALUES (?, ?, NOW(), ?) ON DUPLICATE KEY UPDATE cas = NOW(), data = VALUES(data)', [$ja, $idc, $data]);
+        if (random_int(1, 40) === 1) {
+            $this->db->run('DELETE FROM {clanky_koncepty} WHERE cas < NOW() - INTERVAL 30 DAY');
+        }
+
+        return Response::json(['ok' => true]);
     }
 
     /** Hledání článků podle titulku pro dialog odkazu v editoru. */
@@ -462,6 +492,7 @@ final class Clanky extends Modul
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
+            'konceptServer' => $this->request->isPost() ? null : $this->db->one('SELECT cas, data FROM {clanky_koncepty} WHERE kdo = ? AND idc = ?', [$auth->id(), (int) $clanek['idc']]),
             'jazykyWebu' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) !== [],
             'original' => empty($clanek['preklad_z']) ? '' : (string) $this->db->value('SELECT seo_link FROM {clanky} WHERE idc = ?', [$clanek['preklad_z']]),
             'asistent' => (new \PhpRS\Core\Asistent($this->app->settings()))->pripraven(),

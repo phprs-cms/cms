@@ -1,3 +1,5 @@
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="image/phprs-logo-tmavy.svg"><img src="image/phprs-logo.svg" alt="phpRS" height="48"></picture></p>
+
 # phpRS 3
 
 Redakční systém pro internetové časopisy a magazíny, napsaný od nuly pro PHP 8.4+ a MySQL 8 / MariaDB 10.6+.

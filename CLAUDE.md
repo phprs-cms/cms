@@ -17,6 +17,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   seskupené menu s čárovými ikonami (`views/admin/ikony.php`), podklad #F7F7F8, bílé karty s jemnou linkou,
   výrazné nadpisy, avatar a přepínač světlý/tmavý vpravo nahoře. Každou změnu šablon administrace zkontroluj ve světlém
   i tmavém režimu a v šířce telefonu.
+- **Logo phpRS** (finální, z Claude Design): v administraci, na přihlášení a v instalátoru jen přes `views/admin/logo.php` (barvy nápisu řídí
+  `--logo-php` / `--logo-rs`, značka je vždy `#2B5BE3` = `--akcent` světlého režimu). Soubory `image/phprs-logo.svg`, `phprs-logo-tmavy.svg`,
+  `phprs-znacka.svg` + PNG 32 a 180 pro ikonu záložky. Na weby uživatelů se značka phpRS nedává – ty mají vlastní logo z Identity webu.
 - **Identita webu** (`Front\Identita`, modul `vzhled`): šablony berou hlavní barvu a písma z proměnných `--rs-akcent`,
   `--rs-pismo-titulky`, `--rs-pismo-text` s vlastní výchozí hodnotou (`--akcent: var(--rs-akcent, #326891)`). Nová šablona
   je musí použít také. Žádná externí písma – jen sady v `Identita::PISMA_*`.

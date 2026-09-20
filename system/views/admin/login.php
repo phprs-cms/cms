@@ -15,12 +15,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <script src="<?= e($app->url('image/tema.js')) ?>?v=<?= e(PHPRS_VERSION) ?>"></script>
-<title><?= e(t('phpRS admin rozhraní')) ?></title>
+<title><?= e(t('Přihlášení')) ?> – phpRS</title>
+<link rel="icon" type="image/svg+xml" href="<?= e($app->url('')) ?>image/phprs-znacka.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="<?= e($app->url('')) ?>image/phprs-znacka-32.png">
+<link rel="apple-touch-icon" href="<?= e($app->url('')) ?>image/phprs-znacka-180.png">
 <link rel="stylesheet" href="<?= e($app->url('image/admin.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body class="login">
 <div class="login-karta">
-<h1>php<b>RS</b></h1>
+<?= $app->view->render('admin/logo', ['vyska' => 36]) ?>
 <h3><?= e(t('Přihlášení do administrace')) ?></h3>
 <?php if ($chyba !== null): ?>
 <p class="hlaska hlaska-chyba" role="alert"><?= e($chyba) ?></p>

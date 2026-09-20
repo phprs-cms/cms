@@ -10,13 +10,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Instalace phpRS 3</title>
+<title>Instalace phpRS</title>
+<link rel="icon" type="image/svg+xml" href="<?= e($base) ?>/image/phprs-znacka.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="<?= e($base) ?>/image/phprs-znacka-32.png">
+<link rel="apple-touch-icon" href="<?= e($base) ?>/image/phprs-znacka-180.png">
 <link rel="stylesheet" href="<?= e($base) ?>/image/install.css?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body>
 <main class="instalator">
 <header class="uvod">
-	<div class="znacka">php<b>RS</b><sup>3</sup></div>
+	<div class="znacka"><?php $vyska = 40; $jenZnacka = false; require PHPRS_SYSTEM . '/views/admin/logo.php'; ?></div>
 <?php if ($jizNainstalovano): ?>
 	<h1>phpRS 3 je už nainstalován</h1>
 	<p>Soubor config.php existuje, instalátor proto nic nemění.</p>

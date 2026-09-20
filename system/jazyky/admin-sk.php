@@ -919,4 +919,5 @@ return [
     'Přihlášení do administrace' => 'Prihlásenie do administrácie',
     'Ověřit kód' => 'Overiť kód',
     'Přihlásit se' => 'Prihlásiť sa',
+    'Přihlášení' => 'Prihlásenie',
 ];

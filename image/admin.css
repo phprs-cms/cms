@@ -9,8 +9,8 @@
 	--linka-pole: #CDD2DB;
 	--text: #14171F;
 	--text-slaby: #667085;
-	--akcent: #1F4FE0;
-	--akcent-tmavy: #173BB0;
+	--akcent: #2B5BE3;        /* modrá loga phpRS */
+	--akcent-tmavy: #1E44B8;
 	--akcent-svetly: #EEF2FF;
 	--chyba: #C4281C;
 	--chyba-podklad: #FEF3F2;
@@ -45,6 +45,8 @@
 		--text-slaby: #98A2B3;
 		--akcent: #6C8CFF;
 		--akcent-tmavy: #8FA7FF;
+		--logo-php: #FFFFFF;
+		--logo-rs: #8FA8F5;
 		--akcent-svetly: #1E2740;
 		--chyba: #FF8A80;
 		--chyba-podklad: #3A1B19;
@@ -63,6 +65,8 @@
 	--text-slaby: #98A2B3;
 	--akcent: #6C8CFF;
 	--akcent-tmavy: #8FA7FF;
+	--logo-php: #FFFFFF;
+	--logo-rs: #8FA8F5;
 	--akcent-svetly: #1E2740;
 	--chyba: #FF8A80;
 	--chyba-podklad: #3A1B19;
@@ -118,33 +122,10 @@ body:not(.login) {
 .znacka {
 	display: flex;
 	align-items: center;
-	gap: 10px;
 	height: 64px;
 	padding: 0 8px;
-	font-size: 19px;
-	font-weight: 600;
-	letter-spacing: -0.02em;
-	color: var(--text);
 }
-.znacka:hover {
-	color: var(--text);
-	text-decoration: none;
-}
-.znacka b {
-	font-weight: 800;
-}
-.znacka-znak {
-	display: grid;
-	place-items: center;
-	width: 30px;
-	height: 30px;
-	border-radius: 8px;
-	background: var(--akcent);
-	color: var(--na-akcentu);
-	font-size: 12px;
-	font-weight: 800;
-	letter-spacing: 0;
-}
+.phprs-logo { display: block; }
 .menu-prepinac {
 	display: none;
 }
@@ -706,16 +687,7 @@ body.login {
 	background: var(--plocha);
 	box-shadow: 0 8px 30px rgb(16 24 40 / 0.06);
 }
-.login-karta h1 {
-	margin: 0;
-	font-size: 28px;
-	font-weight: 500;
-	letter-spacing: -0.02em;
-}
-.login-karta h1 b {
-	color: var(--akcent);
-	font-weight: 800;
-}
+.login-karta .phprs-logo { margin-bottom: 6px; }
 .login-karta h3 {
 	margin: 2px 0 24px;
 	font-size: 13px;

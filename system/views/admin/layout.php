@@ -51,14 +51,17 @@ if ($user !== null) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <script src="<?= e($app->url('image/tema.js')) ?>?v=<?= e(PHPRS_VERSION) ?>"></script>
-<title><?= $nadpis !== '' ? e($nadpis) . ' - ' : '' ?>phpRS admin rozhraní</title>
+<title><?= $nadpis !== '' ? e($nadpis) . ' – ' : '' ?>phpRS</title>
+<link rel="icon" type="image/svg+xml" href="<?= e($app->url('')) ?>image/phprs-znacka.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="<?= e($app->url('')) ?>image/phprs-znacka-32.png">
+<link rel="apple-touch-icon" href="<?= e($app->url('')) ?>image/phprs-znacka-180.png">
 <link rel="stylesheet" href="<?= e($app->url('image/admin.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 <link rel="stylesheet" href="<?= e($app->url('image/editor.css')) ?>?v=<?= e(PHPRS_VERSION) ?>">
 </head>
 <body>
 <?php if ($user !== null): ?>
 <header class="hlavicka">
-	<a class="znacka" href="<?= e($app->url('admin.php')) ?>"><span class="znacka-znak">RS</span><span>php<b>RS</b></span></a>
+	<a class="znacka" href="<?= e($app->url('admin.php')) ?>" aria-label="phpRS – <?= e(t('Přehled')) ?>"><?= $app->view->render('admin/logo', ['vyska' => 28]) ?></a>
 	<button class="menu-prepinac" type="button" aria-expanded="false" aria-controls="menu"><?= e(t('Menu')) ?></button>
 	<ul class="menu rammodry-vypln" id="menu">
 		<li class="menu-prehled<?= $aktivni === '' ? ' aktivni' : '' ?>"><a href="<?= e($app->url('admin.php')) ?>"><?= $ikona('prehled') ?><?= e(t('Přehled')) ?></a></li>

@@ -1037,4 +1037,5 @@ return [
     'Přihlášení do administrace' => 'Sign in to the administration',
     'Ověřit kód' => 'Verify code',
     'Přihlásit se' => 'Sign in',
+    'Přihlášení' => 'Sign in',
 ];

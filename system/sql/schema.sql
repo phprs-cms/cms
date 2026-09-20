@@ -171,6 +171,7 @@ CREATE TABLE rs_clanky (
     medium_url     VARCHAR(255) NOT NULL DEFAULT '',       -- zvuk nebo video: soubor z Médií, YouTube, Vimeo, Spotify
     recenze_predmet VARCHAR(160) NOT NULL DEFAULT '',      -- co se hodnotí
     recenze_hodnoceni TINYINT UNSIGNED NULL,               -- hodnocení v procentech, NULL = není recenze
+    hledani        MEDIUMTEXT NULL,                       -- text bez diakritiky pro hledání (Core\Hledani)
     PRIMARY KEY (idc),
     KEY ix_clanky_jazyk (jazyk, visible, datum),
     UNIQUE KEY uq_clanky_seo (seo_link),
@@ -180,6 +181,7 @@ CREATE TABLE rs_clanky (
     KEY ix_clanky_tema (tema, visible, datum),
     KEY ix_clanky_autor (autor),
     FULLTEXT KEY ft_clanky (titulek, uvod, text, t_slova),
+    FULLTEXT KEY ft_clanky_hledani (hledani),
     CONSTRAINT fk_clanky_tema    FOREIGN KEY (tema)         REFERENCES rs_topic (idt),
     CONSTRAINT fk_clanky_autor   FOREIGN KEY (autor)        REFERENCES rs_user (idu)    ON DELETE SET NULL,
     CONSTRAINT fk_clanky_sablona FOREIGN KEY (sablona)      REFERENCES rs_cla_sab (ids) ON DELETE SET NULL,

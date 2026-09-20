@@ -159,6 +159,7 @@ final class Installer
                 'prostredi' => $d['prostredi'],
             ]);
 
+            \PhpRS\Core\Hledani::dopln($db);
             $nastaveni = ['nazev_webu' => $d['nazev_webu'], 'adresa_webu' => $this->request->origin(), 'email_webu' => $d['email'], 'layout' => $d['layout'], 'rozvrzeni' => Layouty::seznam()[$d['layout']]['rozvrzeni'], 'prostredi_admin' => $d['prostredi'], 'verze_db' => (string) Migrace::posledni()];
             foreach ($nastaveni as $klic => $hodnota) {
                 $db->insert('config', ['promenna' => $klic, 'hodnota' => $hodnota]);

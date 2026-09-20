@@ -215,6 +215,7 @@ final class Clanky extends Modul
         }
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
+        \PhpRS\Core\Hledani::indexuj($this->db, $id);
         $this->ulozStitky($id, $r->post('stitky'));
         // nově vydaný článek se oznámí (webhook, IndexNow, Web Push); naplánovaný počká na svůj čas - viz Core\Oznameni
         \PhpRS\Core\Oznameni::zpracuj($this->app);

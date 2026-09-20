@@ -118,19 +118,17 @@ final class Clanky
     /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function hledej(string $q, int $strana): array
     {
-        // fulltextový index ft_clanky: každé slovo od 3 znaků jako "+slovo*" (všechna slova, libovolná koncovka);
-        // titulek se navíc hledá přes LIKE, aby šla najít i krátká slova a části slov
+        // index bez diakritiky (Core\Hledani): "nabrezi" najde "nábřeží"; krátká slova a části slov se hledají v titulku
+        \PhpRS\Core\Hledani::dopln($this->db); // články z doby před indexem se doplní samy
         $like = '%' . addcslashes($q, '%_\\') . '%';
-        $slova = array_filter(preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($q)) ?: [], fn (string $s): bool => mb_strlen($s) >= 3);
-        if ($slova === []) {
+        $dotaz = \PhpRS\Core\Hledani::dotaz($q);
+        if ($dotaz === '') {
             return $this->vypis($this->vydane . ' AND c.titulek LIKE ?', [$like], 'c.datum DESC, c.idc DESC', $strana);
         }
-        $dotaz = implode(' ', array_map(fn (string $s): string => '+' . $s . '*', array_slice($slova, 0, 8)));
 
         return $this->vypis(
-            // text zamčených článků se neprohledává - jinak by šel po kouskách vyčíst z výsledků hledání
-            $this->vydane . ' AND ((c.pristup = 0 AND MATCH(c.titulek, c.uvod, c.text, c.t_slova) AGAINST (? IN BOOLEAN MODE)) OR c.titulek LIKE ? OR (c.pristup > 0 AND c.uvod LIKE ?))',
-            [$dotaz, $like, $like],
+            $this->vydane . ' AND (MATCH(c.hledani) AGAINST (? IN BOOLEAN MODE) OR c.titulek LIKE ?)',
+            [$dotaz, $like],
             'c.datum DESC, c.idc DESC',
             $strana,
         );

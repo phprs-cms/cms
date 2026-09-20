@@ -289,6 +289,7 @@ final class Nastroje
             $db->insert('clanky_revize', ['idc' => $id, 'datum' => $puvodni['zmeneno'] ?? $puvodni['datum'], 'kdo' => $auth->id(), 'titulek' => $puvodni['titulek'], 'uvod' => $puvodni['uvod'], 'text' => $puvodni['text']]);
             $db->update('clanky', $data, ['idc' => $id]);
         }
+        \PhpRS\Core\Hledani::indexuj($db, $id);
         if (array_key_exists('stitky', $a)) {
             $db->delete('clanky_stitky', ['idc' => $id]);
             foreach (array_slice(array_unique(array_filter(array_map(trim(...), explode(',', (string) $a['stitky'])))), 0, 20) as $stitek) {

@@ -409,6 +409,72 @@ final class Clanky extends Modul
         return Response::json($vysledek);
     }
 
+    /**
+     * „Přeložit asistentem“: z uložené verze článku ve výchozím jazyce založí koncept v rubrice cílového jazyka,
+     * propojený s originálem. Překlad vždy čeká na přečtení člověkem – nikdy se nevydává sám.
+     */
+    protected function akcePreloz(): Response
+    {
+        $clanek = $this->request->isPost() ? $this->nacti($this->request->postInt('idc')) : null;
+        if ($clanek === null) {
+            return $this->zpet('Článek nejdřív uložte, pak ho půjde přeložit.', typ: 'chyba');
+        }
+        $zpetNaClanek = fn (string $hlaska): Response => $this->zpet($hlaska, 'edit', ['id' => $clanek['idc']], typ: 'chyba');
+        $jazyk = $this->request->post('prelozit_do');
+        $asistent = new \PhpRS\Core\Asistent($this->app->settings());
+        if (!$asistent->pripraven()) {
+            return $zpetNaClanek('AI asistent není zapnutý nebo chybí klíč (Nastavení → Rozšíření).');
+        }
+        if ($clanek['jazyk'] !== '' || !in_array($jazyk, \PhpRS\Core\Jazyk::dalsi($this->app->settings()), true)) {
+            return $zpetNaClanek('Přeložit jde jen článek ve výchozím jazyce, a to do některé z dalších jazykových verzí webu.');
+        }
+        if (($hotovy = $this->db->value('SELECT idc FROM {clanky} WHERE preklad_z = ? AND jazyk = ?', [$clanek['idc'], $jazyk])) !== null) {
+            return $this->zpet('Překlad do tohoto jazyka už existuje – tady je.', 'edit', ['id' => (int) $hotovy]);
+        }
+        // cílová rubrika: protějšek rubriky originálu, jinak první rubrika daného jazyka (a vždy jen taková, kam uživatel smí psát)
+        $povolene = $this->app->auth()->povoleneRubriky();
+        $rubrika = null;
+        foreach ($this->db->all('SELECT idt, preklad_z FROM {topic} WHERE jazyk = ? ORDER BY (preklad_z <=> ?) DESC, hodnost DESC, idt', [$jazyk, $clanek['tema']]) as $kandidat) {
+            if ($povolene === null || in_array((int) $kandidat['idt'], $povolene, true)) {
+                $rubrika = (int) $kandidat['idt'];
+                break;
+            }
+        }
+        if ($rubrika === null) {
+            return $zpetNaClanek('V cílovém jazyce zatím není žádná rubrika, do které smíte psát. Založte ji v Rubrikách (pole Jazyk).');
+        }
+        $ja = $this->app->auth()->id();
+        if ((int) $this->db->value("SELECT COUNT(*) FROM {protokol} WHERE kdo = ? AND modul = 'asistent' AND cas > NOW() - INTERVAL 1 HOUR", [$ja]) >= 60) {
+            return $zpetNaClanek('Za poslední hodinu jste asistenta použili 60×. Zkuste to prosím později.');
+        }
+
+        set_time_limit(600); // dlouhý článek se překládá po dávkách
+        $prosta = ['titulek', 'seo_titulek', 'seo_popis', 'shrnuti', 'faq', 'recenze_predmet', 't_slova'];
+        try {
+            $preklad = $asistent->preloz(array_map(strval(...), array_intersect_key($clanek, array_flip([...$prosta, 'uvod', 'text']))), $jazyk, $prosta);
+        } catch (\RuntimeException $e) {
+            return $zpetNaClanek($e->getMessage());
+        }
+        \PhpRS\Admin\Protokol::zapis($this->app, 'asistent', 'preklad-' . $jazyk, mb_substr($clanek['titulek'], 0, 80));
+
+        // koncept přebírá z originálu vše, co se nepřekládá (obrázek, typ, šablonu, přístup, autora…); počitadla a zámky ne
+        $prevzit = ['obrazek', 'autor', 'externi_autor', 'typ_clanku', 'sablona', 'zdroj', 'povolit_kom', 'noindex', 'pristup', 'medium_url', 'recenze_hodnoceni', 'zobr_na_indexu'];
+        $data = array_intersect_key($clanek, array_flip($prevzit)) + [
+            'tema' => $rubrika, 'jazyk' => $jazyk, 'preklad_z' => $clanek['idc'], 'visible' => 0, 'datum' => date('Y-m-d H:i:s'),
+        ];
+        foreach ($preklad as $pole => $hodnota) {
+            $data[$pole] = $pole === 'titulek' ? mb_substr($hodnota, 0, 255) : $hodnota;
+        }
+        $data['seo_link'] = $this->volnySeoLink(slugify($data['titulek'], 100), 0);
+        $id = $this->db->insert('clanky', $data);
+        Galerie::zapisPouziti($this->db, $id, (string) $data['obrazek'], $data['uvod'], $data['text']);
+        $this->db->run('INSERT INTO {clanky_autori} (idc, idu) SELECT ?, idu FROM {clanky_autori} WHERE idc = ?', [$id, $clanek['idc']]);
+        $this->db->run('INSERT INTO {clanky_stitky} (idc, ids) SELECT ?, ids FROM {clanky_stitky} WHERE idc = ?', [$id, $clanek['idc']]);
+        \PhpRS\Core\Hledani::indexuj($this->db, $id);
+
+        return $this->zpet('Překlad je založený jako koncept. Než ho vydáte, přečtěte ho – asistent může chybovat ve jménech, číslech a odborných výrazech.', 'edit', ['id' => $id]);
+    }
+
     /** Redakční kalendář: články podle data vydání v měsíční mřížce. */
     protected function akceKalendar(): Response
     {
@@ -584,6 +650,9 @@ final class Clanky extends Modul
             'vsichniAutori' => $this->db->pairs("SELECT idu, IF(jmeno = '', user, jmeno) FROM {user} WHERE blokovat = 0 ORDER BY 2"),
             'spoluautori' => $this->request->isPost() ? array_map(intval(...), $this->request->postList('spoluautori')) : array_map(intval(...), array_column($this->db->all('SELECT idu FROM {clanky_autori} WHERE idc = ?', [(int) $clanek['idc']]), 'idu')),
             'jazykyWebu' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) !== [],
+            // u článku ve výchozím jazyce: do kterých jazyků jde přeložit a které překlady už existují (jazyk => číslo článku)
+            'jazykyPrekladu' => $clanek['idc'] && ($clanek['jazyk'] ?? '') === '' ? \PhpRS\Core\Jazyk::dalsi($this->app->settings()) : [],
+            'preklady' => $clanek['idc'] ? array_map(intval(...), $this->db->pairs("SELECT jazyk, idc FROM {clanky} WHERE preklad_z = ? AND jazyk <> ''", [(int) $clanek['idc']])) : [],
             'original' => empty($clanek['preklad_z']) ? '' : (string) $this->db->value('SELECT seo_link FROM {clanky} WHERE idc = ?', [$clanek['preklad_z']]),
             'asistent' => (new \PhpRS\Core\Asistent($this->app->settings()))->pripraven(),
             'serialy' => $this->db->pairs('SELECT ids, nazev_skup FROM {skup_cl} ORDER BY nazev_skup'),

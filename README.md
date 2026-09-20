@@ -148,6 +148,7 @@ Hotovo:
   a výzvou; předplatné zapisuje administrátor ručně (modul Čtenáři, export CSV); zamčený text neunikne přes RSS, API ani `.md`;
   strukturovaná data `isAccessibleForFree`. Platební brána záměrně není.
 - **AI asistent v editoru** (rozšíření): návrhy titulků, perexu, shrnutí „Ve zkratce", SEO popisu a štítků, korektura s výběrem oprav
+- **Překlad článku asistentem:** v editoru (Překlad článku) založí koncept v rubrice cílového jazyka, propojený s originálem; formátování, obrázky a galerie zůstávají z originálu. Firemní proxy: `define('PHPRS_AI_URL', '…')` v `config.php`.
   a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající

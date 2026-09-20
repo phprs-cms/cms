@@ -149,6 +149,43 @@ foreach (['http://127.0.0.1/', 'http://localhost/', 'http://10.0.0.5/admin', 'ht
 }
 over('Odkazy: veřejná adresa se kontroluje', PhpRS\Core\Odkazy::jeVerejna('https://93.184.216.34/stranka'), true);
 
+/* ---------- asistent: překlad článku (kostra HTML z originálu, texty od modelu) ---------- */
+$clanekHtml = '<h2>Nadpis oddílu</h2><p>První <strong>tučný</strong> a <a href="/x?a=1&amp;b=2">odkaz</a>.</p><figure><img src="a.jpg" alt="x"><figcaption>Popisek fotky</figcaption></figure><script>alert("nepřekládat")</script><p>2024</p>';
+$r = PhpRS\Core\Asistent::rozloz($clanekHtml);
+over('Asistent::rozloz: úseky k překladu', $r['useky'], ['Nadpis oddílu', 'První [[0]]tučný[[1]] a [[2]]odkaz[[3]].', 'Popisek fotky']);
+over('Asistent::sloz: beze změny textu vrátí původní HTML', PhpRS\Core\Asistent::sloz($r['kostra'], $r['useky']), $clanekHtml);
+over('Asistent::sloz: HTML od modelu se vypíše jako text', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['<script>alert(1)</script>', 'x', '<img src=x onerror=alert(1)>']), '<script>alert(1)') || str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['a', 'b', '<img src=x onerror=alert(1)>']), '<img src=x'), false);
+over('Asistent::sloz: chybějící symbol = úsek bez formátování', PhpRS\Core\Asistent::sloz($r['kostra'], ['N', 'First [[0]]bold[[1]] and link.', 'P']), '<h2>N</h2><p>First bold and link.</p><figure><img src="a.jpg" alt="x"><figcaption>P</figcaption></figure><script>alert("nepřekládat")</script><p>2024</p>');
+over('Asistent::sloz: špatně vnořené symboly = úsek bez formátování', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['N', '[[1]]bold[[0]] [[2]]link[[3]]', 'P']), '<strong>'), false);
+over('Asistent::sloz: přeházené pořadí slov formátování zachová', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['N', 'A [[2]]link[[3]] and [[0]]bold[[1]] first.', 'P']), '<p>A <a href="/x?a=1&amp;b=2">link</a> and <strong>bold</strong> first.</p>'), true);
+
+$nastaveni = (new ReflectionClass(PhpRS\Core\Settings::class))->newInstanceWithoutConstructor();
+(new ReflectionProperty(PhpRS\Core\Settings::class, 'values'))->setValue($nastaveni, ['nazev_webu' => 'Test', 'ai_klic' => 'x']);
+$falesny = new class($nastaveni) extends PhpRS\Core\Asistent {
+    public int $volani = 0;
+
+    protected function zavolej(array $telo): array
+    {
+        $this->volani++;
+        preg_match('#<useky>\n(.*)\n</useky>#s', $telo['messages'][0]['content'], $m);
+
+        return ['content' => [['type' => 'text', 'text' => json_encode(['preklady' => array_map(mb_strtoupper(...), json_decode($m[1], true))], JSON_UNESCAPED_UNICODE)]]];
+    }
+};
+$prelozeno = $falesny->preloz(['titulek' => 'Tom & Jerry „znovu“ ve městě, tentokrát úplně jinak než kdy dřív', 'text' => '<p>Krátký <em>text</em> článku, který má aspoň pár desítek znaků.</p>', 'seo_popis' => ''], 'en', ['titulek', 'seo_popis']);
+over('Asistent::preloz: prostý text se neescapuje dvakrát', $prelozeno['titulek'], 'TOM & JERRY „ZNOVU“ VE MĚSTĚ, TENTOKRÁT ÚPLNĚ JINAK NEŽ KDY DŘÍV');
+over('Asistent::preloz: HTML pole drží kostru', $prelozeno['text'], '<p>KRÁTKÝ <em>TEXT</em> ČLÁNKU, KTERÝ MÁ ASPOŇ PÁR DESÍTEK ZNAKŮ.</p>');
+over('Asistent::preloz: prázdné pole zůstane prázdné', $prelozeno['seo_popis'], '');
+$falesny->volani = 0;
+$dlouhy = $falesny->preloz(['text' => str_repeat('<p>' . str_repeat('Věta o něčem. ', 100) . '</p>', 9)], 'de');
+over('Asistent::preloz: dlouhý článek jde po dávkách', [$falesny->volani > 1, substr_count($dlouhy['text'], '<p>')], [true, 9]);
+try {
+    $falesny->preloz(['text' => '<p>nic</p>'], 'xx');
+    over('Asistent::preloz: neznámý jazyk odmítne', 'prošlo', 'výjimka');
+} catch (RuntimeException) {
+    over('Asistent::preloz: neznámý jazyk odmítne', 'výjimka', 'výjimka');
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

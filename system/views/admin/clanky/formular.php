@@ -12,6 +12,8 @@
  * @var bool $smiVydavat
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var bool $asistent  AI asistent je zapnutý a má klíč
+ * @var list<string> $jazykyPrekladu  jazyky, do kterých jde článek přeložit (jen u uloženého článku ve výchozím jazyce)
+ * @var array<string, int> $preklady  existující překlady: jazyk => číslo článku
  * @var array{cas:string, data:string}|null $konceptServer  rozepsaný stav uložený na serveru (z jiného zařízení)
  * @var array<int, string> $vsichniAutori
  * @var list<int> $spoluautori
@@ -180,8 +182,25 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </details>
 
 <?php if ($jazykyWebu): ?>
-<details class="pokrocile"<?= $original !== '' ? ' open' : '' ?>>
+<details class="pokrocile"<?= $original !== '' || $preklady !== [] ? ' open' : '' ?>>
 <summary><?= e(t('Překlad článku')) ?></summary>
+<?php if ($jazykyPrekladu !== []): ?>
+<div class="radek pres-celou">
+	<span class="popisek"><?= e(t('Jazykové verze článku')) ?></span>
+	<div class="volby">
+<?php foreach ($jazykyPrekladu as $kodJazyka): $nazevJazyka = PhpRS\Core\Jazyk::DOSTUPNE[$kodJazyka][0]; ?>
+<?php if (isset($preklady[$kodJazyka])): ?>
+		<a class="navigace" href="<?= e($modul->url('edit', ['id' => $preklady[$kodJazyka]])) ?>"><?= e($nazevJazyka) ?>: <?= e(t('otevřít překlad')) ?></a>
+<?php elseif ($asistent): ?>
+		<button class="navigace" type="submit" name="prelozit_do" value="<?= e($kodJazyka) ?>" formaction="<?= e($modul->url('preloz')) ?>" formnovalidate data-potvrdit="<?= e(t('Přeložit uloženou verzi článku asistentem? Vznikne koncept, který před vydáním přečtete. Překlad může trvat i minutu.')) ?>"><?= e(t('Přeložit asistentem')) ?>: <?= e($nazevJazyka) ?></button>
+<?php else: ?>
+		<span class="napoveda" style="display:inline"><?= e($nazevJazyka) ?>: <?= e(t('zatím bez překladu')) ?></span>
+<?php endif ?>
+<?php endforeach ?>
+		<span class="napoveda"><?= e(t('Překládá se naposledy uložená verze. Překlad se založí jako koncept v rubrice daného jazyka a propojí se s tímto článkem.')) ?></span>
+	</div>
+</div>
+<?php endif ?>
 <div class="radek pres-celou">
 	<label for="preklad_z"><?= e(t('Originál ve výchozím jazyce')) ?></label>
 	<input class="textpole siroke" type="text" id="preklad_z" name="preklad_z" value="<?= e($original) ?>" maxlength="255" placeholder="<?= e(t('adresa nebo číslo původního článku')) ?>">

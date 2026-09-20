@@ -95,7 +95,7 @@ final class Clanky extends Modul
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
-            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'pristup' => 0, 'preklad_z' => null, 'medium_url' => '', 'zive' => 0, 'recenze_predmet' => '', 'recenze_hodnoceni' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
+            'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'externi_autor' => '', 'pristup' => 0, 'preklad_z' => null, 'medium_url' => '', 'zive' => 0, 'recenze_predmet' => '', 'recenze_hodnoceni' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
         ]);
     }
 
@@ -161,6 +161,7 @@ final class Clanky extends Modul
             'seo_titulek' => mb_substr($r->post('seo_titulek'), 0, 255),
             'seo_popis' => mb_substr($r->post('seo_popis'), 0, 320),
             'noindex' => (int) $r->postBool('noindex'),
+            'externi_autor' => mb_substr(trim($r->post('externi_autor')), 0, 120),
             'medium_url' => mb_substr(trim($r->post('medium_url')), 0, 255),
             'zive' => min(2, max(0, $r->postInt('zive'))),
             'recenze_predmet' => mb_substr($r->post('recenze_predmet'), 0, 160),
@@ -215,6 +216,13 @@ final class Clanky extends Modul
         }
 
         Galerie::zapisPouziti($this->db, $id, $data['obrazek'], $data['uvod'], $data['text']);
+        // spoluautoři: jen existující účty, bez hlavního autora
+        $this->db->delete('clanky_autori', ['idc' => $id]);
+        foreach (array_unique(array_map(intval(...), $r->postList('spoluautori'))) as $idu) {
+            if ($idu !== $data['autor'] && $this->db->value('SELECT idu FROM {user} WHERE idu = ?', [$idu]) !== null) {
+                $this->db->insert('clanky_autori', ['idc' => $id, 'idu' => $idu]);
+            }
+        }
         \PhpRS\Core\Hledani::indexuj($this->db, $id);
         // uložený článek ruší rozepsaný stav na serveru (u nového článku je veden pod číslem 0)
         $this->db->run('DELETE FROM {clanky_koncepty} WHERE kdo = ? AND idc IN (0, ?)', [$auth->id(), $id]);
@@ -493,6 +501,8 @@ final class Clanky extends Modul
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
             'konceptServer' => $this->request->isPost() ? null : $this->db->one('SELECT cas, data FROM {clanky_koncepty} WHERE kdo = ? AND idc = ?', [$auth->id(), (int) $clanek['idc']]),
+            'vsichniAutori' => $this->db->pairs("SELECT idu, IF(jmeno = '', user, jmeno) FROM {user} WHERE blokovat = 0 ORDER BY 2"),
+            'spoluautori' => $this->request->isPost() ? array_map(intval(...), $this->request->postList('spoluautori')) : array_map(intval(...), array_column($this->db->all('SELECT idu FROM {clanky_autori} WHERE idc = ?', [(int) $clanek['idc']]), 'idu')),
             'jazykyWebu' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) !== [],
             'original' => empty($clanek['preklad_z']) ? '' : (string) $this->db->value('SELECT seo_link FROM {clanky} WHERE idc = ?', [$clanek['preklad_z']]),
             'asistent' => (new \PhpRS\Core\Asistent($this->app->settings()))->pripraven(),

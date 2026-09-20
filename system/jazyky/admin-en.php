@@ -847,4 +847,9 @@ return [
     'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.' => 'Less spam and a more civil discussion; readers comment under their account.',
     'nahlášeno %s×' => 'reported %s×',
     'registrovaný čtenář' => 'registered reader',
+    'Spoluautoři a externí autor' => 'Co-authors and external author',
+    'Spoluautoři' => 'Co-authors',
+    'Externí autor' => 'External author',
+    'např. ČTK nebo jméno hosta' => 'e.g. a news agency or a guest\'s name',
+    'Host nebo agentura bez účtu v administraci. Na webu se uvede jako autor.' => 'A guest or agency without an administration account. Shown as the author on the site.',
 ];

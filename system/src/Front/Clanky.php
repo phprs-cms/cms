@@ -30,7 +30,7 @@ final class Clanky
      */
     private const string SLOUPCE_VYPISU = "c.idc, c.seo_link, c.titulek, c.uvod, '' AS text, c.obrazek, c.tema, c.autor, c.datum, c.datum_pl, c.visible, c.zobr_na_indexu,
         c.priority, c.typ_clanku, c.sablona, c.skupina_cl, c.zdroj, c.t_slova, c.noindex, c.pristup, '' AS shrnuti, '' AS faq, c.povolit_kom, c.kom, c.visit,
-        c.hodnoceni, c.mn_hodnoceni, c.zmeneno, c.aktualizovano, c.jazyk, c.preklad_z, c.zive, c.medium_url, c.recenze_predmet, c.recenze_hodnoceni";
+        c.hodnoceni, c.mn_hodnoceni, c.zmeneno, c.aktualizovano, c.jazyk, c.preklad_z, c.zive, c.medium_url, c.recenze_predmet, c.recenze_hodnoceni, c.externi_autor";
 
     private const string VYDANE = 'c.visible = 1 AND c.datum <= NOW()';
 
@@ -67,6 +67,11 @@ final class Clanky
                     return $srcset === '' ? $m[0] : '<img' . $m[1] . 'src="' . $m[2] . '" srcset="' . e($srcset) . '" sizes="(max-width: 800px) 100vw, 800px"';
                 }, $clanek[$cast]) ?? $clanek[$cast];
             }
+        }
+
+        // externí autor (host, agentura) nahrazuje na webu autora z redakce; šablony dál tisknou jen autor_jm
+        if (($clanek['externi_autor'] ?? '') !== '' && empty($clanek['autori_slozeni'])) {
+            $clanek['autor_jm'] = $clanek['externi_autor'];
         }
 
         return $this->uprava === null ? $clanek : ($this->uprava)($clanek);
@@ -106,7 +111,8 @@ final class Clanky
     /** @return array{0: list<array<string, mixed>>, 1: int} */
     public function odAutora(int $idu, int $strana): array
     {
-        return $this->vypis($this->vydane . ' AND c.autor = ?', [$idu], 'c.datum DESC, c.idc DESC', $strana);
+        // i články, u kterých je spoluautorem
+        return $this->vypis($this->vydane . ' AND (c.autor = ? OR EXISTS (SELECT 1 FROM {clanky_autori} ca WHERE ca.idc = c.idc AND ca.idu = ?))', [$idu, $idu], 'c.datum DESC, c.idc DESC', $strana);
     }
 
     /** @return array{0: list<array<string, mixed>>, 1: int} */
@@ -138,8 +144,15 @@ final class Clanky
     public function podleSeo(string $seo, bool $iNevydany = false): ?array
     {
         $clanek = $this->db->one(self::SELECT . ' WHERE c.seo_link = ?' . ($iNevydany ? '' : ' AND ' . self::VYDANE), [$seo]);
+        if ($clanek === null) {
+            return null;
+        }
+        // spoluautoři se dohledávají jen u celého článku (ve výpisech by to byl dotaz navíc na každý článek)
+        $clanek['spoluautori'] = $this->db->all("SELECT u.idu, u.jmeno FROM {clanky_autori} ca JOIN {user} u ON u.idu = ca.idu WHERE ca.idc = ? AND u.jmeno <> '' ORDER BY u.jmeno", [$clanek['idc']]);
+        $clanek['autor_jm'] = implode(', ', array_filter([$clanek['externi_autor'] !== '' ? $clanek['externi_autor'] : $clanek['autor_jm'], ...array_column($clanek['spoluautori'], 'jmeno')])) ?: null;
+        $clanek['autori_slozeni'] = true;
 
-        return $clanek === null ? null : $this->priprav($clanek);
+        return $this->priprav($clanek);
     }
 
     /**

@@ -13,6 +13,8 @@
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var bool $asistent  AI asistent je zapnutý a má klíč
  * @var array{cas:string, data:string}|null $konceptServer  rozepsaný stav uložený na serveru (z jiného zařízení)
+ * @var array<int, string> $vsichniAutori
+ * @var list<int> $spoluautori
  * @var bool $jazykyWebu  web má další jazykové verze
  * @var string $original  adresa článku, jehož je tento překladem
  * @var array<int, string> $serialy
@@ -113,6 +115,15 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endforeach ?>
 	</select><?= $chyba('autor') ?></div>
 </div>
+<details class="pokrocile"<?= $spoluautori !== [] || $clanek['externi_autor'] !== '' ? ' open' : '' ?>>
+<summary><?= e(t('Spoluautoři a externí autor')) ?></summary>
+<div class="radek"><span class="popisek"><?= e(t('Spoluautoři')) ?></span><div class="volby">
+<?php foreach ($vsichniAutori as $idu => $jmenoAutora): ?>
+	<label><input type="checkbox" name="spoluautori[]" value="<?= (int) $idu ?>"<?= in_array((int) $idu, $spoluautori, true) ? ' checked' : '' ?>> <?= e($jmenoAutora) ?></label><br>
+<?php endforeach ?>
+</div></div>
+<div class="radek"><label for="externi_autor"><?= e(t('Externí autor')) ?></label><div><input class="textpole siroke" type="text" id="externi_autor" name="externi_autor" value="<?= e($clanek['externi_autor']) ?>" maxlength="120" placeholder="<?= e(t('např. ČTK nebo jméno hosta')) ?>"><span class="napoveda"><?= e(t('Host nebo agentura bez účtu v administraci. Na webu se uvede jako autor.')) ?></span></div></div>
+</details>
 <div class="radek">
 	<label for="stitky"><?= e(t('Štítky')) ?></label>
 	<div><input class="textpole siroke" type="text" id="stitky" name="stitky" value="<?= e($stitky) ?>" maxlength="600" list="stitky-seznam" autocomplete="off" data-stitky>

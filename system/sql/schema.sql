@@ -172,6 +172,7 @@ CREATE TABLE rs_clanky (
     recenze_predmet VARCHAR(160) NOT NULL DEFAULT '',      -- co se hodnotí
     recenze_hodnoceni TINYINT UNSIGNED NULL,               -- hodnocení v procentech, NULL = není recenze
     hledani        MEDIUMTEXT NULL,                       -- text bez diakritiky pro hledání (Core\Hledani)
+    externi_autor  VARCHAR(120) NOT NULL DEFAULT '',      -- host nebo agentura bez účtu v administraci
     PRIMARY KEY (idc),
     KEY ix_clanky_jazyk (jazyk, visible, datum),
     UNIQUE KEY uq_clanky_seo (seo_link),
@@ -550,4 +551,14 @@ CREATE TABLE rs_clanky_koncepty (
     cas  DATETIME NOT NULL,
     data MEDIUMTEXT NOT NULL,                             -- JSON {název pole formuláře: hodnota}
     PRIMARY KEY (kdo, idc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- Spoluautoři článku (hlavní autor je rs_clanky.autor)
+CREATE TABLE rs_clanky_autori (
+    idc INT UNSIGNED NOT NULL,
+    idu INT UNSIGNED NOT NULL,
+    PRIMARY KEY (idc, idu),
+    KEY ix_clanky_autori_idu (idu),
+    CONSTRAINT fk_clanky_autori_clanek FOREIGN KEY (idc) REFERENCES rs_clanky (idc) ON DELETE CASCADE,
+    CONSTRAINT fk_clanky_autori_autor FOREIGN KEY (idu) REFERENCES rs_user (idu) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

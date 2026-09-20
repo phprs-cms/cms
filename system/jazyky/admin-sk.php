@@ -740,4 +740,9 @@ return [
     'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.' => 'Menej spamu a slušnejšia diskusia; čitateľ komentuje pod svojím účtom.',
     'nahlášeno %s×' => 'nahlásené %s×',
     'registrovaný čtenář' => 'registrovaný čitateľ',
+    'Spoluautoři a externí autor' => 'Spoluautori a externý autor',
+    'Spoluautoři' => 'Spoluautori',
+    'Externí autor' => 'Externý autor',
+    'např. ČTK nebo jméno hosta' => 'napr. TASR alebo meno hosťa',
+    'Host nebo agentura bez účtu v administraci. Na webu se uvede jako autor.' => 'Hosť alebo agentúra bez účtu v administrácii. Na webe sa uvedie ako autor.',
 ];

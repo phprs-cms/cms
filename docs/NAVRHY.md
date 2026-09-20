@@ -9,7 +9,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 |---|-------|------|----------|
 | 1 | ✅ HOTOVO · **Tlačítka sdílení pod článkem** (Web Share API na mobilu, jinak odkazy na Facebook, X, LinkedIn, WhatsApp, e-mail, „kopírovat odkaz") | dnes nejde článek sdílet jinak než zkopírováním adresy; bez cizích skriptů, jen odkazy | S |
 | 2 | ✅ HOTOVO · **Medailonek autora**: fotka, pár vět o autorovi, sociální sítě; rámeček pod článkem a hlavička stránky autora | účet má jen jméno a web; důvěryhodnost autora (E-E-A-T) je dnes pro vyhledávače i AI podstatná | M |
-| 3 | **Více autorů u článku** a „externí autor" bez účtu | společné texty, hosté, agenturní zprávy | M |
+| 3 | ✅ HOTOVO · **Více autorů u článku** a „externí autor" bez účtu | společné texty, hosté, agenturní zprávy | M |
 | 4 | ✅ HOTOVO · **Automatické související články** podle štítků a rubriky (dnes jen ručně přes seriál) | drží čtenáře na webu bez práce redakce | S |
 | 5 | ✅ HOTOVO · **Hledání bez diakritiky a s našeptávačem** („nabrezi" najde „nábřeží"; fulltext nad indexem už běží) | čtenáři na mobilu diakritiku nepíšou | M |
 | 6 | ✅ HOTOVO · **Obsah článku (osnova)** z mezititulků u dlouhých textů + kotvy u H2 | dlouhé čtení, odkazování na část článku | S |
@@ -86,10 +86,10 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 24, 25, 29, 31, 32, 37, 38, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 24, 25, 29, 31, 32, 37, 38, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
-Další v pořadí: více autorů u článku (3), zálohy mimo server (23), platební brána (15),
+Další v pořadí: zálohy mimo server (23), platební brána (15),
 
 ## Doporučené pořadí
 

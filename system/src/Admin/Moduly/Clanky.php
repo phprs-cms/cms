@@ -331,6 +331,17 @@ final class Clanky extends Modul
         if (mb_strlen($q) < 2) {
             return Response::json(['clanky' => []]);
         }
+        if ($this->request->get('uprava') === '1') {
+            // paleta příkazů: odkazy do editoru, jen na články, které smí přihlášený upravovat
+            $clanky = $this->db->all(
+                'SELECT idc, titulek, visible AND datum <= NOW() AS vydany FROM {clanky} WHERE titulek LIKE ?' . $this->app->auth()->articleScope() . ' ORDER BY datum DESC LIMIT 8',
+                ['%' . addcslashes($q, '%_\\') . '%'],
+            );
+
+            return Response::json(['clanky' => array_map(fn (array $c): array => [
+                'titulek' => $c['titulek'], 'vydany' => (bool) $c['vydany'], 'url' => $this->url('edit', ['id' => $c['idc']]),
+            ], $clanky)]);
+        }
         $clanky = $this->db->all(
             "SELECT titulek, seo_link, jazyk, visible AND datum <= NOW() AS vydany FROM {clanky} WHERE titulek LIKE ? AND typ_clanku = 1 ORDER BY datum DESC LIMIT 8",
             ['%' . addcslashes($q, '%_\\') . '%'],

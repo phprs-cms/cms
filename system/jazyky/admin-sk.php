@@ -836,4 +836,11 @@ return [
     'Rozeslat newsletter %s odběratelům?' => 'Rozoslať newsletter %s odberateľom?',
     'Rozeslat newsletter odběratelům jazyka vybraných článků?' => 'Rozoslať newsletter odberateľom jazyka vybraných článkov?',
     'Vyberte články jen jedné jazykové verze – každý jazyk má vlastní vydání a vlastní odběratele.' => 'Vyberte články len jednej jazykovej verzie – každý jazyk má vlastné vydanie a vlastných odberateľov.',
+    'Rychlé hledání a příkazy' => 'Rýchle hľadanie a príkazy',
+    'Hledat…' => 'Hľadať…',
+    'Kam chcete jít? Napište název sekce, akce nebo článku…' => 'Kam chcete ísť? Napíšte názov sekcie, akcie alebo článku…',
+    'výběr' => 'výber',
+    'otevřít' => 'otvoriť',
+    'zavřít' => 'zavrieť',
+    'Upravit rozvržení přímo na webu' => 'Upraviť rozloženie priamo na webe',
 ];

@@ -948,4 +948,11 @@ return [
     'Rozeslat newsletter %s odběratelům?' => 'Send the newsletter to %s subscribers?',
     'Rozeslat newsletter odběratelům jazyka vybraných článků?' => 'Send the newsletter to subscribers of the selected articles\' language?',
     'Vyberte články jen jedné jazykové verze – každý jazyk má vlastní vydání a vlastní odběratele.' => 'Pick articles of one language version only – each language has its own issue and its own subscribers.',
+    'Rychlé hledání a příkazy' => 'Quick search and commands',
+    'Hledat…' => 'Search…',
+    'Kam chcete jít? Napište název sekce, akce nebo článku…' => 'Where do you want to go? Type a section, an action or an article title…',
+    'výběr' => 'select',
+    'otevřít' => 'open',
+    'zavřít' => 'close',
+    'Upravit rozvržení přímo na webu' => 'Edit the layout right on the site',
 ];

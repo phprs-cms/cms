@@ -243,4 +243,105 @@
 			if (zmeneno) { e.preventDefault(); e.returnValue = ''; }
 		});
 	});
+	/* ---------- paleta příkazů: Ctrl/⌘+K – sekce, rychlé akce a hledání článku ---------- */
+
+	var paleta = document.getElementById('paleta');
+	if (paleta && typeof paleta.showModal === 'function') {
+		var pPole = paleta.querySelector('.paleta-pole');
+		var pSeznam = paleta.querySelector('.paleta-seznam');
+		var pPrikazy = [];
+		try { pPrikazy = JSON.parse(document.getElementById('paleta-data').textContent) || []; } catch (e) {}
+		var pClanky = [];
+		var pVybrano = 0;
+		var pCasovac = null;
+		var bezDiakritiky = function (t) { return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); };
+
+		var pPolozky = function () {
+			var q = bezDiakritiky(pPole.value.trim());
+			var slova = q.split(/\s+/).filter(Boolean);
+			var prikazy = pPrikazy.filter(function (p) {
+				var kde = bezDiakritiky(p.n + ' ' + p.s);
+				return slova.every(function (s) { return kde.indexOf(s) !== -1; });
+			});
+			return (q === '' ? prikazy.slice(0, 9) : prikazy.slice(0, 7)).concat(q === '' ? [] : pClanky);
+		};
+		var pKresli = function () {
+			var polozky = pPolozky();
+			pVybrano = Math.max(0, Math.min(pVybrano, polozky.length - 1));
+			pSeznam.textContent = '';
+			polozky.forEach(function (p, i) {
+				var li = document.createElement('li');
+				li.setAttribute('role', 'option');
+				li.setAttribute('aria-selected', i === pVybrano ? 'true' : 'false');
+				var a = document.createElement('a');
+				a.href = p.u;
+				a.textContent = p.n;
+				var s = document.createElement('small');
+				s.textContent = p.s;
+				a.appendChild(s);
+				li.appendChild(a);
+				li.addEventListener('mousemove', function () { if (pVybrano !== i) { pVybrano = i; pKresli(); } });
+				pSeznam.appendChild(li);
+			});
+			if (polozky.length === 0) {
+				var nic = document.createElement('li');
+				nic.className = 'paleta-nic';
+				nic.textContent = T('Nic takového tu není.');
+				pSeznam.appendChild(nic);
+			}
+			var vybrany = pSeznam.querySelector('[aria-selected="true"]');
+			if (vybrany && vybrany.scrollIntoView) { vybrany.scrollIntoView({ block: 'nearest' }); }
+		};
+		var pOtevri = function () {
+			if (paleta.open) { return; }
+			pPole.value = '';
+			pClanky = [];
+			pVybrano = 0;
+			pKresli();
+			paleta.showModal();
+			pPole.focus();
+		};
+
+		document.addEventListener('keydown', function (e) {
+			if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 'k' || e.key === 'K')) {
+				e.preventDefault();
+				if (paleta.open) { paleta.close(); } else { pOtevri(); }
+			}
+		});
+		document.addEventListener('click', function (e) {
+			if (e.target.closest && e.target.closest('[data-paleta]')) { pOtevri(); }
+			if (e.target === paleta) { paleta.close(); } // klik mimo okno
+		});
+		pPole.addEventListener('input', function () {
+			pVybrano = 0;
+			pKresli();
+			clearTimeout(pCasovac);
+			var q = pPole.value.trim();
+			var adresa = paleta.getAttribute('data-clanky');
+			if (!adresa || q.length < 2) { pClanky = []; return; }
+			pCasovac = setTimeout(function () {
+				fetch(adresa + '&q=' + encodeURIComponent(q), { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (d) {
+					if (pPole.value.trim() !== q) { return; } // mezitím se psalo dál
+					pClanky = (d.clanky || []).map(function (c) { return { n: c.titulek, u: c.url, s: c.vydany ? T('článek') : T('článek – nevydaný') }; });
+					pKresli();
+				}).catch(function () {});
+			}, 200);
+		});
+		pPole.addEventListener('keydown', function (e) {
+			var pocet = pPolozky().length;
+			if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+				e.preventDefault();
+				pVybrano = pocet === 0 ? 0 : (pVybrano + (e.key === 'ArrowDown' ? 1 : pocet - 1)) % pocet;
+				pKresli();
+			} else if (e.key === 'Enter') {
+				e.preventDefault();
+				var cil = pSeznam.querySelector('[aria-selected="true"] a');
+				if (cil) { window.location.href = cil.href; }
+			}
+		});
+		// na Macu ukázat ⌘K
+		if (/Mac|iPhone|iPad/.test(navigator.platform || '')) {
+			Array.prototype.forEach.call(document.querySelectorAll('[data-paleta] kbd'), function (k) { k.textContent = '⌘K'; });
+		}
+	}
 })();

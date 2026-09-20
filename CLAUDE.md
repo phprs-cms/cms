@@ -113,6 +113,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **E-mail čtenáři se skládá v jazyce příjemce, ne toho, kdo ho spustil:** obal vykreslení do `Jazyk::docasne($kod, fn)` (viz `Rozesilka::posli()`);
   texty e-mailů patří do slovníků webu (`en/sk/de.php`), ne administrace. Sloupec `jazyk` mají i novinky, ankety, odběratelé a vydání newsletteru.
 
+- **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
+  v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.
+
 - **Prázdný výpis** v administraci vypisuj sdílenou šablonou `views/admin/prazdno.php` (ikona, nadpis, věta, první akce) – ne holou větou.
   Ikony bloků ve vizuálním editoru jsou ze stejné sady jako menu administrace (`views/admin/ikony.php`, klíče `b-*`); `Bloky::KATALOG` nese název ikony.
 

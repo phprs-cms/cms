@@ -989,3 +989,68 @@ body.login {
 .prazdny-stav-nadpis { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
 .prazdny-stav-text { max-width: 520px; margin: 0 auto 14px; color: var(--text-slaby); }
 .prazdny-stav p:last-child { margin-bottom: 0; }
+
+/* paleta příkazů (Ctrl/⌘+K) */
+.paleta-spustit {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px 8px 6px 12px;
+	border: 1px solid var(--linka-pole);
+	border-radius: 8px;
+	background: var(--plocha);
+	color: var(--text-slaby);
+	font: inherit;
+	font-size: 13px;
+	cursor: pointer;
+}
+.paleta-spustit:hover { border-color: var(--akcent); color: var(--text); }
+.paleta-spustit kbd, .paleta-napoveda kbd {
+	padding: 1px 6px;
+	border: 1px solid var(--linka-pole);
+	border-radius: 5px;
+	background: var(--podklad);
+	font: 600 11px/1.5 system-ui, sans-serif;
+	color: var(--text-slaby);
+}
+.paleta {
+	width: min(600px, calc(100vw - 32px));
+	margin-top: 12vh;
+	padding: 0;
+	border: 1px solid var(--linka);
+	border-radius: 12px;
+	background: var(--plocha);
+	color: var(--text);
+	box-shadow: 0 24px 60px rgba(15, 17, 21, 0.28);
+	overflow: hidden;
+}
+.paleta::backdrop { background: rgba(15, 17, 21, 0.45); }
+.paleta-pole {
+	display: block;
+	width: 100%;
+	padding: 16px 18px;
+	border: 0;
+	border-bottom: 1px solid var(--linka);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 16px;
+	outline: none;
+}
+.paleta-seznam { max-height: 46vh; margin: 0; padding: 6px; overflow-y: auto; list-style: none; }
+.paleta-seznam a {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	padding: 9px 12px;
+	border-radius: 8px;
+	color: inherit;
+	text-decoration: none;
+}
+.paleta-seznam small { flex: none; color: var(--text-slaby); font-size: 12px; }
+.paleta-seznam [aria-selected="true"] a { background: var(--akcent); color: var(--na-akcentu); }
+.paleta-seznam [aria-selected="true"] small { color: inherit; opacity: 0.8; }
+.paleta-nic { padding: 14px 12px; color: var(--text-slaby); }
+.paleta-napoveda { margin: 0; padding: 8px 14px; border-top: 1px solid var(--linka); color: var(--text-slaby); font-size: 12px; }
+@media (max-width: 720px) { .paleta-spustit span { display: none; } }

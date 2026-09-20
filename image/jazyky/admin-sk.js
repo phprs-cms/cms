@@ -94,5 +94,8 @@ window.PHPRS_PREKLAD = {
 	"Ano, provést": "Áno, vykonať",
 	"Zrušit": "Zrušiť",
 	"Obnovit ji": "Obnoviť ju",
-	"Zahodit": "Zahodiť"
+	"Zahodit": "Zahodiť",
+	"Nic takového tu není.": "Nič také tu nie je.",
+	"článek": "článok",
+	"článek – nevydaný": "článok – nevydaný"
 };

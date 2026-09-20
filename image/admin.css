@@ -484,3 +484,16 @@ body.login h1 b {
 .prazdny-stav-nadpis { margin: 0 0 4px; font-weight: bold; }
 .prazdny-stav-text { max-width: 520px; margin: 0 auto 10px; }
 .prazdny-stav p:last-child { margin-bottom: 0; }
+
+/* paleta prikazu (Ctrl+K) */
+.paleta-spustit { border: 1px solid #000000; background-color: #FFFFFF; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; padding: 1px 6px; cursor: pointer; }
+.paleta-spustit kbd, .paleta-napoveda kbd { font-family: inherit; font-weight: bold; }
+.paleta { width: 520px; max-width: 94%; margin-top: 90px; padding: 0; border: 2px solid var(--modra); background-color: #FFFFFF; color: #000000; }
+.paleta::backdrop { background: rgba(0, 0, 0, 0.35); }
+.paleta-pole { display: block; width: 100%; box-sizing: border-box; padding: 6px 8px; border: 0; border-bottom: 1px solid var(--modra); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; outline: none; }
+.paleta-seznam { max-height: 300px; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.paleta-seznam a { display: block; padding: 4px 8px; color: var(--modra); text-decoration: none; }
+.paleta-seznam small { float: right; color: #444444; }
+.paleta-seznam [aria-selected="true"] a { background-color: var(--modra-vypln); color: #000000; }
+.paleta-nic { padding: 6px 8px; }
+.paleta-napoveda { margin: 0; padding: 3px 8px; border-top: 1px solid var(--modra); background-color: var(--modra-svetla); font-size: 10px; }

@@ -404,6 +404,27 @@ final class Clanky extends Modul
         return $this->formular(['titulek' => $revize['titulek'], 'uvod' => $revize['uvod'], 'text' => $revize['text']] + $clanek);
     }
 
+    /** Co se od uložené verze změnilo: porovnání starší verze se současným zněním článku. */
+    protected function akcePorovnej(): Response
+    {
+        $clanek = $this->nacti($this->request->getInt('id'));
+        $revize = $clanek === null ? null : $this->db->one(
+            "SELECT r.*, IF(u.jmeno = '' OR u.jmeno IS NULL, u.user, u.jmeno) AS kdo_jm FROM {clanky_revize} r LEFT JOIN {user} u ON u.idu = r.kdo WHERE r.idr = ? AND r.idc = ?",
+            [$this->request->getInt('idr'), $clanek['idc'] ?? 0],
+        );
+        if ($revize === null) {
+            return $this->chyba('Verze článku neexistuje.', 404);
+        }
+
+        return $this->view('porovnani', 'Porovnání verzí', [
+            'clanek' => $clanek,
+            'revize' => $revize,
+            'titulek' => \PhpRS\Core\Rozdil::html((string) $revize['titulek'], (string) $clanek['titulek']),
+            'uvod' => \PhpRS\Core\Rozdil::html((string) $revize['uvod'], (string) $clanek['uvod']),
+            'text' => \PhpRS\Core\Rozdil::html((string) $revize['text'], (string) $clanek['text']),
+        ]);
+    }
+
     protected function akceSmaz(): Response
     {
         if (!$this->request->isPost()) {

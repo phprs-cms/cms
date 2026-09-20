@@ -692,4 +692,12 @@ return [
     'vypnutý – web je vždy světlý' => 'vypnutý – web je vždy svetlý',
     'podle zařízení čtenáře' => 'podľa zariadenia čitateľa',
     'Čtenář s tmavým režimem v telefonu nebo počítači uvidí tmavou verzi šablony. Zkontrolujte logo: tmavé logo na průhledném pozadí by na tmavém webu zaniklo.' => 'Čitateľ s tmavým režimom v telefóne alebo počítači uvidí tmavú verziu šablóny. Skontrolujte logo: tmavé logo na priehľadnom pozadí by na tmavom webe zaniklo.',
+    'co se změnilo' => 'čo sa zmenilo',
+    'Porovnání verzí' => 'Porovnanie verzií',
+    'Načíst tuto verzi do editoru' => 'Načítať túto verziu do editora',
+    'Verze z %s' => 'Verzia z %s',
+    'současné znění' => 'súčasné znenie',
+    'přidáno' => 'pridané',
+    'smazáno' => 'zmazané',
+    'Text se od této verze nezměnil (změny formátování a obrázků se neporovnávají).' => 'Text sa od tejto verzie nezmenil (zmeny formátovania a obrázkov sa neporovnávajú).',
 ];

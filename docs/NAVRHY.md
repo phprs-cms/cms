@@ -18,7 +18,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 9 | ✅ HOTOVO · **Výběr odkazu na vlastní článek** v dialogu odkazu (hledání podle titulku) | interní prolinkování je základ SEO | S |
 | 10 | **Ořez a otočení obrázku, bod zájmu** pro výřezy v otvíráku | dnes se fotka ořízne na střed | M |
 | 11 | ✅ HOTOVO · **Přílohy ke stažení** (PDF, tabulky) v Médiích a v článku – nahrazuje zamýšlenou „Download sekci" | tiskové zprávy, dokumenty ke kauzám | M |
-| 12 | **Ukládání rozepsaného článku na server** (dnes jen v prohlížeči) a porovnání revizí (co se změnilo) | práce z více zařízení, korektury | M |
+| 12 | ◐ ČÁSTEČNĚ (porovnání verzí hotové; ukládání rozepsaného článku na server zbývá) · **Ukládání rozepsaného článku na server** (dnes jen v prohlížeči) a porovnání revizí (co se změnilo) | práce z více zařízení, korektury | M |
 | 13 | ✅ HOTOVO · **Kurátorovaná hlavní stránka**: ruční pořadí prvních N článků přetažením (dnes jen „připnout") | editor dne si chce titulní stranu poskládat | M |
 | 14 | ✅ HOTOVO · **Stránky témat**: štítek s popisem, obrázkem a vlastním úvodem („speciál") | volby, kauzy, festivaly | S |
 
@@ -86,7 +86,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne), 12 (porovnání verzí ano, ukládání konceptu na server ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
 Další v pořadí: více autorů u článku (3), ukládání rozepsaného článku na server

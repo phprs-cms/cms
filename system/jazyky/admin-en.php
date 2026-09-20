@@ -794,4 +794,12 @@ return [
     'vypnutý – web je vždy světlý' => 'off – the site is always light',
     'podle zařízení čtenáře' => 'follow the reader\'s device',
     'Čtenář s tmavým režimem v telefonu nebo počítači uvidí tmavou verzi šablony. Zkontrolujte logo: tmavé logo na průhledném pozadí by na tmavém webu zaniklo.' => 'Readers with dark mode on their phone or computer see a dark version of the template. Check your logo: a dark logo on a transparent background would disappear on a dark site.',
+    'co se změnilo' => 'what changed',
+    'Porovnání verzí' => 'Compare versions',
+    'Načíst tuto verzi do editoru' => 'Load this version into the editor',
+    'Verze z %s' => 'Version from %s',
+    'současné znění' => 'current text',
+    'přidáno' => 'added',
+    'smazáno' => 'deleted',
+    'Text se od této verze nezměnil (změny formátování a obrázků se neporovnávají).' => 'The text has not changed since this version (formatting and image changes are not compared).',
 ];

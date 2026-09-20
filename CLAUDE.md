@@ -35,8 +35,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   žádné nahrávání kódu z administrace. Nová volitelná funkce = položka v `SEZNAM` + `ROZSIRENI` u modulu +
   kontrola `Rozsireni::je()` na webu. Jádro (články, média, rubriky, stránky, bloky, uživatelé, nastavení) vypnout nejde.
 - **Vydání a aktualizace:** verze je `PHPRS_VERSION` v `system/bootstrap.php`; `php tools/vydani.php <verze> --url=…`
-  vytvoří `dist/*.zip` a podepsaný `dist/aktualizace.json`. Soukromý klíč `tools/klice/vydavatel.key` NIKDY do gitu
-  ani do balíčku; veřejný `system/aktualizace.pub` je součástí systému. `Core\Aktualizace::CHRANENE` = co se nepřepisuje.
+  vytvoří `dist/*.zip` a podepsaný `dist/aktualizace.json`. Soukromé klíče `tools/klice/*.key` NIKDY do gitu ani do balíčku;
+  `system/aktualizace.pub` nese veřejné klíče (provozní + záložní, na řádek jeden) a podpisy ověřuje jen `Core\Podpis` – platí kterýkoli z nich.
+  Podepisuje se i příznak bezpečnostního vydání (instaluje se samo). Výměna, ztráta a únik klíče: `docs/VYDAVANI.md`. `Core\Aktualizace::CHRANENE` = co se nepřepisuje.
   Až bude web projektu, doplnit `Aktualizace::VYCHOZI_URL`.
 - **Nastavení** (`Moduly\Konfigurace`): nová volba = klíč v `Settings::DEFAULTS` + typ v `Konfigurace::POLE`
   (podle typu se hodnota čistí) + řádek `$pole(...)` v `views/admin/config/<zalozka>.php`.

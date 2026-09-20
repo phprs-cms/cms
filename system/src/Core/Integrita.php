@@ -23,10 +23,7 @@ final class Integrita
         }
         $data = json_decode((string) file_get_contents(self::SEZNAM), true);
         $soubory = is_array($data['soubory'] ?? null) ? $data['soubory'] : null;
-        $klic = base64_decode(trim((string) @file_get_contents($klicSoubor)), true);
-        $podpis = base64_decode((string) ($data['podpis'] ?? ''), true);
-        if ($soubory === null || !function_exists('sodium_crypto_sign_verify_detached') || $klic === false || $podpis === false || strlen($podpis) !== SODIUM_CRYPTO_SIGN_BYTES
-            || !sodium_crypto_sign_verify_detached($podpis, self::kPodpisu((string) ($data['verze'] ?? ''), $soubory), $klic)) {
+        if ($soubory === null || !Podpis::plati(self::kPodpisu((string) ($data['verze'] ?? ''), $soubory), (string) ($data['podpis'] ?? ''), $klicSoubor)) {
             return ['stav' => 'chyba', 'info' => 'seznam souborů jádra (system/soubory.json) je poškozený nebo nemá platný podpis vydavatele'] + $prazdne;
         }
         $zmenene = $chybi = [];

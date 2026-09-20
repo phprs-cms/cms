@@ -255,6 +255,31 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PHPRS_ROOT
 }
 over('šablony administrace neobsahují inline skripty (CSP)', $inline, []);
 
+/* ---------- podpisy vydavatele: víc klíčů, výměna a odvolání klíče ---------- */
+if (function_exists('sodium_crypto_sign_keypair')) {
+    $par = fn (): array => (fn (string $p): array => [sodium_crypto_sign_secretkey($p), sodium_crypto_sign_publickey($p)])(sodium_crypto_sign_keypair());
+    [[$skProvozni, $pkProvozni], [$skZalozni, $pkZalozni], [$skNovy, $pkNovy], [$skCizi]] = [$par(), $par(), $par(), $par()];
+    $podepis = fn (string $zprava, string $sk): string => base64_encode(sodium_crypto_sign_detached($zprava, $sk));
+    $pub = tempnam(sys_get_temp_dir(), 'rs');
+    file_put_contents($pub, "# poznámka\n" . base64_encode($pkProvozni) . " provozni\n\nnesmysl-ktery-neni-klic\n" . base64_encode($pkZalozni) . " zalozni 2026-09-20\n");
+    $zprava = PhpRS\Core\Podpis::zpravaBalicku('3.0.1', str_repeat('A', 64), false);
+    over('Podpis::klice: dva platné klíče, poznámky a nesmysly se přeskočí', count(PhpRS\Core\Podpis::klice($pub)), 2);
+    over('Podpis: provozní klíč platí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skProvozni), $pub), true);
+    over('Podpis: záložní klíč platí také', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skZalozni), $pub), true);
+    over('Podpis: cizí klíč neplatí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skCizi), $pub), false);
+    over('Podpis: poškozený podpis neplatí', PhpRS\Core\Podpis::plati($zprava, 'AAAA', $pub), false);
+    over('Podpis: běžné vydání nejde prohlásit za bezpečnostní', PhpRS\Core\Podpis::plati(PhpRS\Core\Podpis::zpravaBalicku('3.0.1', str_repeat('A', 64), true), $podepis($zprava, $skProvozni), $pub), false);
+    over('Podpis: otisk balíčku se porovnává bez ohledu na velikost písmen', PhpRS\Core\Podpis::zpravaBalicku('3.0.1', 'ABC', false), '3.0.1|abc|bezne');
+    // únik provozního klíče: vydání podepsané záložním přinese soubor bez něj a s novým provozním
+    file_put_contents($pub, base64_encode($pkNovy) . " provozni\n" . base64_encode($pkZalozni) . " zalozni\n");
+    over('výměna klíče: odvolaný klíč už neplatí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skProvozni), $pub), false);
+    over('výměna klíče: nový provozní klíč platí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skNovy), $pub), true);
+    file_put_contents($pub, '');
+    over('Podpis: bez klíčů neplatí nic', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skNovy), $pub), false);
+    unlink($pub);
+}
+over('system/aktualizace.pub obsahuje aspoň jeden platný klíč', count(PhpRS\Core\Podpis::klice(PHPRS_ROOT . '/system/aktualizace.pub')) >= 1, true);
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

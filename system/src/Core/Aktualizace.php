@@ -9,8 +9,8 @@ namespace PhpRS\Core;
  *
  * Zdroj je soubor aktualizace.json: {"verze","vydano","url","sha256","podpis","min_php","bezpecnostni","zmeny":[...]}.
  * Vydání označené "bezpecnostni": true se umí nainstalovat samo (Nastavení -> Zálohy a aktualizace).
- * Balíček (ZIP) se přijme jen tehdy, když sedí SHA-256 a podpis Ed25519 nad řetězcem "verze|sha256"
- * ověřený veřejným klíčem system/aktualizace.pub. Soukromý klíč má jen vydavatel (tools/vydani.php).
+ * Balíček (ZIP) se přijme jen tehdy, když sedí SHA-256 a podpis Ed25519 (Core\Podpis::zpravaBalicku) ověřený některým
+ * z veřejných klíčů v system/aktualizace.pub (provozní + záložní, viz docs/VYDAVANI.md). Soukromý klíč má jen vydavatel (tools/vydani.php).
  * Nikdy se nepřepisuje config.php, media/, storage/, install.php ani layouty, které nejsou součástí balíčku.
  */
 final class Aktualizace
@@ -122,8 +122,7 @@ final class Aktualizace
         if (!is_writable($this->koren) || !is_writable($this->koren . '/system')) {
             throw new \RuntimeException('Soubory systému nejsou zapisovatelné - aktualizujte ručně přes FTP.');
         }
-        $klic = is_file($this->klicSoubor) ? base64_decode(trim((string) file_get_contents($this->klicSoubor)), true) : false;
-        if ($klic === false || strlen($klic) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+        if (Podpis::klice($this->klicSoubor) === []) {
             throw new \RuntimeException('Chybí veřejný klíč vydavatele (system/aktualizace.pub), balíček nelze ověřit.');
         }
 
@@ -132,11 +131,11 @@ final class Aktualizace
         try {
             $this->stahni((string) $m['url'], $zip);
             $sha = hash_file('sha256', $zip);
-            $podpis = base64_decode((string) $m['podpis'], true);
             if (!hash_equals(strtolower((string) $m['sha256']), $sha)) {
                 throw new \RuntimeException('Kontrolní součet balíčku nesouhlasí.');
             }
-            if ($podpis === false || strlen($podpis) !== SODIUM_CRYPTO_SIGN_BYTES || !sodium_crypto_sign_verify_detached($podpis, $m['verze'] . '|' . $sha, $klic)) {
+            // podpis kryje i příznak bezpečnostního vydání: kdo by ovládl jen web s manifestem, nesmí běžné vydání prohlásit za bezpečnostní
+            if (!Podpis::plati(Podpis::zpravaBalicku((string) $m['verze'], $sha, !empty($m['bezpecnostni'])), (string) $m['podpis'], $this->klicSoubor)) {
                 throw new \RuntimeException('Podpis balíčku není platný - balíček nepochází od vydavatele phpRS.');
             }
             $soubory = $this->rozbal($zip, $pracovni);

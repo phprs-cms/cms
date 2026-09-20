@@ -679,4 +679,13 @@ return [
     'Zatím žádné štítky. Přidáte je v editoru článku v poli Štítky.' => 'Zatiaľ žiadne štítky. Pridáte ich v editore článku v poli Štítky.',
     'Štítek' => 'Štítok',
     'Smazat štítek? Články zůstanou, jen ho už nebudou mít.' => 'Zmazať štítok? Články zostanú, len ho už nebudú mať.',
+    'Titulní strana' => 'Titulná strana',
+    'Připnout' => 'Pripnúť',
+    'Odepnout' => 'Odopnúť',
+    'Připnuté články jsou na hlavní stránce nahoře v pořadí, které tady určíte – přetažením nebo šipkami. Pod nimi následují ostatní články od nejnovějšího. První připnutý článek je otvírák.' => 'Pripnuté články sú na hlavnej stránke hore v poradí, ktoré tu určíte – pretiahnutím alebo šípkami. Pod nimi nasledujú ostatné články od najnovšieho. Prvý pripnutý článok je otvárak.',
+    'Nahoře na titulní straně' => 'Hore na titulnej strane',
+    'Sem přetáhněte článek, nebo u něj klepněte na Připnout.' => 'Sem pretiahnite článok, alebo pri ňom kliknite na Pripnúť.',
+    'Nejnovější články' => 'Najnovšie články',
+    'Žádné další články.' => 'Žiadne ďalšie články.',
+    'Uložit titulní stranu' => 'Uložiť titulnú stranu',
 ];

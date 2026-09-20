@@ -941,3 +941,19 @@ body.login {
 .pruvodce-kroky .hotovo a::before { content: "✓"; background: var(--akcent); color: #fff; }
 .pruvodce-kroky .hotovo strong { text-decoration: line-through; }
 .log-chyb { max-height: 320px; overflow: auto; padding: 12px 14px; border: 1px solid var(--linka); border-radius: 8px; background: var(--podklad, #F7F7F8); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }
+
+/* ---------- titulní strana: ruční pořadí článků ---------- */
+.titulni-sloupce { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; }
+.titulni-seznam { min-height: 72px; margin: 0; padding: 8px; list-style: none; border: 1px dashed var(--linka-pole); border-radius: var(--radius); background: var(--plocha); counter-reset: poradi; }
+.titulni-seznam:empty::before { content: attr(data-prazdne); display: block; padding: 18px 10px; color: var(--text-slaby); font-size: 13px; text-align: center; }
+.titulni-seznam li { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--linka); border-radius: 8px; background: var(--plocha); cursor: grab; }
+.titulni-seznam li + li { margin-top: 6px; }
+.titulni-seznam li.tazeny { opacity: 0.45; }
+[data-seznam="pripnute"] li { counter-increment: poradi; }
+[data-seznam="pripnute"] li::before { content: counter(poradi); flex: none; width: 22px; text-align: center; font-weight: 600; color: var(--akcent); }
+.titulni-seznam img, .titulni-bez-obrazku { flex: none; width: 56px; height: 42px; border-radius: 4px; object-fit: cover; background: var(--linka); }
+.titulni-text { flex: 1; min-width: 0; display: grid; gap: 2px; font-size: 13.5px; line-height: 1.3; }
+.titulni-text small { color: var(--text-slaby); }
+.titulni-akce { flex: none; display: flex; align-items: center; gap: 4px; }
+.titulni-akce button[data-nahoru], .titulni-akce button[data-dolu] { width: 28px; height: 28px; border: 1px solid var(--linka); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+[data-seznam="dalsi"] button[data-nahoru], [data-seznam="dalsi"] button[data-dolu] { display: none; }

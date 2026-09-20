@@ -19,8 +19,8 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 10 | **Ořez a otočení obrázku, bod zájmu** pro výřezy v otvíráku | dnes se fotka ořízne na střed | M |
 | 11 | ✅ HOTOVO · **Přílohy ke stažení** (PDF, tabulky) v Médiích a v článku – nahrazuje zamýšlenou „Download sekci" | tiskové zprávy, dokumenty ke kauzám | M |
 | 12 | **Ukládání rozepsaného článku na server** (dnes jen v prohlížeči) a porovnání revizí (co se změnilo) | práce z více zařízení, korektury | M |
-| 13 | **Kurátorovaná hlavní stránka**: ruční pořadí prvních N článků přetažením (dnes jen „připnout") | editor dne si chce titulní stranu poskládat | M |
-| 14 | **Stránky témat**: štítek s popisem, obrázkem a vlastním úvodem („speciál") | volby, kauzy, festivaly | S |
+| 13 | ✅ HOTOVO · **Kurátorovaná hlavní stránka**: ruční pořadí prvních N článků přetažením (dnes jen „připnout") | editor dne si chce titulní stranu poskládat | M |
+| 14 | ✅ HOTOVO · **Stránky témat**: štítek s popisem, obrázkem a vlastním úvodem („speciál") | volby, kauzy, festivaly | S |
 
 ## 2. Čtenáři, komunita, příjmy
 
@@ -86,11 +86,11 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 18, 21, 24, 25, 29, 31, 32, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
-Další v pořadí: stránky témat (14), více autorů u článku (3), ukládání rozepsaného článku na server
-a porovnání revizí (12), kurátorovaná hlavní stránka (13), zálohy mimo server (23), newsletter 2.0 (20), platební brána (15),
+Další v pořadí: více autorů u článku (3), ukládání rozepsaného článku na server
+a porovnání revizí (12), zálohy mimo server (23), newsletter 2.0 (20), platební brána (15),
 tmavý režim a další šablony článku (37, 38).
 
 ## Doporučené pořadí

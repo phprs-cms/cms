@@ -460,3 +460,14 @@ body.login h1 b {
 	}
 }
 .log-chyb { max-height: 320px; overflow: auto; padding: 8px; border: 1px solid #999; background: #fff; font: 11px/1.4 monospace; white-space: pre-wrap; word-break: break-word; }
+
+/* titulní strana */
+.titulni-sloupce { display: flex; flex-wrap: wrap; gap: 16px; }
+.titulni-sloupce section { flex: 1 1 320px; }
+.titulni-seznam { min-height: 50px; margin: 0; padding: 4px; list-style: none; border: 1px dashed #999; background: #fff; }
+.titulni-seznam:empty::before { content: attr(data-prazdne); display: block; padding: 12px; color: #666; text-align: center; }
+.titulni-seznam li { display: flex; align-items: center; gap: 8px; padding: 4px; border: 1px solid #ccc; margin-bottom: 3px; cursor: move; background: #f4f4f4; }
+.titulni-seznam img, .titulni-bez-obrazku { width: 48px; height: 36px; object-fit: cover; background: #ddd; }
+.titulni-text { flex: 1; font-size: 12px; }
+.titulni-text small { display: block; color: #666; }
+[data-seznam="dalsi"] button[data-nahoru], [data-seznam="dalsi"] button[data-dolu] { display: none; }

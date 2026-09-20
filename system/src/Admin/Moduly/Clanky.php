@@ -245,6 +245,35 @@ final class Clanky extends Modul
         return Response::json(['ok' => $clanek !== null]);
     }
 
+    /**
+     * Titulní strana: ruční pořadí článků nahoře na hlavní stránce. Připnuté články mají prioritu 250, 245, 240…
+     * (hlavní stránka řadí podle priority a pak podle data), ostatní nulu.
+     */
+    protected function akceTitulni(): Response
+    {
+        if (!$this->app->auth()->smiVydavat()) {
+            return $this->chyba('Titulní stranu může skládat jen uživatel s právem vydávat.', 403);
+        }
+        if ($this->request->isPost()) {
+            $ids = array_slice(array_values(array_unique(array_filter(array_map(intval(...), explode(',', $this->request->post('poradi')))))), 0, 30);
+            $this->db->transaction(function () use ($ids): void {
+                $this->db->run('UPDATE {clanky} SET priority = 0 WHERE priority > 0');
+                foreach ($ids as $i => $idc) {
+                    $this->db->update('clanky', ['priority' => 250 - $i * 5], ['idc' => $idc]); // sloupec je TINYINT: 250, 245… (30 míst)
+                }
+            });
+
+            return $this->zpet('Titulní strana je uložená.', 'titulni');
+        }
+        $sloupce = "c.idc, c.titulek, c.datum, c.obrazek, c.priority, t.nazev AS tema_jm";
+        $vydane = "c.visible = 1 AND c.datum <= NOW() AND c.zobr_na_indexu = 1 AND c.jazyk = ''";
+
+        return $this->view('titulni', 'Titulní strana', [
+            'pripnute' => $this->db->all("SELECT {$sloupce} FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE {$vydane} AND c.priority > 0 ORDER BY c.priority DESC, c.datum DESC"),
+            'dalsi' => $this->db->all("SELECT {$sloupce} FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE {$vydane} AND c.priority = 0 ORDER BY c.datum DESC LIMIT 30"),
+        ]);
+    }
+
     /** Hledání článků podle titulku pro dialog odkazu v editoru. */
     protected function akceHledejJson(): Response
     {

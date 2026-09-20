@@ -780,4 +780,13 @@ return [
     'Téma' => 'Topic',
     'má úvod' => 'has an intro',
     'Smazat štítek? Články zůstanou, jen ho už nebudou mít.' => 'Delete the tag? Articles stay, they just lose this tag.',
+    'Titulní strana' => 'Front page',
+    'Připnout' => 'Pin',
+    'Odepnout' => 'Unpin',
+    'Připnuté články jsou na hlavní stránce nahoře v pořadí, které tady určíte – přetažením nebo šipkami. Pod nimi následují ostatní články od nejnovějšího. První připnutý článek je otvírák.' => 'Pinned articles appear at the top of the home page in the order you set here – by dragging or with the arrows. The rest follow below, newest first. The first pinned article is the lead story.',
+    'Nahoře na titulní straně' => 'At the top of the front page',
+    'Sem přetáhněte článek, nebo u něj klepněte na Připnout.' => 'Drag an article here, or click Pin next to it.',
+    'Nejnovější články' => 'Latest articles',
+    'Žádné další články.' => 'No other articles.',
+    'Uložit titulní stranu' => 'Save the front page',
 ];

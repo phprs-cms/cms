@@ -161,6 +161,37 @@
 		prekresli();
 	}
 
+	// Titulní strana: dva seznamy (připnuté / ostatní), přetahování, šipky a tlačítko Připnout; pořadí jde do skrytého pole
+	var titulni = document.querySelector('form[data-titulni]');
+	if (titulni) {
+		var pripnute = titulni.querySelector('[data-seznam="pripnute"]'), ostatni = titulni.querySelector('[data-seznam="dalsi"]'), tazenyClanek = null;
+		var zapisPoradi = function () {
+			titulni.poradi.value = Array.prototype.map.call(pripnute.children, function (li) { return li.getAttribute('data-id'); }).join(',');
+			Array.prototype.forEach.call(titulni.querySelectorAll('[data-prepnout]'), function (b) {
+				b.textContent = b.closest('[data-seznam]') === pripnute ? b.getAttribute('data-odepnout') : b.getAttribute('data-pripnout');
+			});
+		};
+		titulni.addEventListener('click', function (e) {
+			var li = e.target.closest('li');
+			if (!li) { return; }
+			if (e.target.hasAttribute('data-prepnout')) { (li.parentNode === pripnute ? ostatni : pripnute)[li.parentNode === pripnute ? 'prepend' : 'appendChild'](li); }
+			if (e.target.hasAttribute('data-nahoru') && li.previousElementSibling) { li.parentNode.insertBefore(li, li.previousElementSibling); e.target.focus(); }
+			if (e.target.hasAttribute('data-dolu') && li.nextElementSibling) { li.parentNode.insertBefore(li.nextElementSibling, li); e.target.focus(); }
+			zapisPoradi();
+		});
+		titulni.addEventListener('dragstart', function (e) { tazenyClanek = e.target.closest('li'); if (tazenyClanek) { tazenyClanek.classList.add('tazeny'); e.dataTransfer.effectAllowed = 'move'; } });
+		titulni.addEventListener('dragend', function () { if (tazenyClanek) { tazenyClanek.classList.remove('tazeny'); } tazenyClanek = null; zapisPoradi(); });
+		titulni.addEventListener('dragover', function (e) {
+			var seznam = e.target.closest('[data-seznam]');
+			if (!seznam || !tazenyClanek) { return; }
+			e.preventDefault();
+			var pod = Array.prototype.filter.call(seznam.children, function (li) { return li !== tazenyClanek; }).filter(function (li) {
+				var r = li.getBoundingClientRect(); return e.clientY < r.top + r.height / 2;
+			})[0];
+			seznam.insertBefore(tazenyClanek, pod || null);
+		});
+	}
+
 	// Obecné: volba s data-prepni="sekce:1" ukáže (nebo :0 skryje) část formuláře označenou data-sekce="sekce"
 	document.querySelectorAll('[data-prepni]').forEach(function (volba) {
 		volba.addEventListener('change', function () {

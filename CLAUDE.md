@@ -110,6 +110,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   Claude pracujícího se soubory jsou v `layout/CLAUDE.md` (je součástí balíčku). Vydání nese podepsaný seznam souborů
   `system/soubory.json`; `Core\Integrita` podle něj ve Stavu systému hlásí změněné, chybějící a přidané soubory jádra.
 
+- **Překlady doplňuj nástrojem** `tools/slovnik.py <slovník> < řádky „česky|překlad“` – správně escapuje apostrofy (ruční skládání PHP
+  řetězců už dvakrát rozbilo anglický slovník). Po každé změně slovníků spusť `tools/test.sh`.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

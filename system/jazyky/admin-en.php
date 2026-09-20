@@ -896,7 +896,7 @@ return [
     'Na pozadí, jeden článek za pět minut. Výsledek je v Článcích → Nefunkční odkazy.' => 'In the background, one article every five minutes. Results are in Articles → Broken links.',
     'Plánování, cílení a limity' => 'Scheduling, targeting and limits',
     've všech' => 'in all',
-    'Reklama se ukáže jen ve výpisu této rubriky a u jejích článků.' => 'The ad appears only in this section's listing and with its articles.',
+    'Reklama se ukáže jen ve výpisu této rubriky a u jejích článků.' => 'The ad appears only in the listing of this section and with its articles.',
     'všechna' => 'all',
     'jen telefony' => 'phones only',
     'jen počítače a tablety' => 'computers and tablets only',

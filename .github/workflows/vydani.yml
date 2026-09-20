@@ -1,36 +1,35 @@
-# Vydání nové verze: stačí poslat tag (git tag v3.0.1 && git push --tags).
-# Sestaví ZIP, podepíše aktualizace.json soukromým klíčem z tajemství PHPRS_KLIC, založí GitHub Release
-# a zveřejní aktualizace.json na GitHub Pages (větev gh-pages) - odtud si ho čtou instalace.
-#
-# Tag končící "-sec" (v3.0.1-sec není nutné; stačí napsat do zprávy tagu [bezpecnostni]) označí vydání jako bezpečnostní.
-# Tajemství PHPRS_KLIC uložte do prostředí "vydani" s povinným schválením (Settings -> Environments),
-# aby podpis nemohl proběhnout bez vašeho potvrzení.
+# Vydání: tag vX.Y.Z spustí testy a založí KONCEPT vydání na GitHubu.
+# Balíček se tady nepodepisuje – soukromý klíč nepatří do CI (docs/VYDAVANI.md). Vydavatel pak lokálně spustí
+#   php tools/vydani.php X.Y.Z --url=https://github.com/<účet>/<repo>/releases/download/vX.Y.Z/phprs-X.Y.Z.zip --zmena="…"
+# nahraje dist/phprs-X.Y.Z.zip ke konceptu (gh release upload vX.Y.Z dist/phprs-X.Y.Z.zip), koncept zveřejní
+# a dist/aktualizace.json vystaví na https://phprs.dev/aktualizace.json.
 name: Vydání
+
 on:
   push:
     tags: ['v*']
+
 permissions:
   contents: write
+
 jobs:
-  vydani:
+  koncept:
     runs-on: ubuntu-latest
-    environment: vydani
+    services:
+      mysql:
+        image: mysql:8.4
+        env: { MYSQL_ROOT_PASSWORD: root }
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
       - uses: shivammathur/setup-php@v2
-        with: { php-version: '8.4', extensions: 'zip, sodium', coverage: none }
-      - name: Sestavit a podepsat
-        env: { PHPRS_KLIC: '${{ secrets.PHPRS_KLIC }}' }
-        run: |
-          VERZE="${GITHUB_REF_NAME#v}"
-          ZPRAVA="$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")"
-          PRIZNAK=""; echo "$ZPRAVA" | grep -qi '\[bezpecnostni\]' && PRIZNAK="--bezpecnostni"
-          ZMENY=(); while IFS= read -r radek; do [ -n "$radek" ] && ZMENY+=("--zmena=${radek#- }"); done < <(echo "$ZPRAVA" | grep '^- ' || true)
-          php tools/vydani.php "$VERZE" "--url=https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/phprs-${VERZE}.zip" $PRIZNAK "${ZMENY[@]}"
-      - name: GitHub Release
+        with: { php-version: '8.4', extensions: 'pdo_mysql, mbstring, gd, intl, zip, sodium', coverage: none }
+      - name: Verze v kódu odpovídá tagu
+        run: grep -q "const PHPRS_VERSION = '${GITHUB_REF_NAME#v}';" system/bootstrap.php
+      - name: Testy
+        env: { DB_HOST: 127.0.0.1, DB_USER: root, DB_PASS: root }
+        run: tools/test.sh
+      - name: Koncept vydání
         uses: softprops/action-gh-release@v2
-        with: { files: 'dist/*.zip', generate_release_notes: true }
-      - name: Zveřejnit aktualizace.json
-        uses: peaceiris/actions-gh-pages@v4
-        with: { github_token: '${{ secrets.GITHUB_TOKEN }}', publish_dir: dist, exclude_assets: '*.zip', keep_files: true }
+        with: { draft: true, generate_release_notes: true }

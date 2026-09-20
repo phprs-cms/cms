@@ -1038,4 +1038,7 @@ return [
     'Ověřit kód' => 'Verify code',
     'Přihlásit se' => 'Sign in',
     'Přihlášení' => 'Sign in',
+    'Podpořit phpRS' => 'Support phpRS',
+    'Odkaz „Podpořit phpRS“ pod přehledem' => '“Support phpRS” link below the overview',
+    'phpRS je zdarma a vzniká z dobrovolných příspěvků. Odkaz vidí jen přihlášení v administraci, na webu se nic nezobrazuje.' => 'phpRS is free and funded by voluntary contributions. The link is visible only to people signed in to the administration; nothing is shown on the site.',
 ];

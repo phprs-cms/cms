@@ -86,4 +86,4 @@
 </table>
 </div>
 <?php endif ?>
-<p class="verze">phpRS <?= e(PHPRS_VERSION) ?></p>
+<p class="verze">phpRS <?= e(PHPRS_VERSION) ?> · <a href="https://phprs.dev" target="_blank" rel="noopener">phprs.dev</a><?php if ($app->settings()->bool('odkaz_podpora')): ?> · <a href="https://github.com/sponsors/phprscms" target="_blank" rel="noopener"><?= e(t('Podpořit phpRS')) ?></a><?php endif ?></p>

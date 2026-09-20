@@ -2,7 +2,7 @@
 /**
  * phpRS 3 - příprava vydání (spouští vydavatel na svém počítači, na web se nenahrává).
  *
- *   php tools/vydani.php 3.0.1 --url=https://github.com/<ucet>/<repo>/releases/download/v3.0.1/phprs-3.0.1.zip \
+ *   php tools/vydani.php 3.0.1 --url=https://github.com/phprscms/phprs/releases/download/v3.0.1/phprs-3.0.1.zip \
  *       --zmena="Oprava ..." --zmena="Nové ..." [--bezpecnostni]
  *
  * --bezpecnostni označí vydání jako bezpečnostní opravu: instalace se na ně aktualizují samy a správce dostane e-mail.

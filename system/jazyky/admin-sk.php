@@ -920,4 +920,7 @@ return [
     'Ověřit kód' => 'Overiť kód',
     'Přihlásit se' => 'Prihlásiť sa',
     'Přihlášení' => 'Prihlásenie',
+    'Podpořit phpRS' => 'Podporiť phpRS',
+    'Odkaz „Podpořit phpRS“ pod přehledem' => 'Odkaz „Podporiť phpRS“ pod prehľadom',
+    'phpRS je zdarma a vzniká z dobrovolných příspěvků. Odkaz vidí jen přihlášení v administraci, na webu se nic nezobrazuje.' => 'phpRS je zadarmo a vzniká z dobrovoľných príspevkov. Odkaz vidia len prihlásení v administrácii, na webe sa nič nezobrazuje.',
 ];

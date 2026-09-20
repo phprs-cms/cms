@@ -37,7 +37,8 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   vytvoří `dist/*.zip` a podepsaný `dist/aktualizace.json`. Soukromé klíče `tools/klice/*.key` NIKDY do gitu ani do balíčku;
   `system/aktualizace.pub` nese veřejné klíče (provozní + záložní, na řádek jeden) a podpisy ověřuje jen `Core\Podpis` – platí kterýkoli z nich.
   Podepisuje se i příznak bezpečnostního vydání (instaluje se samo). Výměna, ztráta a únik klíče: `docs/VYDAVANI.md`. `Core\Aktualizace::CHRANENE` = co se nepřepisuje.
-  Až bude web projektu, doplnit `Aktualizace::VYCHOZI_URL`.
+  Zdroj aktualizací je `https://phprs.dev/aktualizace.json` (`Aktualizace::VYCHOZI_URL`); balíček se podepisuje lokálně, CI zakládá jen koncept vydání.
+  Podpora projektu: GitHub Sponsors (`.github/FUNDING.yml`, odkaz pod přehledem administrace jde vypnout – `odkaz_podpora`).
 - **Nastavení** (`Moduly\Konfigurace`): nová volba = klíč v `Settings::DEFAULTS` + typ v `Konfigurace::POLE`
   (podle typu se hodnota čistí) + řádek `$pole(...)` v `views/admin/config/<zalozka>.php`.
 - **Layouty musí vypsat `<?= $hlava ?>` před `</head>` a `<?= $pata ?>` před `</body>`** - tudy jde SEO,

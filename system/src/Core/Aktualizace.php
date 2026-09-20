@@ -16,7 +16,7 @@ namespace PhpRS\Core;
 final class Aktualizace
 {
     /** Výchozí zdroj aktualizací; doplní se, až poběží web projektu. Lze přepsat v Nastavení. */
-    public const string VYCHOZI_URL = '';
+    public const string VYCHOZI_URL = 'https://phprs.dev/aktualizace.json';
 
     private const array CHRANENE = ['config.php', 'install.php', 'media/', 'storage/', 'image/ukazka/', 'tools/', '.git/'];
     private const int MAX_BAJTU = 60 * 1024 * 1024;
@@ -165,7 +165,7 @@ final class Aktualizace
     /** @return array<string, mixed> */
     private function manifest(): array
     {
-        $json = $this->http($this->url(), 200 * 1024);
+        $json = $this->http($this->url(), 200 * 1024, 6); // krátký limit: kontrola běží po odeslání stránky, ale ne každý server ji umí oddělit
         $m = json_decode($json, true);
         if (!is_array($m) || !isset($m['verze'], $m['url'], $m['sha256'], $m['podpis']) || !preg_match('/^\d+\.\d+\.\d+([.-][0-9A-Za-z.-]+)?$/', (string) $m['verze'])) {
             throw new \RuntimeException('Soubor s informací o aktualizaci nemá platný tvar.');
@@ -180,14 +180,14 @@ final class Aktualizace
         file_put_contents($cil, $this->http($url, self::MAX_BAJTU));
     }
 
-    private function http(string $url, int $maxBajtu): string
+    private function http(string $url, int $maxBajtu, int $limitSekund = 30): string
     {
         $host = (string) parse_url($url, PHP_URL_HOST);
         $mistni = in_array($host, ['localhost', '127.0.0.1'], true);
         if (!preg_match('#^https://#i', $url) && !($mistni && preg_match('#^http://#i', $url))) {
             throw new \RuntimeException('Zdroj aktualizací musí být na adrese https://.');
         }
-        $data = @file_get_contents($url, false, stream_context_create(['http' => ['timeout' => 20, 'follow_location' => 1, 'max_redirects' => 5, 'header' => "User-Agent: phpRS/" . PHPRS_VERSION . "\r\n"]]), 0, $maxBajtu + 1);
+        $data = @file_get_contents($url, false, stream_context_create(['http' => ['timeout' => $limitSekund, 'follow_location' => 1, 'max_redirects' => 5, 'header' => "User-Agent: phpRS/" . PHPRS_VERSION . "\r\n"]]), 0, $maxBajtu + 1);
         if ($data === false || $data === '') {
             throw new \RuntimeException('Zdroj aktualizací není dostupný (' . $host . ').');
         }

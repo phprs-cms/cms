@@ -171,6 +171,13 @@ Hotovo:
 - **Článek pro čtenáře:** odkazy pro sdílení (bez cizích skriptů, na telefonu systémové sdílení), osnova z mezititulků s kotvami,
   automatické související články podle štítků a rubriky, medailonek autora (pozice, fotka, pár vět – Můj účet), tabulky v editoru,
   přehrávač z adresy videa vložené na samostatný řádek, mobilní menu rubrik.
+- **Hledání bez diakritiky** („nabrezi" najde „nábřeží") nad vlastním fulltextovým indexem; zamčené články indexují jen titulek a perex.
+- **Přílohy ke stažení** v Médiích (PDF, dokumenty, tabulky, ZIP, zvuk, video) – do článku se vkládají jako odkaz s typem a velikostí.
+- **Pošta s frontou:** nepovedené odeslání se opakuje (5 min až 12 h), v Nastavení → Pošta je přehled posledních zpráv.
+- **Zálohy:** obnova databáze ze zálohy přímo v administraci, před obnovou vždy vznikne pojistná záloha.
+- **Správa:** prohlížeč záznamu chyb (Stav systému), přehled adres 404 s nabídkou přesměrování, blok „Podpořte nás",
+  doba čtení a ukazatel průběhu, tiskový styl, stránka 404 s hledáním a nejčtenějšími články.
+- **Testy:** `php tools/testy.php` – jednotkové testy jádra bez databáze (součást `tools/test.sh`).
 - **Redakce a provoz:** e-mail redakci o komentářích (nejvýš jednou za 10 minut), adresa pro cron `/ulohy?token=…` (Stav systému),
   „První kroky" po instalaci na přehledu administrace.
 - **Provoz:** migrace databáze se provedou i při první návštěvě webu (se zámkem), takže automatická aktualizace web nerozbije.

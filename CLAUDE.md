@@ -91,10 +91,15 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Pošta** jde vždy přes `Core\Posta::odesli()` (SMTP nebo mail() podle Nastavení → Pošta), nikdy přímo `mail()`.
 - Čtenář se registruje bez hesla; heslo nastavuje až z odkazu v e-mailu (`/ctenar/heslo/<token>`) – neměnit zpět na heslo v prvním kroku.
 
+- **Hledání** jde přes sloupec `rs_clanky.hledani` (`Core\Hledani`): kdo ukládá článek jinudy než přes administraci nebo MCP,
+  musí zavolat `Hledani::indexuj()`. **Nahrávání**: obrázky `Core\Obrazky`, přílohy `Core\Soubory` (whitelist přípon – HTML, SVG ani
+  skripty nikdy). **E-maily** mají frontu (`rs_posta`, `Posta::zpracujFrontu()` z úloh na pozadí); jednorázové zprávy `doFronty: false`.
+- **Testy:** logiku bez databáze (kryptografie, parsování, převody textu) pokryj v `tools/testy.php`; průchod webem hlídá `tools/test.sh`.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,
 databáze `phprs3`, uživatel `phprs3` (údaje v `config.php`, není v gitu). Čistá instalace: smazat
 `config.php`, `DROP` tabulek `rs_*`, otevřít `/install.php`.
 
-Po změně: `find . -name '*.php' | xargs -n1 php -l` a projít dotčené stránky v prohlížeči / přes curl.
+Po změně: `tools/test.sh` (lint, jednotkové testy, čistá instalace a průchod webem; potřebuje MySQL), případně jen `php tools/testy.php`, a projít dotčené stránky v prohlížeči / přes curl.

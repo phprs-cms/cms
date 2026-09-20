@@ -32,6 +32,9 @@ over() { # over <popis> <očekávaný kód> <adresa> [hledaný text]
 POSLEDNI=$(ls "$KOREN"/system/sql/migrace/*.sql | sed 's/.*\/\([0-9]*\)-.*/\1/' | sort -n | tail -1 | sed 's/^0*//')
 grep -q "const PHPRS_VERZE_DB = $POSLEDNI;" "$KOREN/system/bootstrap.php" && echo "  ok     PHPRS_VERZE_DB odpovídá poslední migraci ($POSLEDNI)" || { echo "  CHYBA  PHPRS_VERZE_DB v system/bootstrap.php neodpovídá poslední migraci ($POSLEDNI)"; CHYB=$((CHYB+1)); }
 
+echo "== jednotkové testy"
+php "$KOREN/tools/testy.php" || CHYB=$((CHYB+1))
+
 echo "== instalace"
 HESLO="Test-$(date +%s)-heslo"
 curl -s -o "$PRACE/odpoved" -X POST "$B/install.php" --data-urlencode "db_host=$DB_HOST" -d "db_port=$DB_PORT" -d "db_name=$DB_NAME" -d "db_user=$DB_USER" --data-urlencode "db_password=$DB_PASS" -d db_prefix=rs_ \

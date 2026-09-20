@@ -178,6 +178,23 @@ final class Konfigurace extends Modul
         return $this->zpet('Záloha byla smazána.', '', ['zalozka' => 'zalohy']);
     }
 
+    /** Obnova databáze ze zálohy; těsně před ní vznikne pojistná záloha současného stavu. */
+    protected function akceObnovZalohu(): Response
+    {
+        if (!$this->request->isPost()) {
+            return $this->zpet('', '', ['zalozka' => 'zalohy']);
+        }
+        try {
+            $pojistna = Zaloha::vytvor($this->db, 'predobnovou');
+            $prikazu = Zaloha::obnov($this->db, $this->request->post('soubor'));
+        } catch (\Throwable $e) {
+            return $this->zpet('Obnova se nezdařila: ' . $e->getMessage() . (isset($pojistna) ? ' Stav před obnovou je v záloze ' . $pojistna . '.' : ''), '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+        \PhpRS\Front\Cache::vymaz();
+
+        return $this->zpet('Databáze byla obnovena ze zálohy (' . $prikazu . ' příkazů). Stav před obnovou je uložený v záloze ' . $pojistna . '.', '', ['zalozka' => 'zalohy']);
+    }
+
     /** Znovu zjistí, zda je k dispozici novější verze. */
     protected function akceZkontroluj(): Response
     {

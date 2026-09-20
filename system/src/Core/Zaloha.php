@@ -59,6 +59,54 @@ final class Zaloha
         return $soubor;
     }
 
+    /**
+     * Obnoví databázi ze zálohy vytvořené touto třídou. Příkaz v záloze vždy končí středníkem na konci řádku
+     * (hodnoty zapisuje PDO::quote, konce řádků v textech jsou v nich zakódované), takže ji lze číst po řádcích
+     * bez načtení celého souboru do paměti.
+     *
+     * @return int počet provedených příkazů
+     * @throws \RuntimeException
+     */
+    public static function obnov(Db $db, string $soubor): int
+    {
+        $cesta = self::cesta($soubor);
+        if ($cesta === null) {
+            throw new \RuntimeException('Záloha neexistuje.');
+        }
+        $gz = str_ends_with($cesta, '.gz');
+        if ($gz && !function_exists('gzopen')) {
+            throw new \RuntimeException('Server neumí číst komprimované zálohy (chybí zlib).');
+        }
+        $f = $gz ? gzopen($cesta, 'rb') : fopen($cesta, 'rb');
+        $prvni = (string) ($gz ? gzgets($f) : fgets($f));
+        if (!str_starts_with($prvni, '-- phpRS ')) {
+            throw new \RuntimeException('Soubor není záloha vytvořená systémem phpRS.');
+        }
+        @set_time_limit(300);
+        $pdo = $db->pdo();
+        $prikaz = '';
+        $pocet = 0;
+        while (($radek = $gz ? gzgets($f) : fgets($f)) !== false) {
+            if ($prikaz === '' && (trim($radek) === '' || str_starts_with($radek, '--'))) {
+                continue;
+            }
+            $prikaz .= $radek;
+            if (str_ends_with(rtrim($radek), ';')) {
+                // záloha smí obsahovat jen tabulky této instalace
+                if (preg_match('/^(DROP TABLE IF EXISTS|CREATE TABLE|INSERT INTO) `([^`]+)`/', $prikaz, $m) && !str_starts_with($m[2], $db->prefix)) {
+                    throw new \RuntimeException('Záloha obsahuje cizí tabulku ' . $m[2] . ' – obnova byla zastavena.');
+                }
+                $pdo->exec($prikaz);
+                $prikaz = '';
+                $pocet++;
+            }
+        }
+        $gz ? gzclose($f) : fclose($f);
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+
+        return $pocet;
+    }
+
     /** @return list<array{soubor:string, velikost:int, cas:int}> od nejnovější */
     public static function seznam(): array
     {

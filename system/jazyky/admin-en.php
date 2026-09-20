@@ -744,4 +744,6 @@ return [
     'Pár vět o mně' => 'A few sentences about me',
     'Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.' => 'Shown as an author box under your articles and on your author page. What you cover, where you write from, your background.',
     'Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.' => 'JPG, PNG, WebP and GIF images as well as downloadable attachments (PDF, documents, spreadsheets, ZIP, audio, video), up to %s per file. Large photos are scaled down to %s px and location data is removed.',
+    'Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.' => 'Restore the database from this backup? Everything added to the site after it was made (articles, comments, settings) will be lost. The current state is saved to a new backup first.',
+    'Obnovit' => 'Restore',
 ];

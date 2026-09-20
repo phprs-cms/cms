@@ -940,3 +940,4 @@ body.login {
 .pruvodce-kroky .hotovo a { opacity: 0.6; }
 .pruvodce-kroky .hotovo a::before { content: "✓"; background: var(--akcent); color: #fff; }
 .pruvodce-kroky .hotovo strong { text-decoration: line-through; }
+.log-chyb { max-height: 320px; overflow: auto; padding: 12px 14px; border: 1px solid var(--linka); border-radius: 8px; background: var(--podklad, #F7F7F8); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }

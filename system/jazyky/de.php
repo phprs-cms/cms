@@ -160,4 +160,8 @@ return [
     'Zkopírováno' => 'Kopiert',
     'Kopírovat odkaz' => 'Link kopieren',
     'O autorovi' => 'Über den Autor',
+    'Nejčtenější články' => 'Meistgelesen',
+    'Čtení na %s min' => '%s Min. Lesezeit',
+    'Podpořit redakci' => 'Redaktion unterstützen',
+    'Děláme nezávislou žurnalistiku. Pokud vám naše práce dává smysl, podpořte ji.' => 'Wir machen unabhängigen Journalismus. Wenn Ihnen unsere Arbeit wichtig ist, unterstützen Sie sie.',
 ];

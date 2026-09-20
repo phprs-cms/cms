@@ -148,4 +148,8 @@ return [
     'Sdílet…' => 'Zdieľať…',
     'Zkopírováno' => 'Skopírované',
     'Kopírovat odkaz' => 'Kopírovať odkaz',
+    'Nejčtenější články' => 'Najčítanejšie články',
+    'Čtení na %s min' => 'Čítanie na %s min',
+    'Podpořit redakci' => 'Podporiť redakciu',
+    'Děláme nezávislou žurnalistiku. Pokud vám naše práce dává smysl, podpořte ji.' => 'Robíme nezávislú žurnalistiku. Ak vám naša práca dáva zmysel, podporte ju.',
 ];

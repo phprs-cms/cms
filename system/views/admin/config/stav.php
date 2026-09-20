@@ -26,6 +26,15 @@ $skupina = '';
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>"><?= e(t('Odeslat zkušební e-mail na adresu redakce')) ?></button></p>
 </fieldset>
 <fieldset>
+<legend><?= e(t('Záznam chyb')) ?></legend>
+<?php if ($chybyLog === []): ?>
+<p><?= e(t('Žádné chyby – záznam je prázdný.')) ?></p>
+<?php else: ?>
+<pre class="log-chyb"><?php foreach (array_reverse($chybyLog) as $radek): ?><?= e(mb_strimwidth(str_replace(PHPRS_ROOT, '', $radek), 0, 400, '…')) . "\n" ?><?php endforeach ?></pre>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('smaz_log')) ?>" data-potvrdit="<?= e(t('Vyprázdnit záznam chyb?')) ?>"><?= e(t('Vyprázdnit záznam')) ?></button> <span class="smltxt"><?= e(t('Nejnovější nahoře, posledních 40 záznamů ze souboru storage/log/chyby.log.')) ?></span></p>
+<?php endif ?>
+</fieldset>
+<fieldset>
 <legend><?= e(t('Úlohy na pozadí (cron)')) ?></legend>
 <p><?= e(t('Naplánované články, oznámení a zálohy se spouštějí při návštěvách webu. Web s menší návštěvností je zpřesní, když tuto adresu zavoláte každých 5 minut cronem hostingu:')) ?></p>
 <?php if ($ulohyToken !== ''): ?>

@@ -53,6 +53,7 @@ final class Bloky extends Modul
         'nws' => 'Newsletter – přihlášení k odběru',
         'cte' => 'Účet čtenáře – přihlášení a registrace',
         'psh' => 'Oznámení – upozornění na nové články v prohlížeči',
+        'pod' => 'Podpořte nás – výzva k dobrovolnému příspěvku',
         'soc' => 'Sociální sítě',
         'kon' => 'Kontakt na redakci',
         'rek' => 'Reklama',
@@ -81,6 +82,7 @@ final class Bloky extends Modul
             'nov' => ['Novinky', 'Krátké zprávy redakce.', '✎'],
             'ank' => ['Anketa', 'Aktuální anketa s hlasováním.', '◔'],
             'nws' => ['Newsletter', 'Formulář pro přihlášení k odběru novinek e-mailem.', '✉'],
+            'pod' => ['Podpořte nás', 'Krátká výzva a tlačítko na platbu nebo stránku s číslem účtu.', '♥'],
             'psh' => ['Oznámení', 'Tlačítko, kterým si čtenář zapne upozornění na nové články v prohlížeči.', '🔔'],
             'cte' => ['Účet čtenáře', 'Odkaz na přihlášení, registraci a účet čtenáře.', '☻'],
             'soc' => ['Sociální sítě', 'Odkazy na profily vyplněné v Nastavení.', '@'],
@@ -217,6 +219,8 @@ final class Bloky extends Modul
             'zona' => in_array($r->post('zona'), $povolene, true) ? $r->post('zona') : end($povolene),
             'data_sys' => match ($sys) {
                 'rek' => isset(Reklama::POZICE[$r->post('data_sys')]) ? $r->post('data_sys') : 'sloupec',
+                // blok Podpořte nás: "text tlačítka|adresa" (platební odkaz, stránka s číslem účtu…)
+                'pod' => mb_substr(str_replace('|', ' ', $r->post('pod_tlacitko')) . '|' . (preg_match('#^(https?://|/)[^\s"<>]*$#', $r->post('pod_adresa')) ? $r->post('pod_adresa') : ''), 0, 255),
                 'cla' => $r->postInt('blok_rubrika') . ':' . max(1, min(20, $r->postInt('blok_pocet', 5))),
                 'nej', 'sti', 'aut', 'arc' => (string) max(1, min(50, $r->postInt('blok_pocet', 5))),
                 default => '',

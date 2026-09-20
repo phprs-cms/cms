@@ -52,6 +52,25 @@
 		otevri(seznam, seznam.indexOf(img));
 	});
 
+	/* ---------- ukazatel průběhu čtení u delších článků ---------- */
+
+	var textClanku = document.querySelector('[data-prubeh]') && document.querySelector('.clanek-text');
+	if (textClanku) {
+		var pruhCteni = document.createElement('div');
+		pruhCteni.className = 'rs-prubeh';
+		pruhCteni.setAttribute('aria-hidden', 'true');
+		document.body.appendChild(pruhCteni);
+		var ceka = false;
+		var prekresliPrubeh = function () {
+			ceka = false;
+			var r = textClanku.getBoundingClientRect();
+			var podil = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - window.innerHeight * 0.6)));
+			pruhCteni.style.transform = 'scaleX(' + podil + ')';
+		};
+		window.addEventListener('scroll', function () { if (!ceka) { ceka = true; requestAnimationFrame(prekresliPrubeh); } }, { passive: true });
+		prekresliPrubeh();
+	}
+
 	/* ---------- mobilní menu: pruh rubrik se na telefonu sbalí pod tlačítko ---------- */
 
 	var pruh = document.querySelector('nav.rubriky-lista');

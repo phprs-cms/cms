@@ -133,6 +133,13 @@ final class Bloky
                 . ($web->get('email_webu') !== '' ? '<br><a href="mailto:' . e($web->get('email_webu')) . '">' . e($web->get('email_webu')) . '</a>' : '') . '</p>',
             'nws' => (new Newsletter($this->app, $this->view))->formularHtml(),
             // stránka může být z cache, proto blok nerozlišuje přihlášeného - /ctenar ukáže přihlášení, nebo účet
+            'pod' => (function () use ($data, $obsah, $url): string {
+                [$tlacitko, $adresa] = explode('|', $data . '|', 3);
+                $text = trim(strip_tags($obsah)) !== '' ? '<p>' . nl2br(e(trim(strip_tags($obsah)))) . '</p>' : '<p>' . e(t('Děláme nezávislou žurnalistiku. Pokud vám naše práce dává smysl, podpořte ji.')) . '</p>';
+
+                return '<div class="rs-podpora">' . $text . ($adresa === '' ? '' : '<p><a class="rs-tl" href="' . e(str_starts_with($adresa, '/') ? $url(ltrim($adresa, '/')) : $adresa) . '"'
+                    . (str_starts_with($adresa, '/') ? '' : ' rel="noopener"') . '>♥ ' . e($tlacitko !== '' ? $tlacitko : t('Podpořit redakci')) . '</a></p>') . '</div>';
+            })(),
             // tlačítko oživí image/web.js; v prohlížeči bez podpory oznámení zůstane blok skrytý
             'psh' => '<div class="rs-push" data-push hidden><p>' . e($obsah !== '' ? strip_tags($obsah) : t('Dáme vám vědět, když vyjde nový článek.')) . '</p>'
                 . '<button type="button" class="rs-tl" data-push-tl>' . e(t('Zapnout oznámení')) . '</button><p class="rs-drobne" data-push-stav role="status"></p></div>',

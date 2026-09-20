@@ -28,10 +28,15 @@ final class TypyObsahu
 
             return $clanek;
         }
+        $slov = count(preg_split('/\s+/u', trim(strip_tags((string) $clanek['text'])), -1, PREG_SPLIT_NO_EMPTY) ?: []);
         $clanek['text'] = $this->sOsnovou($this->vlozeneAdresy((string) $clanek['text']));
         $pred = self::prehravac((string) $clanek['medium_url'], $this->app->request->basePath(), (string) $clanek['titulek']);
         if ((int) $clanek['zive'] > 0) {
             $pred .= $this->ziveHtml($clanek);
+        }
+        if ($slov >= 400 && $this->app->settings()->bool('doba_cteni')) {
+            // od dvou minut čtení výš; 200 slov za minutu je běžné tempo čtení na obrazovce
+            $pred = '<p class="rs-cteni" data-prubeh>' . e(t('Čtení na %s min', (int) round($slov / 200))) . '</p>' . $pred;
         }
         $clanek['text'] = $pred . $clanek['text'] . self::recenzeHtml($clanek) . $this->autorHtml($clanek) . $this->sdileniHtml($clanek);
 

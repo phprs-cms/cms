@@ -39,7 +39,11 @@ final class Presmerovani extends Modul
 
     protected function akceVypis(): Response
     {
-        return $this->view('vypis', 'Přesměrování', ['zaznamy' => $this->db->all('SELECT * FROM {presmerovani} ORDER BY idp DESC LIMIT 500')]);
+        return $this->view('vypis', 'Přesměrování', [
+            'zaznamy' => $this->db->all('SELECT * FROM {presmerovani} ORDER BY idp DESC LIMIT 500'),
+            'nenalezeno' => $this->db->all('SELECT * FROM {nenalezeno} WHERE naposledy > NOW() - INTERVAL 60 DAY ORDER BY pocet DESC, naposledy DESC LIMIT 25'),
+            'zAdresy' => mb_substr($this->request->get('z'), 0, 255),
+        ]);
     }
 
     protected function akceUloz(): Response
@@ -53,8 +57,19 @@ final class Presmerovani extends Modul
             return $this->zpet('Vyplňte starou adresu (cestu na tomto webu) a cíl – cestu, nebo celou adresu https://…', typ: 'chyba');
         }
         self::pridej($this->db, $z, preg_match('#^https?://#i', $na) ? $na : trim($na, '/'));
+        $this->db->delete('nenalezeno', ['cesta' => trim($z, '/')]);
 
         return $this->zpet('Přesměrování bylo uloženo.');
+    }
+
+    /** Vyprázdní přehled nenalezených adres. */
+    protected function akceVycisti(): Response
+    {
+        if ($this->request->isPost()) {
+            $this->db->run('DELETE FROM {nenalezeno}');
+        }
+
+        return $this->zpet('Přehled nenalezených adres je prázdný.');
     }
 
     protected function akceSmaz(): Response

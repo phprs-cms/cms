@@ -14,6 +14,7 @@
  * @var list<array{soubor:string, velikost:int, cas:int}> $zalohy
  * @var array<string, mixed>|null $aktualizace
  * @var list<array{kategorie:string, pocet:int}> $souhlasy
+ * @var list<string> $chybyLog  poslední řádky záznamu chyb
  * @var string $ulohyToken  tajná část adresy /ulohy pro cron
  */
 use PhpRS\Admin\Moduly\Konfigurace;

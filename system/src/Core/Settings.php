@@ -42,6 +42,7 @@ final class Settings
         'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
+        'doba_cteni' => '1',          // u delších článků doba čtení a ukazatel průběhu
         'sdileni' => '1',             // odkazy pro sdílení pod článkem
         'osnova_clanku' => '1',       // obsah článku z mezititulků (od tří H2)
         'souvisejici_auto' => '1',    // související články podle štítků a rubriky, když článek není v seriálu

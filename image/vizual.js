@@ -206,6 +206,13 @@
 			if (['cla', 'nej', 'sti', 'aut', 'arc'].indexOf(typ) !== -1) {
 				radky.push(pole('Kolik položek', el('input', { type: 'number', name: 'blok_pocet', min: '1', max: '50', value: typ === 'cla' ? (data.split(':')[1] || 5) : (data || 5) })));
 			}
+			if (typ === 'pod') {
+				var taPod = el('textarea', { name: 'obsah', rows: '3' });
+				taPod.value = String(b.obsah || '').replace(/<[^>]+>/g, '');
+				radky.push(pole('Výzva', taPod, 'Jedna až dvě věty. Prázdné = výchozí text.'));
+				radky.push(pole('Text tlačítka', el('input', { type: 'text', name: 'pod_tlacitko', maxlength: '60', value: data.split('|')[0] || '', placeholder: 'Podpořit redakci' })));
+				radky.push(pole('Kam tlačítko vede', el('input', { type: 'text', name: 'pod_adresa', maxlength: '190', value: data.split('|')[1] || '', placeholder: 'https://… nebo /podporte-nas' }), 'Platební odkaz (Stripe, Donio, Darujme, Ko-fi…) nebo vlastní stránka s číslem účtu a QR kódem.'));
+			}
 			if (typ === 'rek') {
 				radky.push(pole('Reklamní pozice', vyber('data_sys', Object.keys(N.pozice).map(function (k) { return [k, N.pozice[k]]; }), data), 'Bannery se spravují v sekci Reklama.'));
 			}
@@ -238,7 +245,7 @@
 				odeslat.typ = f.get('ukazat_nadpis') ? (f.get('vzhled') || 1) : 5;
 				odeslat.zobrazit_kde = f.get('zobrazit_kde'); odeslat.jen_rubrika = f.get('jen_rubrika'); odeslat.zarizeni = f.get('zarizeni'); odeslat.jen_jazyk = f.get('jen_jazyk') || '';
 				if (!f.get('skryt')) { odeslat.zobrazit = 1; }
-				['obsah', 'blok_rubrika', 'blok_pocet', 'data_sys'].forEach(function (k) { if (f.get(k) !== null) { odeslat[k] = f.get(k); } });
+				['obsah', 'blok_rubrika', 'blok_pocet', 'data_sys', 'pod_tlacitko', 'pod_adresa'].forEach(function (k) { if (f.get(k) !== null) { odeslat[k] = f.get(k); } });
 				if (typ === 'men') {
 					odeslat.obsah_menu = Array.prototype.map.call(form.querySelectorAll('.rs-odkaz'), function (r) {
 						var v = r.querySelectorAll('input'); return v[0].value.trim() && v[1].value.trim() ? v[0].value.trim() + ' | ' + v[1].value.trim() : '';

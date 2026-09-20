@@ -459,3 +459,4 @@ body.login h1 b {
 		grid-template-columns: 1fr;
 	}
 }
+.log-chyb { max-height: 320px; overflow: auto; padding: 8px; border: 1px solid #999; background: #fff; font: 11px/1.4 monospace; white-space: pre-wrap; word-break: break-word; }

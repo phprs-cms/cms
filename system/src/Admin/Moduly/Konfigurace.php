@@ -41,7 +41,7 @@ final class Konfigurace extends Modul
         'zakladni' => [
             'nazev_webu' => 'text', 'adresa_webu' => 'vzor:#^https?://[a-z0-9.-]+(:\d+)?$#i', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
-            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'sdileni' => 'ano', 'osnova_clanku' => 'ano', 'souvisejici_auto' => 'ano', 'upozorneni_komentare' => 'vyber:schvaleni|vse|nic', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
+            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'sdileni' => 'ano', 'doba_cteni' => 'ano', 'osnova_clanku' => 'ano', 'souvisejici_auto' => 'ano', 'upozorneni_komentare' => 'vyber:schvaleni|vse|nic', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
             'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',
             'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'paywall_zdarma' => 'cislo:0:50', 'zamek_text' => 'text',
         ],
@@ -81,6 +81,7 @@ final class Konfigurace extends Modul
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
             'ulohyToken' => $nastaveni->get('ulohy_token'),
+            'chybyLog' => $zalozka === 'stav' ? self::konecSouboru(PHPRS_ROOT . '/storage/log/chyby.log', 40) : [],
             'posta' => $zalozka === 'posta' ? $this->db->all('SELECT komu, predmet, vytvoreno, odeslano, pokusu, dalsi_pokus, chyba FROM {posta} ORDER BY idp DESC LIMIT 30') : [],
             'zapnutaRozsireni' => Rozsireni::zapnuta($nastaveni),
             'zalohy' => $zalozka === 'zalohy' ? Zaloha::seznam() : [],
@@ -177,6 +178,34 @@ final class Konfigurace extends Modul
         }
 
         return $this->zpet('Záloha byla smazána.', '', ['zalozka' => 'zalohy']);
+    }
+
+    /** Vyprázdní záznam chyb aplikace. */
+    protected function akceSmazLog(): Response
+    {
+        if ($this->request->isPost() && is_file(PHPRS_ROOT . '/storage/log/chyby.log')) {
+            file_put_contents(PHPRS_ROOT . '/storage/log/chyby.log', '');
+        }
+
+        return $this->zpet('Záznam chyb je prázdný.', '', ['zalozka' => 'stav']);
+    }
+
+    /**
+     * Posledních N řádků souboru bez načtení celého souboru do paměti.
+     *
+     * @return list<string>
+     */
+    private static function konecSouboru(string $soubor, int $radku): array
+    {
+        if (!is_file($soubor) || filesize($soubor) === 0) {
+            return [];
+        }
+        $f = fopen($soubor, 'rb');
+        fseek($f, -min(filesize($soubor), 64 * 1024), SEEK_END);
+        $konec = (string) stream_get_contents($f);
+        fclose($f);
+
+        return array_slice(array_values(array_filter(explode("\n", $konec), fn (string $r): bool => trim($r) !== '')), -$radku);
     }
 
     /** Obnova databáze ze zálohy; těsně před ní vznikne pojistná záloha současného stavu. */

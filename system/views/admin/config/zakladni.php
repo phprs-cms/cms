@@ -77,6 +77,7 @@ $pole('klicova_slova', 'Klíčová slova webu', 'text');
 $pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50" style="width:90px"');
 $pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
 $pole('sdileni', 'Odkazy pro sdílení pod článkem', 'ano', 'Facebook, X, LinkedIn, WhatsApp, e-mail a kopírování odkazu – bez cizích skriptů.');
+$pole('doba_cteni', 'Doba čtení a ukazatel průběhu', 'ano', 'U článků delších než dvě minuty čtení.');
 $pole('osnova_clanku', 'Obsah článku z mezititulků', 'ano', 'U článků s aspoň třemi mezititulky se nad textem zobrazí klikací osnova.');
 $pole('souvisejici_auto', 'Související články automaticky', 'ano', 'Když článek není dílem seriálu, vyberou se podobné podle štítků a rubriky.');
 ?>

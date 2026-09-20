@@ -435,7 +435,19 @@ final class Kernel
             return Response::redirect(preg_match('#^https?://#i', $cil['na_adresu']) ? $cil['na_adresu'] : $this->app->url($cil['na_adresu']), 301);
         }
 
-        return $this->stranka(t('Stránka nenalezena'), $this->view->render('nenalezeno', ['url' => $this->app->url(...)]), ['noindex' => true], 404);
+        // přehled nenalezených adres pro správce (Přesměrování); roboti zkoušející cizí systémy se nezapisují
+        $cesta = mb_substr(trim($this->app->request->path(), '/'), 0, 255);
+        if ($cesta !== '' && !preg_match('#\.(php|asp|aspx|env|git|sql|bak|ini|xml|txt|js|css|map|png|jpe?g|gif|ico|webp)$|^(wp-|\.|cgi-bin|vendor/|admin/)#i', $cesta) && mb_check_encoding($cesta, 'UTF-8')) {
+            try {
+                if ((int) $this->app->db()->value('SELECT COUNT(*) FROM {nenalezeno}') < 2000 || $this->app->db()->value('SELECT 1 FROM {nenalezeno} WHERE cesta = ?', [$cesta]) !== null) {
+                    $this->app->db()->run('INSERT INTO {nenalezeno} (cesta, pocet, naposledy) VALUES (?, 1, NOW()) ON DUPLICATE KEY UPDATE pocet = pocet + 1, naposledy = NOW()', [$cesta]);
+                }
+            } catch (\Throwable) {
+                // přehled je jen pomůcka - chyba zápisu nesmí změnit odpověď
+            }
+        }
+
+        return $this->stranka(t('Stránka nenalezena'), $this->view->render('nenalezeno', ['url' => $this->app->url(...), 'nejctenejsi' => $this->clanky->nejctenejsi(5)]), ['noindex' => true], 404);
     }
 
     /**

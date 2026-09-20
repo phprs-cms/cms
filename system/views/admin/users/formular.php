@@ -64,7 +64,7 @@ $role = [
 </div>
 </fieldset>
 
-<details class="pokrocile"<?= $rucne || $maPodrizene !== [] || $autor['blokovat'] || !empty($autor['url']) ? ' open' : '' ?>>
+<details class="pokrocile"<?= $modul->app()->db()->value('SELECT 1 FROM {user_rubriky} WHERE idu = ?', [(int) ($autor['idu'] ?? 0)]) !== null || $rucne || $maPodrizene !== [] || $autor['blokovat'] || !empty($autor['url']) ? ' open' : '' ?>>
 <summary><?= e(t('Podrobné nastavení')) ?></summary>
 <div class="radek">
 	<label for="url"><?= e(t('Web uživatele')) ?></label>
@@ -97,6 +97,16 @@ $role = [
 	<div class="volby"><span class="stitek stitek-vydano"><?= e(t('zapnuté')) ?></span> <label><input type="checkbox" name="totp_reset" value="1"> <?= e(t('vypnout (uživatel ztratil telefon i záložní kódy)')) ?></label></div>
 </div>
 <?php endif ?>
+<div class="radek">
+	<span class="popisek"><?= e(t('Jen tyto rubriky')) ?></span>
+	<div class="volby">
+<?php $maRubriky = array_map(intval(...), array_column($modul->app()->db()->all('SELECT idt FROM {user_rubriky} WHERE idu = ?', [(int) ($autor['idu'] ?? 0)]), 'idt'));
+foreach (PhpRS\Admin\Moduly\Rubriky::strom($modul->app()->db()) as $rub): ?>
+		<label><input type="checkbox" name="rubriky[]" value="<?= (int) $rub['idt'] ?>"<?= in_array((int) $rub['idt'], $maRubriky, true) ? ' checked' : '' ?>> <?= e(str_repeat('– ', (int) $rub['uroven']) . $rub['nazev']) ?></label><br>
+<?php endforeach ?>
+		<span class="napoveda"><?= e(t('Nic nezaškrtnuto = smí psát do všech rubrik. Se zaškrtnutím vidí a upravuje jen články z vybraných rubrik a jejich podrubrik. Administrátora omezit nejde.')) ?></span>
+	</div>
+</div>
 <?php if (!$sam): ?>
 <div class="radek">
 	<span class="popisek"><?= e(t('Zablokovat účet')) ?></span>

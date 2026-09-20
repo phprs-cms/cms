@@ -94,6 +94,9 @@ final class Nastroje
                 if (($autori = $auth->spravovaniAutori()) !== null) {
                     $where[] = 'c.autor IN (' . implode(',', $autori) . ')';
                 }
+                if (($rubriky = $auth->povoleneRubriky()) !== null) {
+                    $where[] = 'c.tema IN (' . implode(',', $rubriky) . ')';
+                }
                 $stavy = ['vydane' => 'c.visible = 1 AND c.datum <= NOW()', 'plan' => 'c.visible = 1 AND c.datum > NOW()', 'koncepty' => 'c.visible = 0'];
                 if (isset($stavy[$a['stav'] ?? ''])) {
                     $where[] = $stavy[$a['stav']];
@@ -314,7 +317,8 @@ final class Nastroje
     {
         $clanek = $this->app->db()->one('SELECT * FROM {clanky} WHERE idc = ?', [$id]);
         $autori = $this->app->auth()->spravovaniAutori();
-        if ($clanek === null || ($autori !== null && !in_array((int) $clanek['autor'], $autori, true))) {
+        $rubriky = $this->app->auth()->povoleneRubriky();
+        if ($clanek === null || ($autori !== null && !in_array((int) $clanek['autor'], $autori, true)) || ($rubriky !== null && !in_array((int) $clanek['tema'], $rubriky, true))) {
             throw new \InvalidArgumentException('Článek neexistuje nebo k němu uživatel nemá přístup.');
         }
 
@@ -326,6 +330,10 @@ final class Nastroje
         $idt = $this->app->db()->value('SELECT idt FROM {topic} WHERE seo_link = ? OR nazev = ? LIMIT 1', [$nazevNeboAdresa, $nazevNeboAdresa]);
         if ($idt === null) {
             throw new \InvalidArgumentException('Rubrika „' . $nazevNeboAdresa . '“ neexistuje. Použij nástroj seznam_rubrik.');
+        }
+
+        if (($povolene = $this->app->auth()->povoleneRubriky()) !== null && !in_array((int) $idt, $povolene, true)) {
+            throw new \InvalidArgumentException('Do rubriky „' . $nazevNeboAdresa . '“ nemá uživatel oprávnění psát.');
         }
 
         return (int) $idt;

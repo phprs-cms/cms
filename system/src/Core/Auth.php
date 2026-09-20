@@ -28,6 +28,9 @@ final class Auth
     /** @var list<string>|null */
     private ?array $moduly = null;
 
+    /** @var list<int>|null povolené rubriky přihlášeného (načtou se při prvním dotazu) */
+    private ?array $rubriky = null;
+
     public function __construct(private readonly Db $db, private readonly Session $session)
     {
     }
@@ -195,6 +198,51 @@ final class Auth
      *
      * @return list<int>|null
      */
+    /**
+     * Rubriky, ve kterých smí uživatel pracovat s články. Null = všechny (administrátor, nebo uživatel bez omezení).
+     *
+     * @return list<int>|null
+     */
+    public function povoleneRubriky(): ?array
+    {
+        if ($this->isAdmin() || $this->user() === null) {
+            return null;
+        }
+        if ($this->rubriky === null) {
+            $this->rubriky = array_map(intval(...), array_column($this->db->all('SELECT idt FROM {user_rubriky} WHERE idu = ?', [$this->id()]), 'idt'));
+            // povolení platí i pro podrubriky – včetně těch, které vzniknou později
+            $predci = $this->rubriky === [] ? [] : $this->db->pairs('SELECT idt, id_predka FROM {topic} WHERE id_predka IS NOT NULL');
+            do {
+                $pridano = false;
+                foreach ($predci as $idt => $predek) {
+                    if (in_array((int) $predek, $this->rubriky, true) && !in_array((int) $idt, $this->rubriky, true)) {
+                        $this->rubriky[] = (int) $idt;
+                        $pridano = true;
+                    }
+                }
+            } while ($pridano);
+        }
+
+        return $this->rubriky === [] ? null : $this->rubriky;
+    }
+
+    /**
+     * Část podmínky WHERE (začíná „ AND“, nebo je prázdná), která výpis článků omezí na to, co přihlášený smí vidět:
+     * jeho autoři a jeho rubriky. Hodnoty jsou celá čísla z databáze, do dotazu jdou bezpečně.
+     */
+    public function articleScope(string $alias = ''): string
+    {
+        $sql = '';
+        if (($autori = $this->spravovaniAutori()) !== null) {
+            $sql .= ' AND ' . $alias . 'autor IN (' . implode(',', array_map(intval(...), $autori)) . ')';
+        }
+        if (($rubriky = $this->povoleneRubriky()) !== null) {
+            $sql .= ' AND ' . $alias . 'tema IN (' . implode(',', $rubriky) . ')';
+        }
+
+        return $sql;
+    }
+
     public function spravovaniAutori(): ?array
     {
         if ($this->isAdmin() || $this->isRedaktor()) {

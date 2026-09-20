@@ -86,7 +86,9 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+
+K bodu 27: uživateli jde v pokročilých volbách zaškrtnout „Jen tyto rubriky“ (platí i pro podrubriky, v administraci i přes MCP). Samostatnou roli „korektor“ nepřidáváme – složí se z existujících voleb: autor, který „smí upravovat i články autorů“ a nemá právo vydávat.
 
 Další v pořadí: platební brána (15),
 

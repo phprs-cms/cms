@@ -197,8 +197,8 @@ final class Kernel
             return $data;
         }
         $db = $this->app->db();
-        $autori = $this->app->auth()->spravovaniAutori();
-        $jen = $autori === null ? '' : ' AND autor IN (' . implode(',', $autori) . ')';
+        $jen = $this->app->auth()->articleScope();      // pro dotazy bez aliasu
+        $jenC = $this->app->auth()->articleScope('c.');  // pro dotazy s aliasem c
 
         return $data + [
             'pruvodce' => $this->pruvodce(),
@@ -208,7 +208,7 @@ final class Kernel
             'fronta' => $db->all(
                 "SELECT c.idc, c.titulek, c.datum, c.visible, c.stav_redakce, IF(u.jmeno = '' OR u.jmeno IS NULL, u.user, u.jmeno) AS autor_jm
                  FROM {clanky} c LEFT JOIN {user} u ON u.idu = c.autor
-                 WHERE ((c.visible = 0 AND c.stav_redakce IN ('korektura', 'schvaleno')) OR (c.visible = 1 AND c.datum > NOW()))" . str_replace('autor', 'c.autor', $jen) . "
+                 WHERE ((c.visible = 0 AND c.stav_redakce IN ('korektura', 'schvaleno')) OR (c.visible = 1 AND c.datum > NOW()))" . $jenC . "
                  ORDER BY c.visible, c.datum LIMIT 8",
             ),
             'pocty' => [
@@ -221,7 +221,7 @@ final class Kernel
             ],
             'posledni' => $db->all(
                 "SELECT c.idc, c.titulek, c.datum, c.visible, c.visit, t.nazev AS tema_jm
-                 FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE 1 = 1" . str_replace('autor', 'c.autor', $jen) . "
+                 FROM {clanky} c JOIN {topic} t ON t.idt = c.tema WHERE 1 = 1" . $jenC . "
                  ORDER BY COALESCE(c.zmeneno, c.datum) DESC LIMIT 6",
             ),
         ];

@@ -901,4 +901,6 @@ return [
     'jen telefony' => 'phones only',
     'jen počítače a tablety' => 'computers and tablets only',
     'Výkaz pro inzerenta (CSV)' => 'Advertiser report (CSV)',
+    'Jen tyto rubriky' => 'Only these sections',
+    'Nic nezaškrtnuto = smí psát do všech rubrik. Se zaškrtnutím vidí a upravuje jen články z vybraných rubrik a jejich podrubrik. Administrátora omezit nejde.' => 'Nothing ticked = may write in all sections. With ticks, the user sees and edits only articles from the selected sections and their subsections. An administrator cannot be restricted.',
 ];

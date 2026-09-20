@@ -789,4 +789,6 @@ return [
     'jen telefony' => 'len telefóny',
     'jen počítače a tablety' => 'len počítače a tablety',
     'Výkaz pro inzerenta (CSV)' => 'Výkaz pre inzerenta (CSV)',
+    'Jen tyto rubriky' => 'Len tieto rubriky',
+    'Nic nezaškrtnuto = smí psát do všech rubrik. Se zaškrtnutím vidí a upravuje jen články z vybraných rubrik a jejich podrubrik. Administrátora omezit nejde.' => 'Nič nezaškrtnuté = smie písať do všetkých rubrík. So zaškrtnutím vidí a upravuje len články z vybraných rubrík a ich podrubrík. Administrátora obmedziť nemožno.',
 ];

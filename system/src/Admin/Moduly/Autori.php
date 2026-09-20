@@ -110,6 +110,13 @@ final class Autori extends Modul
             foreach ($moduly as $ident) {
                 $this->db->insert('user_prava', ['fk_id_user' => $id, 'ident_modulu' => $ident]);
             }
+            // omezení na rubriky: nic nezaškrtnuto = všechny rubriky
+            $this->db->delete('user_rubriky', ['idu' => $id]);
+            foreach (array_unique(array_filter(array_map(intval(...), $this->request->postList('rubriky')))) as $idt) {
+                if ((int) $data['admin'] < \PhpRS\Core\Auth::ADMIN && $this->db->value('SELECT idt FROM {topic} WHERE idt = ?', [$idt]) !== null) {
+                    $this->db->insert('user_rubriky', ['idu' => $id, 'idt' => $idt]);
+                }
+            }
             $this->db->delete('vazby_prava', ['fk_id_nadrizeny' => $id]);
             foreach ($podrizeni as $p) {
                 $this->db->insert('vazby_prava', ['fk_id_nadrizeny' => $id, 'fk_id_podrizeny' => $p]);

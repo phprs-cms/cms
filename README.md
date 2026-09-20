@@ -186,6 +186,7 @@ Hotovo:
 - **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
 - **Čtenáři a diskuse:** přihlášení odkazem z e-mailu (bez hesla), odběr newsletteru při registraci, komentáře pod účtem čtenáře
   (volitelně jen pro přihlášené), upozornění na odpověď e-mailem, nahlášení komentáře (po třech nahlášeních čeká na redakci).
+- **Oprávnění podle rubriky:** uživateli jde vymezit rubriky (včetně podrubrik), ve kterých smí psát a upravovat – platí v administraci i přes napojení na Claude.
 - **Autoři:** spoluautoři článku a externí autor (host, agentura); stránka autora ukazuje i spoluautorské články.
 - **Zálohy mimo server:** každá nová záloha databáze se může sama nahrát na FTP(S) nebo do úložiště kompatibilního s S3.
 - **Hranice úprav:** přes napojení na Claude jde měnit jen obsah a vlastní šablony. Šablona je prezentační vrstva – PHP soubor,

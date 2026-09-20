@@ -38,6 +38,9 @@ final class Clanky extends Modul
         if ($autori !== null) {
             $where[] = 'c.autor IN (' . implode(',', $autori) . ')';
         }
+        if (($povolene = $auth->povoleneRubriky()) !== null) {
+            $where[] = 'c.tema IN (' . implode(',', $povolene) . ')'; // uživatel omezený na vybrané rubriky
+        }
         if (($tema = $this->request->getInt('tema')) > 0) {
             $where[] = 'c.tema = ?';
             $params[] = $tema;
@@ -78,7 +81,7 @@ final class Clanky extends Modul
             'celkem' => $celkem,
             'strana' => $strana,
             'stran' => max(1, (int) ceil($celkem / self::NA_STRANKU)),
-            'rubriky' => Rubriky::strom($this->db),
+            'rubriky' => $this->nabidkaRubrik(),
             'filtr' => ['tema' => $tema, 'hledat' => $hledat, 'moje' => $this->request->get('moje'), 'stav' => isset($podminkyStavu[$stav]) ? $stav : ''],
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
@@ -91,13 +94,19 @@ final class Clanky extends Modul
             return $this->chyba('Nejprve založte alespoň jednu rubriku (Úprava rubrik).');
         }
 
-        return $this->formular([
+        return $this->formular($this->vychozi());
+    }
+
+    /** Hodnoty nového článku; doplňují se jimi i pole, která při neúspěšné validaci ve formuláři chybí. */
+    private function vychozi(): array
+    {
+        return [
             'idc' => 0, 'seo_link' => '', 'titulek' => '', 'uvod' => '', 'text' => '', 'obrazek' => '',
             'tema' => 0, 'autor' => $this->app->auth()->id(), 'datum' => date('Y-m-d H:i:s'), 'datum_pl' => null,
             'visible' => 0, 'zobr_na_indexu' => 1, 'priority' => 0, 'typ_clanku' => 1, 'sablona' => null,
             'zdroj' => '', 't_slova' => '', 'povolit_kom' => 1, 'skupina_cl' => null,
             'seo_titulek' => '', 'seo_popis' => '', 'noindex' => 0, 'externi_autor' => '', 'pristup' => 0, 'preklad_z' => null, 'medium_url' => '', 'zive' => 0, 'recenze_predmet' => '', 'recenze_hodnoceni' => null, 'shrnuti' => '', 'faq' => '', 'stav_redakce' => '', 'poznamka' => '',
-        ]);
+        ];
     }
 
     protected function akceEdit(): Response
@@ -181,6 +190,8 @@ final class Clanky extends Modul
         }
         if ($this->db->value('SELECT idt FROM {topic} WHERE idt = ?', [$data['tema']]) === null) {
             $chyby['tema'] = 'Vyberte rubriku.';
+        } elseif (($povoleneRubriky = $auth->povoleneRubriky()) !== null && !in_array($data['tema'], $povoleneRubriky, true)) {
+            $chyby['tema'] = 'Do této rubriky nemáte oprávnění psát.';
         }
         $povoleniAutori = $auth->spravovaniAutori();
         if ($povoleniAutori !== null && !in_array($data['autor'], $povoleniAutori, true)) {
@@ -190,7 +201,7 @@ final class Clanky extends Modul
             $chyby['autor'] = 'Vyberte autora.';
         }
         if ($chyby !== []) {
-            return $this->formular(['idc' => $id] + $data, $chyby);
+            return $this->formular(['idc' => $id, 'skupina_cl' => $r->postInt('skupina_cl') ?: null] + $data + ($puvodni ?? $this->vychozi()), $chyby);
         }
         // jazyková verze se přebírá z rubriky; překlad se propojuje s článkem ve výchozím jazyce (adresa nebo číslo článku)
         $data['jazyk'] = (string) $this->db->value('SELECT jazyk FROM {topic} WHERE idt = ?', [$data['tema']]);
@@ -403,10 +414,8 @@ final class Clanky extends Modul
     {
         $mesic = preg_match('/^\d{4}-\d{2}$/', $this->request->get('mesic')) ? $this->request->get('mesic') : date('Y-m');
         $od = new \DateTimeImmutable($mesic . '-01');
-        $autori = $this->app->auth()->spravovaniAutori();
         $clanky = $this->db->all(
-            'SELECT idc, titulek, datum, visible FROM {clanky} WHERE datum >= ? AND datum < ?'
-            . ($autori !== null ? ' AND autor IN (' . implode(',', $autori) . ')' : '') . ' ORDER BY datum',
+            'SELECT idc, titulek, datum, visible FROM {clanky} WHERE datum >= ? AND datum < ?' . $this->app->auth()->articleScope() . ' ORDER BY datum',
             [$od->format('Y-m-d'), $od->modify('+1 month')->format('Y-m-d')],
         );
         $dny = [];
@@ -474,10 +483,8 @@ final class Clanky extends Modul
 
             return $this->zpet('Článek se zkontroluje znovu během několika minut.', 'odkazy');
         }
-        $autori = $this->app->auth()->spravovaniAutori();
-
         return $this->view('odkazy', 'Nefunkční odkazy', [
-            'odkazy' => $this->db->all('SELECT o.*, c.titulek FROM {odkazy_vadne} o JOIN {clanky} c ON c.idc = o.idc' . ($autori !== null ? ' WHERE c.autor IN (' . implode(',', $autori) . ')' : '') . ' ORDER BY o.cas DESC LIMIT 300'),
+            'odkazy' => $this->db->all('SELECT o.*, c.titulek FROM {odkazy_vadne} o JOIN {clanky} c ON c.idc = o.idc WHERE 1 = 1' . $this->app->auth()->articleScope('c.') . ' ORDER BY o.cas DESC LIMIT 300'),
             'zkontrolovano' => (int) $this->db->value('SELECT COUNT(*) FROM {clanky} WHERE odkazy_cas IS NOT NULL'),
             'celkem' => (int) $this->db->value('SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW()'),
             'zapnuto' => $this->app->settings()->bool('kontrola_odkazu'),
@@ -493,6 +500,9 @@ final class Clanky extends Modul
         $co = $this->request->post('provest');
         $rubrika = $this->db->one('SELECT idt, jazyk FROM {topic} WHERE idt = ?', [$this->request->postInt('do_rubriky')]);
         $stitek = mb_substr(trim($this->request->post('stitek')), 0, 80);
+        if ($co === 'rubrika' && $rubrika !== null && ($povolene = $this->app->auth()->povoleneRubriky()) !== null && !in_array((int) $rubrika['idt'], $povolene, true)) {
+            return $this->zpet('Do této rubriky nemáte oprávnění články přesouvat.', typ: 'chyba');
+        }
         if (($co === 'rubrika' && $rubrika === null) || ($co === 'stitek' && $stitek === '')) {
             return $this->zpet($co === 'rubrika' ? 'Vyberte rubriku, do které se mají články přesunout.' : 'Napište štítek, který se má článkům přidat.', typ: 'chyba');
         }
@@ -546,6 +556,14 @@ final class Clanky extends Modul
      * @param array<string, mixed> $clanek
      * @param array<string, string> $chyby
      */
+    /** Strom rubrik, do kterých smí přihlášený psát (uživatel omezený na rubriky vidí jen ty své). */
+    private function nabidkaRubrik(): array
+    {
+        $povolene = $this->app->auth()->povoleneRubriky();
+
+        return array_values(array_filter(Rubriky::strom($this->db), static fn (array $r): bool => $povolene === null || in_array((int) $r['idt'], $povolene, true)));
+    }
+
     private function formular(array $clanek, array $chyby = []): Response
     {
         $auth = $this->app->auth();
@@ -557,7 +575,7 @@ final class Clanky extends Modul
         return $this->view('formular', $clanek['idc'] ? 'Úprava článku' : 'Nový článek', [
             'clanek' => $clanek,
             'chyby' => $chyby,
-            'rubriky' => Rubriky::strom($this->db),
+            'rubriky' => $this->nabidkaRubrik(),
             'autori' => $autori,
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
@@ -626,7 +644,8 @@ final class Clanky extends Modul
     {
         $clanek = $this->db->one('SELECT * FROM {clanky} WHERE idc = ?', [$id]);
         $autori = $this->app->auth()->spravovaniAutori();
-        if ($clanek === null || ($autori !== null && !in_array((int) $clanek['autor'], $autori, true))) {
+        $rubriky = $this->app->auth()->povoleneRubriky();
+        if ($clanek === null || ($autori !== null && !in_array((int) $clanek['autor'], $autori, true)) || ($rubriky !== null && !in_array((int) $clanek['tema'], $rubriky, true))) {
             return null;
         }
 

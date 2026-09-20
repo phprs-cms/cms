@@ -77,6 +77,25 @@ kod=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: applicati
 over "anglická verze webu" 200 /en/ 'lang="en"'
 kod=$(curl -s -o /dev/null -w '%{http_code}' "$B/en/clanek/vitejte-v-phprs-3"); [ "$kod" = 301 ] && echo "  ok     článek jiné jazykové verze přesměruje" || { echo "  CHYBA  jazykové přesměrování: $kod"; CHYB=$((CHYB+1)); }
 over "neznámý modul" 403 "/admin.php?modul=neexistuje"
+
+# neúspěšná validace článku musí vrátit formulář s hláškou, ne chybu 500 (dřív padala na chybějícím klíči)
+curl -s -b "$JAR" -c "$JAR" -o "$PRACE/odpoved" "$B/admin.php?modul=clanky&akce=novy"
+TOKEN=$(grep -o 'name="_csrf" value="[a-f0-9]*"' "$PRACE/odpoved" | head -1 | sed 's/.*value="//;s/"//')
+kod=$(curl -s -b "$JAR" -c "$JAR" -o "$PRACE/odpoved" -w '%{http_code}' -X POST "$B/admin.php?modul=clanky&akce=uloz" -d "_csrf=$TOKEN" -d idc=0 -d titulek= -d tema=1)
+[ "$kod" = 200 ] && grep -q 'name="titulek"' "$PRACE/odpoved" && echo "  ok     chyba ve formuláři článku vrátí formulář" || { echo "  CHYBA  validace článku: kód $kod"; CHYB=$((CHYB+1)); }
+
+# oprávnění podle rubriky: redaktor omezený na jinou rubriku článek z první rubriky nevidí ani neotevře
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_topic (nazev, seo_link, popis) VALUES ('Jen pro test', 'jen-pro-test', '')"
+RUB=$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT idt FROM rs_topic WHERE seo_link = 'jen-pro-test'")
+CLANEK=$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT idc FROM rs_clanky ORDER BY idc LIMIT 1")
+curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=users&akce=uloz" -d "_csrf=$TOKEN" -d idu=0 -d jmeno=Omezeny -d user=omezeny --data-urlencode "password=$HESLO" -d admin=1 -d "rubriky[]=$RUB"
+JAR2="$PRACE/jar2"
+TOKEN2=$(curl -s -c "$JAR2" "$B/admin.php" | grep -o 'name="_csrf" value="[a-f0-9]*"' | head -1 | sed 's/.*value="//;s/"//')
+curl -s -b "$JAR2" -c "$JAR2" -o /dev/null -X POST "$B/admin.php" -d "_csrf=$TOKEN2" -d user=omezeny --data-urlencode "password=$HESLO"
+kod=$(curl -s -b "$JAR2" -o "$PRACE/odpoved" -w '%{http_code}' "$B/admin.php?modul=clanky")
+[ "$kod" = 200 ] && ! grep -q "akce=edit&amp;id=$CLANEK\"" "$PRACE/odpoved" && echo "  ok     omezený redaktor nevidí články cizí rubriky" || { echo "  CHYBA  oprávnění podle rubriky – výpis: kód $kod"; CHYB=$((CHYB+1)); }
+kod=$(curl -s -b "$JAR2" -o /dev/null -w '%{http_code}' "$B/admin.php?modul=clanky&akce=edit&id=$CLANEK")
+[ "$kod" = 404 ] && echo "  ok     omezený redaktor cizí článek neotevře" || { echo "  CHYBA  oprávnění podle rubriky – úprava: kód $kod"; CHYB=$((CHYB+1)); }
 over "vizuální editor bloků" 200 "/?upravit=1" "rs-nastaveni"
 kod=$(curl -s -o "$PRACE/odpoved" -w '%{http_code}' "$B/?upravit=1"); grep -q "rs-nastaveni" "$PRACE/odpoved" && { echo "  CHYBA  vizuální editor je vidět bez přihlášení"; CHYB=$((CHYB+1)); } || echo "  ok     vizuální editor jen pro přihlášené"
 

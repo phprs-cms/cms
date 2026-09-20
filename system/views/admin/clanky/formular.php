@@ -71,20 +71,24 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endif ?>
 	</div>
 </div>
+<?php if ($viceLidi || (string) $clanek['poznamka'] !== ''): ?>
 <div class="radek">
 	<label for="poznamka"><?= e(t('Poznámka pro redakci')) ?></label>
 	<div><textarea class="textbox" id="poznamka" name="poznamka" rows="2" style="min-height:54px" placeholder="<?= e(t('Na webu se neukazuje.')) ?>"><?= e((string) $clanek['poznamka']) ?></textarea></div>
 </div>
+<?php endif ?>
 <div class="radek">
 	<label for="datum"><?= e(t('Datum vydání')) ?></label>
 	<div><input class="textpole" type="datetime-local" id="datum" name="datum" value="<?= e($dt($clanek['datum'])) ?>" required>
 	<span class="napoveda"><?= e(t('Budoucí datum = článek se vydá sám v daný čas.')) ?></span></div>
 </div>
-<div class="radek">
+<div class="radek"<?= !$smiVydavat && !$clanek['visible'] ? ' hidden' : '' ?>>
 	<span class="popisek"><?= e(t('Hlavní stránka')) ?></span>
 	<div class="volby">
+<?php if ($smiVydavat): // o titulní straně rozhoduje ten, kdo smí vydávat ?>
 		<label><input type="checkbox" name="zobr_na_indexu" value="1"<?= $clanek['zobr_na_indexu'] ? ' checked' : '' ?>> <?= e(t('Zobrazit na hlavní stránce')) ?></label><br>
 		<label><input type="checkbox" name="pripnout" value="1"<?= $clanek['priority'] > 0 ? ' checked' : '' ?>> <?= e(t('Připnout nahoru (otvírák)')) ?></label>
+<?php endif ?>
 <?php if ($clanek['visible']): ?>
 		<br><label><input type="checkbox" name="oznacit_aktualizaci" value="1"> <?= e(t('Označit jako aktualizovaný (čtenář uvidí „Aktualizováno“ s dnešním datem)')) ?></label>
 <?php endif ?>
@@ -110,9 +114,12 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php endforeach ?>
 	</select><?= $chyba('tema') ?></div>
 </div>
-<div class="radek">
+<?php if (count($autori) < 2): ?>
+<input type="hidden" name="autor" value="<?= (int) (array_key_first($autori) ?? $clanek['autor']) ?>">
+<?php endif ?>
+<div class="radek"<?= count($autori) < 2 ? ' hidden' : '' ?>>
 	<label for="autor"><?= e(t('Autor')) ?></label>
-	<div><select id="autor" name="autor">
+	<div><select id="autor" name="autor"<?= count($autori) < 2 ? ' disabled' : '' ?>>
 <?php foreach ($autori as $idu => $jmeno): ?>
 		<option value="<?= (int) $idu ?>"<?= (int) $clanek['autor'] === (int) $idu ? ' selected' : '' ?>><?= e($jmeno) ?></option>
 <?php endforeach ?>

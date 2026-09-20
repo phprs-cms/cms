@@ -160,9 +160,10 @@ final class Clanky extends Modul
             'visible' => (int) ($r->post('stav') === 'vydany' && $auth->smiVydavat()),
             'stav_redakce' => in_array($r->post('stav'), ['korektura', 'schvaleno'], true) && ($r->post('stav') !== 'schvaleno' || $auth->smiVydavat()) ? $r->post('stav') : '',
             'poznamka' => $r->post('poznamka'),
-            'zobr_na_indexu' => (int) $r->postBool('zobr_na_indexu'),
+            // o titulní straně rozhoduje ten, kdo smí vydávat; autorovi zůstává, co článek měl (nový: na hlavní stránce, nepřipnutý)
+            'zobr_na_indexu' => $auth->smiVydavat() ? (int) $r->postBool('zobr_na_indexu') : (int) ($puvodni['zobr_na_indexu'] ?? 1),
             // připnutý článek = priorita > 0; hlavní stránka řadí podle priority a pak podle data
-            'priority' => $r->postBool('pripnout') ? max(100, (int) ($puvodni['priority'] ?? 0)) : 0,
+            'priority' => !$auth->smiVydavat() ? (int) ($puvodni['priority'] ?? 0) : ($r->postBool('pripnout') ? max(100, (int) ($puvodni['priority'] ?? 0)) : 0),
             'typ_clanku' => $r->postBool('kratky') ? 2 : 1,
             'sablona' => $r->postInt('sablona') ?: null,
             'zdroj' => $r->post('zdroj'),
@@ -245,6 +246,8 @@ final class Clanky extends Modul
             (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $data['seo_link']); // úprava vydaného článku
         }
 
+        $this->upozorniRedakci($puvodni, $data, $id);
+
         $hlaska = 'Článek byl uložen.';
         if (!$auth->smiVydavat()) {
             $hlaska .= ' Na webu se objeví, až ho vydá redaktor.';
@@ -253,6 +256,46 @@ final class Clanky extends Modul
         return $r->post('po_ulozeni') === 'zustat'
             ? $this->zpet($hlaska, 'edit', ['id' => $id])
             : $this->zpet($hlaska);
+    }
+
+    /**
+     * Redakční předávka e-mailem: autor pošle článek ke korektuře -> dozvědí se to ti, kdo ho smí vydat;
+     * redaktor článek vydá nebo vrátí do konceptu -> dozví se to autor. Kdo upozornění nechce, vypne si je v Můj účet.
+     *
+     * @param array<string, mixed>|null $puvodni
+     * @param array<string, mixed> $data
+     */
+    private function upozorniRedakci(?array $puvodni, array $data, int $id): void
+    {
+        $ja = $this->app->auth()->id();
+        $byloKorektura = ($puvodni['stav_redakce'] ?? '') === 'korektura' && empty($puvodni['visible']);
+        $prijemci = [];
+        $udalost = '';
+        if (!$data['visible'] && $data['stav_redakce'] === 'korektura' && !$byloKorektura) {
+            $udalost = 'korektura';
+            // kdo smí vydávat a není omezen na jiné rubriky
+            $prijemci = $this->db->all(
+                'SELECT u.* FROM {user} u WHERE u.blokovat = 0 AND u.upozorneni = 1 AND u.email <> \'\' AND u.idu <> ? AND (u.admin >= ? OR u.pravo_vydavat = 1)
+                 AND (NOT EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu) OR EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu AND r.idt = ?))',
+                [$ja, \PhpRS\Core\Auth::REDAKTOR, $data['tema']],
+            );
+        } elseif ((int) $data['autor'] !== $ja && $puvodni !== null && ($data['visible'] && empty($puvodni['visible']) || (!$data['visible'] && $byloKorektura && $data['stav_redakce'] === ''))) {
+            $udalost = $data['visible'] ? 'vydano' : 'vraceno';
+            $prijemci = $this->db->all("SELECT * FROM {user} WHERE idu = ? AND blokovat = 0 AND upozorneni = 1 AND email <> ''", [$data['autor']]);
+        }
+        $web = $this->app->settings();
+        $kdo = (string) ($this->app->auth()->user()['jmeno'] ?: $this->app->auth()->user()['user']);
+        $uprava = $this->app->request->origin() . $this->url('edit', ['id' => $id]);
+        $naWebu = $this->app->request->origin() . $this->app->url(($data['jazyk'] !== '' ? $data['jazyk'] . '/' : '') . 'clanek/' . $data['seo_link']);
+        foreach ($prijemci as $komu) {
+            $jazyk = isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$komu['jazyk']]) ? $komu['jazyk'] : \PhpRS\Core\Jazyk::vychozi($web);
+            [$predmet, $text] = \PhpRS\Core\Jazyk::docasne($jazyk, fn (): array => match ($udalost) {
+                'korektura' => [t('Ke korektuře: %s', $data['titulek']), t('%s posílá článek „%s“ ke korektuře.', $kdo, $data['titulek']) . ($data['poznamka'] !== '' ? "\n\n" . t('Poznámka pro redakci') . ': ' . $data['poznamka'] : '') . "\n\n" . $uprava],
+                'vydano' => [t('Váš článek vyšel: %s', $data['titulek']), t('%s vydal(a) váš článek „%s“.', $kdo, $data['titulek']) . "\n\n" . (strtotime($data['datum']) > time() ? t('Na webu se objeví %s.', datum($data['datum'], true)) . "\n\n" . $uprava : $naWebu)],
+                default => [t('Článek se vrací k dopracování: %s', $data['titulek']), t('%s vrátil(a) článek „%s“ do konceptu.', $kdo, $data['titulek']) . ($data['poznamka'] !== '' ? "\n\n" . t('Poznámka pro redakci') . ': ' . $data['poznamka'] : '') . "\n\n" . $uprava],
+            }, 'admin-');
+            \PhpRS\Core\Posta::odesli($web, $komu['email'], $predmet . ' – ' . $web->get('nazev_webu'), $text . "\n\n--\n" . $web->get('nazev_webu'));
+        }
     }
 
     /** "Jsem tu" z otevřeného editoru - prodlužuje zámek článku. */
@@ -660,6 +703,7 @@ final class Clanky extends Modul
             'konceptServer' => $this->request->isPost() ? null : $this->db->one('SELECT cas, data FROM {clanky_koncepty} WHERE kdo = ? AND idc = ?', [$auth->id(), (int) $clanek['idc']]),
             'vsichniAutori' => $this->db->pairs("SELECT idu, IF(jmeno = '', user, jmeno) FROM {user} WHERE blokovat = 0 ORDER BY 2"),
             'spoluautori' => $this->request->isPost() ? array_map(intval(...), $this->request->postList('spoluautori')) : array_map(intval(...), array_column($this->db->all('SELECT idu FROM {clanky_autori} WHERE idc = ?', [(int) $clanek['idc']]), 'idu')),
+            'viceLidi' => (int) $this->db->value('SELECT COUNT(*) FROM {user} WHERE blokovat = 0') > 1, // jednočlenná redakce nepotřebuje poznámky pro redakci
             'jazykyWebu' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) !== [],
             // u článku ve výchozím jazyce: do kterých jazyků jde přeložit a které překlady už existují (jazyk => číslo článku)
             'jazykyPrekladu' => $clanek['idc'] && ($clanek['jazyk'] ?? '') === '' ? \PhpRS\Core\Jazyk::dalsi($this->app->settings()) : [],

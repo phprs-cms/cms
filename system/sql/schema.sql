@@ -30,6 +30,7 @@ CREATE TABLE rs_user (
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,
     jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyk administrace; '' = čeština
+    upozorneni     BOOL NOT NULL DEFAULT 1,                -- redakční upozornění e-mailem (ke korektuře, vydáno, vráceno)
     pozice         VARCHAR(100) NOT NULL DEFAULT '',      -- pozice v redakci (medailonek autora)
     foto           VARCHAR(255) NOT NULL DEFAULT '',
     bio            TEXT NULL,                             -- pár vět o autorovi

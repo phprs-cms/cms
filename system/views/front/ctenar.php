@@ -74,6 +74,8 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 	<p><?= e(t('Přihlášen:')) ?> <strong><?= e($ctenar['email']) ?></strong>
 <?php if ($predplatitel): ?>
 		· <?= e(t('předplatné do')) ?> <strong><?= e(datum($ctenar['predplatne_do'])) ?></strong>
+<?php elseif (($predplatneUrl ?? '') !== ''): ?>
+		· <a href="<?= e($predplatneUrl) ?>"><?= e(t('Získat předplatné')) ?></a>
 <?php endif ?>
 	</p>
 <?php if ($zpet !== ''): ?>

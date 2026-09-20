@@ -37,7 +37,9 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <?php foreach (PhpRS\Core\Jazyk::ADMINISTRACE as $kodJazyka => $nazevJazyka): ?>
 	<option value="<?= e($kodJazyka) ?>"<?= ($user['jazyk'] ?: 'cs') === $kodJazyka ? ' selected' : '' ?>><?= e($nazevJazyka) ?></option>
 <?php endforeach ?>
-</select><span class="napoveda"><?= e(t('Language / Jazyk. Přeložené je menu, přehled, Můj účet a psaní článků; nastavení webu zůstává česky.')) ?></span></div></div>
+</select><span class="napoveda">Language · Jazyk · Sprache</span></div></div>
+<div class="radek"><span class="popisek"><?= e(t('Upozornění e-mailem')) ?></span><div class="volby"><label><input type="checkbox" name="upozorneni" value="1"<?= !empty($user['upozorneni']) ? ' checked' : '' ?>> <?= e(t('psát mi, když článek čeká na korekturu, vyjde nebo se vrací k dopracování')) ?></label>
+	<span class="napoveda"><?= e(t('Upozornění chodí na e-mail uvedený výše. Bez e-mailu žádná nechodí.')) ?></span></div></div>
 </fieldset>
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Uložit údaje')) ?>"></p>
 </form>

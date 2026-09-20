@@ -6,6 +6,7 @@
  * @var bool $prihlasen   čtenář je přihlášený (ale nemá předplatné)
  * @var string $text      vlastní text výzvy z Nastavení
  * @var string $ucet      adresa přihlášení s návratem na článek
+ * @var string $predplatneUrl  kde získat předplatné (prázdné = web to neříká)
  * @var bool $registrace
  * @var array{precteno:int, limit:int, vycerpano:bool}|null $zdarma  stav měkkého paywallu
  */
@@ -16,7 +17,9 @@
 <?php if ($zdarma !== null && $zdarma['vycerpano']): ?>
 	<p><small><?= e(t('Tento měsíc jste už přečetli všech %s článků zdarma.', $zdarma['limit'])) ?></small></p>
 <?php endif ?>
-<?php if (!$prihlasen): ?>
+<?php if ($predplatne && ($predplatneUrl ?? '') !== ''): ?>
+	<p><a class="rs-tl" href="<?= e($predplatneUrl) ?>"><?= e(t('Získat předplatné')) ?></a><?php if (!$prihlasen): ?> <a class="rs-tl rs-tl-vedlejsi" href="<?= e($ucet) ?>"><?= e(t('Už předplatné mám – přihlásit se')) ?></a><?php endif ?></p>
+<?php elseif (!$prihlasen): ?>
 	<p><a class="rs-tl" href="<?= e($ucet) ?>"><?= e(t('Přihlásit se')) ?></a><?php if ($registrace): ?> <a class="rs-tl rs-tl-vedlejsi" href="<?= e($ucet) ?>"><?= e(t('Zaregistrovat se')) ?></a><?php endif ?></p>
 <?php endif ?>
 </aside>

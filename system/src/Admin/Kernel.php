@@ -216,7 +216,7 @@ final class Kernel
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),
                 'Ke korektuře' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0 AND stav_redakce = 'korektura'{$jen}"),
                 'Koncepty' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 0 AND stav_redakce <> 'korektura'{$jen}"),
-                ...(Rozsireni::je($this->app->settings(), 'komentare') ? ['Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0')] : []),
+                ...(Rozsireni::je($this->app->settings(), 'komentare') && isset($this->moduly()['comment']) ? ['Komentáře ke schválení' => (int) $db->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0')] : []),
                 'Přečtení celkem' => (int) $db->value("SELECT COALESCE(SUM(visit), 0) FROM {clanky} WHERE 1 = 1{$jen}"),
             ],
             'posledni' => $db->all(

@@ -130,6 +130,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
   v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.
 
+- **Redakční předávka** (`Moduly\Clanky::upozorniRedakci()`): přechod na „Ke korektuře“ píše těm, kdo smějí vydávat, vydání a vrácení píše autorovi –
+  v jazyce administrace příjemce (`Jazyk::docasne($kod, fn, 'admin-')`), respektuje `rs_user.upozorneni`. O titulní straně (hlavní stránka, připnutí) rozhoduje jen ten, kdo smí vydávat.
+
 - **Prázdný výpis** v administraci vypisuj sdílenou šablonou `views/admin/prazdno.php` (ikona, nadpis, věta, první akce) – ne holou větou.
   Ikony bloků ve vizuálním editoru jsou ze stejné sady jako menu administrace (`views/admin/ikony.php`, klíče `b-*`); `Bloky::KATALOG` nese název ikony.
 

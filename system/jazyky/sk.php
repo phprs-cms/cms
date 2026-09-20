@@ -178,4 +178,6 @@ return [
     'Číst článek →' => 'Čítať článok →',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Tento e-mail dostávate, pretože ste sa prihlásili na odber noviniek z webu %s.',
     'Příliš mnoho chybných pokusů. Zkuste to znovu za 15 minut, nebo si nechte poslat přihlašovací odkaz e-mailem.' => 'Príliš veľa chybných pokusov. Skúste to znova o 15 minút, alebo si nechajte poslať prihlasovací odkaz e-mailom.',
+    'Získat předplatné' => 'Získať predplatné',
+    'Už předplatné mám – přihlásit se' => 'Predplatné už mám – prihlásiť sa',
 ];

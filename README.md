@@ -156,6 +156,8 @@ Hotovo:
 - **Méně poskakování stránky:** obrázky z Médií dostávají na webu samy rozměry a převládající barvu jako podklad, než se načtou.
 - **Administrace česky, slovensky, anglicky a německy** (volba v Můj účet), včetně vizuálního editoru bloků.
 - **Zabezpečení administrace:** Content-Security-Policy bez inline skriptů, zákaz ukládání do mezipaměti, HSTS na HTTPS; chybné pokusy se počítají i na účet (heslo, kód 2FA, účet čtenáře).
+- **Redakční předávka e-mailem:** článek ke korektuře se ohlásí těm, kdo ho smějí vydat; autor se dozví o vydání i o vrácení k dopracování.
+- **Cesta k předplatnému:** u článku pro předplatitele a v účtu čtenáře tlačítko „Získat předplatné“ na stránku webu nebo platební odkaz.
   a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající

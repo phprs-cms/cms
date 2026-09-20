@@ -53,10 +53,10 @@ final class Jazyk
      * @param callable(): T $funkce
      * @return T
      */
-    public static function docasne(string $kod, callable $funkce): mixed
+    public static function docasne(string $kod, callable $funkce, string $sada = ''): mixed
     {
         [$kodPred, $slovnikPred] = [self::$kod, self::$slovnik];
-        self::nastav($kod);
+        self::nastav($kod, $sada); // sada "admin-" = e-mail členovi redakce v jazyce jeho administrace
         try {
             return $funkce();
         } finally {

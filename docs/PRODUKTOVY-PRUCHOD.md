@@ -56,9 +56,9 @@ Správce po uložení neví, co uživatel ve výsledku smí.
 **Návrh:** nad formulářem jednověté shrnutí složené z voleb („Píše a upravuje vlastní články v rubrice Kultura, nevydává.“)
 a tentýž text ve výpisu uživatelů.
 
-### 8. E-mail z instalace se nepoužije jako e-mail redakce — nízký dopad, S
-Instalátor se ptá na e-mail, ale uloží ho jen k účtu. Krok 5 Prvních kroků („Nastavte e-mail redakce“) tak zůstává nesplněný
-a web do té doby nemá komu posílat upozornění. **Návrh:** předvyplnit jím `email_webu`.
+### 8. (zrušeno) E-mail z instalace
+Původní nález byl chybný: instalátor e-mail redakce nastavuje. Krok 5 Prvních kroků zůstává otevřený záměrně, dokud není
+nastavené odesílání pošty (SMTP nebo adresa odesílatele). Beze změny.
 
 ### 9. Výchozí menu má 15 položek — nízký dopad, S
 Blogger po instalaci vidí i Novinky, Ankety, Přesměrování a Protokol změn. **Návrh:** Ankety a Novinky ve výchozí sadě vypnout
@@ -82,8 +82,18 @@ Chybí řádky „Úlohy na pozadí: naposledy před X minutami“ (naplánovan�
 Skutečné odesílání pošty, Web Push, Claude API, vzdálené zálohy a aktualizaci z administrace – ty ověří až beta na ostrém hostingu.
 Vizuální editor bloků a editor článku byly prověřeny dříve (včetně opravy dialogu Médií).
 
+## Stav úprav
+
+- **1 mezikrok – HOTOVO 2026-09-20:** Nastavení → Základní → Čtenáři a zamčený obsah → „Kde získat předplatné“ (stránka webu nebo https odkaz);
+  tlačítko *Získat předplatné* u zamčeného článku i v účtu čtenáře. Platební brána zůstává.
+- **2 – HOTOVO:** e-mail těm, kdo smějí vydávat (a nejsou omezeni na jinou rubriku), když článek přejde na „Ke korektuře“; e-mail autorovi
+  při vydání a při vrácení do konceptu, v jazyce jeho administrace. Vypíná se v Můj účet (sloupec `rs_user.upozorneni`, migrace 0037).
+- **4 – HOTOVO:** volby titulní strany vidí a ukládá jen ten, kdo smí vydávat (vynuceno i na serveru).
+- **5 – HOTOVO zčásti:** výběr autora se skryje, když není z čeho vybírat; poznámka pro redakci jen ve vícečlenné redakci;
+  dlaždice „Komentáře ke schválení“ jen s přístupem ke komentářům. Seriál zůstal na místě.
+
 ## Doporučené pořadí úprav
 
-1. Rychlé a s velkým účinkem (vše S): **1 mezikrok**, **2**, **4**, **5**, **8**.
+1. Rychlé a s velkým účinkem (vše S): **1 mezikrok**, **2**, **4**, **5**.
 2. Před betou: **3** (instalátor v jazycích), **11**.
 3. Po betě podle ohlasů: **6**, **7**, **9**, **12**; **10** spolu s webem projektu.

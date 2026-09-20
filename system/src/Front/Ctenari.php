@@ -149,6 +149,17 @@ final class Ctenari
         return implode("\n", array_slice($m[0], 0, $pocet));
     }
 
+    /** Kam vede tlačítko „Získat předplatné“: stránka webu nebo https odkaz z Nastavení; cokoli jiného se ignoruje. */
+    public function predplatneUrl(): string
+    {
+        $cil = trim($this->app->settings()->get('predplatne_url'));
+        if (preg_match('#^https://[^\s"<>]+$#i', $cil)) {
+            return $cil;
+        }
+
+        return preg_match('#^/?[a-z0-9][a-z0-9/_-]*$#i', $cil) ? $this->app->url(ltrim($cil, '/')) : '';
+    }
+
     /** Výzva pod ukázkou zamčeného článku. */
     public function zamekHtml(array $clanek, View $view): string
     {
@@ -156,6 +167,7 @@ final class Ctenari
             'predplatne' => (int) $clanek['pristup'] === 2,
             'prihlasen' => $this->prihlaseny() !== null,
             'text' => $this->app->settings()->get('zamek_text'),
+            'predplatneUrl' => $this->predplatneUrl(),
             'ucet' => $this->app->url('ctenar') . '?zpet=' . rawurlencode('clanek/' . $clanek['seo_link']),
             'registrace' => $this->app->settings()->bool('ctenari_registrace'),
             'zdarma' => $this->stavZdarma,
@@ -201,6 +213,7 @@ final class Ctenari
         return [t($ctenar === null ? 'Přihlášení čtenáře' : 'Můj účet'), $view->render('ctenar', [
             'ctenar' => $ctenar,
             'predplatitel' => $this->jePredplatitel(),
+            'predplatneUrl' => $this->predplatneUrl(),
             'akce' => $this->app->url('ctenar'),
             'zpet' => $this->zpet($r->get('zpet')),
             'stav' => $r->get('stav'),

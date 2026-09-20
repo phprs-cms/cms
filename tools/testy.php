@@ -82,6 +82,30 @@ $typy = (new ReflectionClass(TypyObsahu::class))->newInstanceWithoutConstructor(
 $html = $typy->vlozeneAdresy('<p>Úvod</p><p>https://youtu.be/dQw4w9WgXcQ</p><p>Viz https://youtu.be/dQw4w9WgXcQ v textu.</p>');
 over('vlozeneAdresy: jen samostatný řádek', [substr_count($html, 'data-vlozit'), substr_count($html, 'Viz https://youtu.be')], [1, 1]);
 
+/* ---------- bezpečný dialekt šablon (ukládání přes napojení na Claude) ---------- */
+use PhpRS\Core\SablonaKontrola;
+
+$vadne = [];
+foreach (glob(dirname(__DIR__) . '/layout/*/*.php') as $soubor) {
+    if (SablonaKontrola::over((string) file_get_contents($soubor)) !== []) {
+        $vadne[] = basename(dirname($soubor)) . '/' . basename($soubor);
+    }
+}
+over('SablonaKontrola: vestavěné šablony dialektem projdou', $vadne, []);
+$utoky = [
+    '<?php file_put_contents(PHPRS_ROOT . "/system/x.php", "x");', '<?= file_get_contents("../config.php") ?>', '<?php eval($_GET["c"]);', '<?php include "../config.php";',
+    '<?php system("id");', '<?php echo `id`;', '<?php $f = "sys" . "tem"; $f("id");', '<?php array_map("system", ["id"]);', '<?php array_map("sys" . "tem", ["id"]);',
+    '<?php $x = "system"; usort($a, $x);', '<?php call_user_func("system", "id");', '<?php $d = new PDO("mysql:host=x");', '<?php \\PhpRS\\Core\\App::boot();',
+    '<?php $web->db()->run("DROP TABLE rs_clanky");', '<?php $web->set("ai_klic", "x");', '<?= $_COOKIE["phprs3"] ?>', '<?php $a = "_GET"; echo $$a["x"];',
+    '<?php echo "{$web->db()->run(1)}";', '<?php (fn () => 1)()("x");', '<?php [$web, "set"]("a", "b");', '<?php function system2() {}', '<?php ($web->x)("id");', '<?php exit;',
+    '<?php use PhpRS\\Core\\Db as e;', '<?php echo constant("PHPRS_ROOT");', '<?php preg_replace_callback("/x/", "system", "x");', '<?php highlight_file("../config.php");',
+    '<?php $m = "db"; $web->$m();', '<?php array_map(system(...), ["id"]);', '<?php $web?->db();', '<?php echo $app->settings()->get("ai_klic");', '<?php mail("a@b.cz", "x", "y");',
+    '<?php curl_init("https://example.com");', '<?php fopen("php://input", "r");', '<?php unlink("index.php");', '<?php putenv("A=B");', '<?php extract($_POST);',
+];
+$prosle = array_values(array_filter($utoky, fn (string $php): bool => SablonaKontrola::over($php) === []));
+over('SablonaKontrola: žádný z ' . count($utoky) . ' útoků neprojde', $prosle, []);
+over('SablonaKontrola: běžná šablona projde', SablonaKontrola::over('<?php $x = fn (array $c): string => e($c["titulek"]); ?><h1><?= $x($clanek) ?></h1><?php foreach (array_map(trim(...), explode(",", "a,b")) as $s): ?><?= e(t("Štítek")) ?> <?= e($url("stitek/" . $s)) ?><?php endforeach; usort($a, fn ($p, $q) => $p <=> $q); if ($web->get("logo_webu") !== "") { echo e(datum($clanek["datum"], true)); }'), []);
+
 /* ---------- šablona Rozhovor: otázka = odstavec celý tučně ---------- */
 $otazky = preg_replace('#<p>(\s*<(strong|b)>(?:(?!</?(?:strong|b|p)\b).)*</\2>\s*)</p>#is', '<p class="rs-otazka">$1</p>', '<p><strong>Proč?</strong></p><p><strong>Tučně</strong> a dál text.</p><p>Odpověď.</p>');
 over('Rozhovor: jen celý tučný odstavec je otázka', substr_count((string) $otazky, 'rs-otazka'), 1);

@@ -184,6 +184,9 @@ Hotovo:
   a prokliků bez sledování jednotlivců, šablona s logem a barvou webu.
 - **Šablony článku:** Standardní, Dlouhé čtení, Fotoreportáž, Rozhovor – fungují ve všech třech layoutech.
 - **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
+- **Hranice úprav:** přes napojení na Claude jde měnit jen obsah a vlastní šablony. Šablona je prezentační vrstva – PHP soubor,
+  který by sahal na soubory, databázi, síť nebo kód systému, se neuloží (`Core\SablonaKontrola`). Vydání nese podepsaný seznam
+  souborů a Stav systému hlásí zásahy do jádra; pravidla pro Claude Code jsou v `layout/CLAUDE.md`.
 - **Testy:** `php tools/testy.php` – jednotkové testy jádra bez databáze (součást `tools/test.sh`).
 - **Redakce a provoz:** e-mail redakci o komentářích (nejvýš jednou za 10 minut), adresa pro cron `/ulohy?token=…` (Stav systému),
   „První kroky" po instalaci na přehledu administrace.

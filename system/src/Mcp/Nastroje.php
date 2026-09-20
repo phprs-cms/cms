@@ -217,11 +217,14 @@ final class Nastroje
                     throw new \InvalidArgumentException('Soubor je větší než 300 kB.');
                 }
                 if (str_ends_with($cesta, '.php')) {
-                    try {
-                        token_get_all($obsah, TOKEN_PARSE);
-                    } catch (\ParseError $e) {
-                        throw new \InvalidArgumentException('PHP soubor má syntaktickou chybu na řádku ' . $e->getLine() . ': ' . $e->getMessage() . '. Nic se neuložilo.');
+                    // šablona je jen prezentační vrstva: nesmí na soubory, databázi, síť ani na kód systému (Core\SablonaKontrola)
+                    $vady = \PhpRS\Core\SablonaKontrola::over($obsah);
+                    if ($vady !== []) {
+                        throw new \InvalidArgumentException("Soubor se neuložil – šablona smí jen vypisovat data, která dostává:\n- " . implode("\n- ", array_slice($vady, 0, 12))
+                            . "\nPovolené: výpis, if/foreach/match, uzávěry, \$web->get(), \$url(), e(), t(), datum() a běžné funkce pro text, čísla a pole. Pravidla: layout/CLAUDE.md.");
                     }
+                } elseif (preg_match('#expression\s*\(|behavior\s*:#i', $obsah)) {
+                    throw new \InvalidArgumentException('Styl obsahuje zastaralé spustitelné konstrukce (expression, behavior). Nic se neuložilo.');
                 }
                 file_put_contents($cesta, $obsah, LOCK_EX);
 

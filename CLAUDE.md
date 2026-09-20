@@ -103,6 +103,13 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   `sablona-<soubor>` a vzhled je v `image/web.css`. Nová šablona layoutu musí tu třídu vypsat také. Co vkládáš před text článku,
   nesmí být `<p>` – šablony dávají prvnímu odstavci iniciálu.
 
+- **Hranice napojení na Claude (rozhodnutí uživatele 2026-09-21, bezpečí na prvním místě):** přes MCP se mění jen obsah a VLASTNÍ
+  šablony; žádný nástroj nesmí umět zapsat mimo `layout/<vlastní>/`, spustit kód ani dotaz. PHP šablony ukládané přes MCP musí projít
+  `Core\SablonaKontrola` (povolovací seznam funkcí a konstrukcí; vestavěné šablony jím projít musí – hlídá `tools/testy.php`).
+  Novou funkci do seznamu přidej jen tehdy, když nepracuje se soubory, sítí, procesy, zpětným voláním ani reflexí. Pravidla pro
+  Claude pracujícího se soubory jsou v `layout/CLAUDE.md` (je součástí balíčku). Vydání nese podepsaný seznam souborů
+  `system/soubory.json`; `Core\Integrita` podle něj ve Stavu systému hlásí změněné, chybějící a přidané soubory jádra.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

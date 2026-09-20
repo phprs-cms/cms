@@ -78,6 +78,8 @@ final class Stav
             }
         }
         $pridej('Provoz', 'Velikost médií', 'ok', self::velikost($media));
+        $jadro = Integrita::kontrola();
+        $pridej('Bezpečnost', 'Soubory jádra', $jadro['stav'], $jadro['info']);
         $smtp = $app->settings()->get('posta_rezim') === 'smtp' && $app->settings()->get('smtp_host') !== '';
         $pridej('Provoz', 'Odesílání pošty', $smtp || function_exists('mail') ? 'ok' : 'varovani', $smtp ? 'přes SMTP server ' . $app->settings()->get('smtp_host') : (function_exists('mail') ? 'funkcí mail() serveru – spolehlivější je SMTP (Nastavení → Pošta)' : 'funkce mail() je vypnutá – nastavte SMTP (Nastavení → Pošta)'));
 

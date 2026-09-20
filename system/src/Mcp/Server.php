@@ -74,7 +74,10 @@ final class Server
                 'capabilities' => ['tools' => new \stdClass()],
                 'serverInfo' => ['name' => 'phpRS – ' . $this->app->settings()->get('nazev_webu'), 'version' => PHPRS_VERSION],
                 'instructions' => 'Redakční systém phpRS 3. Texty piš česky, články jako čisté HTML (p, h2, h3, ul, ol, blockquote, a, strong, em, figure/img). '
-                    . 'Nový článek vzniká jako koncept; vydat ho může jen uživatel s právem vydávat a jen na výslovný pokyn. Před úpravou šablony si ji nejdřív zkopíruj a změny ukaž v náhledu.',
+                    . 'Nový článek vzniká jako koncept; vydat ho může jen uživatel s právem vydávat a jen na výslovný pokyn. Před úpravou šablony si ji nejdřív zkopíruj a změny ukaž v náhledu. '
+                    . 'HRANICE: přes toto napojení se mění jen obsah (články, rubriky, bloky) a VLASTNÍ šablony vzhledu. Kód systému (system/, admin.php, index.php), vestavěné šablony '
+                    . 'ani databázi neupravuj a nenavrhuj obcházení – vlastní funkce CMS se nedělají, systém má být pro všechny stejný a aktualizovatelný. Šablona je jen prezentační vrstva: '
+                    . 'vypisuje data, která dostane; nesmí číst soubory, volat databázi ani síť. Požaduje-li uživatel novou funkci systému, řekni mu, že ji má navrhnout autorům phpRS.',
             ]),
             'ping' => $ok([]),
             'tools/list' => $ok(['tools' => $nastroje->seznam()]),

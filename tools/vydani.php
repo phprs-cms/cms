@@ -55,12 +55,13 @@ if ($sk === false || strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES || base64
 
 // --- balíček ze souborů sledovaných gitem
 $soubory = array_filter(explode("\n", (string) shell_exec('cd ' . escapeshellarg($koren) . ' && git ls-files')));
-$vynechat = ['tools/', '.claude/', 'CLAUDE.md', '.gitignore'];
+$vynechat = ['tools/', 'docs/', '.github/', '.claude/', 'CLAUDE.md', '.gitignore']; // kořenový CLAUDE.md je pro vývoj; layout/CLAUDE.md (pravidla šablon) do balíčku patří
 @mkdir($koren . '/dist');
 $zipSoubor = $koren . "/dist/phprs-{$verze}.zip";
 @unlink($zipSoubor);
 $zip = new ZipArchive();
 $zip->open($zipSoubor, ZipArchive::CREATE);
+$otisky = [];
 foreach ($soubory as $soubor) {
     foreach ($vynechat as $v) {
         if ($soubor === $v || str_starts_with($soubor, $v)) {
@@ -68,7 +69,18 @@ foreach ($soubory as $soubor) {
         }
     }
     $zip->addFile($koren . '/' . $soubor, $soubor);
+    // seznam souborů jádra s otisky: instalace podle něj pozná změněné, chybějící a přidané soubory (Core\Integrita)
+    // bez uživatelských složek a bez install.php (aktualizace ho nepřepisuje a správce ho po instalaci může smazat)
+    if (!preg_match('#^(media|storage)/|^install\.php$#', $soubor)) {
+        $otisky[$soubor] = hash_file('sha256', $koren . '/' . $soubor);
+    }
 }
+require_once $koren . '/system/src/Core/Integrita.php';
+ksort($otisky);
+$zip->addFromString('system/soubory.json', json_encode([
+    'verze' => $verze, 'soubory' => $otisky,
+    'podpis' => base64_encode(sodium_crypto_sign_detached(PhpRS\Core\Integrita::kPodpisu($verze, $otisky), $sk)),
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
 $zip->close();
 
 $sha = hash_file('sha256', $zipSoubor);

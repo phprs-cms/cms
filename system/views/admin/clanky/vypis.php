@@ -14,6 +14,7 @@
 $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['strana' => $s]);
 ?>
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nový článek')) ?></a> <a class="navigace" href="<?= e($modul->url('kalendar')) ?>"><?= e(t('Redakční kalendář')) ?></a>
+	<a class="navigace" href="<?= e($modul->url('odkazy')) ?>"><?= e(t('Nefunkční odkazy')) ?></a>
 <?php if ($modul->app()->auth()->smiVydavat()): ?>
 	<a class="navigace" href="<?= e($modul->url('titulni')) ?>"><?= e(t('Titulní strana')) ?></a>
 <?php endif ?></p>

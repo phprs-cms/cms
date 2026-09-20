@@ -93,6 +93,7 @@ $pole('souvisejici_auto', 'Související články automaticky', 'ano', 'Když č
 <?php
 $pole('hlidat_platnost', 'Stahovat články z hlavní stránky', 'ano', 'Článek po svém „datu stažení“ zmizí z hlavní stránky; v rubrice zůstane.');
 $pole('webhook_url', 'Webhook po vydání článku', 'url', 'Adresa ze služby Make, Zapier, IFTTT nebo n8n. Po vydání článku na ni systém pošle titulek, perex, adresu a obrázek – služba je pak sama sdílí na Facebook, X, Mastodon, do Slacku apod.', 'placeholder="https://"');
+$pole('kontrola_odkazu', 'Hledat nefunkční odkazy', 'ano', 'Na pozadí, jeden článek za pět minut. Výsledek je v Článcích → Nefunkční odkazy.');
 $pole('cache_stranek', 'Cache stránek', 'ano', 'Hotové stránky se čtenářům podávají z paměti – web je rychlejší a vydrží nápor. Nechte zapnuté.');
 ?>
 </details>

@@ -773,4 +773,13 @@ return [
     'Je překladem' => 'Je prekladom',
     '– není překlad –' => '– nie je preklad –',
     'Vyplňte u položky v jiné jazykové verzi: přepínač jazyků pak vede přímo na protějšek a vyhledávače dostanou značky hreflang.' => 'Vyplňte pri položke v inej jazykovej verzii: prepínač jazykov potom vedie priamo na náprotivok a vyhľadávače dostanú značky hreflang.',
+    'Nefunkční odkazy' => 'Nefunkčné odkazy',
+    'Kontrola odkazů je vypnutá (Nastavení → Základní → Další možnosti).' => 'Kontrola odkazov je vypnutá (Nastavenia → Základné → Ďalšie možnosti).',
+    'Systém na pozadí prochází vydané články – jeden za pět minut, každý jednou za měsíc – a zkouší, jestli odkazy v nich ještě fungují. Zkontrolováno článků: %s z %s.' => 'Systém na pozadí prechádza vydané články – jeden za päť minút, každý raz za mesiac – a skúša, či odkazy v nich ešte fungujú. Skontrolovaných článkov: %s z %s.',
+    'Žádný nefunkční odkaz nebyl nalezen.' => 'Nenašiel sa žiadny nefunkčný odkaz.',
+    'Zjištěno' => 'Zistené',
+    'server neodpovídá' => 'server neodpovedá',
+    'Zkontrolovat znovu' => 'Skontrolovať znova',
+    'Hledat nefunkční odkazy' => 'Hľadať nefunkčné odkazy',
+    'Na pozadí, jeden článek za pět minut. Výsledek je v Článcích → Nefunkční odkazy.' => 'Na pozadí, jeden článok za päť minút. Výsledok je v Článkoch → Nefunkčné odkazy.',
 ];

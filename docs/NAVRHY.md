@@ -46,7 +46,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 27 | **Oprávnění podle rubriky** a role „korektor" | větší redakce; dnes jen autor / redaktor / administrátor | M |
 | 28 | **Import z WordPressu (WXR)** a **export celého webu** (JSON + média) | bez importu se na phpRS 3 stěhuje těžko; export = žádné uzamčení dat | L |
 | 29 | ✅ HOTOVO · **Prohlížeč chyb** (`storage/log/chyby.log`) a **404 log s nabídkou přesměrování** ve Stavu systému | správce dnes musí na FTP | S |
-| 30 | **Kontrola nefunkčních odkazů** v článcích (na pozadí, po dávkách) | hygiena obsahu i SEO | M |
+| 30 | ✅ HOTOVO · **Kontrola nefunkčních odkazů** v článcích (na pozadí, po dávkách) | hygiena obsahu i SEO | M |
 | 31 | ✅ HOTOVO · **Jednotkové testy** jádra (Totp, Antispam, Push/VAPID, cookie čtenáře, Migrace::prikazy, čistič adres) vedle kouřového testu | kouřový test nechytí regresi v kryptografii a parsování | M |
 | 32 | ✅ HOTOVO · **Průvodce po instalaci** na přehledu: 5 kroků (logo a barva → rubriky → první článek → bloky → SMTP) a volba „nainstalovat ukázkový obsah" | prázdný web po instalaci působí mrtvě; nový uživatel neví kudy | S |
 
@@ -86,7 +86,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 23, 24, 25, 29, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
 
 Další v pořadí: platební brána (15),
 

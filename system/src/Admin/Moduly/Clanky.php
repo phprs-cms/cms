@@ -464,6 +464,26 @@ final class Clanky extends Modul
         ]);
     }
 
+    /** Nefunkční odkazy nalezené kontrolou na pozadí (Core\Odkazy). */
+    protected function akceOdkazy(): Response
+    {
+        if ($this->request->isPost()) {
+            // "zkontrolovat znovu": článek se zařadí na začátek fronty
+            $this->db->update('clanky', ['odkazy_cas' => null], ['idc' => $this->request->postInt('idc')]);
+            $this->db->delete('odkazy_vadne', ['idc' => $this->request->postInt('idc')]);
+
+            return $this->zpet('Článek se zkontroluje znovu během několika minut.', 'odkazy');
+        }
+        $autori = $this->app->auth()->spravovaniAutori();
+
+        return $this->view('odkazy', 'Nefunkční odkazy', [
+            'odkazy' => $this->db->all('SELECT o.*, c.titulek FROM {odkazy_vadne} o JOIN {clanky} c ON c.idc = o.idc' . ($autori !== null ? ' WHERE c.autor IN (' . implode(',', $autori) . ')' : '') . ' ORDER BY o.cas DESC LIMIT 300'),
+            'zkontrolovano' => (int) $this->db->value('SELECT COUNT(*) FROM {clanky} WHERE odkazy_cas IS NOT NULL'),
+            'celkem' => (int) $this->db->value('SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW()'),
+            'zapnuto' => $this->app->settings()->bool('kontrola_odkazu'),
+        ]);
+    }
+
     /** Hromadné akce ve výpisu: přesun do rubriky, přidání štítku, zamknutí / odemknutí pro čtenáře. */
     protected function akceHromadne(): Response
     {

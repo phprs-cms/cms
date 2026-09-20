@@ -45,6 +45,8 @@ final class Settings
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
         'doba_cteni' => '1',          // u delších článků doba čtení a ukazatel průběhu
+        'kontrola_odkazu' => '1',     // na pozadí hledat v článcích nefunkční odkazy
+        'kontrola_odkazu_cas' => '0',
         'sdileni' => '1',             // odkazy pro sdílení pod článkem
         'osnova_clanku' => '1',       // obsah článku z mezititulků (od tří H2)
         'souvisejici_auto' => '1',    // související články podle štítků a rubriky, když článek není v seriálu

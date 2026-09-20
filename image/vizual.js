@@ -7,6 +7,8 @@
 (function () {
 	'use strict';
 
+	var T = function (t) { return (window.PHPRS_PREKLAD || {})[t] || t; };
+
 	var N = JSON.parse(document.getElementById('rs-nastaveni').textContent);
 	var MODUL = N.admin + '?modul=bloky';
 
@@ -35,16 +37,26 @@
 		setTimeout(function () { h.remove(); }, 2200);
 	}
 
+	// tlačítka „Přidat blok“ vykresluje server česky – v jiném jazyce administrace se přeloží tady
+	if (window.PHPRS_PREKLAD) {
+		Array.prototype.forEach.call(document.querySelectorAll('.rs-pridat'), function (tl) {
+			var zona = tl.querySelector('small');
+			var nazev = zona ? zona.textContent : '';
+			tl.textContent = T('+ Přidat blok') + ' ';
+			tl.appendChild(el('small', { text: T(nazev) }));
+		});
+	}
+
 	/* ---------- horní lišta ---------- */
 
 	var lista = el('div', { class: 'rs-lista rs-ui' }, [
-		el('strong', { text: 'Úprava bloků' }),
-		el('span', { class: 'rs-lista-napoveda', text: 'Bloky přetahujte myší. Najetím na blok se ukáže jeho ovládání.' }),
-		el('span', { class: 'rs-lista-rozvrzeni' }, [el('span', { text: 'Rozvržení:' })].concat(Object.keys(N.rozvrzeniVolby).map(function (klic) {
+		el('strong', { text: T('Úprava bloků') }),
+		el('span', { class: 'rs-lista-napoveda', text: T('Bloky přetahujte myší. Najetím na blok se ukáže jeho ovládání.') }),
+		el('span', { class: 'rs-lista-rozvrzeni' }, [el('span', { text: T('Rozvržení:') })].concat(Object.keys(N.rozvrzeniVolby).map(function (klic) {
 			return el('button', { type: 'button', class: klic === N.rozvrzeni ? 'rs-aktivni' : '', title: N.rozvrzeniVolby[klic].popis, text: N.rozvrzeniVolby[klic].nazev,
 				onclick: function () { if (klic !== N.rozvrzeni) { odesli('rozvrzeni', { rozvrzeni: klic }).then(function () { znovu(); }); } } });
 		}))),
-		el('a', { class: 'rs-hotovo', href: N.admin, text: 'Hotovo' })
+		el('a', { class: 'rs-hotovo', href: N.admin, text: T('Hotovo') })
 	]);
 	document.body.appendChild(lista);
 	document.documentElement.classList.add('rs-upravy');
@@ -68,7 +80,7 @@
 		document.querySelectorAll('.rs-zona').forEach(function (z) {
 			poradi[z.getAttribute('data-zona')] = Array.prototype.map.call(z.querySelectorAll(':scope > .rs-blok'), function (b) { return b.getAttribute('data-blok'); });
 		});
-		odesli('poradi', { poradi: JSON.stringify(poradi) }).then(function (r) { return r.json(); }).then(function (j) { hlaska(j.ok ? 'Pořadí uloženo' : 'Pořadí se nepodařilo uložit'); });
+		odesli('poradi', { poradi: JSON.stringify(poradi) }).then(function (r) { return r.json(); }).then(function (j) { hlaska(j.ok ? T('Pořadí uloženo') : T('Pořadí se nepodařilo uložit')); });
 	}
 	function posun(blok, smer) {
 		var soused = smer > 0 ? blok.nextElementSibling : blok.previousElementSibling;
@@ -81,11 +93,11 @@
 		var id = blok.getAttribute('data-blok');
 		blok.appendChild(el('div', { class: 'rs-nastroje rs-ui' }, [
 			el('span', { class: 'rs-nazev', text: blok.getAttribute('data-nazev') }),
-			el('button', { type: 'button', title: 'Posunout výš', 'aria-label': 'Posunout výš', text: '↑', onclick: function () { posun(blok, -1); } }),
-			el('button', { type: 'button', title: 'Posunout níž', 'aria-label': 'Posunout níž', text: '↓', onclick: function () { posun(blok, 1); } }),
-			el('button', { type: 'button', class: 'rs-hlavni', text: 'Nastavit', onclick: function () { otevriNastaveni(id); } }),
-			el('button', { type: 'button', title: 'Smazat blok', 'aria-label': 'Smazat blok', text: '✕', onclick: function () {
-				potvrd('Smazat blok „' + blok.getAttribute('data-nazev') + '“?', function () { odesli('smaz', { idb: id }).then(function () { blok.remove(); hlaska('Blok smazán'); }); });
+			el('button', { type: 'button', title: T('Posunout výš'), 'aria-label': T('Posunout výš'), text: '↑', onclick: function () { posun(blok, -1); } }),
+			el('button', { type: 'button', title: T('Posunout níž'), 'aria-label': T('Posunout níž'), text: '↓', onclick: function () { posun(blok, 1); } }),
+			el('button', { type: 'button', class: 'rs-hlavni', text: T('Nastavit'), onclick: function () { otevriNastaveni(id); } }),
+			el('button', { type: 'button', title: T('Smazat blok'), 'aria-label': T('Smazat blok'), text: '✕', onclick: function () {
+				potvrd(T('Smazat blok „') + blok.getAttribute('data-nazev') + '“?', function () { odesli('smaz', { idb: id }).then(function () { blok.remove(); hlaska(T('Blok smazán')); }); });
 			} })
 		]));
 		blok.addEventListener('dragstart', function (e) {
@@ -136,7 +148,7 @@
 			el('p', { text: text }),
 			el('div', { class: 'rs-tlacitka' }, [
 				el('button', { type: 'button', class: 'rs-hlavni', text: 'Ano, smazat', onclick: function () { d.close(); ano(); } }),
-				el('button', { type: 'button', text: 'Zrušit', onclick: function () { d.close(); } })
+				el('button', { type: 'button', text: T('Zrušit'), onclick: function () { d.close(); } })
 			])
 		]);
 	}
@@ -147,8 +159,8 @@
 		tl.addEventListener('click', function () {
 			var zona = tl.getAttribute('data-zona');
 			var d = okno('rs-nabidka', [
-				el('div', { class: 'rs-okno-hlava' }, [el('strong', { text: 'Co chcete přidat?' }), el('button', { type: 'button', 'aria-label': 'Zavřít', text: '✕', onclick: function () { d.close(); } })]),
-				el('p', { class: 'rs-okno-popis', text: 'Blok se přidá do zóny „' + tl.closest('.rs-zona').getAttribute('data-nazev') + '“. Nastavení můžete kdykoli změnit.' })
+				el('div', { class: 'rs-okno-hlava' }, [el('strong', { text: T('Co chcete přidat?') }), el('button', { type: 'button', 'aria-label': T('Zavřít'), text: '✕', onclick: function () { d.close(); } })]),
+				el('p', { class: 'rs-okno-popis', text: T('Blok se přidá do zóny „') + T(tl.closest('.rs-zona').getAttribute('data-nazev')) + T('“. Nastavení můžete kdykoli změnit.') })
 			].concat(Object.keys(N.katalog).map(function (skupina) {
 				return el('section', {}, [el('h3', { text: skupina }), el('div', { class: 'rs-karty' }, N.katalog[skupina].map(function (p) {
 					return el('button', { type: 'button', class: 'rs-karta', onclick: function () {
@@ -172,68 +184,68 @@
 		fetch(MODUL + '&akce=nastaveni_json&id=' + id, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
 			if (!j.ok) { return; }
 			var b = j.blok, typ = b.sys_funkce, data = String(b.data_sys || '');
-			var nazevTypu = 'Text';
+			var nazevTypu = T('Text');
 			Object.keys(N.katalog).forEach(function (s) { N.katalog[s].forEach(function (p) { if (p.typ === typ) { nazevTypu = p.nazev; } }); });
 			var vzhled = Number(b.typ) === 5 ? 1 : Number(b.typ);
 			var form = el('form', { class: 'rs-formular' });
 			var radky = [];
 
-			radky.push(pole('Nadpis', el('input', { type: 'text', name: 'nazev', value: b.nazev, maxlength: '100', required: true })));
-			radky.push(el('label', { class: 'rs-zaskrtnuti' }, [el('input', { type: 'checkbox', name: 'ukazat_nadpis', checked: Number(b.typ) !== 5 }), ' Zobrazit nadpis na webu']));
+			radky.push(pole(T('Nadpis'), el('input', { type: 'text', name: 'nazev', value: b.nazev, maxlength: '100', required: true })));
+			radky.push(el('label', { class: 'rs-zaskrtnuti' }, [el('input', { type: 'checkbox', name: 'ukazat_nadpis', checked: Number(b.typ) !== 5 }), T(' Zobrazit nadpis na webu')]));
 
 			if (typ === '') {
 				var ta = el('textarea', { name: 'obsah', rows: '8', 'data-editor': 'maly' });
 				ta.value = b.obsah;
-				radky.push(pole('Obsah', ta, 'Text, obrázek z médií nebo vložený kód (přepněte na HTML).'));
+				radky.push(pole(T('Obsah'), ta, T('Text, obrázek z médií nebo vložený kód (přepněte na HTML).')));
 			}
 			if (typ === 'men') {
 				var seznam = el('div', { class: 'rs-odkazy' });
 				var pridejRadek = function (text, adresa) {
 					var r = el('div', { class: 'rs-odkaz' }, [
-						el('input', { type: 'text', placeholder: 'Text odkazu', value: text || '', 'aria-label': 'Text odkazu' }),
-						el('input', { type: 'text', placeholder: '/o-nas nebo https://…', value: adresa || '', 'aria-label': 'Adresa' }),
-						el('button', { type: 'button', 'aria-label': 'Odebrat odkaz', text: '✕', onclick: function () { r.remove(); } })
+						el('input', { type: 'text', placeholder: T('Text odkazu'), value: text || '', 'aria-label': T('Text odkazu') }),
+						el('input', { type: 'text', placeholder: T('/o-nas nebo https://…'), value: adresa || '', 'aria-label': T('Adresa') }),
+						el('button', { type: 'button', 'aria-label': T('Odebrat odkaz'), text: '✕', onclick: function () { r.remove(); } })
 					]);
 					seznam.appendChild(r);
 				};
 				String(b.obsah).split(/\r?\n/).forEach(function (l) { var c = l.split('|'); if (c.length > 1 && c[0].trim()) { pridejRadek(c[0].trim(), c.slice(1).join('|').trim()); } });
 				if (!seznam.children.length) { pridejRadek('', ''); }
-				radky.push(el('div', { class: 'rs-pole' }, [el('span', { text: 'Odkazy' }), seznam, el('button', { type: 'button', class: 'rs-pridat-radek', text: '+ další odkaz', onclick: function () { pridejRadek('', ''); } })]));
+				radky.push(el('div', { class: 'rs-pole' }, [el('span', { text: T('Odkazy') }), seznam, el('button', { type: 'button', class: 'rs-pridat-radek', text: T('+ další odkaz'), onclick: function () { pridejRadek('', ''); } })]));
 			}
 			if (typ === 'cla') {
-				radky.push(pole('Rubrika', vyber('blok_rubrika', [[0, 'Nejnovější ze všech rubrik']].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), data.split(':')[0])));
+				radky.push(pole(T('Rubrika'), vyber('blok_rubrika', [[0, T('Nejnovější ze všech rubrik')]].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), data.split(':')[0])));
 			}
 			if (['cla', 'nej', 'sti', 'aut', 'arc'].indexOf(typ) !== -1) {
-				radky.push(pole('Kolik položek', el('input', { type: 'number', name: 'blok_pocet', min: '1', max: '50', value: typ === 'cla' ? (data.split(':')[1] || 5) : (data || 5) })));
+				radky.push(pole(T('Kolik položek'), el('input', { type: 'number', name: 'blok_pocet', min: '1', max: '50', value: typ === 'cla' ? (data.split(':')[1] || 5) : (data || 5) })));
 			}
 			if (typ === 'pod') {
 				var taPod = el('textarea', { name: 'obsah', rows: '3' });
 				taPod.value = String(b.obsah || '').replace(/<[^>]+>/g, '');
-				radky.push(pole('Výzva', taPod, 'Jedna až dvě věty. Prázdné = výchozí text.'));
-				radky.push(pole('Text tlačítka', el('input', { type: 'text', name: 'pod_tlacitko', maxlength: '60', value: data.split('|')[0] || '', placeholder: 'Podpořit redakci' })));
-				radky.push(pole('Kam tlačítko vede', el('input', { type: 'text', name: 'pod_adresa', maxlength: '190', value: data.split('|')[1] || '', placeholder: 'https://… nebo /podporte-nas' }), 'Platební odkaz (Stripe, Donio, Darujme, Ko-fi…) nebo vlastní stránka s číslem účtu a QR kódem.'));
+				radky.push(pole(T('Výzva'), taPod, T('Jedna až dvě věty. Prázdné = výchozí text.')));
+				radky.push(pole(T('Text tlačítka'), el('input', { type: 'text', name: 'pod_tlacitko', maxlength: '60', value: data.split('|')[0] || '', placeholder: T('Podpořit redakci') })));
+				radky.push(pole(T('Kam tlačítko vede'), el('input', { type: 'text', name: 'pod_adresa', maxlength: '190', value: data.split('|')[1] || '', placeholder: 'https://… nebo /podporte-nas' }), T('Platební odkaz (Stripe, Donio, Darujme, Ko-fi…) nebo vlastní stránka s číslem účtu a QR kódem.')));
 			}
 			if (typ === 'rek') {
-				radky.push(pole('Reklamní pozice', vyber('data_sys', Object.keys(N.pozice).map(function (k) { return [k, N.pozice[k]]; }), data), 'Bannery se spravují v sekci Reklama.'));
+				radky.push(pole(T('Reklamní pozice'), vyber('data_sys', Object.keys(N.pozice).map(function (k) { return [k, N.pozice[k]]; }), data), T('Bannery se spravují v sekci Reklama.')));
 			}
 
-			radky.push(el('div', { class: 'rs-pole' }, [el('span', { text: 'Vzhled' }), el('div', { class: 'rs-vzhledy' }, [[1, 'Běžný'], [2, 'Podbarvený'], [3, 'Zvýrazněný nadpis'], [4, 'V rámečku']].map(function (v) {
+			radky.push(el('div', { class: 'rs-pole' }, [el('span', { text: T('Vzhled') }), el('div', { class: 'rs-vzhledy' }, [[1, T('Běžný')], [2, T('Podbarvený')], [3, T('Zvýrazněný nadpis')], [4, T('V rámečku')]].map(function (v) {
 				return el('label', {}, [el('input', { type: 'radio', name: 'vzhled', value: v[0], checked: vzhled === v[0] }), el('span', { text: v[1] })]);
 			}))]));
 
 			radky.push(el('details', {}, [
-				el('summary', { text: 'Kdy a kde blok zobrazit' }),
-				pole('Stránky', vyber('zobrazit_kde', Object.keys(N.kde).map(function (k) { return [k, N.kde[k]]; }), b.zobrazit_kde)),
-				pole('Jen v rubrice', vyber('jen_rubrika', [[0, 've všech']].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), b.jen_rubrika || 0)),
-				N.jazyky.length ? pole('Jazyková verze', vyber('jen_jazyk', N.jazyky, b.jen_jazyk || '')) : null,
-				pole('Zařízení', vyber('zarizeni', Object.keys(N.zarizeni).map(function (k) { return [k, N.zarizeni[k]]; }), b.zarizeni)),
-				el('label', { class: 'rs-zaskrtnuti' }, [el('input', { type: 'checkbox', name: 'skryt', checked: !Number(b.zobrazit) }), ' Blok dočasně skrýt'])
+				el('summary', { text: T('Kdy a kde blok zobrazit') }),
+				pole(T('Stránky'), vyber('zobrazit_kde', Object.keys(N.kde).map(function (k) { return [k, N.kde[k]]; }), b.zobrazit_kde)),
+				pole(T('Jen v rubrice'), vyber('jen_rubrika', [[0, T('ve všech')]].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), b.jen_rubrika || 0)),
+				N.jazyky.length ? pole(T('Jazyková verze'), vyber('jen_jazyk', N.jazyky, b.jen_jazyk || '')) : null,
+				pole(T('Zařízení'), vyber('zarizeni', Object.keys(N.zarizeni).map(function (k) { return [k, N.zarizeni[k]]; }), b.zarizeni)),
+				el('label', { class: 'rs-zaskrtnuti' }, [el('input', { type: 'checkbox', name: 'skryt', checked: !Number(b.zobrazit) }), T(' Blok dočasně skrýt')])
 			]));
-			radky.push(el('div', { class: 'rs-tlacitka' }, [el('button', { type: 'submit', class: 'rs-hlavni', text: 'Uložit' }), el('button', { type: 'button', text: 'Zrušit', onclick: function () { d.close(); } })]));
+			radky.push(el('div', { class: 'rs-tlacitka' }, [el('button', { type: 'submit', class: 'rs-hlavni', text: T('Uložit') }), el('button', { type: 'button', text: T('Zrušit'), onclick: function () { d.close(); } })]));
 			radky.forEach(function (r) { form.appendChild(r); });
 
 			var d = okno('rs-panel', [
-				el('div', { class: 'rs-okno-hlava' }, [el('strong', { text: nazevTypu }), el('button', { type: 'button', 'aria-label': 'Zavřít', text: '✕', onclick: function () { d.close(); } })]),
+				el('div', { class: 'rs-okno-hlava' }, [el('strong', { text: nazevTypu }), el('button', { type: 'button', 'aria-label': T('Zavřít'), text: '✕', onclick: function () { d.close(); } })]),
 				form
 			]);
 			var editor = form.querySelector('textarea[data-editor]');
@@ -252,7 +264,7 @@
 					}).filter(Boolean).join('\n');
 				}
 				odesli('uloz_json', odeslat).then(function (r) { return r.json(); }).then(function (o) {
-					if (o.ok) { znovu(); } else { hlaska(o.chyba || 'Uložení se nezdařilo'); }
+					if (o.ok) { znovu(); } else { hlaska(o.chyba || T('Uložení se nezdařilo')); }
 				});
 			});
 		});

@@ -120,6 +120,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   `data-vlozit`, první otevření spadlo). Hlídá to statická kontrola v `tools/testy.php`; po úpravě dialogů v `editor.js` je vždy otevři v prohlížeči.
   Atribut `hidden` platí i na tlačítkách díky `[hidden] { display: none !important }` v `image/editor.css`.
 
+- **Vizuální editor bloků mluví jazykem administrace přihlášeného**, ne jazykem zobrazené verze webu: texty ve `vizual.js` obaluj `T()`
+  (slovník `image/jazyky/admin-<kód>.js`), texty posílané z PHP překládá `$ta()` ve `views/front/vizual.php` ze slovníku `admin-<kód>.php`.
+
 - **Paleta příkazů** (Ctrl/⌘+K, `views/admin/layout.php` + `admin.js`): nová obrazovka, kterou má jít rychle najít, se přidává do pole `$rychle`
   v layoutu (jen u modulu, na který má uživatel právo). Hledání článků jde přes `hledej_json&uprava=1` a respektuje `Auth::articleScope()`.
 

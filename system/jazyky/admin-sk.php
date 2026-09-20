@@ -761,4 +761,13 @@ return [
     'Poslední kopie byla nahrána %s.' => 'Posledná kópia bola nahraná %s.',
     'Poslední pokus %s selhal: %s' => 'Posledný pokus %s zlyhal: %s',
     'Nastavení uložte a pak klepněte na „Vytvořit zálohu“ – kopie se nahraje hned a uvidíte, jestli spojení funguje.' => 'Nastavenia uložte a potom kliknite na „Vytvoriť zálohu“ – kópia sa nahrá hneď a uvidíte, či spojenie funguje.',
+    'Hromadná akce' => 'Hromadná akcia',
+    '– vyberte akci –' => '– vyberte akciu –',
+    'přesunout do rubriky…' => 'presunúť do rubriky…',
+    'přidat štítek…' => 'pridať štítok…',
+    'zamknout pro přihlášené čtenáře' => 'zamknúť pre prihlásených čitateľov',
+    'odemknout pro všechny' => 'odomknúť pre všetkých',
+    'štítek' => 'štítok',
+    'Provést' => 'Vykonať',
+    'Označit' => 'Označiť',
 ];

@@ -161,6 +161,13 @@
 		prekresli();
 	}
 
+	// Hromadné akce: doplňující pole (rubrika, štítek) se ukáže jen u akce, která ho potřebuje
+	document.querySelectorAll('[data-hromadne]').forEach(function (vyber) {
+		vyber.addEventListener('change', function () {
+			vyber.form.querySelectorAll('[data-pro-akci]').forEach(function (p) { p.hidden = p.getAttribute('data-pro-akci') !== vyber.value; });
+		});
+	});
+
 	// Titulní strana: dva seznamy (připnuté / ostatní), přetahování, šipky a tlačítko Připnout; pořadí jde do skrytého pole
 	var titulni = document.querySelector('form[data-titulni]');
 	if (titulni) {

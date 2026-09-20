@@ -45,12 +45,12 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <p class="stred"><?= e(t('Žádné články.')) ?></p>
 <?php else: ?>
 <form method="post" id="vydat" action="<?= e($modul->url('vydat')) ?>"><?= $csrf ?></form>
-<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu vymazat všechny označené články?')) ?>">
+<form method="post" action="<?= e($modul->url('hromadne')) ?>">
 <?= $csrf ?>
 <div class="tab-obal">
 <table class="vypis">
 <thead>
-<tr><th><?= e(t('Titulek')) ?></th><th><?= e(t('Rubrika')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Datum vydání')) ?></th><th><?= e(t('Stav')) ?></th><th><?= e(t('Čteno')) ?></th><th><?= e(t('Akce')) ?></th><th><?= e(t('Smazat')) ?></th></tr>
+<tr><th><?= e(t('Titulek')) ?></th><th><?= e(t('Rubrika')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Datum vydání')) ?></th><th><?= e(t('Stav')) ?></th><th><?= e(t('Čteno')) ?></th><th><?= e(t('Akce')) ?></th><th><?= e(t('Označit')) ?></th></tr>
 </thead>
 <tbody>
 <?php foreach ($clanky as $c): ?>
@@ -62,13 +62,32 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 	<td><span class="stitek stitek-<?= !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'plan' : 'vydano') ?>"><?= !$c['visible'] ? (['korektura' => 'ke korektuře', 'schvaleno' => 'schváleno'][$c['stav_redakce']] ?? 'koncept') : (strtotime($c['datum']) > time() ? 'naplánováno' : 'vydáno') ?></span></td>
 	<td class="cislo"><?= (int) $c['visit'] ?>x</td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>"><?= e(t('Upravit')) ?></a><?php if (!$c['visible'] && $smiVydavat): ?> · <button class="navigace" type="submit" form="vydat" name="idc" value="<?= (int) $c['idc'] ?>"><?= e(t('Vydat')) ?></button><?php endif ?> · <a href="<?= e($app->url('clanek/' . $c['seo_link'] . '?nahled=1')) ?>" target="_blank" rel="noopener"><?= e(t('Náhled')) ?></a></td>
-	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $c['idc'] ?>" aria-label="Označit ke smazání: <?= e($c['titulek']) ?>"></td>
+	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $c['idc'] ?>" aria-label="<?= e(t('Označit')) ?>: <?= e($c['titulek']) ?>"></td>
 </tr>
 <?php endforeach ?>
 </tbody>
 </table>
 </div>
-<p class="stred"><input class="tl" type="submit" value="<?= e(t('Smazat označené')) ?>"></p>
+<p class="media-hromadne">
+	<?= e(t('S označenými:')) ?>
+	<select name="provest" aria-label="<?= e(t('Hromadná akce')) ?>" data-hromadne>
+		<option value=""><?= e(t('– vyberte akci –')) ?></option>
+		<option value="rubrika"><?= e(t('přesunout do rubriky…')) ?></option>
+		<option value="stitek"><?= e(t('přidat štítek…')) ?></option>
+<?php if ($ctenari): ?>
+		<option value="zamknout"><?= e(t('zamknout pro přihlášené čtenáře')) ?></option>
+		<option value="odemknout"><?= e(t('odemknout pro všechny')) ?></option>
+<?php endif ?>
+	</select>
+	<select name="do_rubriky" aria-label="<?= e(t('Rubrika')) ?>" data-pro-akci="rubrika" hidden>
+<?php foreach ($rubriky as $r): ?>
+		<option value="<?= (int) $r['idt'] ?>"><?= e(str_repeat('– ', (int) $r['uroven']) . $r['nazev']) ?></option>
+<?php endforeach ?>
+	</select>
+	<input class="textpole" type="text" name="stitek" maxlength="80" placeholder="<?= e(t('štítek')) ?>" aria-label="<?= e(t('Štítek')) ?>" data-pro-akci="stitek" hidden>
+	<input class="tl" type="submit" value="<?= e(t('Provést')) ?>">
+	<button class="navigace" type="submit" formaction="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu vymazat všechny označené články?')) ?>"><?= e(t('Smazat označené')) ?></button>
+</p>
 </form>
 
 <?php if ($stran > 1): ?>

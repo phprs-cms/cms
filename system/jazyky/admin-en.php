@@ -869,4 +869,13 @@ return [
     'Poslední kopie byla nahrána %s.' => 'The last copy was uploaded %s.',
     'Poslední pokus %s selhal: %s' => 'The last attempt %s failed: %s',
     'Nastavení uložte a pak klepněte na „Vytvořit zálohu“ – kopie se nahraje hned a uvidíte, jestli spojení funguje.' => 'Save the settings, then click “Create backup” – the copy uploads right away and you will see whether the connection works.',
+    'Hromadná akce' => 'Bulk action',
+    '– vyberte akci –' => '– choose an action –',
+    'přesunout do rubriky…' => 'move to section…',
+    'přidat štítek…' => 'add a tag…',
+    'zamknout pro přihlášené čtenáře' => 'lock for signed-in readers',
+    'odemknout pro všechny' => 'unlock for everyone',
+    'štítek' => 'tag',
+    'Provést' => 'Apply',
+    'Označit' => 'Select',
 ];

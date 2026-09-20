@@ -81,6 +81,7 @@ final class Clanky extends Modul
             'rubriky' => Rubriky::strom($this->db),
             'filtr' => ['tema' => $tema, 'hledat' => $hledat, 'moje' => $this->request->get('moje'), 'stav' => isset($podminkyStavu[$stav]) ? $stav : ''],
             'smiVydavat' => $auth->smiVydavat(),
+            'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
         ]);
     }
 
@@ -461,6 +462,47 @@ final class Clanky extends Modul
             'uvod' => \PhpRS\Core\Rozdil::html((string) $revize['uvod'], (string) $clanek['uvod']),
             'text' => \PhpRS\Core\Rozdil::html((string) $revize['text'], (string) $clanek['text']),
         ]);
+    }
+
+    /** Hromadné akce ve výpisu: přesun do rubriky, přidání štítku, zamknutí / odemknutí pro čtenáře. */
+    protected function akceHromadne(): Response
+    {
+        if (!$this->request->isPost()) {
+            return $this->zpet();
+        }
+        $co = $this->request->post('provest');
+        $rubrika = $this->db->one('SELECT idt, jazyk FROM {topic} WHERE idt = ?', [$this->request->postInt('do_rubriky')]);
+        $stitek = mb_substr(trim($this->request->post('stitek')), 0, 80);
+        if (($co === 'rubrika' && $rubrika === null) || ($co === 'stitek' && $stitek === '')) {
+            return $this->zpet($co === 'rubrika' ? 'Vyberte rubriku, do které se mají články přesunout.' : 'Napište štítek, který se má článkům přidat.', typ: 'chyba');
+        }
+        $pocet = 0;
+        foreach ($this->request->postList('smaz') as $id) {
+            $clanek = $this->nacti((int) $id);
+            if ($clanek === null || ($clanek['visible'] && !$this->app->auth()->smiVydavat())) {
+                continue;
+            }
+            match ($co) {
+                'rubrika' => $this->db->update('clanky', ['tema' => $rubrika['idt'], 'jazyk' => $rubrika['jazyk']], ['idc' => $clanek['idc']]),
+                'zamknout' => $this->db->update('clanky', ['pristup' => 1], ['idc' => $clanek['idc']]),
+                'odemknout' => $this->db->update('clanky', ['pristup' => 0], ['idc' => $clanek['idc']]),
+                'stitek' => $this->pridejStitek((int) $clanek['idc'], $stitek),
+                default => null,
+            };
+            if (in_array($co, ['zamknout', 'odemknout'], true)) {
+                \PhpRS\Core\Hledani::indexuj($this->db, (int) $clanek['idc']); // zamčený článek se hledá jen podle titulku a perexu
+            }
+            $pocet++;
+        }
+
+        return $this->zpet($pocet === 0 ? 'Neoznačili jste žádný článek.' : "Upraveno článků: {$pocet}.", typ: $pocet === 0 ? 'chyba' : 'ok');
+    }
+
+    private function pridejStitek(int $idc, string $nazev): void
+    {
+        $seo = slugify($nazev, 100);
+        $ids = $this->db->value('SELECT ids FROM {stitky} WHERE seo_link = ?', [$seo]) ?? $this->db->insert('stitky', ['nazev' => $nazev, 'seo_link' => $seo]);
+        $this->db->run('INSERT IGNORE INTO {clanky_stitky} (idc, ids) VALUES (?, ?)', [$idc, (int) $ids]);
     }
 
     protected function akceSmaz(): Response

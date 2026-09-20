@@ -965,3 +965,27 @@ body.login {
 .prehled-graf svg { display: block; width: 100%; height: 90px; }
 .prehled-graf rect { fill: var(--akcent); opacity: 0.85; }
 .prehled-graf rect:hover { opacity: 1; }
+
+/* prázdný stav výpisu (views/admin/prazdno.php) */
+.prazdny-stav {
+	margin: 8px 0 20px;
+	padding: 36px 20px;
+	border: 1px dashed var(--linka-pole);
+	border-radius: 10px;
+	background: var(--plocha);
+	text-align: center;
+}
+.prazdny-stav-ikona {
+	display: inline-grid;
+	place-items: center;
+	width: 48px;
+	height: 48px;
+	margin-bottom: 10px;
+	border-radius: 12px;
+	background: var(--podklad);
+	color: var(--text-slaby);
+}
+.prazdny-stav-ikona svg { width: 24px; height: 24px; }
+.prazdny-stav-nadpis { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
+.prazdny-stav-text { max-width: 520px; margin: 0 auto 14px; color: var(--text-slaby); }
+.prazdny-stav p:last-child { margin-bottom: 0; }

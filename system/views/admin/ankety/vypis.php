@@ -12,6 +12,9 @@
 <?php if (!$maBlok): ?>
 <p class="hlaska"><?= e(t('Anketa se na webu zobrazuje v bloku „Anketa“. Zatím ho nemáte – přidejte ho v sekci')) ?> <a href="<?= e($app->url('admin.php?modul=bloky&akce=novy&sys=ank')) ?>"><?= e(t('Bloky a rozvržení')) ?></a>.</p>
 <?php endif ?>
+<?php if ($ankety === []): ?>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'ankety', 'nadpis' => t('Zatím žádná anketa.'), 'text' => t('Anketa je jedna otázka s několika odpověďmi; na webu běží vždy ta aktuální.'), 'akce' => [$modul->url('novy'), t('Založit první anketu')]]) ?>
+<?php endif ?>
 <?php if ($ankety !== []): ?>
 <div class="tab-obal">
 <table class="vypis">

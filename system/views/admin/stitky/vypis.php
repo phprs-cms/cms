@@ -30,7 +30,7 @@
 </form>
 <?php endif ?>
 <?php if ($stitky === []): ?>
-<p><?= e(t('Zatím žádné štítky. Přidáte je v editoru článku v poli Štítky.')) ?></p>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'stitky', 'nadpis' => t('Zatím žádné štítky.'), 'text' => t('Přidáte je v editoru článku v poli Štítky. Tady je pak půjde slučovat a měnit na stránky témat.')]) ?>
 <?php else: ?>
 <div class="tab-obal"><table class="vypis">
 <thead><tr><th><?= e(t('Štítek')) ?></th><th><?= e(t('Článků')) ?></th><th><?= e(t('Téma')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>

@@ -43,7 +43,11 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <br>
 
 <?php if ($clanky === []): ?>
-<p class="stred"><?= e(t('Žádné články.')) ?></p>
+<?php if (array_filter($filtr) !== []): ?>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'clanek', 'nadpis' => t('Filtru neodpovídá žádný článek.'), 'text' => t('Zkuste jiné slovo, rubriku nebo stav.'), 'akce' => [$modul->url(), t('Zrušit filtr')]]) ?>
+<?php else: ?>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'clanek', 'nadpis' => t('Zatím tu není žádný článek.'), 'text' => t('Článek napíšete v editoru; než ho vydáte, zůstává konceptem, který vidí jen redakce.'), 'akce' => [$modul->url('novy'), t('Napsat první článek')]]) ?>
+<?php endif ?>
 <?php else: ?>
 <form method="post" id="vydat" action="<?= e($modul->url('vydat')) ?>"><?= $csrf ?></form>
 <form method="post" action="<?= e($modul->url('hromadne')) ?>">

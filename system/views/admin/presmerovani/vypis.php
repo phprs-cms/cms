@@ -14,6 +14,9 @@
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Přidat přesměrování')) ?>"></p>
 </form>
 <p class="smltxt"><?= e(t('Přesměrování se použije jen tehdy, když na staré adrese nic není. Při změně adresy vydaného článku vzniká samo.')) ?></p>
+<?php if ($zaznamy === []): ?>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'presmerovani', 'nadpis' => t('Zatím žádné přesměrování.'), 'text' => t('Nic nemusíte dělat – když změníte adresu vydaného článku, přesměrování vznikne samo.')]) ?>
+<?php endif ?>
 <?php if ($zaznamy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">

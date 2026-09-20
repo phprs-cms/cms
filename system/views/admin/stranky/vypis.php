@@ -8,7 +8,7 @@
 ?>
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nová stránka')) ?></a></p>
 <?php if ($stranky === []): ?>
-<p><?= e(t('Zatím žádné stránky. Hodí se například O nás, Kontakt nebo Zásady ochrany soukromí.')) ?></p>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'stranky', 'nadpis' => t('Zatím žádné stránky.'), 'text' => t('Hodí se například O nás, Kontakt nebo Zásady ochrany soukromí.'), 'akce' => [$modul->url('novy'), t('Založit první stránku')]]) ?>
 <?php else: ?>
 <div class="tab-obal">
 <table class="vypis">

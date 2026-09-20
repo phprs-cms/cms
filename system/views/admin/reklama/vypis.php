@@ -10,6 +10,9 @@ use PhpRS\Admin\Moduly\Reklama;
 ?>
 <p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nová reklama')) ?></a> <a class="navigace" href="<?= e($modul->url('vykaz')) ?>"><?= e(t('Výkaz pro inzerenta (CSV)')) ?></a></p>
 <p class="smltxt"><?= e(t('Reklama pod článkem se zobrazuje sama. Ostatní pozice umístíte na web blokem „Reklama“ v sekci')) ?> <a href="<?= e($app->url('admin.php?modul=bloky')) ?>"><?= e(t('Bloky a rozvržení')) ?></a><?= e(t('. Každá reklama je na webu označena slovem „Reklama“.')) ?></p>
+<?php if ($reklamy === []): ?>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'reklama', 'nadpis' => t('Zatím žádná reklama.'), 'text' => t('Banner nebo kód reklamní sítě přidáte jednou a systém ho střídá na zvolené pozici, počítá zobrazení i kliky.'), 'akce' => [$modul->url('novy'), t('Přidat první reklamu')]]) ?>
+<?php endif ?>
 <?php if ($reklamy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">

@@ -153,7 +153,7 @@
 				return el('section', {}, [el('h3', { text: skupina }), el('div', { class: 'rs-karty' }, N.katalog[skupina].map(function (p) {
 					return el('button', { type: 'button', class: 'rs-karta', onclick: function () {
 						odesli('rychle_pridat', { zona: zona, typ: p.typ }).then(function (r) { return r.json(); }).then(function (j) { if (j.ok) { znovu(j.idb); } });
-					} }, [el('i', { text: p.ikona, 'aria-hidden': 'true' }), el('strong', { text: p.nazev }), el('span', { text: p.popis })]);
+					} }, [el('i', { html: p.ikona, 'aria-hidden': 'true' }), el('strong', { text: p.nazev }), el('span', { text: p.popis })]);
 				}))]);
 			})));
 		});

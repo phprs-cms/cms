@@ -11,11 +11,12 @@ use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\Rozsireni;
 
 $vypnute = array_keys(array_filter(['nov' => 'novinky', 'ank' => 'ankety', 'rek' => 'reklama', 'nws' => 'newsletter', 'cte' => 'ctenari', 'psh' => 'push'], fn (string $r): bool => !Rozsireni::je($app->settings(), $r)));
+$svgIkona = require PHPRS_ROOT . '/system/views/admin/ikony.php'; // stejná sada čárových ikon jako v administraci
 $katalog = [];
 foreach (Bloky::KATALOG as $skupina => $typy) {
     foreach ($typy as $typ => [$nazev, $popis, $ikona]) {
         if (!in_array($typ, $vypnute, true)) {
-            $katalog[$skupina][] = ['typ' => (string) $typ, 'nazev' => $nazev, 'popis' => $popis, 'ikona' => $ikona];
+            $katalog[$skupina][] = ['typ' => (string) $typ, 'nazev' => $nazev, 'popis' => $popis, 'ikona' => $svgIkona($ikona)];
         }
     }
 }

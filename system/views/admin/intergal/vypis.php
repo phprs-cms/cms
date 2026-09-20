@@ -62,7 +62,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 </form>
 
 <?php if ($obrazky === []): ?>
-<p><?= e(t('Žádné obrázky.')) ?></p>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'media', 'nadpis' => t('Žádné obrázky.'), 'text' => t('Nahrajte první fotky formulářem nahoře – nebo je přetáhněte přímo do textu článku v editoru.')]) ?>
 <?php else: ?>
 <form method="post" action="<?= e($modul->url('hromadne')) ?>">
 <?= $csrf ?>

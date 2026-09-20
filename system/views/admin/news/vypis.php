@@ -27,7 +27,7 @@
 	<label for="datum"><?= e(t('Datum')) ?></label>
 	<input class="textpole" type="datetime-local" id="datum" name="datum" value="<?= e(date('Y-m-d\TH:i', strtotime($novinka['datum']))) ?>">
 </div>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= $novinka['idn'] ? 'Ulož' : 'Přidej' ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($novinka['idn'] ? 'Ulož' : 'Přidej')) ?>"></p>
 </form>
 
 <?php if ($novinky !== []): ?>

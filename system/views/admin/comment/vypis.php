@@ -15,7 +15,7 @@
 	<a href="<?= e($modul->url('', ['stav' => 'cekajici'])) ?>"<?= $cekajici ? ' class="aktivni"' : '' ?>>Čekají na schválení (<?= $pocetCekajicich ?>)</a>
 </nav>
 <?php if ($komentare === []): ?>
-<p><?= e(t('Žádné komentáře.')) ?></p>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'komentare', 'nadpis' => t('Žádné komentáře.'), 'text' => t('Komentáře čtenářů se tu objeví hned, jak je někdo pod článkem napíše. Ty, které čekají na schválení, uvidíte nahoře.')]) ?>
 <?php else: ?>
 <form method="post" action="<?= e($modul->url('hromadne')) ?>">
 <?= $csrf ?>

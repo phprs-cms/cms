@@ -471,3 +471,16 @@ body.login h1 b {
 .titulni-text { flex: 1; font-size: 12px; }
 .titulni-text small { display: block; color: #666; }
 [data-seznam="dalsi"] button[data-nahoru], [data-seznam="dalsi"] button[data-dolu] { display: none; }
+
+/* prazdny stav vypisu (views/admin/prazdno.php) */
+.prazdny-stav {
+	margin: 8px 0 16px;
+	padding: 18px 12px;
+	border: 1px dashed var(--ed-linka);
+	background-color: var(--modra-svetla);
+	text-align: center;
+}
+.prazdny-stav-ikona { display: none; }
+.prazdny-stav-nadpis { margin: 0 0 4px; font-weight: bold; }
+.prazdny-stav-text { max-width: 520px; margin: 0 auto 10px; }
+.prazdny-stav p:last-child { margin-bottom: 0; }

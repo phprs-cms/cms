@@ -28,6 +28,22 @@ $cesty = [
     'web' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     'odhlasit' => '<path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="m16 17 5-5-5-5M21 12H9"/>',
     'tema' => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    // bloky ve vizuálním editoru (Bloky::KATALOG)
+    'b-otvirak' => '<rect x="3" y="4" width="18" height="10" rx="1.5"/><path d="M3 18h12M3 21h7"/>',
+    'b-seznam' => '<rect x="3" y="4.5" width="4" height="4" rx="1"/><rect x="3" y="13.5" width="4" height="4" rx="1"/><path d="M10 5.5h11M10 8h7M10 14.500h11M10 17h7"/>',
+    'b-nejctenejsi' => '<path d="M3 17l5-5 4 3 8-9"/><path d="M15 6h5v5"/><path d="M3 21h18"/>',
+    'b-hash' => '<path d="M9 3 7 21M17 3l-2 18M4 9h17M3 15h17"/>',
+    'b-archiv' => '<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/>',
+    'b-autori' => '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+    'b-menu' => '<path d="M4 6h16M4 12h16M4 18h16"/>',
+    'b-hledani' => '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.300-4.300"/>',
+    'b-anketa' => '<path d="M4 6h9M4 12h16M4 18h6"/><circle cx="17" cy="6" r="1.2"/><circle cx="14" cy="18" r="1.2"/>',
+    'b-srdce' => '<path d="M12 20s-7.500-4.600-7.500-10A4.300 4.300 0 0 1 12 7.400 4.300 4.300 0 0 1 19.500 10c0 5.400-7.500 10-7.500 10z"/>',
+    'b-zvonek' => '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21a2 2 0 0 0 4 0"/>',
+    'b-ucet' => '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.500 18.500a6 6 0 0 1 11 0"/>',
+    'b-site' => '<circle cx="6" cy="12" r="2.500"/><circle cx="18" cy="6" r="2.500"/><circle cx="18" cy="18" r="2.500"/><path d="m8.200 10.900 7.600-3.800M8.200 13.100l7.600 3.800"/>',
+    'b-kontakt' => '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.500h8M8 12.500h5"/>',
+    'b-text' => '<path d="M5 6V4h14v2M12 4v16M9 20h6"/>',
 ];
 
 return fn (string $klic): string => '<svg class="ikona" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($cesty[$klic] ?? $cesty['clanek']) . '</svg>';

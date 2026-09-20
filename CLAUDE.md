@@ -110,6 +110,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   Claude pracujícího se soubory jsou v `layout/CLAUDE.md` (je součástí balíčku). Vydání nese podepsaný seznam souborů
   `system/soubory.json`; `Core\Integrita` podle něj ve Stavu systému hlásí změněné, chybějící a přidané soubory jádra.
 
+- **Prázdný výpis** v administraci vypisuj sdílenou šablonou `views/admin/prazdno.php` (ikona, nadpis, věta, první akce) – ne holou větou.
+  Ikony bloků ve vizuálním editoru jsou ze stejné sady jako menu administrace (`views/admin/ikony.php`, klíče `b-*`); `Bloky::KATALOG` nese název ikony.
+
 - **Překlad článku asistentem** (`Asistent::preloz()`): HTML se rozloží na kostru a úseky (`rozloz`/`sloz`); od modelu se bere jen text úseků
   (escapuje se), značky se vracejí z originálu. Prostá textová pole (titulek, SEO…) předávej v `$prosta`, jinak se escapují dvakrát.
   Překlad je vždy koncept. Adresu API jde změnit jen konstantou `PHPRS_AI_URL` v `config.php` – nikdy ji nedávej do Nastavení.

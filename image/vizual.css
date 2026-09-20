@@ -53,6 +53,7 @@ html.rs-tahne .rs-nastroje { display: none !important; }
 .rs-karta { display: grid; grid-template-columns: 40px 1fr; gap: 2px 12px; align-items: start; padding: 12px; border: 1px solid #E4E7EC; border-radius: 10px; background: #FFFFFF; color: #14171F; text-align: left; cursor: pointer; font-size: 14px; }
 .rs-karta:hover, .rs-karta:focus-visible { border-color: var(--rs-akcent); box-shadow: 0 0 0 3px rgb(31 79 224 / 0.15); outline: 0; }
 .rs-karta i { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: #EEF2FF; color: var(--rs-akcent); font-size: 20px; font-style: normal; }
+.rs-karta i svg { width: 22px; height: 22px; }
 .rs-karta span { font-size: 12.5px; line-height: 1.35; color: #667085; }
 
 .rs-panel { width: min(520px, 100vw); height: 100vh; max-height: 100vh; margin: 0 0 0 auto; border-radius: 0; overflow-y: auto; }

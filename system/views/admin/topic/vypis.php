@@ -7,7 +7,7 @@
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nová rubrika')) ?></a></p>
 <?php if ($rubriky === []): ?>
-<p class="stred"><?= e(t('Zatím není založena žádná rubrika.')) ?></p>
+<?= $app->view->render('admin/prazdno', ['ikona' => 'rubriky', 'nadpis' => t('Zatím není založena žádná rubrika.'), 'text' => t('Každý článek patří do jedné rubriky – bez ní článek nepůjde uložit.'), 'akce' => [$modul->url('novy'), t('Založit první rubriku')]]) ?>
 <?php else: ?>
 <div class="tab-obal">
 <table class="vypis">

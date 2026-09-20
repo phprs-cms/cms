@@ -181,4 +181,9 @@ return [
     'Na odpovědi k tomuto komentáři už vás e-mailem upozorňovat nebudeme.' => 'Wir benachrichtigen Sie nicht mehr über Antworten auf diesen Kommentar.',
     'Odkaz neplatí' => 'Der Link ist ungültig',
     'Upozornění se nepodařilo vypnout.' => 'Die Benachrichtigungen konnten nicht ausgeschaltet werden.',
+    'Uložit na později' => 'Für später speichern',
+    'Uloženo – odebrat' => 'Gespeichert – entfernen',
+    'Moje uložené články' => 'Meine gespeicherten Artikel',
+    'Uložené články' => 'Gespeicherte Artikel',
+    'Odebrat z uložených' => 'Aus Gespeicherten entfernen',
 ];

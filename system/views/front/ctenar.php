@@ -10,6 +10,8 @@
  * @var string $pole     skrytá pole antispamu
  * @var string $podpis   podpis formulářů přihlášeného čtenáře
  * @var bool $registrace jsou povolené nové registrace
+ * @var string $koren  kořen webu bez předpony jazykové verze
+ * @var list<array<string, mixed>> $ulozene  uložené články přihlášeného čtenáře
  * @var bool $newsletter  web má newsletter - při registraci jde rovnou přihlásit odběr
  * @var callable(string): string $url
  */
@@ -75,6 +77,15 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 	</p>
 <?php if ($zpet !== ''): ?>
 	<p><a class="rs-tl" href="<?= e($url($zpet)) ?>"><?= e(t('Pokračovat ve čtení')) ?></a></p>
+<?php endif ?>
+<?php if ($ulozene !== []): ?>
+	<h2><?= e(t('Uložené články')) ?></h2>
+	<ul class="rs-ulozene">
+<?php foreach ($ulozene as $u): ?>
+		<li><a href="<?= e($koren . ($u['jazyk'] !== '' ? $u['jazyk'] . '/' : '') . 'clanek/' . $u['seo_link']) ?>"><?= e($u['titulek']) ?></a> <small><?= e(datum($u['datum'])) ?></small>
+			<form method="post" action="<?= e($akce) ?>"><input type="hidden" name="akce" value="ulozit"><input type="hidden" name="z_uctu" value="1"><input type="hidden" name="idc" value="<?= (int) $u['idc'] ?>"><input type="hidden" name="podpis" value="<?= e($podpis) ?>"><button type="submit" aria-label="<?= e(t('Odebrat z uložených')) ?>">×</button></form></li>
+<?php endforeach ?>
+	</ul>
 <?php endif ?>
 	<form class="rs-formular" method="post" action="<?= e($akce) ?>">
 		<input type="hidden" name="akce" value="ucet"><input type="hidden" name="podpis" value="<?= e($podpis) ?>">

@@ -404,7 +404,10 @@ final class Kernel
             $clanek['text'] .= '<p class="rs-paywall-info">' . e(t('Čtete %s. z %s článků, které máte tento měsíc zdarma.', $zdarma['precteno'], $zdarma['limit']))
                 . ' <a href="' . e($this->app->url('ctenar')) . '">' . e(t('Přihlásit se')) . '</a></p>';
         }
-        $clanek = (new TypyObsahu($this->app))->dopln($clanek); // přehrávač, živá reportáž, hodnocení recenze
+        $clanek = (new TypyObsahu($this->app))->dopln($clanek);
+        if ($this->ctenari !== null && !$nahled) {
+            $clanek['text'] .= $this->ctenari->ulozitHtml($clanek);
+        } // přehrávač, živá reportáž, hodnocení recenze
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
         $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem');
         $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);

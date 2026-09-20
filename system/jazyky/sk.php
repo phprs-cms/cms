@@ -167,4 +167,7 @@ return [
     'Upozornění jsou vypnutá' => 'Upozornenia sú vypnuté',
     'Na odpovědi k tomuto komentáři už vás e-mailem upozorňovat nebudeme.' => 'Na odpovede k tomuto komentáru vás už e-mailom upozorňovať nebudeme.',
     'Upozornění se nepodařilo vypnout.' => 'Upozornenia sa nepodarilo vypnúť.',
+    'Uložit na později' => 'Uložiť na neskôr',
+    'Uloženo – odebrat' => 'Uložené – odobrať',
+    'Odebrat z uložených' => 'Odobrať z uložených',
 ];

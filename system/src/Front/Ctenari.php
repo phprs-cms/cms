@@ -190,6 +190,7 @@ final class Ctenari
                 'odhlasit' => $this->odhlas(),
                 'ucet' => $this->ulozUcet(),
                 'smazat' => $this->smazUcet(),
+                'ulozit' => $this->ulozClanek(),
                 default => Response::redirect($this->app->url('ctenar'), 303),
             };
         }
@@ -207,6 +208,8 @@ final class Ctenari
             'podpis' => $ctenar === null ? '' : $this->podpis('formular.' . $ctenar['idct']),
             'registrace' => $this->app->settings()->bool('ctenari_registrace'),
             'newsletter' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'newsletter'),
+            'koren' => $this->app->request->basePath() . '/',
+            'ulozene' => $ctenar === null ? [] : $this->app->db()->all('SELECT c.idc, c.titulek, c.seo_link, c.jazyk, c.datum FROM {ctenari_ulozene} u JOIN {clanky} c ON c.idc = u.idc WHERE u.idct = ? AND c.visible = 1 ORDER BY u.cas DESC LIMIT 100', [$ctenar['idct']]),
             'url' => $this->app->url(...),
         ])];
     }
@@ -364,6 +367,38 @@ final class Ctenari
         }
 
         return $this->na('ulozeno');
+    }
+
+    /** Tlačítko "Uložit na později" pod článkem. Nepřihlášenému vede na přihlášení (stránka článku bývá z cache, společná pro všechny). */
+    public function ulozitHtml(array $clanek): string
+    {
+        $ctenar = $this->prihlaseny();
+        if ($ctenar === null) {
+            return '<p class="rs-ulozit"><a href="' . e($this->app->url('ctenar') . '?zpet=' . rawurlencode('clanek/' . $clanek['seo_link'])) . '">☆ ' . e(t('Uložit na později')) . '</a></p>';
+        }
+        $ulozeno = $this->app->db()->value('SELECT 1 FROM {ctenari_ulozene} WHERE idct = ? AND idc = ?', [$ctenar['idct'], $clanek['idc']]) !== null;
+
+        return '<form class="rs-ulozit" method="post" action="' . e($this->app->url('ctenar')) . '"><input type="hidden" name="akce" value="ulozit"><input type="hidden" name="idc" value="' . (int) $clanek['idc'] . '">'
+            . '<input type="hidden" name="podpis" value="' . e($this->podpis('formular.' . $ctenar['idct'])) . '"><button type="submit">' . ($ulozeno ? '★ ' . e(t('Uloženo – odebrat')) : '☆ ' . e(t('Uložit na později'))) . '</button>'
+            . ($ulozeno ? ' <a href="' . e($this->app->url('ctenar')) . '">' . e(t('Moje uložené články')) . '</a>' : '') . '</form>';
+    }
+
+    /** Uloží článek, nebo ho z uložených odebere (přepínač). */
+    private function ulozClanek(): Response
+    {
+        $ctenar = $this->overPrihlaseneho();
+        $db = $this->app->db();
+        $clanek = $db->one('SELECT idc, seo_link, jazyk FROM {clanky} WHERE idc = ? AND visible = 1 AND datum <= NOW()', [$this->app->request->postInt('idc')]);
+        if ($ctenar === null || $clanek === null) {
+            return $this->na('');
+        }
+        if ($db->delete('ctenari_ulozene', ['idct' => $ctenar['idct'], 'idc' => $clanek['idc']]) === 0
+            && (int) $db->value('SELECT COUNT(*) FROM {ctenari_ulozene} WHERE idct = ?', [$ctenar['idct']]) < 500) {
+            $db->insert('ctenari_ulozene', ['idct' => $ctenar['idct'], 'idc' => $clanek['idc'], 'cas' => date('Y-m-d H:i:s')]);
+        }
+        $zpet = $this->app->request->post('z_uctu') === '1' ? 'ctenar' : ($clanek['jazyk'] !== '' ? $clanek['jazyk'] . '/' : '') . 'clanek/' . $clanek['seo_link'];
+
+        return Response::redirect($this->app->request->basePath() . '/' . $zpet, 303);
     }
 
     private function smazUcet(): Response

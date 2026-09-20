@@ -182,4 +182,9 @@ return [
     'Na odpovědi k tomuto komentáři už vás e-mailem upozorňovat nebudeme.' => 'We will no longer e-mail you about replies to this comment.',
     'Odkaz neplatí' => 'The link is not valid',
     'Upozornění se nepodařilo vypnout.' => 'The notifications could not be turned off.',
+    'Uložit na později' => 'Save for later',
+    'Uloženo – odebrat' => 'Saved – remove',
+    'Moje uložené články' => 'My saved articles',
+    'Uložené články' => 'Saved articles',
+    'Odebrat z uložených' => 'Remove from saved',
 ];

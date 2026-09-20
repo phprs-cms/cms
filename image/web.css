@@ -201,3 +201,15 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .komentar-volba label { font-weight: 400; }
 .komentare-prihlaseni { padding: 16px; border: 1px solid rgb(128 128 128 / 0.35); border-radius: 4px; }
 .rs-formular label.rs-volba { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+
+/* ---------- uložené články čtenáře ---------- */
+.rs-ulozit { margin: 0 0 1.5em; font: 600 14px/1.3 system-ui, sans-serif; }
+.rs-ulozit button, .rs-ulozit > a, .clanek-text .rs-ulozit > a { padding: 8px 14px; border: 1px solid rgb(128 128 128 / 0.45); border-radius: 99px; background: transparent; color: inherit; font: inherit; text-decoration: none; cursor: pointer; }
+.rs-ulozit button:hover, .rs-ulozit > a:hover { border-color: var(--rs-akcent, #1f4fe0); color: var(--rs-akcent, #1f4fe0); }
+.rs-ulozit form a, .rs-ulozit button + a { margin-left: 10px; font-weight: 400; }
+.rs-ulozene { margin: 0 0 28px; padding: 0; list-style: none; font: 16px/1.4 system-ui, sans-serif; }
+.rs-ulozene li { display: flex; align-items: baseline; gap: 8px; padding: 9px 0; border-bottom: 1px solid rgb(128 128 128 / 0.25); }
+.rs-ulozene li a { flex: 1; }
+.rs-ulozene form { margin: 0; }
+.rs-ulozene button { border: 0; background: none; color: inherit; font-size: 18px; line-height: 1; opacity: 0.55; cursor: pointer; }
+@media print { .rs-ulozit { display: none; } }

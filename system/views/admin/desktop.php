@@ -39,6 +39,40 @@
 	<div class="dlazdice-polozka"><strong><?= number_format($pocet, 0, ',', ' ') ?></strong><span><?= e(t($popis)) ?></span></div>
 <?php endforeach ?>
 </div>
+<?php if (count($navstevnost) >= 2):
+    // sloupcový graf v čistém SVG: jeden sloupec na den, výška podle návštěv
+    $dny = [];
+    for ($i = 13; $i >= 0; $i--) { $dny[date('Y-m-d', strtotime("-{$i} day"))] = 0; }
+    foreach ($navstevnost as $n) { $dny[$n['den']] = (int) $n['navstevy']; }
+    $max = max(1, ...array_values($dny));
+?>
+<section class="prehled-graf" aria-label="<?= e(t('Návštěvnost za 14 dní')) ?>">
+	<h3><?= e(t('Návštěvnost za 14 dní')) ?> <small><?= e(t('%s návštěv', number_format(array_sum($dny), 0, ',', ' '))) ?></small></h3>
+	<svg viewBox="0 0 280 70" preserveAspectRatio="none" role="img" aria-label="<?= e(t('Návštěvnost za 14 dní')) ?>">
+<?php $x = 0; foreach ($dny as $den => $pocet): $v = max(1, (int) round($pocet / $max * 62)); ?>
+		<rect x="<?= $x * 20 + 2 ?>" y="<?= 66 - $v ?>" width="16" height="<?= $v ?>" rx="2"><title><?= e(datum($den)) ?>: <?= $pocet ?></title></rect>
+<?php $x++; endforeach ?>
+	</svg>
+	<p class="smltxt"><a href="<?= e($app->url('admin.php?modul=stat')) ?>"><?= e(t('Celá statistika')) ?></a></p>
+</section>
+<?php endif ?>
+<?php if ($fronta !== [] && isset($moduly['clanky'])): ?>
+<h3><?= e(t('Čeká na vás')) ?></h3>
+<div class="tab-obal">
+<table class="vypis">
+<tbody>
+<?php foreach ($fronta as $c): ?>
+<tr>
+	<td><a href="<?= e($app->url('admin.php?modul=clanky&akce=edit&id=' . (int) $c['idc'])) ?>"><?= e($c['titulek']) ?></a></td>
+	<td><?= e((string) $c['autor_jm']) ?></td>
+	<td><span class="stitek stitek-<?= $c['visible'] ? 'vydano' : 'koncept' ?>"><?= e(t($c['visible'] ? 'naplánováno' : ($c['stav_redakce'] === 'korektura' ? 'ke korektuře' : 'schváleno'))) ?></span></td>
+	<td class="cislo"><?= e(datum($c['datum'], true)) ?></td>
+</tr>
+<?php endforeach ?>
+</tbody>
+</table>
+</div>
+<?php endif ?>
 <?php if ($posledni !== [] && isset($moduly['clanky'])): ?>
 <h3><?= e(t('Naposledy upravené články')) ?></h3>
 <div class="tab-obal">

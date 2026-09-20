@@ -200,6 +200,15 @@ final class Kernel
 
         return $data + [
             'pruvodce' => $this->pruvodce(),
+            // návštěvnost za 14 dní (vlastní měření bez cookies) a fronta práce redakce
+            'navstevnost' => Rozsireni::je($this->app->settings(), 'statistika') && isset($this->moduly()['stat'])
+                ? $db->all('SELECT den, navstevy, zobrazeni FROM {stat_dny} WHERE den > CURDATE() - INTERVAL 14 DAY ORDER BY den') : [],
+            'fronta' => $db->all(
+                "SELECT c.idc, c.titulek, c.datum, c.visible, c.stav_redakce, IF(u.jmeno = '' OR u.jmeno IS NULL, u.user, u.jmeno) AS autor_jm
+                 FROM {clanky} c LEFT JOIN {user} u ON u.idu = c.autor
+                 WHERE ((c.visible = 0 AND c.stav_redakce IN ('korektura', 'schvaleno')) OR (c.visible = 1 AND c.datum > NOW()))" . str_replace('autor', 'c.autor', $jen) . "
+                 ORDER BY c.visible, c.datum LIMIT 8",
+            ),
             'pocty' => [
                 'Vydané články' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum <= NOW(){$jen}"),
                 'Naplánované' => (int) $db->value("SELECT COUNT(*) FROM {clanky} WHERE visible = 1 AND datum > NOW(){$jen}"),

@@ -802,4 +802,11 @@ return [
     'přidáno' => 'added',
     'smazáno' => 'deleted',
     'Text se od této verze nezměnil (změny formátování a obrázků se neporovnávají).' => 'The text has not changed since this version (formatting and image changes are not compared).',
+    'Návštěvnost za 14 dní' => 'Visits in the last 14 days',
+    '%s návštěv' => '%s visits',
+    'Celá statistika' => 'Full statistics',
+    'Čeká na vás' => 'Waiting for you',
+    'naplánováno' => 'scheduled',
+    'ke korektuře' => 'for review',
+    'schváleno' => 'approved',
 ];

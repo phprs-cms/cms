@@ -957,3 +957,11 @@ body.login {
 .titulni-akce { flex: none; display: flex; align-items: center; gap: 4px; }
 .titulni-akce button[data-nahoru], .titulni-akce button[data-dolu] { width: 28px; height: 28px; border: 1px solid var(--linka); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
 [data-seznam="dalsi"] button[data-nahoru], [data-seznam="dalsi"] button[data-dolu] { display: none; }
+
+/* ---------- přehled: graf návštěvnosti ---------- */
+.prehled-graf { margin: 0 0 24px; padding: 16px 20px 10px; border: 1px solid var(--linka); border-radius: var(--radius); background: var(--plocha); }
+.prehled-graf h3 { margin: 0 0 10px; font-size: 15px; }
+.prehled-graf h3 small { margin-left: 8px; font-weight: 400; color: var(--text-slaby); }
+.prehled-graf svg { display: block; width: 100%; height: 90px; }
+.prehled-graf rect { fill: var(--akcent); opacity: 0.85; }
+.prehled-graf rect:hover { opacity: 1; }

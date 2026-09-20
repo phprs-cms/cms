@@ -78,7 +78,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 |---|-------|----------|
 | 45 | **Čárové ikony bloků** ve vizuálním editoru místo znaků (★ ☰ 🔔) – sjednotit se sadou v `views/admin/ikony.php` | S |
 | 46 | **Prázdné stavy** se zřetelnou první akcí ve všech výpisech (část je hotová: Čtenáři) | S |
-| 47 | **Přehled (dashboard)**: graf návštěvnosti za 14 dní, fronta „ke korektuře", naplánované články, stav rozesílek | M |
+| 47 | ✅ HOTOVO (graf návštěvnosti, fronta ke korektuře a naplánované; stav rozesílek zbývá) · **Přehled (dashboard)**: graf návštěvnosti za 14 dní, fronta „ke korektuře", naplánované články, stav rozesílek | M |
 | 48 | **Hromadné akce ve výpisu článků** (změna rubriky, štítek, zamknout) a uložené filtry | S |
 | 49 | **Klávesové zkratky a paleta příkazů** (Ctrl+K: „nový článek", „najít článek…", „nastavení pošty") | M |
 | 50 | **Administrace na telefonu**: editor článku v jednom sloupci s plovoucím „Uložit", nahrání fotky z fotoaparátu | M |
@@ -86,7 +86,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne), 12 (porovnání verzí ano, ukládání konceptu na server ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne), 12 (porovnání verzí ano, ukládání konceptu na server ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
 Další v pořadí: více autorů u článku (3), ukládání rozepsaného článku na server

@@ -700,4 +700,11 @@ return [
     'přidáno' => 'pridané',
     'smazáno' => 'zmazané',
     'Text se od této verze nezměnil (změny formátování a obrázků se neporovnávají).' => 'Text sa od tejto verzie nezmenil (zmeny formátovania a obrázkov sa neporovnávajú).',
+    'Návštěvnost za 14 dní' => 'Návštevnosť za 14 dní',
+    '%s návštěv' => '%s návštev',
+    'Celá statistika' => 'Celá štatistika',
+    'Čeká na vás' => 'Čaká na vás',
+    'naplánováno' => 'naplánované',
+    'ke korektuře' => 'na korektúru',
+    'schváleno' => 'schválené',
 ];

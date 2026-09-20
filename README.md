@@ -177,6 +177,10 @@ Hotovo:
 - **Zálohy:** obnova databáze ze zálohy přímo v administraci, před obnovou vždy vznikne pojistná záloha.
 - **Správa:** prohlížeč záznamu chyb (Stav systému), přehled adres 404 s nabídkou přesměrování, blok „Podpořte nás",
   doba čtení a ukazatel průběhu, tiskový styl, stránka 404 s hledáním a nejčtenějšími články.
+- **Redakční nástroje:** Titulní strana (ruční pořadí článků nahoře na hlavní stránce přetažením), Štítky a témata (přejmenování,
+  sloučení, stránka tématu s úvodem a obrázkem), porovnání verzí článku („co se změnilo"), dialog odkazu s hledáním vlastních článků,
+  přehled s grafem návštěvnosti za 14 dní a frontou práce.
+- **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
 - **Testy:** `php tools/testy.php` – jednotkové testy jádra bez databáze (součást `tools/test.sh`).
 - **Redakce a provoz:** e-mail redakci o komentářích (nejvýš jednou za 10 minut), adresa pro cron `/ulohy?token=…` (Stav systému),
   „První kroky" po instalaci na přehledu administrace.

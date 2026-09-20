@@ -1,6 +1,6 @@
 # Vydání: tag vX.Y.Z spustí testy a založí KONCEPT vydání na GitHubu.
 # Balíček se tady nepodepisuje – soukromý klíč nepatří do CI (docs/VYDAVANI.md). Vydavatel pak lokálně spustí
-#   php tools/vydani.php X.Y.Z --url=https://github.com/<účet>/<repo>/releases/download/vX.Y.Z/phprs-X.Y.Z.zip --zmena="…"
+#   php tools/vydani.php X.Y.Z --url=https://github.com/phprs-cms/cms/releases/download/vX.Y.Z/phprs-X.Y.Z.zip --zmena="…"
 # nahraje dist/phprs-X.Y.Z.zip ke konceptu (gh release upload vX.Y.Z dist/phprs-X.Y.Z.zip), koncept zveřejní
 # a dist/aktualizace.json vystaví na https://phprs.dev/aktualizace.json.
 name: Vydání

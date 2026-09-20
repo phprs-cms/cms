@@ -29,6 +29,32 @@
 
 <fieldset>
 <legend><?= e(t('Zálohy databáze')) ?></legend>
+<details class="pokrocile"<?= $hodnoty['zaloha_vzdalena'] !== 'vypnuto' ? ' open' : '' ?>>
+<summary><?= e(t('Kopie záloh mimo server')) ?><?= $hodnoty['zaloha_vzdalena'] !== 'vypnuto' ? ' – ' . e(t('zapnuté')) : '' ?></summary>
+<p class="napoveda"><?= e(t('Záloha na stejném serveru jako web nepomůže, když o hosting přijdete. Každá nová záloha databáze se proto může sama nahrát jinam. Média se tímto způsobem nekopírují – stahujte si je občas jako ZIP.')) ?></p>
+<div class="radek"><label for="zaloha_vzdalena"><?= e(t('Kam kopírovat')) ?></label><select id="zaloha_vzdalena" name="zaloha_vzdalena">
+	<option value="vypnuto"><?= e(t('nikam')) ?></option>
+	<option value="ftp"<?= $hodnoty['zaloha_vzdalena'] === 'ftp' ? ' selected' : '' ?>><?= e(t('na FTP server (jiný hosting, domácí NAS)')) ?></option>
+	<option value="s3"<?= $hodnoty['zaloha_vzdalena'] === 's3' ? ' selected' : '' ?>><?= e(t('do úložiště S3 (Amazon S3, Backblaze B2, Wasabi, Cloudflare R2)')) ?></option>
+</select></div>
+<?php
+$pole('zaloha_host', 'Server', 'text', 'FTP: ftp.example.cz. S3: adresa úložiště, např. s3.eu-central-1.amazonaws.com nebo s3.eu-central-003.backblazeb2.com.', 'maxlength="150" autocomplete="off"');
+$pole('zaloha_uzivatel', 'Jméno / přístupový klíč', 'text', '', 'maxlength="190" autocomplete="off"');
+?>
+<div class="radek"><label for="zaloha_heslo"><?= e(t('Heslo / tajný klíč')) ?></label><div><input class="textpole siroke" type="password" id="zaloha_heslo" name="zaloha_heslo" value="" autocomplete="new-password" placeholder="<?= $hodnoty['zaloha_heslo'] !== '' ? e(t('uloženo – nové vložte jen při změně')) : '' ?>">
+<?php if ($hodnoty['zaloha_heslo'] !== ''): ?>
+	<label><input type="checkbox" name="zaloha_heslo_smazat" value="1"> <?= e(t('Odebrat uložené heslo')) ?></label>
+<?php endif ?>
+</div></div>
+<?php
+$pole('zaloha_slozka', 'Složka / bucket', 'text', 'FTP: složka pro zálohy (vytvoří se). S3: název bucketu, případně bucket/složka.', 'maxlength="150"');
+$pole('zaloha_region', 'Region (jen S3)', 'text', 'Například eu-central-1. U Cloudflare R2 zadejte auto.', 'maxlength="40" style="width:180px"');
+?>
+<?php if ($vzdalenaStav !== ''): [$kdy, $jak] = explode('|', $vzdalenaStav, 2) + [1 => '']; ?>
+<p class="hlaska<?= $jak === 'ok' ? ' hlaska-ok' : ' hlaska-chyba' ?>"><?= e($jak === 'ok' ? t('Poslední kopie byla nahrána %s.', $kdy) : t('Poslední pokus %s selhal: %s', $kdy, $jak)) ?></p>
+<?php endif ?>
+<p class="napoveda"><?= e(t('Nastavení uložte a pak klepněte na „Vytvořit zálohu“ – kopie se nahraje hned a uvidíte, jestli spojení funguje.')) ?></p>
+</details>
 <?php $pole('zalohy_auto', 'Automatická záloha jednou týdně', 'ano', 'Vytvoří se při přihlášení administrátora, když je poslední záloha starší než týden. Uchovává se posledních 10 záloh.'); ?>
 <p><button class="tl" type="submit" formaction="<?= e($modul->url('zalohuj')) ?>"><?= e(t('Vytvořit zálohu teď')) ?></button></p>
 <?php if ($zalohy !== []): ?>

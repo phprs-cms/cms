@@ -58,7 +58,8 @@ final class Konfigurace extends Modul
         'posta' => ['posta_rezim' => 'vyber:mail|smtp', 'posta_od' => 'email', 'posta_odpoved' => 'email', 'smtp_host' => 'vzor:/^[A-Za-z0-9.-]{0,120}$/', 'smtp_port' => 'cislo:1:65535',
             'smtp_sifrovani' => 'vyber:tls|ssl|zadne', 'smtp_uzivatel' => 'text', 'smtp_heslo' => 'tajne'],
         'rozsireni' => ['ai_klic' => 'tajne', 'ai_model' => 'vyber:' . \PhpRS\Core\Asistent::MODELY_KLICE],
-        'zalohy' => ['zalohy_auto' => 'ano', 'aktualizace_auto' => 'ano', 'aktualizace_url' => 'url'],
+        'zalohy' => ['zaloha_vzdalena' => 'vyber:vypnuto|ftp|s3', 'zaloha_host' => 'vzor:#^[A-Za-z0-9.:/-]{0,150}$#', 'zaloha_uzivatel' => 'text', 'zaloha_heslo' => 'tajne',
+            'zaloha_slozka' => 'vzor:#^[A-Za-z0-9._/-]{0,150}$#', 'zaloha_region' => 'vzor:/^[a-z0-9-]{0,40}$/', 'zalohy_auto' => 'ano', 'aktualizace_auto' => 'ano', 'aktualizace_url' => 'url'],
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
 
@@ -80,6 +81,7 @@ final class Konfigurace extends Modul
             'layouty' => Layouty::seznam(),
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
+            'vzdalenaStav' => $nastaveni->get('zaloha_vzdalena_stav'),
             'ulohyToken' => $nastaveni->get('ulohy_token'),
             'chybyLog' => $zalozka === 'stav' ? self::konecSouboru(PHPRS_ROOT . '/storage/log/chyby.log', 40) : [],
             'posta' => $zalozka === 'posta' ? $this->db->all('SELECT komu, predmet, vytvoreno, odeslano, pokusu, dalsi_pokus, chyba FROM {posta} ORDER BY idp DESC LIMIT 30') : [],
@@ -151,6 +153,10 @@ final class Konfigurace extends Modul
             $soubor = Zaloha::vytvor($this->db);
         } catch (\Throwable $e) {
             return $this->zpet('Zálohu se nepodařilo vytvořit: ' . $e->getMessage(), '', ['zalozka' => 'zalohy'], 'chyba');
+        }
+        $vzdalena = \PhpRS\Core\VzdalenaZaloha::nahraj($this->app->settings(), (string) Zaloha::cesta($soubor));
+        if ($vzdalena !== null) {
+            return $this->zpet('Záloha ' . $soubor . ' je hotová, ale kopii mimo server se nepodařilo nahrát: ' . $vzdalena, '', ['zalozka' => 'zalohy'], 'chyba');
         }
 
         return $this->zpet('Záloha ' . $soubor . ' je hotová.', '', ['zalozka' => 'zalohy']);

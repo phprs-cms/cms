@@ -39,7 +39,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 | # | Námět | Proč | Pracnost |
 |---|-------|------|----------|
-| 23 | ◐ ČÁSTEČNĚ (obnova ze zálohy hotová; zálohy mimo server zbývají) · **Obnova ze zálohy přímo v administraci** a zálohy mimo server (SFTP / S3 kompatibilní úložiště) | záloha na stejném disku nechrání před ztrátou hostingu | M |
+| 23 | ✅ HOTOVO (obnova v administraci; kopie na FTP nebo do S3 – proti skutečnému úložišti zatím neověřeno) · **Obnova ze zálohy přímo v administraci** a zálohy mimo server (SFTP / S3 kompatibilní úložiště) | záloha na stejném disku nechrání před ztrátou hostingu | M |
 | 24 | ✅ HOTOVO · **Adresa pro cron** (`/ulohy?token=…`) jako doplněk úloh spouštěných návštěvou | web s malou návštěvností vydá naplánovaný článek a pošle push se zpožděním | S |
 | 25 | ✅ HOTOVO · **Fronta e-mailů** s opakováním a protokolem odeslaných zpráv | při výpadku SMTP se potvrzovací e-mail dnes ztratí | M |
 | 26 | **Přihlášení klíčem (passkey / WebAuthn)** vedle TOTP; přehled přihlášených zařízení s možností odhlásit | pohodlnější a bezpečnější než kódy | M |
@@ -86,10 +86,9 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 24, 25, 29, 31, 32, 37, 38, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
-vzdálené zálohy ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 23, 24, 25, 29, 31, 32, 37, 38, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
 
-Další v pořadí: zálohy mimo server (23), platební brána (15),
+Další v pořadí: platební brána (15),
 
 ## Doporučené pořadí
 

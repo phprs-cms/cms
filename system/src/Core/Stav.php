@@ -78,6 +78,12 @@ final class Stav
             }
         }
         $pridej('Provoz', 'Velikost médií', 'ok', self::velikost($media));
+        $vzdalena = explode('|', $app->settings()->get('zaloha_vzdalena_stav'), 2);
+        if ($app->settings()->get('zaloha_vzdalena') !== 'vypnuto') {
+            $pridej('Provoz', 'Zálohy mimo server', ($vzdalena[1] ?? '') === 'ok' ? 'ok' : 'varovani', ($vzdalena[1] ?? '') === 'ok' ? 'poslední kopie nahrána ' . $vzdalena[0] : (($vzdalena[1] ?? '') !== '' ? 'poslední pokus ' . $vzdalena[0] . ' selhal: ' . $vzdalena[1] : 'zatím žádná kopie nevznikla'));
+        } else {
+            $pridej('Provoz', 'Zálohy mimo server', 'varovani', 'vypnuté – zálohy leží jen na stejném serveru jako web (Nastavení → Zálohy a aktualizace)');
+        }
         $jadro = Integrita::kontrola();
         $pridej('Bezpečnost', 'Soubory jádra', $jadro['stav'], $jadro['info']);
         $smtp = $app->settings()->get('posta_rezim') === 'smtp' && $app->settings()->get('smtp_host') !== '';

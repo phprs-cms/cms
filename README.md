@@ -184,6 +184,10 @@ Hotovo:
   a prokliků bez sledování jednotlivců, šablona s logem a barvou webu.
 - **Šablony článku:** Standardní, Dlouhé čtení, Fotoreportáž, Rozhovor – fungují ve všech třech layoutech.
 - **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
+- **Čtenáři a diskuse:** přihlášení odkazem z e-mailu (bez hesla), odběr newsletteru při registraci, komentáře pod účtem čtenáře
+  (volitelně jen pro přihlášené), upozornění na odpověď e-mailem, nahlášení komentáře (po třech nahlášeních čeká na redakci).
+- **Autoři:** spoluautoři článku a externí autor (host, agentura); stránka autora ukazuje i spoluautorské články.
+- **Zálohy mimo server:** každá nová záloha databáze se může sama nahrát na FTP(S) nebo do úložiště kompatibilního s S3.
 - **Hranice úprav:** přes napojení na Claude jde měnit jen obsah a vlastní šablony. Šablona je prezentační vrstva – PHP soubor,
   který by sahal na soubory, databázi, síť nebo kód systému, se neuloží (`Core\SablonaKontrola`). Vydání nese podepsaný seznam
   souborů a Stav systému hlásí zásahy do jádra; pravidla pro Claude Code jsou v `layout/CLAUDE.md`.

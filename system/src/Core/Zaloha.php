@@ -134,7 +134,8 @@ final class Zaloha
         $posledni = self::seznam()[0]['cas'] ?? 0;
         if (time() - $posledni > 7 * 86400) {
             try {
-                self::vytvor($db, 'auto');
+                $soubor = self::vytvor($db, 'auto');
+                VzdalenaZaloha::nahraj($settings, (string) self::cesta($soubor)); // výsledek ukáže Stav systému a záložka Zálohy
             } catch (\Throwable) {
                 // záloha nesmí shodit administraci; na chybějící zálohu upozorní Stav systému
             }

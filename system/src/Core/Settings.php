@@ -84,6 +84,13 @@ final class Settings
         'kod_marketing' => '',
         'cookies_evidence' => '1',    // zapisovat udělené souhlasy (doklad pro případnou kontrolu)
         'stav_token' => '',
+        'zaloha_vzdalena' => 'vypnuto', // kopie zálohy mimo server: vypnuto | ftp | s3
+        'zaloha_host' => '',          // FTP server, nebo adresa úložiště S3 (s3.eu-central-1.amazonaws.com)
+        'zaloha_uzivatel' => '',      // jméno FTP / přístupový klíč S3
+        'zaloha_heslo' => '',         // heslo FTP / tajný klíč S3 (typ "tajne")
+        'zaloha_slozka' => '',        // složka na FTP / název bucketu
+        'zaloha_region' => '',        // region S3 (eu-central-1…)
+        'zaloha_vzdalena_stav' => '', // "RRRR-MM-DD HH:MM|ok" nebo text chyby
         'zalohy_auto' => '1',         // týdenní automatická záloha databáze
         'aktualizace_url' => '',      // adresa souboru aktualizace.json; prázdné = výchozí zdroj projektu
         'aktualizace_cache' => '',

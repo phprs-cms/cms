@@ -15,6 +15,7 @@
  * @var array<string, mixed>|null $aktualizace
  * @var list<array{kategorie:string, pocet:int}> $souhlasy
  * @var list<string> $chybyLog  poslední řádky záznamu chyb
+ * @var string $vzdalenaStav  výsledek posledního nahrání zálohy mimo server
  * @var string $ulohyToken  tajná část adresy /ulohy pro cron
  */
 use PhpRS\Admin\Moduly\Konfigurace;

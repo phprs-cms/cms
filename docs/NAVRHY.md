@@ -15,7 +15,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 6 | ✅ HOTOVO · **Obsah článku (osnova)** z mezititulků u dlouhých textů + kotvy u H2 | dlouhé čtení, odkazování na část článku | S |
 | 7 | ◐ ČÁSTEČNĚ (video a podcast z adresy na samostatném řádku; příspěvky ze sítí zbývají) · **Vložení příspěvku ze sítí a videa vložením adresy** do textu (YouTube, Vimeo, X, Instagram, Mastodon – načtení až po kliknutí jako u přehrávače) | dnes jen ruční `<iframe>` v HTML režimu | M |
 | 8 | ✅ HOTOVO · **Tabulky v editoru** (vložit tabulku, přidat řádek/sloupec, záhlaví) | čistič HTML je povoluje, ale editor je neumí vytvořit | M |
-| 9 | **Výběr odkazu na vlastní článek** v dialogu odkazu (hledání podle titulku) | interní prolinkování je základ SEO | S |
+| 9 | ✅ HOTOVO · **Výběr odkazu na vlastní článek** v dialogu odkazu (hledání podle titulku) | interní prolinkování je základ SEO | S |
 | 10 | **Ořez a otočení obrázku, bod zájmu** pro výřezy v otvíráku | dnes se fotka ořízne na střed | M |
 | 11 | ✅ HOTOVO · **Přílohy ke stažení** (PDF, tabulky) v Médiích a v článku – nahrazuje zamýšlenou „Download sekci" | tiskové zprávy, dokumenty ke kauzám | M |
 | 12 | **Ukládání rozepsaného článku na server** (dnes jen v prohlížeči) a porovnání revizí (co se změnilo) | práce z více zařízení, korektury | M |
@@ -86,10 +86,10 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 11, 18, 21, 24, 25, 29, 31, 32, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 18, 21, 24, 25, 29, 31, 32, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
-Další v pořadí: výběr odkazu na vlastní článek (9), stránky témat (14), více autorů u článku (3), ukládání rozepsaného článku na server
+Další v pořadí: stránky témat (14), více autorů u článku (3), ukládání rozepsaného článku na server
 a porovnání revizí (12), kurátorovaná hlavní stránka (13), zálohy mimo server (23), newsletter 2.0 (20), platební brána (15),
 tmavý režim a další šablony článku (37, 38).
 

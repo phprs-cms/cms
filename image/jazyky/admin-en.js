@@ -1,5 +1,16 @@
 /* phpRS 3 - překlad textů skriptů administrace (en). Klíčem je český text ze skriptů (funkce T()). */
 window.PHPRS_PREKLAD = {
+	"Odkaz": "Link",
+	"Adresa": "Address",
+	"nebo": "or",
+	"…nebo najděte vlastní článek": "…or find one of your articles",
+	"část titulku": "part of the headline",
+	"otevřít v novém okně": "open in a new window",
+	"Vložit odkaz": "Insert link",
+	"Zrušit odkaz": "Remove link",
+	"Nic nenalezeno.": "Nothing found.",
+	"nevydaný": "unpublished",
+
 	"tabulka": "table",
 	"Vložit tabulku 3 × 3 se záhlavím; řádky a sloupce pak přidáte tlačítky nad tabulkou": "Insert a 3 × 3 table with a header; add rows and columns with the buttons above the table",
 	"+ řádek": "+ row",

@@ -245,6 +245,24 @@ final class Clanky extends Modul
         return Response::json(['ok' => $clanek !== null]);
     }
 
+    /** Hledání článků podle titulku pro dialog odkazu v editoru. */
+    protected function akceHledejJson(): Response
+    {
+        $q = mb_substr(trim($this->request->get('q')), 0, 80);
+        if (mb_strlen($q) < 2) {
+            return Response::json(['clanky' => []]);
+        }
+        $clanky = $this->db->all(
+            "SELECT titulek, seo_link, jazyk, visible AND datum <= NOW() AS vydany FROM {clanky} WHERE titulek LIKE ? AND typ_clanku = 1 ORDER BY datum DESC LIMIT 8",
+            ['%' . addcslashes($q, '%_\\') . '%'],
+        );
+
+        return Response::json(['clanky' => array_map(fn (array $c): array => [
+            'titulek' => $c['titulek'], 'vydany' => (bool) $c['vydany'],
+            'url' => $this->app->url(($c['jazyk'] !== '' ? $c['jazyk'] . '/' : '') . 'clanek/' . $c['seo_link']),
+        ], $clanky)]);
+    }
+
     /** Živá reportáž: rychlé psaní průběžných zápisů k článku. */
     protected function akceZive(): Response
     {

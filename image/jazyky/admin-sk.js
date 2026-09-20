@@ -1,5 +1,14 @@
 /* phpRS 3 - překlad textů skriptů administrace (sk). Klíčem je český text ze skriptů (funkce T()). */
 window.PHPRS_PREKLAD = {
+	"nebo": "alebo",
+	"…nebo najděte vlastní článek": "…alebo nájdite vlastný článok",
+	"část titulku": "časť titulku",
+	"otevřít v novém okně": "otvoriť v novom okne",
+	"Vložit odkaz": "Vložiť odkaz",
+	"Zrušit odkaz": "Zrušiť odkaz",
+	"Nic nenalezeno.": "Nič sa nenašlo.",
+	"nevydaný": "nevydaný",
+
 	"tabulka": "tabuľka",
 	"Vložit tabulku 3 × 3 se záhlavím; řádky a sloupce pak přidáte tlačítky nad tabulkou": "Vložiť tabuľku 3 × 3 s hlavičkou; riadky a stĺpce potom pridáte tlačidlami nad tabuľkou",
 	"+ řádek": "+ riadok",

@@ -201,13 +201,69 @@
 
 	function prikaz(nazev, hodnota) { document.execCommand(nazev, false, hodnota || null); }
 
+	/* Dialog odkazu: adresa, nebo vlastní článek vyhledaný podle titulku. Systémový prompt() vestavěné prohlížeče potlačují. */
+	var oknoOdkazu = null;
+
 	function odkaz() {
 		var vyber = window.getSelection();
-		var kotva = vyber.anchorNode && vyber.anchorNode.parentElement && vyber.anchorNode.parentElement.closest('a');
-		var url = window.prompt(T('Adresa odkazu (prázdné = odkaz zrušit):'), kotva ? kotva.getAttribute('href') : 'https://');
-		if (url === null) { return; }
-		if (url === '') { prikaz('unlink'); return; }
-		if (vyber.isCollapsed && !kotva) { prikaz('insertHTML', '<a href="' + url.replace(/"/g, '&quot;') + '">' + url.replace(/</g, '&lt;') + '</a>'); } else { prikaz('createLink', url); }
+		var rozsah = vyber.rangeCount ? vyber.getRangeAt(0).cloneRange() : null;
+		var uzel = vyber.anchorNode && (vyber.anchorNode.nodeType === 1 ? vyber.anchorNode : vyber.anchorNode.parentElement);
+		var kotva = uzel && uzel.closest('a');
+		var plocha = uzel && uzel.closest('.editor-plocha');
+		if (!plocha || !rozsah) { return; }
+		if (!oknoOdkazu) {
+			oknoOdkazu = document.createElement('dialog');
+			oknoOdkazu.className = 'galerie-okno odkaz-okno';
+			oknoOdkazu.innerHTML = '<form method="dialog"><div class="galerie-okno-hlava"><strong>' + T('Odkaz') + '</strong></div>'
+				+ '<label>' + T('Adresa') + '<input class="textpole siroke" type="text" name="adresa" placeholder="https://… ' + T('nebo') + ' /o-nas" autocomplete="off"></label>'
+				+ '<label>' + T('…nebo najděte vlastní článek') + '<input class="textpole siroke" type="search" name="hledat" placeholder="' + T('část titulku') + '" autocomplete="off"></label>'
+				+ '<div class="odkaz-vysledky" aria-live="polite"></div>'
+				+ '<label class="odkaz-volba"><input type="checkbox" name="nove"> ' + T('otevřít v novém okně') + '</label>'
+				+ '<div class="odkaz-tlacitka"><button type="submit" class="tl" value="ok">' + T('Vložit odkaz') + '</button> <button type="button" class="navigace" data-zrusit>' + T('Zrušit odkaz') + '</button> <button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div></form>';
+			document.body.appendChild(oknoOdkazu);
+			var casovac = null;
+			oknoOdkazu.querySelector('[name=hledat]').addEventListener('input', function () {
+				var q = this.value.trim(), vysledky = oknoOdkazu.querySelector('.odkaz-vysledky');
+				clearTimeout(casovac);
+				if (q.length < 2) { vysledky.textContent = ''; return; }
+				casovac = setTimeout(function () {
+					fetch(ADMIN + '?modul=clanky&akce=hledej_json&q=' + encodeURIComponent(q), { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
+						vysledky.textContent = j.clanky.length ? '' : T('Nic nenalezeno.');
+						j.clanky.forEach(function (c) {
+							var b = document.createElement('button');
+							b.type = 'button';
+							b.textContent = c.titulek + (c.vydany ? '' : ' (' + T('nevydaný') + ')');
+							b.addEventListener('click', function () { oknoOdkazu.querySelector('[name=adresa]').value = c.url; oknoOdkazu.querySelector('[name=adresa]').focus(); });
+							vysledky.appendChild(b);
+						});
+					});
+				}, 250);
+			});
+			oknoOdkazu.querySelector('[data-zavri]').addEventListener('click', function () { oknoOdkazu.close('zavrit'); });
+			oknoOdkazu.querySelector('[data-zrusit]').addEventListener('click', function () { oknoOdkazu.close('zrusit'); });
+			oknoOdkazu.addEventListener('close', function () { oknoOdkazu.hotovo(oknoOdkazu.returnValue); });
+		}
+		var f = oknoOdkazu.querySelector('form');
+		f.adresa.value = kotva ? kotva.getAttribute('href') : '';
+		f.hledat.value = '';
+		f.nove.checked = !!(kotva && kotva.target === '_blank');
+		oknoOdkazu.querySelector('.odkaz-vysledky').textContent = '';
+		oknoOdkazu.querySelector('[data-zrusit]').hidden = !kotva;
+		oknoOdkazu.returnValue = '';
+		oknoOdkazu.hotovo = function (vysledek) {
+			plocha.focus();
+			vyber.removeAllRanges();
+			if (kotva) { var r = document.createRange(); r.selectNode(kotva); vyber.addRange(r); } else { vyber.addRange(rozsah); }
+			var url = f.adresa.value.trim();
+			if (vysledek === 'zrusit') { prikaz('unlink'); } else if (vysledek === 'ok' && url !== '' && !/^\s*javascript:/i.test(url)) {
+				var cil = f.nove.checked ? ' target="_blank" rel="noopener"' : '';
+				var text = vyber.isCollapsed ? url : (kotva ? kotva.innerHTML : vyber.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;'));
+				prikaz('insertHTML', '<a href="' + url.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"' + cil + '>' + (kotva || !vyber.isCollapsed ? text : url.replace(/&/g, '&amp;').replace(/</g, '&lt;')) + '</a>');
+			}
+			plocha.dispatchEvent(new Event('input', { bubbles: true }));
+		};
+		oknoOdkazu.showModal();
+		f.adresa.focus();
 	}
 
 	function vytvorEditor(pole) {

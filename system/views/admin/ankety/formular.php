@@ -12,6 +12,7 @@
 <?= $csrf ?>
 <input type="hidden" name="ida" value="<?= (int) $anketa['ida'] ?>">
 <div class="radek"><label for="otazka"><?= e(t('Otázka')) ?></label><input class="textpole siroke" type="text" id="otazka" name="otazka" value="<?= e($anketa['otazka']) ?>" maxlength="255" required></div>
+<?= $app->view->render('admin/jazyk_pole', ['app' => $app, 'hodnota' => (string) ($anketa['jazyk'] ?? ''), 'napoveda' => t('Anketa se ukáže jen v této jazykové verzi webu. V jazyce, který nemá aktivní anketu, se zobrazí nejnovější otevřená.')]) ?>
 <div class="radek">
 	<span class="popisek"><?= e(t('Odpovědi')) ?></span>
 	<div>

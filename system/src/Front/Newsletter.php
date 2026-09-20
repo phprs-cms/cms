@@ -52,7 +52,7 @@ final class Newsletter
         $odberatel = $db->one('SELECT * FROM {odberatele} WHERE email = ?', [$email]);
         if ($odberatel === null) {
             $token = bin2hex(random_bytes(16));
-            $db->insert('odberatele', ['email' => $email, 'token' => $token, 'prihlasen' => date('Y-m-d H:i:s')]);
+            $db->insert('odberatele', ['email' => $email, 'token' => $token, 'prihlasen' => date('Y-m-d H:i:s'), 'jazyk' => \PhpRS\Core\Jazyk::sloupecWebu()]);
         } else {
             $token = $odberatel['token'];
         }

@@ -18,6 +18,7 @@
 	<label for="titulek"><?= e(t('Titulek novinky')) ?></label>
 	<input class="textpole siroke" type="text" id="titulek" name="titulek" value="<?= e($novinka['titulek']) ?>" maxlength="150" required>
 </div>
+<?= $app->view->render('admin/jazyk_pole', ['app' => $app, 'hodnota' => (string) ($novinka['jazyk'] ?? ''), 'napoveda' => t('Novinka se ukáže jen v této jazykové verzi webu.')]) ?>
 <div class="radek">
 	<label for="informace"><?= e(t('Text novinky')) ?></label>
 	<div><textarea class="textbox" id="informace" name="informace" rows="4"><?= e($novinka['informace']) ?></textarea>

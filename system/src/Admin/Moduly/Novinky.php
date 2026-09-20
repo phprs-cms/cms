@@ -23,7 +23,7 @@ final class Novinky extends Modul
     {
         return $this->view('vypis', 'Novinky', [
             'novinky' => $this->db->all('SELECT * FROM {news} ORDER BY datum DESC, idn DESC LIMIT 200'),
-            'novinka' => ['idn' => 0, 'titulek' => '', 'informace' => '', 'datum' => date('Y-m-d H:i:s')],
+            'novinka' => ['idn' => 0, 'titulek' => '', 'informace' => '', 'datum' => date('Y-m-d H:i:s'), 'jazyk' => ''],
         ]);
     }
 
@@ -49,6 +49,7 @@ final class Novinky extends Modul
             'titulek' => $r->post('titulek'),
             'informace' => $r->post('informace'),
             'datum' => ($datum ?: new \DateTimeImmutable())->format('Y-m-d H:i:00'),
+            'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
         if ($data['titulek'] === '') {
             return $this->zpet('Vyplňte titulek novinky.', $id > 0 ? 'edit' : '', $id > 0 ? ['id' => $id] : [], 'chyba');

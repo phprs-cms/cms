@@ -200,6 +200,16 @@ foreach (['https://x.com/nasa', 'http://x.com/nasa/status/1790000000000000000', 
     over('TypyObsahu::prispevek: nevkládá ' . $adresa, PhpRS\Front\TypyObsahu::prispevek($adresa), '');
 }
 
+/* ---------- dočasné přepnutí jazyka (e-maily v jazyce příjemce) ---------- */
+PhpRS\Core\Jazyk::nastav('cs');
+over('Jazyk::docasne: uvnitř platí cizí jazyk', PhpRS\Core\Jazyk::docasne('en', fn (): string => PhpRS\Core\Jazyk::kod() . '|' . t('Číst článek →')), 'en|Read article →');
+over('Jazyk::docasne: potom se jazyk vrátí', PhpRS\Core\Jazyk::kod() . '|' . t('Číst článek →'), 'cs|Číst článek →');
+try {
+    PhpRS\Core\Jazyk::docasne('de', function (): never { throw new RuntimeException('x'); });
+} catch (RuntimeException) {
+}
+over('Jazyk::docasne: jazyk se vrátí i po výjimce', PhpRS\Core\Jazyk::kod(), 'cs');
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

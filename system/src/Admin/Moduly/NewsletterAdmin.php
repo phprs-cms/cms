@@ -29,7 +29,9 @@ final class NewsletterAdmin extends Modul
             'odberatelu' => (int) $this->db->value('SELECT COUNT(*) FROM {odberatele} WHERE potvrzen = 1'),
             'nepotvrzenych' => (int) $this->db->value('SELECT COUNT(*) FROM {odberatele} WHERE potvrzen = 0'),
             'vydani' => $this->db->all('SELECT * FROM {newsletter} ORDER BY idn DESC LIMIT 30'),
-            'clanky' => $this->db->all('SELECT idc, titulek, datum, datum > ? AS novy FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 15', [$posledni]),
+            // předvybrané jsou jen nové články výchozího jazyka – vydání je vždy v jednom jazyce
+            'clanky' => $this->db->all("SELECT idc, titulek, datum, jazyk, (datum > ? AND jazyk = '') AS novy FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT " . (\PhpRS\Core\Jazyk::dalsi($this->app->settings()) === [] ? 15 : 30), [$posledni]),
+            'podleJazyka' => \PhpRS\Core\Jazyk::dalsi($this->app->settings()) === [] ? [] : array_map(intval(...), $this->db->pairs('SELECT jazyk, COUNT(*) FROM {odberatele} WHERE potvrzen = 1 GROUP BY jazyk')),
             'maEmail' => $this->app->settings()->get('email_webu') !== '',
             'automat' => array_map($this->app->settings()->get(...), ['newsletter_auto' => 'newsletter_auto', 'newsletter_den' => 'newsletter_den', 'newsletter_hodina' => 'newsletter_hodina', 'newsletter_uvod' => 'newsletter_uvod']),
             'maBlok' => $this->db->value("SELECT idb FROM {bloky} WHERE sys_funkce = 'nws'") !== null,
@@ -47,7 +49,12 @@ final class NewsletterAdmin extends Modul
         if ($r->post('predmet') === '' || $clanky === []) {
             return $this->zpet('Vyplňte předmět a vyberte alespoň jeden článek.', typ: 'chyba');
         }
-        $idn = $this->db->insert('newsletter', ['predmet' => mb_substr($r->post('predmet'), 0, 200), 'uvod' => $r->post('uvod'), 'clanky' => implode(',', $clanky), 'vytvoreno' => date('Y-m-d H:i:s')]);
+        // jazyk vydání určují vybrané články; dostanou ho jen odběratelé téhož jazyka
+        $jazyky = array_column($this->db->all('SELECT DISTINCT jazyk FROM {clanky} WHERE idc IN (' . implode(',', $clanky) . ')'), 'jazyk');
+        if (count($jazyky) !== 1) {
+            return $this->zpet('Vyberte články jen jedné jazykové verze – každý jazyk má vlastní vydání a vlastní odběratele.', typ: 'chyba');
+        }
+        $idn = $this->db->insert('newsletter', ['predmet' => mb_substr($r->post('predmet'), 0, 200), 'uvod' => $r->post('uvod'), 'clanky' => implode(',', $clanky), 'vytvoreno' => date('Y-m-d H:i:s'), 'jazyk' => $jazyky[0]]);
         if ($r->post('co') === 'zkouska') {
             $ok = \PhpRS\Core\Rozesilka::posli($this->app, $idn, $this->app->settings()->get('email_webu'), 'zkouska');
             $this->db->delete('newsletter', ['idn' => $idn]);
@@ -104,14 +111,14 @@ final class NewsletterAdmin extends Modul
 
         return $this->view('rozeslat', 'Rozesílka newsletteru', [
             'vydani' => $vydani,
-            'zbyva' => (int) $this->db->value('SELECT COUNT(*) FROM {odberatele} WHERE potvrzen = 1 AND ido > ?', [(int) $vydani['posledni']]),
+            'zbyva' => (int) $this->db->value('SELECT COUNT(*) FROM {odberatele} WHERE potvrzen = 1 AND jazyk = ? AND ido > ?', [$vydani['jazyk'], (int) $vydani['posledni']]),
         ]);
     }
 
     protected function akceOdberatele(): Response
     {
         if ($this->request->get('format') === 'csv') {
-            $csv = "email;prihlasen\n" . implode("\n", array_map(fn (array $o): string => $o['email'] . ';' . $o['prihlasen'], $this->db->all('SELECT email, prihlasen FROM {odberatele} WHERE potvrzen = 1 ORDER BY email')));
+            $csv = "email;prihlasen;jazyk\n" . implode("\n", array_map(fn (array $o): string => $o['email'] . ';' . $o['prihlasen'] . ';' . ($o['jazyk'] !== '' ? $o['jazyk'] : \PhpRS\Core\Jazyk::vychozi($this->app->settings())), $this->db->all('SELECT email, prihlasen, jazyk FROM {odberatele} WHERE potvrzen = 1 ORDER BY email')));
 
             return new Response($csv, 200, ['Content-Type' => 'text/csv; charset=utf-8', 'Content-Disposition' => 'attachment; filename="odberatele.csv"']);
         }

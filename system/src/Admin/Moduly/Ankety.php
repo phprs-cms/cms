@@ -30,7 +30,7 @@ final class Ankety extends Modul
 
     protected function akceNovy(): Response
     {
-        return $this->formular(['ida' => 0, 'titulek' => '', 'otazka' => '', 'zobrazit' => 1, 'uzavrena' => 0], []);
+        return $this->formular(['ida' => 0, 'titulek' => '', 'otazka' => '', 'zobrazit' => 1, 'uzavrena' => 0, 'jazyk' => ''], []);
     }
 
     protected function akceEdit(): Response
@@ -52,6 +52,7 @@ final class Ankety extends Modul
         $data = [
             'titulek' => mb_substr($r->post('otazka'), 0, 150), 'otazka' => $r->post('otazka'),
             'zobrazit' => (int) $r->postBool('zobrazit'), 'uzavrena' => (int) $r->postBool('uzavrena'),
+            'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
         // odpovědi: existující podle ido (prázdná = smazat), nové z posledních polí
         $existujici = is_array($_POST['odpoved'] ?? null) ? $_POST['odpoved'] : [];

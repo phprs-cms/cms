@@ -829,4 +829,11 @@ return [
     'Nic nemusíte dělat – když změníte adresu vydaného článku, přesměrování vznikne samo.' => 'Nič nemusíte robiť – keď zmeníte adresu vydaného článku, presmerovanie vznikne samo.',
     'Přidej' => 'Pridaj',
     'Video nebo příspěvek ze sítí vložíte tak, že jeho adresu dáte na samostatný řádek (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čtenáři se načte až po kliknutí.' => 'Video alebo príspevok zo sietí vložíte tak, že jeho adresu dáte na samostatný riadok (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čitateľovi sa načíta až po kliknutí.',
+    'Novinka se ukáže jen v této jazykové verzi webu.' => 'Novinka sa ukáže len v tejto jazykovej verzii webu.',
+    'Anketa se ukáže jen v této jazykové verzi webu. V jazyce, který nemá aktivní anketu, se zobrazí nejnovější otevřená.' => 'Anketa sa ukáže len v tejto jazykovej verzii webu. V jazyku, ktorý nemá aktívnu anketu, sa zobrazí najnovšia otvorená.',
+    'výchozí' => 'východiskový',
+    'Vydání je vždy v jednom jazyce: vyberte články jedné jazykové verze, dostanou je odběratelé přihlášení na téže verzi webu.' => 'Vydanie je vždy v jednom jazyku: vyberte články jednej jazykovej verzie, dostanú ich odberatelia prihlásení na tej istej verzii webu.',
+    'Rozeslat newsletter %s odběratelům?' => 'Rozoslať newsletter %s odberateľom?',
+    'Rozeslat newsletter odběratelům jazyka vybraných článků?' => 'Rozoslať newsletter odberateľom jazyka vybraných článkov?',
+    'Vyberte články jen jedné jazykové verze – každý jazyk má vlastní vydání a vlastní odběratele.' => 'Vyberte články len jednej jazykovej verzie – každý jazyk má vlastné vydanie a vlastných odberateľov.',
 ];

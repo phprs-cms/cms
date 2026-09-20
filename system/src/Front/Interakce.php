@@ -259,7 +259,10 @@ final class Interakce
     public function anketaHtml(): string
     {
         $db = $this->app->db();
-        $anketa = $db->one('SELECT * FROM {ankety} WHERE ida = ? AND zobrazit = 1', [$this->app->settings()->int('aktivni_anketa')]);
+        // aktivní anketa platí pro svůj jazyk; v ostatních jazykových verzích se ukáže nejnovější otevřená anketa daného jazyka
+        $jazyk = \PhpRS\Core\Jazyk::sloupecWebu();
+        $anketa = $db->one('SELECT * FROM {ankety} WHERE ida = ? AND zobrazit = 1 AND jazyk = ?', [$this->app->settings()->int('aktivni_anketa'), $jazyk])
+            ?? $db->one('SELECT * FROM {ankety} WHERE zobrazit = 1 AND uzavrena = 0 AND jazyk = ? ORDER BY ida DESC LIMIT 1', [$jazyk]);
         if ($anketa === null) {
             return '';
         }

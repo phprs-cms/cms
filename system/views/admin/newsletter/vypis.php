@@ -10,10 +10,11 @@
  * @var bool $maEmail
  * @var bool $maBlok
  * @var array<string, string> $automat  nastavení automatického výběru
+ * @var array<string, int> $podleJazyka  potvrzení odběratelé podle jazyka (prázdné, když web nemá další jazyky)
  */
 ?>
 <div class="dlazdice">
-	<div class="dlazdice-polozka"><strong><?= $odberatelu ?></strong><span><?= e(t('Odběratelů ·')) ?> <a href="<?= e($modul->url('odberatele')) ?>"><?= e(t('zobrazit')) ?></a></span></div>
+	<div class="dlazdice-polozka"><strong><?= $odberatelu ?></strong><span><?= e(t('Odběratelů ·')) ?> <a href="<?= e($modul->url('odberatele')) ?>"><?= e(t('zobrazit')) ?></a><?php if (count($podleJazyka) > 1): ?><br><small><?= e(implode(' · ', array_map(fn (string $j, int $n): string => ($j !== '' ? $j : PhpRS\Core\Jazyk::vychozi($app->settings())) . ' ' . $n, array_keys($podleJazyka), $podleJazyka))) ?></small><?php endif ?></span></div>
 	<div class="dlazdice-polozka"><strong><?= $nepotvrzenych ?></strong><span><?= e(t('Čeká na potvrzení e-mailem')) ?></span></div>
 </div>
 <?php if (!$maEmail): ?>
@@ -31,9 +32,9 @@
 <div class="radek"><label for="uvod"><?= e(t('Úvodní slovo')) ?></label><div><textarea class="textbox" id="uvod" name="uvod" rows="3" style="min-height:70px"></textarea><span class="napoveda"><?= e(t('Nepovinné – pár vět před výčtem článků.')) ?></span></div></div>
 <div class="radek"><span class="popisek"><?= e(t('Články')) ?></span><div class="volby">
 <?php foreach ($clanky as $c): ?>
-	<label style="white-space:normal"><input type="checkbox" name="clanky[]" value="<?= (int) $c['idc'] ?>"<?= $c['novy'] ? ' checked' : '' ?>> <?= e($c['titulek']) ?> <small>(<?= e(datum($c['datum'])) ?>)</small></label><br>
+	<label style="white-space:normal"><input type="checkbox" name="clanky[]" value="<?= (int) $c['idc'] ?>"<?= $c['novy'] ? ' checked' : '' ?>> <?= $c['jazyk'] !== '' ? '<span class="stitek stitek-koncept">' . e($c['jazyk']) . '</span> ' : '' ?><?= e($c['titulek']) ?> <small>(<?= e(datum($c['datum'])) ?>)</small></label><br>
 <?php endforeach ?>
-	<span class="napoveda"><?= e(t('Předvybrané jsou články vydané od posledního newsletteru.')) ?></span>
+	<span class="napoveda"><?= e(t('Předvybrané jsou články vydané od posledního newsletteru.')) ?><?php if ($podleJazyka !== []): ?> <?= e(t('Vydání je vždy v jednom jazyce: vyberte články jedné jazykové verze, dostanou je odběratelé přihlášení na téže verzi webu.')) ?><?php endif ?></span>
 </div></div>
 </fieldset>
 <details class="pokrocile">
@@ -43,7 +44,7 @@
 	<span class="napoveda"><?= e(t('Naplánované vydání se rozešle samo na pozadí – nemusíte mít otevřenou administraci.')) ?></span></div></div>
 </details>
 <p class="tlacitka">
-	<button class="tl" type="submit" name="co" value="rozeslat" data-potvrdit="Rozeslat newsletter <?= $odberatelu ?> odběratelům?"><?= e(t('Rozeslat odběratelům')) ?></button>
+	<button class="tl" type="submit" name="co" value="rozeslat" data-potvrdit="<?= e($podleJazyka === [] ? t('Rozeslat newsletter %s odběratelům?', $odberatelu) : t('Rozeslat newsletter odběratelům jazyka vybraných článků?')) ?>"><?= e(t('Rozeslat odběratelům')) ?></button>
 	<button class="tl" type="submit" name="co" value="zkouska"><?= e(t('Poslat na zkoušku redakci')) ?></button>
 </p>
 </form>
@@ -74,7 +75,7 @@
 <thead><tr><th><?= e(t('Předmět')) ?></th><th><?= e(t('Vytvořeno')) ?></th><th><?= e(t('Stav')) ?></th><th><?= e(t('Příjemců')) ?></th><th><?= e(t('Otevřeno')) ?></th><th><?= e(t('Prokliků')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($vydani as $v): ?>
-<tr><td><?= e($v['predmet']) ?><?= $v['auto'] ? ' <span class="stitek stitek-koncept">' . e(t('automat')) . '</span>' : '' ?></td><td class="cislo"><?= e(datum($v['vytvoreno'], true)) ?></td>
+<tr><td><?= $v['jazyk'] !== '' ? '<span class="stitek stitek-koncept">' . e($v['jazyk']) . '</span> ' : '' ?><?= e($v['predmet']) ?><?= $v['auto'] ? ' <span class="stitek stitek-koncept">' . e(t('automat')) . '</span>' : '' ?></td><td class="cislo"><?= e(datum($v['vytvoreno'], true)) ?></td>
 	<td><?php if ($v['odeslano']): ?><span class="stitek stitek-vydano"><?= e(t('odesláno')) ?></span>
 <?php elseif ($v['odeslat_v'] !== null && (int) $v['pocet'] === 0 && strtotime($v['odeslat_v']) > time()): ?><?= e(t('naplánováno na %s', datum($v['odeslat_v'], true))) ?>
 		<form method="post" action="<?= e($modul->url('zrus')) ?>" style="display:inline" data-potvrdit="<?= e(t('Zrušit naplánované vydání?')) ?>"><?= $csrf ?><input type="hidden" name="idn" value="<?= (int) $v['idn'] ?>"><button class="navigace" type="submit"><?= e(t('Zrušit')) ?></button></form>

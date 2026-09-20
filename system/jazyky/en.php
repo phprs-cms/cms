@@ -190,4 +190,8 @@ return [
     'Příspěvek ze sítě' => 'Post from',
     'Zobrazit příspěvek ze sítě' => 'Show the post from',
     'Otevřít původní příspěvek' => 'Open the original post',
+    'Další články na webu' => 'More articles on the site',
+    'Odhlásit odběr' => 'Unsubscribe',
+    'Číst článek →' => 'Read article →',
+    'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'You are receiving this e-mail because you subscribed to news from %s.',
 ];

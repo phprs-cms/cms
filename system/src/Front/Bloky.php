@@ -96,7 +96,7 @@ final class Bloky
         return match ($zkratka) {
             'rub' => $this->view->render('blok_rub', ['rubriky' => Rubriky::strom($db, true, Jazyk::sloupecWebu()), 'url' => $url]),
             'nov' => $this->view->render('blok_nov', [
-                'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() ORDER BY datum DESC, idn DESC LIMIT ?', [$web->int('pocet_novinek')]),
+                'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() AND jazyk = ? ORDER BY datum DESC, idn DESC LIMIT ?', [Jazyk::sloupecWebu(), $web->int('pocet_novinek')]),
             ]),
             'hle' => $this->view->render('blok_hle', ['url' => $url, 'q' => $this->app->request->get('q')]),
             'nej' => $this->view->render('blok_nej', ['clanky' => $clanky->nejctenejsi($pocet), 'url' => $url]),

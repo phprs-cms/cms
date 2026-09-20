@@ -110,6 +110,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   Claude pracujícího se soubory jsou v `layout/CLAUDE.md` (je součástí balíčku). Vydání nese podepsaný seznam souborů
   `system/soubory.json`; `Core\Integrita` podle něj ve Stavu systému hlásí změněné, chybějící a přidané soubory jádra.
 
+- **E-mail čtenáři se skládá v jazyce příjemce, ne toho, kdo ho spustil:** obal vykreslení do `Jazyk::docasne($kod, fn)` (viz `Rozesilka::posli()`);
+  texty e-mailů patří do slovníků webu (`en/sk/de.php`), ne administrace. Sloupec `jazyk` mají i novinky, ankety, odběratelé a vydání newsletteru.
+
 - **Prázdný výpis** v administraci vypisuj sdílenou šablonou `views/admin/prazdno.php` (ikona, nadpis, věta, první akce) – ne holou větou.
   Ikony bloků ve vizuálním editoru jsou ze stejné sady jako menu administrace (`views/admin/ikony.php`, klíče `b-*`); `Bloky::KATALOG` nese název ikony.
 

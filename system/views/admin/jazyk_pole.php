@@ -18,12 +18,12 @@ if ($dalsi === []) {
 <div class="radek">
 	<label for="jazyk"><?= e(t('Jazyková verze')) ?></label>
 	<div><select id="jazyk" name="jazyk">
-		<option value=""><?= e(Jazyk::DOSTUPNE[Jazyk::vychozi($app->settings())][0]) ?> (výchozí)</option>
+		<option value=""><?= e(Jazyk::DOSTUPNE[Jazyk::vychozi($app->settings())][0]) ?> (<?= e(t('výchozí')) ?>)</option>
 <?php foreach ($dalsi as $kod): ?>
 		<option value="<?= e($kod) ?>"<?= $hodnota === $kod ? ' selected' : '' ?>><?= e(Jazyk::DOSTUPNE[$kod][0]) ?> – /<?= e($kod) ?>/</option>
 <?php endforeach ?>
 	</select>
-<?php if ($napoveda !== ''): ?>
+<?php if (($napoveda ?? '') !== ''): ?>
 	<span class="napoveda"><?= e($napoveda) ?></span>
 <?php endif ?>
 	</div>

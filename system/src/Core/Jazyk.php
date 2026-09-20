@@ -45,6 +45,25 @@ final class Jazyk
         self::$sloupec = self::sloupec($s, self::$kod);
     }
 
+    /**
+     * Provede funkci s texty webu v jiném jazyce a vrátí jazyk zpět. Pro obsah, jehož jazyk nezávisí na tom,
+     * kdo ho zrovna vytváří – typicky e-mail čtenáři (spouští ho redaktor v administraci nebo úloha na pozadí).
+     *
+     * @template T
+     * @param callable(): T $funkce
+     * @return T
+     */
+    public static function docasne(string $kod, callable $funkce): mixed
+    {
+        [$kodPred, $slovnikPred] = [self::$kod, self::$slovnik];
+        self::nastav($kod);
+        try {
+            return $funkce();
+        } finally {
+            [self::$kod, self::$slovnik] = [$kodPred, $slovnikPred];
+        }
+    }
+
     /** Hodnota sloupce "jazyk" pro právě zobrazenou verzi webu ('' = výchozí jazyk). Jen '' nebo dvě malá písmena. */
     public static function sloupecWebu(): string
     {

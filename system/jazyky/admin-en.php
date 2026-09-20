@@ -941,4 +941,11 @@ return [
     'Nic nemusíte dělat – když změníte adresu vydaného článku, přesměrování vznikne samo.' => 'You don\'t have to do anything – when you change the address of a published article, a redirect is created automatically.',
     'Přidej' => 'Add',
     'Video nebo příspěvek ze sítí vložíte tak, že jeho adresu dáte na samostatný řádek (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čtenáři se načte až po kliknutí.' => 'To embed a video or a social media post, put its address on a line of its own (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). It loads for the reader only after a click.',
+    'Novinka se ukáže jen v této jazykové verzi webu.' => 'The news item is shown only in this language version of the site.',
+    'Anketa se ukáže jen v této jazykové verzi webu. V jazyce, který nemá aktivní anketu, se zobrazí nejnovější otevřená.' => 'The poll is shown only in this language version of the site. A language without an active poll shows its newest open one.',
+    'výchozí' => 'default',
+    'Vydání je vždy v jednom jazyce: vyberte články jedné jazykové verze, dostanou je odběratelé přihlášení na téže verzi webu.' => 'An issue is always in one language: pick articles of a single language version; subscribers who signed up on that version of the site will receive it.',
+    'Rozeslat newsletter %s odběratelům?' => 'Send the newsletter to %s subscribers?',
+    'Rozeslat newsletter odběratelům jazyka vybraných článků?' => 'Send the newsletter to subscribers of the selected articles\' language?',
+    'Vyberte články jen jedné jazykové verze – každý jazyk má vlastní vydání a vlastní odběratele.' => 'Pick articles of one language version only – each language has its own issue and its own subscribers.',
 ];

@@ -113,6 +113,7 @@ CREATE TABLE rs_ankety (
     kdo       INT UNSIGNED NULL,
     zobrazit  BOOL NOT NULL DEFAULT 1,
     uzavrena  BOOL NOT NULL DEFAULT 0,
+    jazyk     CHAR(2) NOT NULL DEFAULT '',                          -- jazyková verze; '' = výchozí jazyk webu
     PRIMARY KEY (ida),
     CONSTRAINT fk_ankety_kdo FOREIGN KEY (kdo) REFERENCES rs_user (idu) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
@@ -252,8 +253,10 @@ CREATE TABLE rs_news (
     titulek   VARCHAR(150) NOT NULL,
     informace TEXT NOT NULL,
     datum     DATETIME NOT NULL,
+    jazyk     CHAR(2) NOT NULL DEFAULT '',                          -- jazyková verze; '' = výchozí jazyk webu
     PRIMARY KEY (idn),
-    KEY ix_news_datum (datum)
+    KEY ix_news_datum (datum),
+    KEY ix_news_jazyk (jazyk, datum)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE rs_bloky (
@@ -456,6 +459,7 @@ CREATE TABLE rs_odberatele (
     token     CHAR(32) NOT NULL,                          -- pro potvrzení a odhlášení odkazem z e-mailu
     potvrzen  BOOL NOT NULL DEFAULT 0,
     prihlasen DATETIME NOT NULL,
+    jazyk     CHAR(2) NOT NULL DEFAULT '',                -- jazyk webu, na kterém se přihlásil; dostává vydání v tomto jazyce
     PRIMARY KEY (ido),
     UNIQUE KEY uq_odberatele_email (email),
     KEY ix_odberatele_token (token)
@@ -473,6 +477,7 @@ CREATE TABLE rs_newsletter (
     odeslat_v DATETIME NULL,                              -- naplánovaná rozesílka na pozadí; NULL = ruční z administrace
     otevreno  INT UNSIGNED NOT NULL DEFAULT 0,            -- souhrnná statistika, nic o jednotlivcích
     prokliku  INT UNSIGNED NOT NULL DEFAULT 0,
+    jazyk     CHAR(2) NOT NULL DEFAULT '',                -- vydání jde jen odběratelům tohoto jazyka
     PRIMARY KEY (idn)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 

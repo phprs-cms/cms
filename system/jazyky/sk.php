@@ -173,4 +173,8 @@ return [
     'Příspěvek ze sítě' => 'Príspevok zo siete',
     'Zobrazit příspěvek ze sítě' => 'Zobraziť príspevok zo siete',
     'Otevřít původní příspěvek' => 'Otvoriť pôvodný príspevok',
+    'Další články na webu' => 'Ďalšie články na webe',
+    'Odhlásit odběr' => 'Odhlásiť odber',
+    'Číst článek →' => 'Čítať článok →',
+    'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Tento e-mail dostávate, pretože ste sa prihlásili na odber noviniek z webu %s.',
 ];

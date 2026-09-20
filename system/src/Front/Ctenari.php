@@ -248,7 +248,7 @@ final class Ctenari
         }
         if ($r->postBool('newsletter') && \PhpRS\Core\Rozsireni::je($web, 'newsletter') && $db->value('SELECT ido FROM {odberatele} WHERE email = ?', [$email]) === null) {
             // odběr se potvrdí spolu s účtem - e-mail ověřuje stejný odkaz
-            $db->insert('odberatele', ['email' => $email, 'token' => bin2hex(random_bytes(16)), 'prihlasen' => date('Y-m-d H:i:s')]);
+            $db->insert('odberatele', ['email' => $email, 'token' => bin2hex(random_bytes(16)), 'prihlasen' => date('Y-m-d H:i:s'), 'jazyk' => \PhpRS\Core\Jazyk::sloupecWebu()]);
         }
         Posta::odesli($web, $email, 'Potvrďte registraci – ' . $web->get('nazev_webu'),
             "Dobrý den,\n\nregistraci na webu {$web->get('nazev_webu')} dokončíte nastavením hesla na této adrese (odkaz platí 3 dny):\n"

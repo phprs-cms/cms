@@ -189,4 +189,8 @@ return [
     'Příspěvek ze sítě' => 'Beitrag von',
     'Zobrazit příspěvek ze sítě' => 'Beitrag anzeigen von',
     'Otevřít původní příspěvek' => 'Originalbeitrag öffnen',
+    'Další články na webu' => 'Weitere Artikel auf der Website',
+    'Odhlásit odběr' => 'Newsletter abbestellen',
+    'Číst článek →' => 'Artikel lesen →',
+    'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Sie erhalten diese E-Mail, weil Sie den Newsletter von %s abonniert haben.',
 ];

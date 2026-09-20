@@ -101,18 +101,18 @@ final class Kernel
             return new Response($seo->robotsTxt(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
         if ($path === '/sitemap.xml') {
-            return new Response($seo->sitemapXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
+            return new Response(Cache::text($this->app, 'sitemap', $seo->sitemapXml(...)), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
         if ($path === '/podcast.xml') {
-            return new Response($seo->podcastXml(), 200, ['Content-Type' => 'application/rss+xml; charset=utf-8']);
+            return new Response(Cache::text($this->app, 'podcast|' . Jazyk::sloupecWebu(), $seo->podcastXml(...)), 200, ['Content-Type' => 'application/rss+xml; charset=utf-8']);
         }
         if ($path === '/sitemap-news.xml') {
-            return new Response($seo->sitemapNewsXml(), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
+            return new Response(Cache::text($this->app, 'sitemap-news', $seo->sitemapNewsXml(...)), 200, ['Content-Type' => 'application/xml; charset=utf-8']);
         }
         if ($path === '/feed.json') {
-            [$clanky] = $this->clanky->naHlavniStranku(1, 20, true);
+            $json = Cache::text($this->app, 'feed.json|' . Jazyk::sloupecWebu(), fn (): string => (string) json_encode($seo->jsonFeed($this->clanky->naHlavniStranku(1, 20, true)[0]), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
-            return new Response(json_encode($seo->jsonFeed($clanky), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 200, ['Content-Type' => 'application/feed+json; charset=utf-8']);
+            return new Response($json, 200, ['Content-Type' => 'application/feed+json; charset=utf-8']);
         }
         $klicIndexNow = $this->app->settings()->get('indexnow_klic');
         if ($klicIndexNow !== '' && $path === '/' . $klicIndexNow . '.txt') {
@@ -222,7 +222,7 @@ final class Kernel
             return $this->autor((int) $m[1]);
         }
         if ($path === '/llms.txt' && $this->app->settings()->bool('llms_txt')) {
-            return new Response($seo->llmsTxt(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+            return new Response(Cache::text($this->app, 'llms|' . Jazyk::sloupecWebu(), $seo->llmsTxt(...)), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
         if (preg_match('#^/clanek/([a-z0-9-]+)\.md$#', $path, $m) && $this->app->settings()->bool('markdown_clanky')) {
             $clanek = $this->clanky->podleSeo($m[1]);
@@ -458,12 +458,11 @@ final class Kernel
 
     private function rss(): Response
     {
-        [$clanky] = $this->clanky->naHlavniStranku(1, 20);
-        $xml = $this->view->render('rss', [
+        $xml = Cache::text($this->app, 'rss|' . Jazyk::sloupecWebu(), fn (): string => $this->view->render('rss', [
             'web' => $this->app->settings(),
-            'clanky' => $clanky,
+            'clanky' => $this->clanky->naHlavniStranku(1, 20)[0],
             'adresa' => $this->app->request->origin() . $this->app->url(''),
-        ]);
+        ]));
 
         return new Response($xml, 200, ['Content-Type' => 'application/rss+xml; charset=utf-8']);
     }

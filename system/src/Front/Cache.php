@@ -57,6 +57,31 @@ final class Cache
         }
     }
 
+    /**
+     * Krátká cache textových výstupů, které jsou pro všechny stejné (RSS, mapa webu, feed.json, llms.txt): čtečky a roboti
+     * si je stahují pořád dokola a bez cache se pokaždé skládají z databáze. Klíč musí zahrnout vše, na čem výstup závisí.
+     *
+     * @param callable(): string $vyrob
+     */
+    public static function text(App $app, string $klic, callable $vyrob): string
+    {
+        if (!$app->settings()->bool('cache_stranek')) {
+            return $vyrob();
+        }
+        // přípona .html jen kvůli vymaz() - jakákoli změna v administraci smaže i tyhle soubory
+        $soubor = self::SLOZKA . '/zdroj-' . sha1($app->request->basePath() . '|' . $klic) . '.html';
+        if (is_file($soubor) && filemtime($soubor) >= time() - self::PLATNOST && ($obsah = file_get_contents($soubor)) !== false && $obsah !== '') {
+            return $obsah;
+        }
+        $obsah = $vyrob();
+        if (!is_dir(self::SLOZKA)) {
+            @mkdir(self::SLOZKA, 0775, true);
+        }
+        @file_put_contents($soubor, $obsah, LOCK_EX);
+
+        return $obsah;
+    }
+
     public static function vymaz(): void
     {
         foreach (glob(self::SLOZKA . '/*.html') ?: [] as $soubor) {

@@ -19,8 +19,8 @@ hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné glo
 3. Otevřete `https://vas-web.cz/install.php` a vyplňte formulář.
 4. Smažte `install.php`.
 
-Apache používá přiložený `.htaccess`. Pro nginx: vše, co není soubor, směrujte na `index.php`
-a zakažte přístup do `system/`, `storage/` a ke `config.php`.
+Apache používá přiložené soubory `.htaccess`. Nginx je nečte – použijte hotovou ukázku `system/nginx.priklad.conf`
+(zákazy přístupu, média bez spouštění skriptů, WebP, hezké adresy) a po nasazení ověřte, že `/config.php` a `/storage/log/chyby.log` vracejí 403.
 
 ## Vývoj
 

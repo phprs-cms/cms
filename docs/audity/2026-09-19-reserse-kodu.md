@@ -21,8 +21,9 @@ Prověřeno a v pořádku: podpisy cookie čtenáře a paywallu, ochrana návrat
 - ✔ HOTOVO 2026-09-20: CSP pro `admin.php` (bez `'unsafe-inline'` u skriptů – inline skripty a obsluhy událostí přesunuty do souborů, hlídá `tools/testy.php`), HSTS na HTTPS, `Cache-Control: no-store` pro administraci a `/ctenar`.
 - ✔ HOTOVO 2026-09-20: limit chybných pokusů i na účet – krok TOTP počítá chyby do `pocet_chyb` a zamyká účet na 15 minut; přihlášení čtenáře má limit 10 chybných hesel za 15 minut na e-mail (i neexistující, aby hláška neprozradila registrované adresy). Obojí ověřeno naživo.
 - ✔ HOTOVO 2026-09-20: session nese otisk hesla – změna hesla (vlastní i administrátorem) ukončí ostatní přihlášení účtu; Můj účet při změně hesla nabízí zrušení tokenů napojení (výchozí ano). Tokeny dál nemají časovou platnost.
-- Pravidla pro nginx (tam `.htaccess` neplatí): zakázat `/system`, `/storage`, `/tools`, `config.php`. Instalátor podmínit jednorázovým souborem.
-- `X-Forwarded-Proto` důvěřovat jen s volbou v `config.php`. GIF při nahrání překódovat po snímcích. Zámek kolem automatické aktualizace.
+- ✔ HOTOVO 2026-09-20: ukázková pravidla pro nginx v `system/nginx.priklad.conf` (zákazy, média bez spouštění PHP, WebP, hezké adresy, hlavička Authorization). Instalátor jednorázovým souborem zatím podmíněn není.
+- `X-Forwarded-Proto`: VĚDOMĚ PONECHÁNO (2026-09-20). Weby za proxy (Cloudflare, sdílené hostingy) na hlavičce závisí; povinná volba v `config.php` by jim po aktualizaci rozbila napojení na Claude (MCP vyžaduje HTTPS). Podvržená hlavička ovlivní jen požadavek toho, kdo ji podvrhl (příznak secure u jeho cookie, HSTS).
+- GIF při nahrání překódovat po snímcích. Zámek kolem automatické aktualizace.
 
 ## Výkon – opraveno
 
@@ -38,10 +39,10 @@ Prověřeno a v pořádku: podpisy cookie čtenáře a paywallu, ochrana návrat
 
 ## Výkon – zbývá
 
-- Krátká souborová cache pro `sitemap.xml`, `rss.xml`, `feed.json`, `llms.txt` (dnes se skládají při každém požadavku).
+- ✔ HOTOVO 2026-09-20: krátká souborová cache (`Front\Cache::text()`, 5 minut, maže ji každá změna v administraci) pro `rss.xml`, `sitemap.xml`, `sitemap-news.xml`, `podcast.xml`, `feed.json`, `llms.txt`.
 - `Rubriky::strom()` a dotaz na stránky v menu běží dvakrát za požadavek (layout + blok) – předat jednou.
 - `Obrazky::srcset()` volá `getimagesize()` při každém vykreslení – rozměry variant ukládat při nahrání.
 - Ochrana proti souběžnému přegenerování téže stránky cache (stampede).
-- `loading="lazy"`, `decoding="async"` a rozměry u obrázků ve výpisech bloků.
+- ◐ rozměry obrázků doplňuje `Front\ObrazkyHtml` (2026-09-20); `loading="lazy"` a `decoding="async"` ve výpisech bloků zbývá.
 
 Měření z revize: stránka z cache = 1 SELECT (nastavení) + 2–3 zápisy statistiky; bez cache cca 19 dotazů (hlavní stránka) a 26–28 (článek).

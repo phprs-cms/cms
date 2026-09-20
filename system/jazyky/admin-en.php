@@ -955,4 +955,6 @@ return [
     'otevřít' => 'open',
     'zavřít' => 'close',
     'Upravit rozvržení přímo na webu' => 'Edit the layout right on the site',
+    'běží' => 'running',
+    'neběží' => 'not running',
 ];

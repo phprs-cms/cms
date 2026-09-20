@@ -497,3 +497,6 @@ body.login h1 b {
 .paleta-seznam [aria-selected="true"] a { background-color: var(--modra-vypln); color: #000000; }
 .paleta-nic { padding: 6px 8px; }
 .paleta-napoveda { margin: 0; padding: 3px 8px; border-top: 1px solid var(--modra); background-color: var(--modra-svetla); font-size: 10px; }
+
+/* popisky zaskrtavatek vedle tlacitek (Ziva reportaz aj.) drzi velikost pisma retro prostredi */
+.tlacitka label { font-size: 11px; }

@@ -843,4 +843,6 @@ return [
     'otevřít' => 'otvoriť',
     'zavřít' => 'zavrieť',
     'Upravit rozvržení přímo na webu' => 'Upraviť rozloženie priamo na webe',
+    'běží' => 'beží',
+    'neběží' => 'nebeží',
 ];

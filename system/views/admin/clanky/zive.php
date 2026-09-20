@@ -13,7 +13,7 @@ $bezi = (int) $clanek['zive'] === 1;
 	<a class="navigace" href="<?= e($modul->url('edit', ['id' => (int) $clanek['idc']])) ?>"><?= e(t('Zpět do článku')) ?></a>
 	<a class="navigace" href="<?= e($modul->app()->url('clanek/' . $clanek['seo_link']) . ($clanek['visible'] ? '' : '?nahled=1')) ?>" target="_blank" rel="noopener"><?= e(t('Zobrazit na webu')) ?></a>
 </p>
-<h3><?= e($clanek['titulek']) ?> <span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= $bezi ? 'běží' : 'neběží' ?></span></h3>
+<h3 class="stred"><?= e($clanek['titulek']) ?> <span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= e(t($bezi ? 'běží' : 'neběží')) ?></span></h3>
 <?php if (!$clanek['visible']): ?>
 <p class="hlaska"><?= e(t('Článek zatím není vydaný – zápisy uvidí čtenáři až po vydání.')) ?></p>
 <?php endif ?>

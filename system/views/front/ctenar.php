@@ -10,10 +10,12 @@
  * @var string $pole     skrytá pole antispamu
  * @var string $podpis   podpis formulářů přihlášeného čtenáře
  * @var bool $registrace jsou povolené nové registrace
+ * @var bool $newsletter  web má newsletter - při registraci jde rovnou přihlásit odběr
  * @var callable(string): string $url
  */
 $zpravy = [
     'poslano' => ['ok', 'Poslali jsme vám e-mail. Registraci dokončíte kliknutím na odkaz v něm a nastavením hesla.'],
+    'odkaz-poslan' => ['ok', 'Pokud u nás tento e-mail má účet, poslali jsme na něj přihlašovací odkaz. Platí 20 minut.'],
     'heslo-poslano' => ['ok', 'Pokud u nás tento e-mail má účet, poslali jsme na něj odkaz pro nastavení nového hesla.'],
     'vitejte' => ['ok', 'Registrace je dokončená. Vítejte!'],
     'heslo-zmeneno' => ['ok', 'Heslo je změněné a jste přihlášeni.'],
@@ -43,6 +45,8 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 			<label><?= e(t('E-mail')) ?> <input type="email" name="email" required autocomplete="username" maxlength="190"></label>
 			<label><?= e(t('Heslo')) ?> <input type="password" name="heslo" required autocomplete="current-password"></label>
 			<button type="submit"><?= e(t('Přihlásit se')) ?></button>
+			<button type="submit" name="akce" value="odkaz" formnovalidate class="rs-tl-vedlejsi"><?= e(t('Přihlásit se odkazem z e-mailu')) ?></button>
+			<p class="rs-drobne"><?= e(t('Bez hesla: vyplňte jen e-mail a pošleme vám jednorázový přihlašovací odkaz.')) ?></p>
 			<details>
 				<summary><?= e(t('Zapomněli jste heslo?')) ?></summary>
 				<p><?= e(t('Zadejte nahoře svůj e-mail a klepněte sem – pošleme vám odkaz pro nastavení nového hesla.')) ?></p>
@@ -55,6 +59,9 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 			<?= $skryte ?><input type="hidden" name="akce" value="registrace">
 			<label><?= e(t('E-mail')) ?> <input type="email" name="email" required autocomplete="email" maxlength="190"></label>
 			<label><?= e(t('Jméno')) ?> <small><?= e(t('(nepovinné)')) ?></small> <input type="text" name="jmeno" autocomplete="name" maxlength="80"></label>
+<?php if ($newsletter): ?>
+			<label class="rs-volba"><input type="checkbox" name="newsletter" value="1"> <?= e(t('Chci dostávat newsletter')) ?></label>
+<?php endif ?>
 			<button type="submit"><?= e(t('Zaregistrovat se zdarma')) ?></button>
 			<p class="rs-drobne"><?= e(t('Pošleme vám e-mail s odkazem, na kterém si nastavíte heslo. Účet můžete kdykoli sami smazat.')) ?></p>
 		</form>

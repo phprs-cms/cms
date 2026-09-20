@@ -41,6 +41,7 @@ final class Settings
         'udrzba_text' => 'Na webu právě pracujeme. Zkuste to prosím za chvíli.',
         'webhook_url' => '',          // kam poslat údaje o právě vydaném článku (Make, Zapier...)
         'cache_stranek' => '1',       // cache celých stránek pro nepřihlášené čtenáře (5 minut)
+        'komentare_jen_prihlaseni' => '0', // komentovat smí jen přihlášení čtenáři (rozšíření Čtenáři)
         'komentare_rezim' => 'hned',  // hned | schvalovat (komentář čeká na schválení)
         'povolit_hodnoceni' => '1',
         'doba_cteni' => '1',          // u delších článků doba čtení a ukazatel průběhu

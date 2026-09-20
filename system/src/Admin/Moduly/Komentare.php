@@ -55,11 +55,14 @@ final class Komentare extends Modul
                 continue;
             }
             match ($co) {
-                'schvalit' => $this->db->update('komentare', ['zobrazit' => 1], ['idk' => $k['idk']]),
+                'schvalit' => $this->db->update('komentare', ['zobrazit' => 1, 'nahlaseno' => 0], ['idk' => $k['idk']]),
                 'skryt' => $this->db->update('komentare', ['zobrazit' => 0], ['idk' => $k['idk']]),
                 'smazat' => $this->db->delete('komentare', ['idk' => $k['idk']]),
                 default => null,
             };
+            if ($co === 'schvalit') {
+                Interakce::upozorniNaOdpoved($this->app, (int) $k['idk']); // autor původního komentáře se o schválené odpovědi dozví e-mailem
+            }
             $clanky[(int) $k['clanek']] = true;
         }
         foreach (array_keys($clanky) as $idc) {

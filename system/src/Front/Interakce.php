@@ -42,10 +42,16 @@ final class Interakce
             }
         }
 
+        $ctenar = $this->ctenar();
+
         return $this->view->render('komentare', [
+            'ctenar' => $ctenar,
+            'jenPrihlaseni' => $this->jenPrihlaseni() && $ctenar === null,
+            'prihlaseni' => $this->app->url('ctenar') . '?zpet=' . rawurlencode('clanek/' . $clanek['seo_link']),
+            'nahlasit' => $this->app->url('komentar/nahlasit'),
             'clanek' => $clanek, 'koreny' => $koreny, 'reakce' => $reakce, 'pocet' => count($vse),
             'akce' => $this->app->url('komentar'), 'pole' => $this->antispam->pole('komentar-' . $clanek['idc']),
-            'zprava' => ['ok' => 'Děkujeme, komentář byl přidán.', 'ceka' => 'Děkujeme. Komentář se zobrazí po schválení redakcí.'][$this->app->request->get('komentar')] ?? '',
+            'zprava' => ['ok' => 'Děkujeme, komentář byl přidán.', 'ceka' => 'Děkujeme. Komentář se zobrazí po schválení redakcí.', 'nahlaseno' => 'Děkujeme, komentář jsme předali redakci k posouzení.'][$this->app->request->get('komentar')] ?? '',
             'chyba' => $this->app->request->get('komentar') === 'chyba' ? (string) $this->app->session->get('komentar_chyba', 'Komentář se nepodařilo uložit.') : '',
         ]);
     }
@@ -72,9 +78,14 @@ final class Interakce
         if ($duvod !== null) {
             return $chyba($duvod);
         }
-        $od = mb_substr($r->post('od'), 0, 60);
+        $ctenar = $this->ctenar();
+        if ($ctenar === null && $this->jenPrihlaseni()) {
+            return $chyba('Komentovat mohou jen přihlášení čtenáři.');
+        }
+        // přihlášený čtenář komentuje pod svým účtem: jméno a e-mail se berou z účtu, ne z formuláře
+        $od = $ctenar !== null ? ($ctenar['jmeno'] !== '' ? $ctenar['jmeno'] : ucfirst((string) strstr($ctenar['email'], '@', true))) : mb_substr($r->post('od'), 0, 60);
         $obsah = mb_substr($r->post('obsah'), 0, 5000);
-        $mail = mb_substr($r->post('od_mail'), 0, 190);
+        $mail = $ctenar !== null ? $ctenar['email'] : mb_substr($r->post('od_mail'), 0, 190);
         if ($od === '' || mb_strlen($obsah) < 3) {
             return $chyba('Vyplňte jméno a text komentáře.');
         }
@@ -92,7 +103,12 @@ final class Interakce
         $db->insert('komentare', [
             'clanek' => $clanek['idc'], 'reakce_na' => $reakceNa === null ? null : (int) $reakceNa, 'datum' => date('Y-m-d H:i:s'),
             'obsah' => $obsah, 'od' => $od, 'od_mail' => $mail, 'od_ip' => $r->ip(), 'zobrazit' => (int) $zobrazit,
+            'idct' => $ctenar['idct'] ?? null, 'upozornit' => (int) ($mail !== '' && $r->postBool('upozornit')),
         ]);
+        $idk = (int) $db->value('SELECT LAST_INSERT_ID()');
+        if ($zobrazit) {
+            self::upozorniNaOdpoved($this->app, $idk);
+        }
         $this->antispam->zapis($r->ip(), 'komentar', 0);
         self::prepocitej($db, (int) $clanek['idc']);
         Cache::vymaz(); // až po skutečném zápisu - odmítnutý spam nesmí držet cache studenou
@@ -121,6 +137,74 @@ final class Interakce
             . ($ceka > 0 ? "Ke schválení čeká komentářů: {$ceka}\n" : '')
             . 'Správa komentářů: ' . $this->app->request->origin() . $this->app->request->basePath() . "/admin.php?modul=comment\n\n"
             . "Další upozornění přijde nejdřív za 10 minut. Vypnete je v Nastavení → Základní.\n");
+    }
+
+    private function ctenar(): ?array
+    {
+        return Rozsireni::je($this->app->settings(), 'ctenari') ? (new Ctenari($this->app))->prihlaseny() : null;
+    }
+
+    private function jenPrihlaseni(): bool
+    {
+        return Rozsireni::je($this->app->settings(), 'ctenari') && $this->app->settings()->bool('komentare_jen_prihlaseni');
+    }
+
+    /** E-mail autorovi původního komentáře, že mu někdo odpověděl (jen když o to stál). Volá se po zveřejnění odpovědi. */
+    public static function upozorniNaOdpoved(App $app, int $idk): void
+    {
+        $db = $app->db();
+        $o = $db->one('SELECT k.od, k.od_mail, k.obsah, k.reakce_na, c.titulek, c.seo_link, c.jazyk FROM {komentare} k JOIN {clanky} c ON c.idc = k.clanek WHERE k.idk = ? AND k.zobrazit = 1', [$idk]);
+        $puvodni = $o === null || $o['reakce_na'] === null ? null : $db->one("SELECT idk, od, od_mail FROM {komentare} WHERE idk = ? AND upozornit = 1 AND od_mail <> ''", [$o['reakce_na']]);
+        if ($puvodni === null || mb_strtolower($puvodni['od_mail']) === mb_strtolower($o['od_mail'])) {
+            return;
+        }
+        $web = $app->settings();
+        $koren = $app->request->origin() . $app->request->basePath() . '/';
+        \PhpRS\Core\Posta::odesli($web, $puvodni['od_mail'], 'Odpověď na váš komentář – ' . $web->get('nazev_webu'),
+            "Dobrý den,\n\nna váš komentář u článku „{$o['titulek']}“ odpověděl(a) {$o['od']}:\n\n" . mb_strimwidth($o['obsah'], 0, 600, '…') . "\n\n"
+            . 'Celá diskuse: ' . $koren . ($o['jazyk'] !== '' ? $o['jazyk'] . '/' : '') . 'clanek/' . $o['seo_link'] . '#komentar-' . $idk . "\n\n"
+            . 'Další upozornění k tomuto komentáři vypnete zde: ' . $koren . 'komentar/neupozornovat?k=' . $puvodni['idk'] . '&p=' . self::podpis($app, (int) $puvodni['idk']) . "\n");
+    }
+
+    /** Čtenář nahlásil komentář. Po třech nahlášeních komentář počká na posouzení redakcí. */
+    public function nahlas(): Response
+    {
+        $r = $this->app->request;
+        $db = $this->app->db();
+        $k = $db->one('SELECT k.idk, k.clanek, k.nahlaseno, c.seo_link FROM {komentare} k JOIN {clanky} c ON c.idc = k.clanek WHERE k.idk = ? AND k.zobrazit = 1', [$r->postInt('idk')]);
+        if ($k === null) {
+            return Response::redirect($this->app->url(''), 303);
+        }
+        $zpet = Response::redirect($this->app->url('clanek/' . $k['seo_link'] . '?komentar=nahlaseno#komentare'), 303);
+        if ($this->antispam->pocet($r->ip(), 'nahlaseni', (int) $k['idk'], 1440) > 0 || $this->antispam->pocet($r->ip(), 'nahlaseni-vse', 0, 60) >= 10) {
+            return $zpet; // jedna adresa = jedno nahlášení komentáře; hromadné nahlašování se nepočítá
+        }
+        $this->antispam->zapis($r->ip(), 'nahlaseni', (int) $k['idk']);
+        $this->antispam->zapis($r->ip(), 'nahlaseni-vse', 0);
+        $db->run('UPDATE {komentare} SET nahlaseno = nahlaseno + 1, zobrazit = IF(nahlaseno >= 3, 0, zobrazit) WHERE idk = ?', [$k['idk']]);
+        if ((int) $k['nahlaseno'] + 1 >= 3) {
+            self::prepocitej($db, (int) $k['clanek']);
+            Cache::vymaz();
+        }
+
+        return $zpet;
+    }
+
+    /** Vypnutí upozornění na odpovědi odkazem z e-mailu. */
+    public function neupozornovat(): bool
+    {
+        $idk = $this->app->request->getInt('k');
+        if (!hash_equals(self::podpis($this->app, $idk), $this->app->request->get('p'))) {
+            return false;
+        }
+        $this->app->db()->update('komentare', ['upozornit' => 0], ['idk' => $idk]);
+
+        return true;
+    }
+
+    private static function podpis(App $app, int $idk): string
+    {
+        return substr(hash_hmac('sha256', 'komentar-upozorneni|' . $idk, (new Antispam($app->db(), $app->settings()))->klic()), 0, 24);
     }
 
     public static function prepocitej(\PhpRS\Core\Db $db, int $idc): void

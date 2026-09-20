@@ -186,6 +186,15 @@ final class Kernel
         if ($path === '/ads.txt' && trim($this->app->settings()->get('ads_txt')) !== '') {
             return new Response($this->app->settings()->get('ads_txt') . "\n", 200, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
+        if ($path === '/komentar/nahlasit' && $request->isPost()) {
+            return (new Interakce($this->app, $this->view))->nahlas();
+        }
+        if ($path === '/komentar/neupozornovat') {
+            $ok = (new Interakce($this->app, $this->view))->neupozornovat();
+            [$nadpis, $text] = $ok ? [t('Upozornění jsou vypnutá'), t('Na odpovědi k tomuto komentáři už vás e-mailem upozorňovat nebudeme.')] : [t('Odkaz neplatí'), t('Upozornění se nepodařilo vypnout.')];
+
+            return $this->stranka($nadpis, $this->view->render('zprava', ['nadpis' => $nadpis, 'text' => $text, 'url' => $this->app->url(...)]), ['noindex' => true]);
+        }
         if ($request->isPost() && in_array($path, ['/komentar', '/hodnoceni', '/anketa'], true)) {
             $interakce = new Interakce($this->app, $this->view);
 

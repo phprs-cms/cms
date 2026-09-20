@@ -736,4 +736,8 @@ return [
     'Další články na webu' => 'Ďalšie články na webe',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'Tento e-mail dostávate, pretože ste sa prihlásili na odber noviniek z webu %s.',
     'Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.' => 'Dlhé čítanie: väčšie písmo a výrazný úvodný obrázok. Fotoreportáž: fotky cez celú šírku textu. Rozhovor: tučný odsek je otázka.',
+    'Komentovat smí jen přihlášení čtenáři' => 'Komentovať smú len prihlásení čitatelia',
+    'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.' => 'Menej spamu a slušnejšia diskusia; čitateľ komentuje pod svojím účtom.',
+    'nahlášeno %s×' => 'nahlásené %s×',
+    'registrovaný čtenář' => 'registrovaný čitateľ',
 ];

@@ -201,6 +201,9 @@ CREATE TABLE rs_komentare (
     od_mail    VARCHAR(190) NOT NULL DEFAULT '',
     od_ip      VARCHAR(45) NOT NULL DEFAULT '',
     zobrazit   BOOL NOT NULL DEFAULT 1,
+    idct       INT UNSIGNED NULL,                         -- účet čtenáře, pokud komentoval přihlášený
+    upozornit  BOOL NOT NULL DEFAULT 0,                   -- e-mail autorovi, když mu někdo odpoví
+    nahlaseno  SMALLINT UNSIGNED NOT NULL DEFAULT 0,      -- kolikrát čtenáři komentář nahlásili
     PRIMARY KEY (idk),
     KEY ix_komentare_clanek (clanek, datum),
     KEY ix_komentare_stav (zobrazit, datum),

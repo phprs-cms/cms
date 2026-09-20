@@ -192,3 +192,12 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 /* Rozhovor: odstavec celý tučně je otázka (třídu rs-otazka doplňuje Front\TypyObsahu) */
 .clanek-text p.rs-otazka { margin: 1.9em 0 0.5em; padding-left: 14px; border-left: 3px solid var(--rs-akcent, #1f4fe0); font-family: system-ui, sans-serif; font-size: 0.95em; line-height: 1.4; }
 .clanek-text p.rs-otazka::first-letter { float: none; margin: 0; font: inherit; }
+
+/* ---------- komentáře: účet čtenáře, nahlášení ---------- */
+.komentar-ctenar { color: var(--rs-akcent, #1f4fe0); font-weight: 700; }
+.komentar-nahlasit { display: inline; margin: 0; }
+.komentar-nahlasit button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: 12px; opacity: 0.55; text-decoration: underline; cursor: pointer; }
+.komentar-nahlasit button:hover { opacity: 1; }
+.komentar-volba label { font-weight: 400; }
+.komentare-prihlaseni { padding: 16px; border: 1px solid rgb(128 128 128 / 0.35); border-radius: 4px; }
+.rs-formular label.rs-volba { display: flex; align-items: center; gap: 8px; font-weight: 400; }

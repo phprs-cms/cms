@@ -843,4 +843,8 @@ return [
     'Další články na webu' => 'More articles on the site',
     'Tento e-mail dostáváte, protože jste se přihlásili k odběru novinek z webu %s.' => 'You are receiving this e-mail because you subscribed to news from %s.',
     'Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.' => 'Long read: larger type and a prominent lead image. Photo story: photos across the full text width. Interview: a bold paragraph is a question.',
+    'Komentovat smí jen přihlášení čtenáři' => 'Only signed-in readers may comment',
+    'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.' => 'Less spam and a more civil discussion; readers comment under their account.',
+    'nahlášeno %s×' => 'reported %s×',
+    'registrovaný čtenář' => 'registered reader',
 ];

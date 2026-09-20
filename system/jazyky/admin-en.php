@@ -1017,4 +1017,9 @@ return [
     'koncept' => 'draft',
     'vydáno' => 'published',
     'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti' => 'the system sends X-Content-Type-Options, Referrer-Policy and X-Frame-Options; the administration also sends a Content-Security-Policy and forbids caching',
+    'Napojení' => 'Connections',
+    'zrušit i tokeny napojení (Claude, API)' => 'also revoke connection tokens (Claude, API)',
+    'Token funguje bez hesla i bez dvoufázového přihlášení. Měníte-li heslo kvůli podezření na zneužití, nechte zaškrtnuté a napojení pak vytvořte znovu.' => 'A token works without the password and without two-factor sign-in. If you are changing the password because you suspect misuse, leave this ticked and create the connection again afterwards.',
+    'Heslo bylo změněno, ostatní přihlášení ukončena a tokeny napojení zrušeny.' => 'The password has been changed, other sign-ins ended and connection tokens revoked.',
+    'Heslo bylo změněno a ostatní přihlášení tohoto účtu ukončena.' => 'The password has been changed and other sign-ins of this account have been ended.',
 ];

@@ -899,4 +899,9 @@ return [
     'připnuto' => 'pripnuté',
     'vydáno' => 'vydané',
     'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti' => 'systém odosiela X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrácia navyše Content-Security-Policy a zákaz ukladania do medzipamäte',
+    'Napojení' => 'Napojenia',
+    'zrušit i tokeny napojení (Claude, API)' => 'zrušiť aj tokeny napojenia (Claude, API)',
+    'Token funguje bez hesla i bez dvoufázového přihlášení. Měníte-li heslo kvůli podezření na zneužití, nechte zaškrtnuté a napojení pak vytvořte znovu.' => 'Token funguje bez hesla aj bez dvojfázového prihlásenia. Ak meníte heslo pre podozrenie na zneužitie, nechajte zaškrtnuté a napojenie potom vytvorte znova.',
+    'Heslo bylo změněno, ostatní přihlášení ukončena a tokeny napojení zrušeny.' => 'Heslo bolo zmenené, ostatné prihlásenia ukončené a tokeny napojenia zrušené.',
+    'Heslo bylo změněno a ostatní přihlášení tohoto účtu ukončena.' => 'Heslo bolo zmenené a ostatné prihlásenia tohto účtu ukončené.',
 ];

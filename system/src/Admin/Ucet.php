@@ -46,8 +46,12 @@ final class Ucet
                         default => null,
                     };
                     if ($hlaska === null) {
-                        $db->update('user', ['password' => password_hash($nove, PASSWORD_DEFAULT)], ['idu' => $user['idu']]);
-                        $hlaska = ['ok', 'Heslo bylo změněno.'];
+                        $novyHash = password_hash($nove, PASSWORD_DEFAULT);
+                        $db->update('user', ['password' => $novyHash], ['idu' => $user['idu']]);
+                        $app->auth()->obnovPoZmeneHesla($novyHash); // ostatní přihlášení tohoto účtu tím končí
+                        $zruseno = $r->postBool('zrusit_tokeny') ? $db->delete('api_tokeny', ['idu' => $user['idu']]) : 0;
+                        Protokol::zapis($app, 'ucet', 'změna hesla' . ($zruseno > 0 ? ', zrušeny tokeny napojení (' . $zruseno . ')' : ''));
+                        $hlaska = ['ok', $zruseno > 0 ? 'Heslo bylo změněno, ostatní přihlášení ukončena a tokeny napojení zrušeny.' : 'Heslo bylo změněno a ostatní přihlášení tohoto účtu ukončena.'];
                     }
                     break;
                 case 'token_novy':

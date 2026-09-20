@@ -48,6 +48,10 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <div class="radek"><label for="soucasne"><?= e(t('Současné heslo')) ?></label><input class="textpole" type="password" id="soucasne" name="soucasne" size="30" autocomplete="current-password" required></div>
 <div class="radek"><label for="nove"><?= e(t('Nové heslo')) ?></label><div><input class="textpole" type="password" id="nove" name="nove" size="30" minlength="10" autocomplete="new-password" required><span class="napoveda"><?= e(t('Alespoň 10 znaků.')) ?></span></div></div>
 <div class="radek"><label for="nove2"><?= e(t('Nové heslo znovu')) ?></label><input class="textpole" type="password" id="nove2" name="nove2" size="30" autocomplete="new-password" required></div>
+<?php if ($tokeny !== []): ?>
+<div class="radek"><span class="popisek"><?= e(t('Napojení')) ?></span><div class="volby"><label><input type="checkbox" name="zrusit_tokeny" value="1" checked> <?= e(t('zrušit i tokeny napojení (Claude, API)')) ?></label>
+	<span class="napoveda"><?= e(t('Token funguje bez hesla i bez dvoufázového přihlášení. Měníte-li heslo kvůli podezření na zneužití, nechte zaškrtnuté a napojení pak vytvořte znovu.')) ?></span></div></div>
+<?php endif ?>
 </fieldset>
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Změnit heslo')) ?>"></p>
 </form>

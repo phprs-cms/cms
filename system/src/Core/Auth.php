@@ -84,9 +84,27 @@ final class Auth
             return null;
         }
         $this->session->set('idu', (int) $user['idu']);
+        $this->session->set('otisk', self::otiskHesla((string) $this->db->value('SELECT password FROM {user} WHERE idu = ?', [$user['idu']])));
         $this->user = false;
 
         return null;
+    }
+
+    /**
+     * Otisk hesla uložený v session: po změně hesla přestanou platit všechna ostatní přihlášení téhož účtu
+     * (ukradená session, zapomenutý počítač). Sám o sobě nic neprozrazuje - je to zkrácený hash už hashovaného hesla.
+     */
+    public static function otiskHesla(string $hash): string
+    {
+        return substr(hash('sha256', 'phprs-session|' . $hash), 0, 24);
+    }
+
+    /** Po změně vlastního hesla: tohle přihlášení zůstává platné, ostatní ne. */
+    public function obnovPoZmeneHesla(string $novyHash): void
+    {
+        $this->session->regenerate();
+        $this->session->set('otisk', self::otiskHesla($novyHash));
+        $this->user = false;
     }
 
     /** Heslo bylo zadáno správně a čeká se na kód z ověřovací aplikace (nejdéle 5 minut). */
@@ -133,6 +151,7 @@ final class Auth
         $this->session->remove('idu_ceka');
         $this->session->regenerate();
         $this->session->set('idu', (int) $user['idu']);
+        $this->session->set('otisk', self::otiskHesla((string) $user['password']));
         $this->user = false;
 
         return null;
@@ -156,6 +175,15 @@ final class Auth
             $this->user = is_int($id)
                 ? $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [$id])
                 : null;
+            if ($this->user !== null) {
+                $otisk = $this->session->get('otisk');
+                if ($otisk === null) {
+                    $this->session->set('otisk', self::otiskHesla((string) $this->user['password'])); // přihlášení z doby před touto kontrolou
+                } elseif (!hash_equals(self::otiskHesla((string) $this->user['password']), (string) $otisk)) {
+                    $this->session->remove('idu'); // heslo se od přihlášení změnilo
+                    $this->user = null;
+                }
+            }
         }
 
         return $this->user;

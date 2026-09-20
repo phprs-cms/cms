@@ -114,7 +114,7 @@ final class Galerie extends Modul
         $chyby = [];
         foreach ($this->soubory() as $file) {
             try {
-                $data = Obrazky::uloz($file);
+                $data = \PhpRS\Core\Soubory::jePriloha((string) ($file['name'] ?? '')) ? \PhpRS\Core\Soubory::uloz($file) : Obrazky::uloz($file);
                 $data['ido'] = $this->db->insert('imggal_obr', $data + ['vlastnik' => $this->app->auth()->id(), 'sekce' => $sekce, 'datum' => date('Y-m-d H:i:s')]);
                 $nahrane[] = $this->proJson($data + ['popis' => '']);
             } catch (\RuntimeException $e) {
@@ -131,7 +131,7 @@ final class Galerie extends Modul
             $this->app->session->flash('chyba', $chyba);
         }
 
-        return $this->zpet($nahrane !== [] ? 'Nahráno obrázků: ' . count($nahrane) . '.' : '', '', $sekce !== null ? ['sekce' => $sekce] : []);
+        return $this->zpet($nahrane !== [] ? 'Nahráno souborů: ' . count($nahrane) . '.' : '', '', $sekce !== null ? ['sekce' => $sekce] : []);
     }
 
     protected function akceUloz(): Response
@@ -164,6 +164,7 @@ final class Galerie extends Modul
                 $pocet += $this->db->update('imggal_obr', ['sekce' => $cil], ['ido' => $obr['ido']]) >= 0 ? 1 : 0;
             } else {
                 Obrazky::smaz($obr['obr_poloha'], $obr['nahl_poloha']);
+                \PhpRS\Core\Soubory::smaz($obr['obr_poloha']);
                 $pocet += $this->db->delete('imggal_obr', ['ido' => $obr['ido']]);
             }
         }
@@ -228,8 +229,10 @@ final class Galerie extends Modul
     {
         return [
             'id' => (int) $o['ido'], 'nazev' => $o['nazev'], 'popis' => $o['popis'] ?? '',
-            'url' => $this->app->url($o['obr_poloha']), 'nahled' => $this->app->url($o['nahl_poloha']),
+            'url' => $this->app->url($o['obr_poloha']), 'nahled' => $o['nahl_poloha'] === '' ? '' : $this->app->url($o['nahl_poloha']),
             'sirka' => (int) $o['obr_width'], 'vyska' => (int) $o['obr_height'],
+            // příloha ke stažení (PDF, dokument, zvuk…): bez náhledu, do článku se vkládá jako odkaz
+            'soubor' => $o['nahl_poloha'] === '', 'pripona' => strtoupper(pathinfo($o['obr_poloha'], PATHINFO_EXTENSION)), 'velikost' => \PhpRS\Core\Soubory::velikost((int) ($o['obr_vel'] ?? 0)),
         ];
     }
 

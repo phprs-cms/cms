@@ -58,7 +58,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 	<label for="soubory"><strong><?= e(t('Nahrát obrázky')) ?><?= $aktivniSlozka !== null ? ' – ' . e($aktivniSlozka['nazev']) : '' ?></strong> <?= e(t('– vyberte soubory, nebo je sem přetáhněte myší')) ?></label>
 	<input type="file" id="soubory" name="soubory[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required>
 	<input class="tl" type="submit" value="<?= e(t('Nahraj')) ?>">
-	<span class="napoveda"><?= e(t('JPG, PNG, WebP nebo GIF, nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.', $limit, PhpRS\Core\Obrazky::MAX_STRANA)) ?></span>
+	<span class="napoveda"><?= e(t('Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.', $limit, PhpRS\Core\Obrazky::MAX_STRANA)) ?></span>
 </form>
 
 <?php if ($obrazky === []): ?>
@@ -69,10 +69,14 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <div class="galerie-mrizka">
 <?php foreach ($obrazky as $o): ?>
 	<figure class="galerie-polozka">
+<?php if ($o['nahl_poloha'] === ''): ?>
+		<a class="galerie-soubor" href="<?= e($app->url($o['obr_poloha'])) ?>" target="_blank" rel="noopener"><span><?= e(strtoupper(pathinfo($o['obr_poloha'], PATHINFO_EXTENSION))) ?></span></a>
+<?php else: ?>
 		<a href="<?= e($app->url($o['obr_poloha'])) ?>" target="_blank" rel="noopener"><img src="<?= e($app->url($o['nahl_poloha'])) ?>" alt="<?= e($o['nazev']) ?>" loading="lazy" width="<?= (int) $o['nahl_width'] ?>" height="<?= (int) $o['nahl_height'] ?>"></a>
+<?php endif ?>
 		<figcaption>
 			<strong title="<?= e($o['nazev']) ?>"><?= e($o['nazev'] !== '' ? $o['nazev'] : 'bez názvu') ?></strong>
-			<span><?= (int) $o['obr_width'] ?>&times;<?= (int) $o['obr_height'] ?> &middot; <?= number_format($o['obr_vel'] / 1024, 0, ',', ' ') ?> kB &middot; <?= (int) $o['pouzito'] > 0 ? 'použito ' . (int) $o['pouzito'] . '&times;' : 'nepoužito' ?></span>
+			<span><?= $o['nahl_poloha'] === '' ? '' : (int) $o['obr_width'] . '&times;' . (int) $o['obr_height'] . ' &middot; ' ?><?= e(PhpRS\Core\Soubory::velikost((int) $o['obr_vel'])) ?> &middot; <?= (int) $o['pouzito'] > 0 ? 'použito ' . (int) $o['pouzito'] . '&times;' : 'nepoužito' ?></span>
 			<span><label><input type="checkbox" name="oznacene[]" value="<?= (int) $o['ido'] ?>"> <?= e(t('označit')) ?></label> &middot; <a href="<?= e($modul->url('vypis', $parametry + ['uprav' => $o['ido'], 'strana' => $strana])) ?>#uprav"><?= e(t('popis')) ?></a></span>
 		</figcaption>
 	</figure>

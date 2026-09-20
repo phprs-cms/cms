@@ -647,4 +647,5 @@ return [
     'Čtvercová fotka, stačí 300 × 300 px.' => 'Štvorcová fotka, stačí 300 × 300 px.',
     'Pár vět o mně' => 'Pár viet o mne',
     'Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.' => 'Zobrazí sa ako medailónik pod vašimi článkami a na stránke autora. Čomu sa venujete, odkiaľ píšete, čo máte za sebou.',
+    'Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.' => 'Obrázky JPG, PNG, WebP a GIF aj prílohy na stiahnutie (PDF, dokumenty, tabuľky, ZIP, zvuk, video), najviac %s na súbor. Veľké fotografie sa samy zmenšia na %s px a odstránia sa z nich údaje o polohe.',
 ];

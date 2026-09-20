@@ -227,3 +227,7 @@ button.galerie-polozka.vybrana { border-color: var(--ed-akcent); box-shadow: 0 0
 .editor-plocha table { width: 100%; border-collapse: collapse; margin: 1em 0; }
 .editor-plocha th, .editor-plocha td { min-width: 40px; padding: 6px 8px; border: 1px solid var(--ed-linka); text-align: left; vertical-align: top; }
 .editor-plocha th { background: var(--ed-lista); }
+
+/* přílohy ke stažení v Médiích */
+.galerie-soubor { display: grid; place-items: center; width: 100%; height: 130px; background: var(--ed-lista); text-decoration: none; }
+.galerie-soubor span { padding: 8px 14px; border: 2px solid var(--ed-akcent); border-radius: 6px; color: var(--ed-akcent); font: 700 15px/1 system-ui, sans-serif; letter-spacing: 0.04em; }

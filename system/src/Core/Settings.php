@@ -97,6 +97,11 @@ final class Settings
         'smtp_sifrovani' => 'tls',    // tls (STARTTLS, port 587) | ssl (port 465) | zadne
         'smtp_uzivatel' => '',
         'smtp_heslo' => '',           // typ "tajne": nikdy se nevypisuje zpět do formuláře
+        'newsletter_auto' => 'vypnuto', // automatický výběr nových článků: vypnuto | tydne | denne
+        'newsletter_den' => '5',      // den v týdnu (1 = pondělí)
+        'newsletter_hodina' => '7',
+        'newsletter_uvod' => '',      // úvodní slovo automatických vydání
+        'newsletter_auto_posledni' => '',
         'push_klic_verejny' => '',    // pár klíčů VAPID pro Web Push vznikne sám při prvním použití
         'push_klic_soukromy' => '',
         'push_zprava' => '',          // poslední oznámení (JSON) - čte ho service worker přes /push.json

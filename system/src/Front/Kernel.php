@@ -131,6 +131,22 @@ final class Kernel
             if ($path === '/newsletter' && $request->isPost()) {
                 return $newsletter->prihlas();
             }
+            if (preg_match('#^/newsletter/o/(\d+)\.gif$#', $path, $m)) {
+                // otevření newsletteru: průhledný obrázek 1×1, počítá se jen souhrnné číslo
+                $this->app->db()->run('UPDATE {newsletter} SET otevreno = otevreno + 1 WHERE idn = ?', [(int) $m[1]]);
+
+                return new Response((string) base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'), 200, ['Content-Type' => 'image/gif', 'Cache-Control' => 'no-store']);
+            }
+            if (preg_match('#^/newsletter/k/(\d+)$#', $path, $m)) {
+                // proklik z newsletteru: cíl musí nést platný podpis, jinak by adresa šla zneužít k přesměrování kamkoli
+                $cil = $request->get('u');
+                if (!hash_equals(\PhpRS\Core\Rozesilka::podpis($this->app, $m[1] . '|' . $cil), $request->get('p'))) {
+                    return Response::redirect($this->app->url(''));
+                }
+                $this->app->db()->run('UPDATE {newsletter} SET prokliku = prokliku + 1 WHERE idn = ?', [(int) $m[1]]);
+
+                return Response::redirect($cil);
+            }
             if (preg_match('#^/newsletter/(potvrdit|odhlasit)/([a-f0-9]{32})$#', $path, $m)) {
                 [$nadpis, $text] = $m[1] === 'potvrdit' ? $newsletter->potvrd($m[2]) : $newsletter->odhlas($m[2]);
 
@@ -213,6 +229,8 @@ final class Kernel
                 $hotovo[] = 'push:' . (new \PhpRS\Core\Push($this->app->db(), $this->app->settings()))->rozesli();
                 \PhpRS\Core\Zaloha::automaticka($this->app->db(), $this->app->settings());
                 $hotovo[] = 'zalohy';
+                \PhpRS\Core\Rozesilka::naPozadi($this->app);
+                $hotovo[] = 'newsletter';
                 $hotovo[] = 'posta:' . \PhpRS\Core\Posta::zpracujFrontu($this->app->settings(), 30);
             } catch (\Throwable $e) {
                 $hotovo[] = 'chyba: ' . $e->getMessage();

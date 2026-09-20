@@ -20,7 +20,6 @@ final class NewsletterAdmin extends Modul
     public const string IKONA = 'newsletter';
     public const string ROZSIRENI = 'newsletter';
 
-    private const int DAVKA = 40;
 
     protected function akceVypis(): Response
     {
@@ -32,6 +31,7 @@ final class NewsletterAdmin extends Modul
             'vydani' => $this->db->all('SELECT * FROM {newsletter} ORDER BY idn DESC LIMIT 30'),
             'clanky' => $this->db->all('SELECT idc, titulek, datum, datum > ? AS novy FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 ORDER BY datum DESC LIMIT 15', [$posledni]),
             'maEmail' => $this->app->settings()->get('email_webu') !== '',
+            'automat' => array_map($this->app->settings()->get(...), ['newsletter_auto' => 'newsletter_auto', 'newsletter_den' => 'newsletter_den', 'newsletter_hodina' => 'newsletter_hodina', 'newsletter_uvod' => 'newsletter_uvod']),
             'maBlok' => $this->db->value("SELECT idb FROM {bloky} WHERE sys_funkce = 'nws'") !== null,
         ]);
     }
@@ -49,13 +49,45 @@ final class NewsletterAdmin extends Modul
         }
         $idn = $this->db->insert('newsletter', ['predmet' => mb_substr($r->post('predmet'), 0, 200), 'uvod' => $r->post('uvod'), 'clanky' => implode(',', $clanky), 'vytvoreno' => date('Y-m-d H:i:s')]);
         if ($r->post('co') === 'zkouska') {
-            $ok = $this->posli($idn, $this->app->settings()->get('email_webu'), 'zkouska');
+            $ok = \PhpRS\Core\Rozesilka::posli($this->app, $idn, $this->app->settings()->get('email_webu'), 'zkouska');
             $this->db->delete('newsletter', ['idn' => $idn]);
 
             return $this->zpet($ok ? 'Zkušební zpráva odešla na e-mail redakce.' : 'Zkušební zprávu se nepodařilo odeslat – zkontrolujte E-mail redakce v Nastavení a poštu u hostingu.', typ: $ok ? 'ok' : 'chyba');
         }
 
+        // naplánované vydání rozešlou úlohy na pozadí, až nastane jeho čas
+        $kdy = strtotime($r->post('odeslat_v'));
+        if ($r->post('co') === 'naplanovat' && $kdy !== false && $kdy > time()) {
+            $this->db->update('newsletter', ['odeslat_v' => date('Y-m-d H:i:s', $kdy)], ['idn' => $idn]);
+
+            return $this->zpet('Newsletter je naplánovaný na ' . datum(date('Y-m-d H:i:s', $kdy), true) . '. Rozešle se sám.');
+        }
+
         return Response::redirect($this->url('rozeslat', ['id' => $idn]));
+    }
+
+    /** Automatický výběr nových článků: jak často, kdy a s jakým úvodním slovem. */
+    protected function akceAutomat(): Response
+    {
+        if ($this->request->isPost()) {
+            $s = $this->app->settings();
+            $s->set('newsletter_auto', in_array($this->request->post('newsletter_auto'), ['tydne', 'denne'], true) ? $this->request->post('newsletter_auto') : 'vypnuto');
+            $s->set('newsletter_den', (string) max(1, min(7, $this->request->postInt('newsletter_den', 5))));
+            $s->set('newsletter_hodina', (string) max(0, min(23, $this->request->postInt('newsletter_hodina', 7))));
+            $s->set('newsletter_uvod', mb_substr($this->request->post('newsletter_uvod'), 0, 1000));
+        }
+
+        return $this->zpet('Nastavení automatického newsletteru je uložené.');
+    }
+
+    /** Zruší naplánované vydání, které se ještě nezačalo rozesílat. */
+    protected function akceZrus(): Response
+    {
+        if ($this->request->isPost()) {
+            $this->db->run('DELETE FROM {newsletter} WHERE idn = ? AND odeslano IS NULL AND pocet = 0', [$this->request->postInt('idn')]);
+        }
+
+        return $this->zpet('Naplánované vydání bylo zrušeno.');
     }
 
     /** Jedna dávka rozesílky; stránka se sama obnovuje, dokud nejsou obslouženi všichni odběratelé. */
@@ -66,14 +98,7 @@ final class NewsletterAdmin extends Modul
             return $this->chyba('Vydání neexistuje.', 404);
         }
         if ($vydani['odeslano'] === null && $this->request->isPost()) {
-            $davka = $this->db->all('SELECT * FROM {odberatele} WHERE potvrzen = 1 AND ido > ? ORDER BY ido LIMIT ?', [(int) $vydani['posledni'], self::DAVKA]);
-            foreach ($davka as $o) {
-                $this->posli((int) $vydani['idn'], $o['email'], $o['token']);
-                $this->db->run('UPDATE {newsletter} SET posledni = ?, pocet = pocet + 1 WHERE idn = ?', [$o['ido'], $vydani['idn']]);
-            }
-            if (count($davka) < self::DAVKA) {
-                $this->db->update('newsletter', ['odeslano' => date('Y-m-d H:i:s')], ['idn' => $vydani['idn']]);
-            }
+            \PhpRS\Core\Rozesilka::davka($this->app, (int) $vydani['idn']);
             $vydani = $this->db->one('SELECT * FROM {newsletter} WHERE idn = ?', [$vydani['idn']]);
         }
 
@@ -101,19 +126,5 @@ final class NewsletterAdmin extends Modul
         }
 
         return $this->zpet('Odběratel byl odstraněn.', 'odberatele');
-    }
-
-    private function posli(int $idn, string $email, string $token): bool
-    {
-        $web = $this->app->settings();
-        $v = $this->db->one('SELECT * FROM {newsletter} WHERE idn = ?', [$idn]);
-        $ids = array_filter(array_map(intval(...), explode(',', $v['clanky'])));
-        $clanky = $ids === [] ? [] : $this->db->all('SELECT titulek, seo_link, uvod, obrazek FROM {clanky} WHERE idc IN (' . implode(',', $ids) . ') ORDER BY FIELD(idc, ' . implode(',', $ids) . ')');
-        $koren = $this->app->request->origin() . $this->app->url('');
-        $odhlasit = $koren . 'newsletter/odhlasit/' . $token;
-        $html = $this->app->view->render('admin/newsletter/email', ['web' => $web, 'vydani' => $v, 'clanky' => $clanky, 'koren' => $koren, 'odhlasit' => $odhlasit]);
-        $text = $v['uvod'] . "\n\n" . implode("\n\n", array_map(fn (array $c): string => $c['titulek'] . "\n" . trim(strip_tags($c['uvod'])) . "\n" . $koren . 'clanek/' . $c['seo_link'], $clanky)) . "\n\n--\nOdhlášení z odběru: {$odhlasit}\n";
-
-        return Posta::odesli($web, $email, $v['predmet'], $text, $html, ['List-Unsubscribe' => "<{$odhlasit}>", 'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click']);
     }
 }

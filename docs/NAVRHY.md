@@ -31,7 +31,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 17 | **Komentáře pod účtem čtenáře** (volitelně jen pro přihlášené), upozornění na odpověď e-mailem, tlačítko „nahlásit" | účty čtenářů už existují, komentáře o nich nevědí | M |
 | 18 | ✅ HOTOVO · **Upozornění redakci** na nový komentář ke schválení a na nového předplatitele | dnes se to redakce dozví jen v administraci | S |
 | 19 | **Uložené články a historie čtení** pro přihlášené | důvod se registrovat i u nezamčeného webu | M |
-| 20 | **Newsletter: automatický týdenní výběr**, naplánované odeslání, statistika otevření a prokliků, šablona s logem a barvou webu | dnes jen ruční vydání bez měření | M–L |
+| 20 | ✅ HOTOVO (automatický výběr, naplánované odeslání, souhrnná statistika, šablona s logem a barvou) · **Newsletter: automatický týdenní výběr**, naplánované odeslání, statistika otevření a prokliků, šablona s logem a barvou webu | dnes jen ruční vydání bez měření | M–L |
 | 21 | ✅ HOTOVO · **Dobrovolný příspěvek čtenářů** (blok „Podpořte nás" s QR platbou / odkazem) | nejjednodušší monetizace malých magazínů | S |
 | 22 | **Reklama: cílení na rubriku a zařízení, limit zobrazení, výkaz pro inzerenta (PDF/CSV)** | dnes jen pozice a termín | M |
 
@@ -86,11 +86,11 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne), 12 (porovnání verzí ano, ukládání konceptu na server ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 20, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne), 12 (porovnání verzí ano, ukládání konceptu na server ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
 Další v pořadí: více autorů u článku (3), ukládání rozepsaného článku na server
-a porovnání revizí (12), zálohy mimo server (23), newsletter 2.0 (20), platební brána (15),
+a porovnání revizí (12), zálohy mimo server (23), platební brána (15),
 další šablony článku (38).
 
 ## Doporučené pořadí

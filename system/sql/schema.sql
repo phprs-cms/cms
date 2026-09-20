@@ -460,6 +460,10 @@ CREATE TABLE rs_newsletter (
     odeslano  DATETIME NULL,                              -- NULL = rozesílka ještě nedoběhla
     posledni  INT UNSIGNED NOT NULL DEFAULT 0,            -- ido posledního obslouženého odběratele
     pocet     INT UNSIGNED NOT NULL DEFAULT 0,
+    auto      BOOL NOT NULL DEFAULT 0,                    -- vydání vzniklo samo z nových článků
+    odeslat_v DATETIME NULL,                              -- naplánovaná rozesílka na pozadí; NULL = ruční z administrace
+    otevreno  INT UNSIGNED NOT NULL DEFAULT 0,            -- souhrnná statistika, nic o jednotlivcích
+    prokliku  INT UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (idn)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 

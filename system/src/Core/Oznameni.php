@@ -29,6 +29,7 @@ final class Oznameni
             self::zpracuj($app);
             $push->rozesli();
             Posta::zpracujFrontu($s);
+            Rozesilka::naPozadi($app);
         } catch (\Throwable) {
             // oznámení nesmí shodit web; další pokus proběhne při příští návštěvě
         }

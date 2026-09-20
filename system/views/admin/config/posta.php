@@ -42,3 +42,21 @@ $pole('posta_odpoved', 'Odpovědi posílat na', 'email', 'Nepovinné – když m
 ?>
 </details>
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('test_posty')) ?>"><?= e(t('Odeslat zkušební e-mail na adresu redakce')) ?></button> <span class="smltxt"><?= e(t('Nejdřív nastavení uložte – zkouška použije uložené hodnoty.')) ?></span></p>
+<?php if (!empty($posta)): ?>
+<h3><?= e(t('Poslední zprávy')) ?></h3>
+<div class="tab-obal"><table class="vypis">
+<thead><tr><th><?= e(t('Čas')) ?></th><th><?= e(t('Komu')) ?></th><th><?= e(t('Předmět')) ?></th><th><?= e(t('Stav')) ?></th></tr></thead>
+<tbody>
+<?php foreach ($posta as $z): ?>
+<tr>
+	<td class="cislo"><?= e(datum($z['vytvoreno'], true)) ?></td>
+	<td><?= e($z['komu']) ?></td>
+	<td><?= e($z['predmet']) ?></td>
+	<td><?php if ($z['odeslano'] !== null): ?><span class="stitek stitek-vydano"><?= e(t('odesláno')) ?></span><?= (int) $z['pokusu'] > 1 ? ' ' . e(t('na %s. pokus', (int) $z['pokusu'])) : '' ?>
+<?php elseif ($z['dalsi_pokus'] !== null): ?><span class="stitek stitek-koncept"><?= e(t('čeká na další pokus')) ?></span> <?= e(datum($z['dalsi_pokus'], true)) ?><br><small><?= e($z['chyba']) ?></small>
+<?php else: ?><span class="stitek stitek-koncept"><?= e(t('neodesláno')) ?></span><br><small><?= e($z['chyba']) ?></small><?php endif ?></td>
+</tr>
+<?php endforeach ?>
+</tbody></table></div>
+<p class="smltxt"><?= e(t('Zpráva, kterou se nepodaří odeslat, se zkouší znovu za 5 minut, 30 minut, 2 a 12 hodin. Záznamy se mažou po 30 dnech; obsah zpráv se neuchovává.')) ?></p>
+<?php endif ?>

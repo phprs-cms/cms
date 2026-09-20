@@ -81,6 +81,7 @@ final class Konfigurace extends Modul
             'prostredi' => Kernel::PROSTREDI,
             'kontroly' => $zalozka === 'stav' ? Stav::kontroly($this->app) : [],
             'ulohyToken' => $nastaveni->get('ulohy_token'),
+            'posta' => $zalozka === 'posta' ? $this->db->all('SELECT komu, predmet, vytvoreno, odeslano, pokusu, dalsi_pokus, chyba FROM {posta} ORDER BY idp DESC LIMIT 30') : [],
             'zapnutaRozsireni' => Rozsireni::zapnuta($nastaveni),
             'zalohy' => $zalozka === 'zalohy' ? Zaloha::seznam() : [],
             'aktualizace' => $zalozka === 'zalohy' ? (new Aktualizace($nastaveni))->stav() : null,
@@ -283,7 +284,7 @@ final class Konfigurace extends Modul
             return $this->zpet('Nejprve vyplňte E-mail redakce v záložce Základní.', '', ['zalozka' => $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav'], 'chyba');
         }
         $web = $this->app->settings()->get('nazev_webu');
-        $ok = \PhpRS\Core\Posta::odesli($this->app->settings(), $komu, 'Zkušební zpráva z ' . $web, "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION);
+        $ok = \PhpRS\Core\Posta::odesli($this->app->settings(), $komu, 'Zkušební zpráva z ' . $web, "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION, doFronty: false);
         $zpet = $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav';
 
         return $this->zpet(

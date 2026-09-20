@@ -19,8 +19,62 @@ final class Posta
     /** @var resource|null otevřené SMTP spojení */
     private static $spojeni = null;
 
-    /** @param array<string, string> $hlavicky další hlavičky (např. List-Unsubscribe) */
-    public static function odesli(Settings $web, string $komu, string $predmet, string $text, string $html = '', array $hlavicky = []): bool
+    /** Za jak dlouho se nepovedené odeslání zkusí znovu (minuty); po posledním pokusu zpráva zůstane ve frontě jako chybná. */
+    private const array OPAKOVANI = [5, 30, 120, 720];
+
+    /**
+     * Odešle zprávu hned. Když to nejde (výpadek SMTP), uloží ji do fronty a zkusí to později znovu - potvrzení
+     * registrace nebo nové heslo se tak neztratí. Každá zpráva má záznam v protokolu (Nastavení → Pošta).
+     *
+     * @param array<string, string> $hlavicky další hlavičky (např. List-Unsubscribe)
+     * @param bool $doFronty false = jednorázová zpráva, která se při chybě neopakuje (zkušební e-mail)
+     */
+    public static function odesli(Settings $web, string $komu, string $predmet, string $text, string $html = '', array $hlavicky = [], bool $doFronty = true): bool
+    {
+        $ok = self::posli($web, $komu, $predmet, $text, $html, $hlavicky);
+        $chyba = self::$chyba;
+        try {
+            $web->db()->insert('posta', [
+                'komu' => mb_substr($komu, 0, 190), 'predmet' => mb_substr($predmet, 0, 255), 'vytvoreno' => date('Y-m-d H:i:s'), 'pokusu' => 1,
+                'odeslano' => $ok ? date('Y-m-d H:i:s') : null, 'chyba' => mb_substr($chyba, 0, 255),
+                'telo' => $ok || !$doFronty ? null : json_encode(['text' => $text, 'html' => $html, 'hlavicky' => $hlavicky], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE),
+                'dalsi_pokus' => $ok || !$doFronty ? null : date('Y-m-d H:i:s', time() + self::OPAKOVANI[0] * 60),
+            ]);
+            if (random_int(1, 50) === 1) {
+                $web->db()->run('DELETE FROM {posta} WHERE vytvoreno < NOW() - INTERVAL 30 DAY');
+            }
+        } catch (\Throwable) {
+            // protokol pošty nesmí shodit odeslání (např. před provedením migrace tabulka ještě není)
+        }
+        self::$chyba = $chyba;
+
+        return $ok;
+    }
+
+    /** Další pokus o zprávy čekající ve frontě; volá se z úloh na pozadí. Vrací počet odeslaných. */
+    public static function zpracujFrontu(Settings $web, int $nejvys = 10): int
+    {
+        $db = $web->db();
+        $odeslano = 0;
+        foreach ($db->all('SELECT * FROM {posta} WHERE odeslano IS NULL AND telo IS NOT NULL AND dalsi_pokus <= NOW() ORDER BY idp LIMIT ' . max(1, $nejvys)) as $z) {
+            $telo = json_decode((string) $z['telo'], true) ?: [];
+            $pokus = (int) $z['pokusu'] + 1;
+            // nejdřív posunout další pokus: souběžný požadavek tak stejnou zprávu neodešle podruhé
+            $db->update('posta', ['pokusu' => $pokus, 'dalsi_pokus' => date('Y-m-d H:i:s', time() + (self::OPAKOVANI[$pokus - 1] ?? 0) * 60)], ['idp' => $z['idp']]);
+            if (self::posli($web, $z['komu'], $z['predmet'], (string) ($telo['text'] ?? ''), (string) ($telo['html'] ?? ''), (array) ($telo['hlavicky'] ?? []))) {
+                $db->update('posta', ['odeslano' => date('Y-m-d H:i:s'), 'telo' => null, 'dalsi_pokus' => null, 'chyba' => ''], ['idp' => $z['idp']]);
+                $odeslano++;
+            } else {
+                $konec = !isset(self::OPAKOVANI[$pokus - 1]);
+                $db->update('posta', ['chyba' => mb_substr(self::$chyba, 0, 255)] + ($konec ? ['telo' => null, 'dalsi_pokus' => null] : []), ['idp' => $z['idp']]);
+            }
+        }
+
+        return $odeslano;
+    }
+
+    /** @param array<string, string> $hlavicky */
+    private static function posli(Settings $web, string $komu, string $predmet, string $text, string $html = '', array $hlavicky = []): bool
     {
         self::$chyba = '';
         $od = $web->get('posta_od') !== '' ? $web->get('posta_od') : $web->get('email_webu');

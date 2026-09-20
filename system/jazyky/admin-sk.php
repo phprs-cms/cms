@@ -650,4 +650,9 @@ return [
     'Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.' => 'Obrázky JPG, PNG, WebP a GIF aj prílohy na stiahnutie (PDF, dokumenty, tabuľky, ZIP, zvuk, video), najviac %s na súbor. Veľké fotografie sa samy zmenšia na %s px a odstránia sa z nich údaje o polohe.',
     'Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.' => 'Obnoviť databázu z tejto zálohy? Všetko, čo na webe pribudlo po jej vytvorení (články, komentáre, nastavenia), sa stratí. Súčasný stav sa predtým uloží do novej zálohy.',
     'Obnovit' => 'Obnoviť',
+    'Poslední zprávy' => 'Posledné správy',
+    'odesláno' => 'odoslané',
+    'čeká na další pokus' => 'čaká na ďalší pokus',
+    'neodesláno' => 'neodoslané',
+    'Zpráva, kterou se nepodaří odeslat, se zkouší znovu za 5 minut, 30 minut, 2 a 12 hodin. Záznamy se mažou po 30 dnech; obsah zpráv se neuchovává.' => 'Správa, ktorú sa nepodarí odoslať, sa skúša znova o 5 minút, 30 minút, 2 a 12 hodín. Záznamy sa mažú po 30 dňoch; obsah správ sa neuchováva.',
 ];

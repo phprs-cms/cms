@@ -114,6 +114,12 @@ final class Settings
     {
     }
 
+    /** Databáze, ze které nastavení pochází (potřebuje ji fronta pošty). */
+    public function db(): Db
+    {
+        return $this->db;
+    }
+
     public function get(string $key): string
     {
         $this->values ??= $this->db->pairs('SELECT promenna, hodnota FROM {config}');

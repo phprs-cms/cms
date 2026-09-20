@@ -213,6 +213,7 @@ final class Kernel
                 $hotovo[] = 'push:' . (new \PhpRS\Core\Push($this->app->db(), $this->app->settings()))->rozesli();
                 \PhpRS\Core\Zaloha::automaticka($this->app->db(), $this->app->settings());
                 $hotovo[] = 'zalohy';
+                $hotovo[] = 'posta:' . \PhpRS\Core\Posta::zpracujFrontu($this->app->settings(), 30);
             } catch (\Throwable $e) {
                 $hotovo[] = 'chyba: ' . $e->getMessage();
             }

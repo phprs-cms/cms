@@ -746,4 +746,11 @@ return [
     'Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.' => 'JPG, PNG, WebP and GIF images as well as downloadable attachments (PDF, documents, spreadsheets, ZIP, audio, video), up to %s per file. Large photos are scaled down to %s px and location data is removed.',
     'Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.' => 'Restore the database from this backup? Everything added to the site after it was made (articles, comments, settings) will be lost. The current state is saved to a new backup first.',
     'Obnovit' => 'Restore',
+    'Poslední zprávy' => 'Recent messages',
+    'Komu' => 'To',
+    'odesláno' => 'sent',
+    'na %s. pokus' => 'on attempt %s',
+    'čeká na další pokus' => 'waiting for the next attempt',
+    'neodesláno' => 'not sent',
+    'Zpráva, kterou se nepodaří odeslat, se zkouší znovu za 5 minut, 30 minut, 2 a 12 hodin. Záznamy se mažou po 30 dnech; obsah zpráv se neuchovává.' => 'A message that fails to send is retried after 5 minutes, 30 minutes, 2 and 12 hours. Records are deleted after 30 days; message content is not kept.',
 ];

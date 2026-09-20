@@ -303,9 +303,15 @@ final class Kernel
         }
         $strana = max(1, $this->app->request->getInt('strana', 1));
         [$clanky, $celkem] = $this->clanky->seStitkem((int) $stitek['ids'], $strana);
-        $hlavicka = ['nazev' => '#' . $stitek['nazev'], 'popis' => ''];
+        // štítek s úvodem je stránka tématu: nadpis bez mřížky, úvod, obrázek a vlastní popis pro vyhledávače
+        $tema = trim((string) $stitek['popis']) !== '';
+        $obrazek = $stitek['obrazek'] === '' ? '' : (preg_match('#^(https?:)?/#i', $stitek['obrazek']) ? $stitek['obrazek'] : $this->app->request->basePath() . '/' . $stitek['obrazek']);
+        $hlavicka = ['nazev' => ($tema ? '' : '#') . $stitek['nazev'], 'popis' => ($obrazek !== '' ? '<img class="rs-tema-obrazek" src="' . e($obrazek) . '" alt="">' : '') . ($tema ? $stitek['popis'] : '')];
 
-        return $this->stranka(t('Štítek') . ' ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)));
+        return $this->stranka($tema ? $stitek['nazev'] : t('Štítek') . ' ' . $stitek['nazev'], $this->view->render('vypis', ['rubrika' => $hlavicka] + $this->proVypis($clanky, $celkem, $strana, 'stitek/' . $seo)), [
+            'popis' => $tema ? mb_strimwidth(trim(strip_tags((string) $stitek['popis'])), 0, 300, '…') : '',
+            'obrazek' => $obrazek === '' ? '' : (preg_match('#^https?://#i', $obrazek) ? $obrazek : $this->app->request->origin() . $obrazek),
+        ]);
     }
 
     private function hlavniStranka(): Response

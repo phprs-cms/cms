@@ -298,6 +298,8 @@ CREATE TABLE rs_stitky (
     ids      INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nazev    VARCHAR(80) NOT NULL,
     seo_link VARCHAR(100) NOT NULL,
+    popis    TEXT NULL,                                   -- úvod stránky tématu (HTML od redakce)
+    obrazek  VARCHAR(255) NOT NULL DEFAULT '',
     PRIMARY KEY (ids),
     UNIQUE KEY uq_stitky_seo (seo_link)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

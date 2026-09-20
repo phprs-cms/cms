@@ -158,3 +158,6 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 	.clanek-text a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 85%; word-break: break-all; }
 	img, figure, .rs-recenze, .rs-autor { break-inside: avoid; }
 }
+
+/* ---------- stránka tématu ---------- */
+.rs-tema-obrazek { display: block; width: 100%; max-height: 380px; margin: 0 0 1em; object-fit: cover; border-radius: 3px; }

@@ -24,6 +24,7 @@ final class Kernel
         Moduly\Clanky::class,
         Moduly\Galerie::class,
         Moduly\Rubriky::class,
+        Moduly\Stitky::class,
         Moduly\Stranky::class,
         Moduly\Novinky::class,
         Moduly\Komentare::class,

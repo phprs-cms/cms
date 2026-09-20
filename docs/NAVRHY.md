@@ -54,7 +54,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 | # | Námět | Pracnost |
 |---|-------|----------|
-| 33 | Propojení překladů i u **stránek a rubrik** (hreflang, přepínač vede na protějšek) – dnes jen u článků | S |
+| 33 | ✅ HOTOVO · Propojení překladů i u **stránek a rubrik** (hreflang, přepínač vede na protějšek) – dnes jen u článků | S |
 | 34 | **Štítky, novinky, ankety a newsletter podle jazyka** (dnes společné) | M |
 | 35 | Překlad **vizuálního editoru bloků** a hlášek skládaných z proměnných; němčina administrace | M |
 | 36 | „Přeložit článek" asistentem: založí koncept v cílové rubrice s propojením na originál | S |
@@ -79,14 +79,14 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 45 | **Čárové ikony bloků** ve vizuálním editoru místo znaků (★ ☰ 🔔) – sjednotit se sadou v `views/admin/ikony.php` | S |
 | 46 | **Prázdné stavy** se zřetelnou první akcí ve všech výpisech (část je hotová: Čtenáři) | S |
 | 47 | ✅ HOTOVO (graf návštěvnosti, fronta ke korektuře a naplánované; stav rozesílek zbývá) · **Přehled (dashboard)**: graf návštěvnosti za 14 dní, fronta „ke korektuře", naplánované články, stav rozesílek | M |
-| 48 | **Hromadné akce ve výpisu článků** (změna rubriky, štítek, zamknout) a uložené filtry | S |
+| 48 | ✅ HOTOVO · **Hromadné akce ve výpisu článků** (změna rubriky, štítek, zamknout) a uložené filtry | S |
 | 49 | **Klávesové zkratky a paleta příkazů** (Ctrl+K: „nový článek", „najít článek…", „nastavení pošty") | M |
 | 50 | **Administrace na telefonu**: editor článku v jednom sloupci s plovoucím „Uložit", nahrání fotky z fotoaparátu | M |
 | 51 | Kontrola nových obrazovek (Čtenáři, Živá reportáž, Pošta) v **retro prostředí** – fungují, ale nebyly vizuálně doladěné | S |
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 23, 24, 25, 29, 31, 32, 37, 38, 39, 40, 41, 44, 47; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 20, 21, 23, 24, 25, 29, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
 
 Další v pořadí: platební brána (15),
 

@@ -57,6 +57,7 @@ final class Stranky extends Modul
             'zmeneno' => date('Y-m-d H:i:s'),
             'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
+        $data['preklad_z'] = $data['jazyk'] === '' ? null : ($this->db->value("SELECT ids FROM {stranky} WHERE ids = ? AND jazyk = '' AND ids <> ?", [$r->postInt('preklad_z'), $id]) ?: null);
         $chyby = [];
         if ($data['titulek'] === '') {
             $chyby['titulek'] = 'Vyplňte název stránky.';

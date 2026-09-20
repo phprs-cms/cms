@@ -878,4 +878,7 @@ return [
     'štítek' => 'tag',
     'Provést' => 'Apply',
     'Označit' => 'Select',
+    'Je překladem' => 'Is a translation of',
+    '– není překlad –' => '– not a translation –',
+    'Vyplňte u položky v jiné jazykové verzi: přepínač jazyků pak vede přímo na protějšek a vyhledávače dostanou značky hreflang.' => 'Fill in for an item in another language version: the language switcher then leads straight to its counterpart and search engines get hreflang tags.',
 ];

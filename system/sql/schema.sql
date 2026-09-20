@@ -92,6 +92,7 @@ CREATE TABLE rs_topic (
     hodnost   SMALLINT UNSIGNED NOT NULL DEFAULT 100,     -- pořadí mezi sourozenci, vyšší = výš
     zobrazit  BOOL NOT NULL DEFAULT 1,
     jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyková verze; '' = výchozí jazyk webu
+    preklad_z      INT UNSIGNED NULL,                      -- protějšek ve výchozím jazyce (hreflang, přepínač jazyků)
     PRIMARY KEY (idt),
     UNIQUE KEY uq_topic_seo (seo_link),
     CONSTRAINT fk_topic_predek FOREIGN KEY (id_predka) REFERENCES rs_topic (idt) ON DELETE SET NULL
@@ -339,6 +340,7 @@ CREATE TABLE rs_stranky (
     poradi   SMALLINT UNSIGNED NOT NULL DEFAULT 100,
     zmeneno  DATETIME NULL,
     jazyk          CHAR(2) NOT NULL DEFAULT '',            -- jazyková verze; '' = výchozí jazyk webu
+    preklad_z      INT UNSIGNED NULL,                      -- protějšek ve výchozím jazyce (hreflang, přepínač jazyků)
     PRIMARY KEY (ids),
     UNIQUE KEY uq_stranky_seo (seo_link)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

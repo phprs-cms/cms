@@ -30,6 +30,9 @@ final class Kernel
     private readonly Clanky $clanky;
     private readonly ?Ctenari $ctenari;
 
+    /** Rubrika nebo stránka, kterou požadavek zobrazuje - přepínač jazyků podle ní najde protějšek v jiné verzi. */
+    private ?array $protejsek = null;
+
     /** Požadovaná stránka výpisu je až za jeho koncem - odpoví se 404. */
     private bool $zaKoncem = false;
 
@@ -259,6 +262,8 @@ final class Kernel
 
         $stranka = $this->app->db()->one('SELECT * FROM {stranky} WHERE seo_link = ? AND zobrazit = 1 AND jazyk = ?', [ltrim($path, '/'), Jazyk::sloupecWebu()]);
         if ($stranka !== null) {
+            $this->protejsek = ['stranky', 'ids', $stranka, ''];
+
             return $this->stranka($stranka['titulek'], $this->view->render('stranka', ['stranka' => $stranka]), ['popis' => $stranka['popis']]);
         }
 
@@ -358,6 +363,7 @@ final class Kernel
         if ($rubrika === null) {
             return $this->nenalezeno();
         }
+        $this->protejsek = ['topic', 'idt', $rubrika, 'rubrika/'];
         $strana = max(1, $this->app->request->getInt('strana', 1));
         [$clanky, $celkem] = $this->clanky->zRubriky((int) $rubrika['idt'], $strana);
 
@@ -530,7 +536,12 @@ final class Kernel
         $preklady = [];
         if ($clanek !== null) {
             $original = (int) ($clanek['preklad_z'] ?: $clanek['idc']);
-            $preklady = $this->app->db()->pairs('SELECT jazyk, seo_link FROM {clanky} WHERE (idc = ? OR preklad_z = ?) AND visible = 1 AND datum <= NOW()', [$original, $original]);
+            $preklady = array_map(fn (string $seo): string => 'clanek/' . $seo, $this->app->db()->pairs('SELECT jazyk, seo_link FROM {clanky} WHERE (idc = ? OR preklad_z = ?) AND visible = 1 AND datum <= NOW()', [$original, $original]));
+        } elseif ($this->protejsek !== null) {
+            // rubrika nebo stránka: originál + jeho překlady
+            [$tabulka, $klic, $radek, $cesta] = $this->protejsek;
+            $original = (int) ($radek['preklad_z'] ?: $radek[$klic]);
+            $preklady = array_map(fn (string $seo): string => $cesta . $seo, $this->app->db()->pairs("SELECT jazyk, seo_link FROM {{$tabulka}} WHERE ({$klic} = ? OR preklad_z = ?) AND zobrazit = 1", [$original, $original]));
         }
         $koren = $this->app->request->basePath() . '/';
         $vysledek = [];
@@ -539,7 +550,7 @@ final class Kernel
             $predpona = $sloupec === '' ? '' : $sloupec . '/';
             $vysledek[$kod] = [
                 'nazev' => Jazyk::DOSTUPNE[$kod][0],
-                'url' => $koren . $predpona . (isset($preklady[$sloupec]) ? 'clanek/' . $preklady[$sloupec] : ''),
+                'url' => $koren . $predpona . ($preklady[$sloupec] ?? ''),
                 'aktivni' => $kod === Jazyk::kod(),
                 'preklad' => isset($preklady[$sloupec]),
             ];

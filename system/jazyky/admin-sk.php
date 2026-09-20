@@ -770,4 +770,7 @@ return [
     'štítek' => 'štítok',
     'Provést' => 'Vykonať',
     'Označit' => 'Označiť',
+    'Je překladem' => 'Je prekladom',
+    '– není překlad –' => '– nie je preklad –',
+    'Vyplňte u položky v jiné jazykové verzi: přepínač jazyků pak vede přímo na protějšek a vyhledávače dostanou značky hreflang.' => 'Vyplňte pri položke v inej jazykovej verzii: prepínač jazykov potom vedie priamo na náprotivok a vyhľadávače dostanú značky hreflang.',
 ];

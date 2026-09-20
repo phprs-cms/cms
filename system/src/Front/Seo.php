@@ -219,7 +219,7 @@ final class Seo
         }
         // jazykové verze: hreflang u článku jen na existující překlady, jinde na úvod každé verze
         foreach ($meta['jazyky'] ?? [] as $kod => $j) {
-            if ($clanek === null ? ($meta['hlavni'] ?? false) : $j['preklad']) {
+            if ($j['preklad'] || ($clanek === null && ($meta['hlavni'] ?? false))) {
                 $h[] = '<link rel="alternate" hreflang="' . e($kod) . '" href="' . e($this->app->request->origin() . $j['url']) . '">';
             }
         }

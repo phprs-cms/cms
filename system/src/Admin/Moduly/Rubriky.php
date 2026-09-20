@@ -82,6 +82,7 @@ final class Rubriky extends Modul
             'zobrazit' => (int) $r->postBool('zobrazit'),
             'jazyk' => \PhpRS\Core\Jazyk::sloupec($this->app->settings(), $r->post('jazyk')),
         ];
+        $data['preklad_z'] = $data['jazyk'] === '' ? null : ($this->db->value("SELECT idt FROM {topic} WHERE idt = ? AND jazyk = '' AND idt <> ?", [$r->postInt('preklad_z'), $id]) ?: null);
 
         $chyby = [];
         if ($data['nazev'] === '') {

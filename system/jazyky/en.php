@@ -187,4 +187,7 @@ return [
     'Moje uložené články' => 'My saved articles',
     'Uložené články' => 'Saved articles',
     'Odebrat z uložených' => 'Remove from saved',
+    'Příspěvek ze sítě' => 'Post from',
+    'Zobrazit příspěvek ze sítě' => 'Show the post from',
+    'Otevřít původní příspěvek' => 'Open the original post',
 ];

@@ -186,4 +186,7 @@ return [
     'Moje uložené články' => 'Meine gespeicherten Artikel',
     'Uložené články' => 'Gespeicherte Artikel',
     'Odebrat z uložených' => 'Aus Gespeicherten entfernen',
+    'Příspěvek ze sítě' => 'Beitrag von',
+    'Zobrazit příspěvek ze sítě' => 'Beitrag anzeigen von',
+    'Otevřít původní příspěvek' => 'Originalbeitrag öffnen',
 ];

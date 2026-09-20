@@ -149,6 +149,7 @@ Hotovo:
   strukturovaná data `isAccessibleForFree`. Platební brána záměrně není.
 - **AI asistent v editoru** (rozšíření): návrhy titulků, perexu, shrnutí „Ve zkratce", SEO popisu a štítků, korektura s výběrem oprav
 - **Překlad článku asistentem:** v editoru (Překlad článku) založí koncept v rubrice cílového jazyka, propojený s originálem; formátování, obrázky a galerie zůstávají z originálu. Firemní proxy: `define('PHPRS_AI_URL', '…')` v `config.php`.
+- **Vložení ze sítí adresou:** adresa příspěvku (X, Instagram, Facebook, TikTok, Mastodon) nebo videa na samostatném řádku se na webu promění ve vložený rámec, který se načte až po kliknutí čtenáře.
   a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající

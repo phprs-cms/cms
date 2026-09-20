@@ -49,6 +49,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<div class="radek pres-celou">
 		<label for="text"><?= e(t('Text článku')) ?></label>
 		<textarea class="textbox vysoky" id="text" name="text" rows="20" data-editor><?= e($clanek['text']) ?></textarea>
+		<span class="napoveda"><?= e(t('Video nebo příspěvek ze sítí vložíte tak, že jeho adresu dáte na samostatný řádek (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čtenáři se načte až po kliknutí.')) ?></span>
 	</div>
 </div>
 

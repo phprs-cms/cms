@@ -940,4 +940,5 @@ return [
     'Zatím žádné přesměrování.' => 'No redirects yet.',
     'Nic nemusíte dělat – když změníte adresu vydaného článku, přesměrování vznikne samo.' => 'You don\'t have to do anything – when you change the address of a published article, a redirect is created automatically.',
     'Přidej' => 'Add',
+    'Video nebo příspěvek ze sítí vložíte tak, že jeho adresu dáte na samostatný řádek (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čtenáři se načte až po kliknutí.' => 'To embed a video or a social media post, put its address on a line of its own (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). It loads for the reader only after a click.',
 ];

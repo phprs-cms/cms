@@ -13,7 +13,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 4 | ✅ HOTOVO · **Automatické související články** podle štítků a rubriky (dnes jen ručně přes seriál) | drží čtenáře na webu bez práce redakce | S |
 | 5 | ✅ HOTOVO · **Hledání bez diakritiky a s našeptávačem** („nabrezi" najde „nábřeží"; fulltext nad indexem už běží) | čtenáři na mobilu diakritiku nepíšou | M |
 | 6 | ✅ HOTOVO · **Obsah článku (osnova)** z mezititulků u dlouhých textů + kotvy u H2 | dlouhé čtení, odkazování na část článku | S |
-| 7 | ◐ ČÁSTEČNĚ (video a podcast z adresy na samostatném řádku; příspěvky ze sítí zbývají) · **Vložení příspěvku ze sítí a videa vložením adresy** do textu (YouTube, Vimeo, X, Instagram, Mastodon – načtení až po kliknutí jako u přehrávače) | dnes jen ruční `<iframe>` v HTML režimu | M |
+| 7 | ✔ HOTOVO (video, podcast i příspěvky z X, Instagramu, Facebooku, TikToku a Mastodonu adresou na samostatném řádku; Bluesky zatím ne – vložení potřebuje DID účtu) · **Vložení příspěvku ze sítí a videa vložením adresy** do textu (YouTube, Vimeo, X, Instagram, Mastodon – načtení až po kliknutí jako u přehrávače) | dnes jen ruční `<iframe>` v HTML režimu | M |
 | 8 | ✅ HOTOVO · **Tabulky v editoru** (vložit tabulku, přidat řádek/sloupec, záhlaví) | čistič HTML je povoluje, ale editor je neumí vytvořit | M |
 | 9 | ✅ HOTOVO · **Výběr odkazu na vlastní článek** v dialogu odkazu (hledání podle titulku) | interní prolinkování je základ SEO | S |
 | 10 | **Ořez a otočení obrázku, bod zájmu** pro výřezy v otvíráku | dnes se fotka ořízne na střed | M |
@@ -86,7 +86,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 36, 37, 38, 39, 40, 41, 44, 45, 46, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 36, 37, 38, 39, 40, 41, 44, 45, 46, 47, 48.
 
 K bodu 36: tlačítko „Přeložit asistentem“ je v editoru článku (Překlad článku); kostra HTML zůstává z originálu, model dodává jen texty úseků, výsledek je vždy koncept. Se skutečným Claude API zatím nevyzkoušeno – jen proti místnímu falešnému serveru.
 

@@ -170,4 +170,7 @@ return [
     'Uložit na později' => 'Uložiť na neskôr',
     'Uloženo – odebrat' => 'Uložené – odobrať',
     'Odebrat z uložených' => 'Odobrať z uložených',
+    'Příspěvek ze sítě' => 'Príspevok zo siete',
+    'Zobrazit příspěvek ze sítě' => 'Zobraziť príspevok zo siete',
+    'Otevřít původní příspěvek' => 'Otvoriť pôvodný príspevok',
 ];

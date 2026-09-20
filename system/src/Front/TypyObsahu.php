@@ -49,17 +49,21 @@ final class TypyObsahu
     }
 
     /**
-     * Odstavec, ve kterém je jen adresa videa nebo podcastu (YouTube, Vimeo, Spotify), se na webu promění v přehrávač.
-     * Redaktor tak video vloží prostým vložením adresy na samostatný řádek.
+     * Odstavec, ve kterém je jen adresa videa, podcastu (YouTube, Vimeo, Spotify) nebo příspěvku ze sítí (X, Instagram,
+     * Facebook, TikTok, Mastodon), se na webu promění v přehrávač či vložený příspěvek. Redaktor jen vloží adresu na samostatný řádek.
      */
     public function vlozeneAdresy(string $html): string
     {
-        if (!preg_match('#youtu|vimeo\.com|spotify\.com#i', $html)) {
+        if (!preg_match('#youtu|vimeo\.com|spotify\.com|twitter\.com|//x\.com|instagram\.com|facebook\.com|tiktok\.com|/@[^/"<\s]+/\d{10}#i', $html)) {
             return $html;
         }
 
         return preg_replace_callback('#<p>\s*(?:<a\b[^>]*href="(https?://[^"]+)"[^>]*>[^<]*</a>|(https?://[^\s<]+))\s*(?:<br\s*/?>)?\s*</p>#i', function (array $m): string {
-            $prehravac = self::prehravac(html_entity_decode($m[1] !== '' ? $m[1] : $m[2]), '', '', true);
+            $adresa = html_entity_decode($m[1] !== '' ? $m[1] : $m[2]);
+            if (($prispevek = self::prispevek($adresa)) !== '') {
+                return $prispevek;
+            }
+            $prehravac = self::prehravac($adresa, '', '', true);
 
             return $prehravac !== '' && !str_contains($prehravac, '<audio') && !str_contains($prehravac, '<video') ? $prehravac : $m[0];
         }, $html) ?? $html;
@@ -142,6 +146,29 @@ final class TypyObsahu
             . '<div><a class="rs-autor-jmeno" href="' . e($this->app->url('autor/' . (int) $clanek['autor'])) . '" rel="author">' . e($clanek['autor_jm']) . '</a>'
             . ($clanek['autor_pozice'] !== '' ? '<span>' . e($clanek['autor_pozice']) . '</span>' : '')
             . '<p>' . nl2br(e(trim((string) $clanek['autor_bio']))) . '</p></div></aside>';
+    }
+
+    /**
+     * Příspěvek ze sociální sítě podle adresy. Vkládá se jako rámec dané služby (žádný cizí skript ve stránce) a až po kliknutí;
+     * do té doby je vidět jen odkaz na originál, který zůstává i pro čtečky a RSS.
+     */
+    public static function prispevek(string $url): string
+    {
+        [$sit, $vlozit] = match (true) {
+            (bool) preg_match('#^https://(?:www\.|mobile\.)?(?:twitter|x)\.com/[A-Za-z0-9_]{1,15}/status/(\d{5,25})#', $url, $m) => ['X', 'https://platform.twitter.com/embed/Tweet.html?dnt=true&id=' . $m[1]],
+            (bool) preg_match('#^https://(?:www\.)?instagram\.com/(p|reel|tv)/([A-Za-z0-9_-]{5,20})#', $url, $m) => ['Instagram', 'https://www.instagram.com/' . $m[1] . '/' . $m[2] . '/embed/'],
+            (bool) preg_match('#^https://(?:www\.|m\.)?facebook\.com/[^\s"<>]+/(?:posts|videos|photos)/[^\s"<>]+$#', $url) => ['Facebook', 'https://www.facebook.com/plugins/post.php?show_text=true&width=500&href=' . rawurlencode($url)],
+            (bool) preg_match('#^https://(?:www\.)?tiktok\.com/@[A-Za-z0-9_.]{1,30}/video/(\d{10,25})#', $url, $m) => ['TikTok', 'https://www.tiktok.com/embed/v2/' . $m[1]],
+            (bool) preg_match('#^https://([a-z0-9][a-z0-9.-]{2,80}\.[a-z]{2,20})/@([A-Za-z0-9_]{1,40}(?:@[a-z0-9.-]{3,80})?)/(\d{10,25})/?$#', $url, $m) => ['Mastodon', 'https://' . $m[1] . '/@' . $m[2] . '/' . $m[3] . '/embed'],
+            default => ['', ''],
+        };
+        if ($vlozit === '') {
+            return '';
+        }
+
+        return '<figure class="rs-medium rs-prispevek"><button type="button" class="rs-medium-spustit" data-vlozit="' . e($vlozit) . '" data-titulek="' . e(t('Příspěvek ze sítě') . ' ' . $sit) . '">'
+            . e(t('Zobrazit příspěvek ze sítě')) . ' ' . e($sit) . '<small>' . e(t('Obsah se načte ze služby')) . ' ' . e((string) parse_url($vlozit, PHP_URL_HOST)) . '</small></button>'
+            . '<figcaption><a href="' . e($url) . '" rel="noopener nofollow">' . e(t('Otevřít původní příspěvek')) . '</a></figcaption></figure>';
     }
 
     /** Přehrávač podle adresy: soubor (audio/video), YouTube, Vimeo, Spotify. Cizí přehrávače se načtou až po kliknutí. */

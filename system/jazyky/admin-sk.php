@@ -828,4 +828,5 @@ return [
     'Zatím žádné přesměrování.' => 'Zatiaľ žiadne presmerovanie.',
     'Nic nemusíte dělat – když změníte adresu vydaného článku, přesměrování vznikne samo.' => 'Nič nemusíte robiť – keď zmeníte adresu vydaného článku, presmerovanie vznikne samo.',
     'Přidej' => 'Pridaj',
+    'Video nebo příspěvek ze sítí vložíte tak, že jeho adresu dáte na samostatný řádek (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čtenáři se načte až po kliknutí.' => 'Video alebo príspevok zo sietí vložíte tak, že jeho adresu dáte na samostatný riadok (YouTube, Vimeo, Spotify, X, Instagram, Facebook, TikTok, Mastodon). Čitateľovi sa načíta až po kliknutí.',
 ];

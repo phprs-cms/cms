@@ -186,6 +186,20 @@ try {
     over('Asistent::preloz: neznámý jazyk odmítne', 'výjimka', 'výjimka');
 }
 
+/* ---------- vložení příspěvku ze sítí adresou ---------- */
+foreach ([
+    'https://x.com/nasa/status/1790000000000000000' => 'platform.twitter.com/embed/Tweet.html?dnt=true&amp;id=1790000000000000000',
+    'https://twitter.com/nasa/status/1790000000000000000?s=20' => 'id=1790000000000000000"',
+    'https://www.instagram.com/p/C1aBcDeFgH_/' => 'https://www.instagram.com/p/C1aBcDeFgH_/embed/',
+    'https://www.tiktok.com/@redakce/video/7300000000000000000' => 'https://www.tiktok.com/embed/v2/7300000000000000000',
+    'https://mastodon.social/@Gargron/111111111111111111' => 'https://mastodon.social/@Gargron/111111111111111111/embed',
+] as $adresa => $ocekavane) {
+    over('TypyObsahu::prispevek: ' . parse_url($adresa, PHP_URL_HOST), str_contains(PhpRS\Front\TypyObsahu::prispevek($adresa), $ocekavane), true);
+}
+foreach (['https://x.com/nasa', 'http://x.com/nasa/status/1790000000000000000', 'https://x.com.utocnik.cz/a/status/1790000000000000000', 'https://example.com/clanek/123', 'https://mastodon.social/@a/1"onload="x', 'javascript:alert(1)'] as $adresa) {
+    over('TypyObsahu::prispevek: nevkládá ' . $adresa, PhpRS\Front\TypyObsahu::prispevek($adresa), '');
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

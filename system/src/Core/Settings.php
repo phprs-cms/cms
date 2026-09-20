@@ -19,6 +19,7 @@ final class Settings
         'logo_webu' => '',
         'favicon' => '',
         'brand_akcent' => '',         // hlavní barva webu (#rrggbb); prázdné = barva šablony
+        'tmavy_rezim' => 'vypnuto',   // tmavý vzhled webu: vypnuto | auto (podle zařízení čtenáře)
         'brand_pismo_titulky' => 'vychozi', // klíč z Front\Identita::PISMA_TITULKU
         'brand_pismo_text' => 'vychozi',            // obrázek místo textového názvu v záhlaví
         'text_paticky' => '',

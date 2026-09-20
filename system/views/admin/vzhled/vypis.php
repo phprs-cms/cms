@@ -57,6 +57,18 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 </fieldset>
 
 <fieldset>
+<legend><?= e(t('Tmavý režim')) ?></legend>
+<div class="radek">
+	<span class="popisek"><?= e(t('Tmavý vzhled webu')) ?></span>
+	<div class="volby">
+		<label><input type="radio" name="tmavy_rezim" value="vypnuto"<?= $hodnoty['tmavy_rezim'] !== 'auto' ? ' checked' : '' ?>> <?= e(t('vypnutý – web je vždy světlý')) ?></label><br>
+		<label><input type="radio" name="tmavy_rezim" value="auto"<?= $hodnoty['tmavy_rezim'] === 'auto' ? ' checked' : '' ?>> <?= e(t('podle zařízení čtenáře')) ?></label>
+		<span class="napoveda"><?= e(t('Čtenář s tmavým režimem v telefonu nebo počítači uvidí tmavou verzi šablony. Zkontrolujte logo: tmavé logo na průhledném pozadí by na tmavém webu zaniklo.')) ?></span>
+	</div>
+</div>
+</fieldset>
+
+<fieldset>
 <legend><?= e(t('Písmo')) ?></legend>
 <div class="radek">
 	<label for="brand_pismo_titulky"><?= e(t('Titulky')) ?></label>

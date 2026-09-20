@@ -63,7 +63,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 | # | Námět | Proč | Pracnost |
 |---|-------|------|----------|
-| 37 | **Tmavý režim šablon** (`prefers-color-scheme` + přepínač) | administrace ho má, web ne | M |
+| 37 | ✅ HOTOVO (podle zařízení čtenáře; ruční přepínač na webu zbývá) · **Tmavý režim šablon** (`prefers-color-scheme` + přepínač) | administrace ho má, web ne | M |
 | 38 | **Další šablony článku**: dlouhé čtení s fotkou přes celou šířku, fotoreportáž, rozhovor (otázka/odpověď), krátká zpráva | dnes jedna šablona „Standardní" na všechno | M |
 | 39 | ✅ HOTOVO · **Mobilní menu** (hamburger s rubrikami, hledáním a jazyky) a lepkavá hlavička | na telefonu se pruh rubrik posouvá do strany bez nápovědy, že pokračuje | S–M |
 | 40 | ✅ HOTOVO · **Ukazatel průběhu čtení**, odhad doby čtení u článku, „další článek" na konci | drobnosti, které dělají magazín magazínem | S |
@@ -86,12 +86,12 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
+Hotovo: 1, 2, 4, 5, 6, 8, 9, 11, 13, 14, 18, 21, 24, 25, 29, 31, 32, 37, 39, 40, 41, 44; částečně 7 (video z adresy ano, příspěvky ze sítí ne) a 23 (obnova ano,
 vzdálené zálohy ne).
 
 Další v pořadí: více autorů u článku (3), ukládání rozepsaného článku na server
 a porovnání revizí (12), zálohy mimo server (23), newsletter 2.0 (20), platební brána (15),
-tmavý režim a další šablony článku (37, 38).
+další šablony článku (38).
 
 ## Doporučené pořadí
 
@@ -99,6 +99,6 @@ tmavý režim a další šablony článku (37, 38).
 2. Důvěryhodnost a obsah: medailonek autora (2), vkládání ze sítí (7), tabulky (8), přílohy (11).
 3. Provozní jistota: obnova a vzdálené zálohy (23), fronta e-mailů (25), jednotkové testy (31).
 4. Příjmy: platební brána (15), dobrovolný příspěvek (21), newsletter 2.0 (20).
-5. Před veřejným vydáním: import z WordPressu (28), tmavý režim a další šablony článku (37, 38).
+5. Před veřejným vydáním: import z WordPressu (28), další šablony článku (38).
 
 Výsledky rešerše bezpečnosti a výkonu včetně toho, co zbývá: `docs/audity/2026-09-19-reserse-kodu.md`.

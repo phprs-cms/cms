@@ -242,3 +242,26 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* písmo titulků z Identity webu */
 h1, h2, h3, .logo, .blok-nadpis, .clanek-text blockquote { font-family: var(--titulky); }
+
+/* ---------- tmavý režim (Identita webu → Tmavý režim: podle zařízení čtenáře) ----------
+ * --bila a --cerna tu znamenají i "text na černé hlavičce", proto zůstávají a přebíjí se jen plochy stránky. */
+@media (prefers-color-scheme: dark) {
+	:root[data-tmavy] {
+		color-scheme: dark;
+		--text: #F2F2F2;
+		--text-slaby: #A0A0A0;
+		--linka: #2E2E2E;
+		--podklad: #1A1A1A;
+	}
+	:root[data-tmavy] body { background: #0E0E0E; }
+	:root[data-tmavy] .hlavicka { border-bottom: 1px solid #2E2E2E; }
+	:root[data-tmavy] .zona-pod, :root[data-tmavy] .strankovani { border-top-color: #F2F2F2; }
+	:root[data-tmavy] .blok-typ2 { background: #1A1A1A; }
+	:root[data-tmavy] .blok-typ4 { background: #F2F2F2; color: #0E0E0E; }
+	:root[data-tmavy] .hledani input, :root[data-tmavy] input, :root[data-tmavy] textarea, :root[data-tmavy] select { background: #1A1A1A; color: var(--text); border-color: #F2F2F2; }
+	:root[data-tmavy] .hledani button { border-color: #F2F2F2; background: #F2F2F2; color: #0E0E0E; }
+	:root[data-tmavy] .komentar-formular button[type="submit"], :root[data-tmavy] .anketa button { color: #0E0E0E; }
+	:root[data-tmavy] .paticka { border-top: 1px solid #2E2E2E; }
+	:root[data-tmavy] .karta .perex, :root[data-tmavy] .clanek-cely .perex { color: #CFCFCF; }
+	:root[data-tmavy] .vypis-titulni .karta-hero .perex { color: #E4E4E4; }
+}

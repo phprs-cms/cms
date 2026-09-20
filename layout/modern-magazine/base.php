@@ -23,7 +23,7 @@
 $nazevWebu = $web->get('nazev_webu');
 ?>
 <!doctype html>
-<html lang="<?= e($jazyk ?? 'cs') ?>">
+<html lang="<?= e($jazyk ?? 'cs') ?>"<?= $web->get('tmavy_rezim') === 'auto' ? ' data-tmavy' : '' ?>>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

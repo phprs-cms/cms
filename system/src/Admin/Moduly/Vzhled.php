@@ -21,7 +21,7 @@ final class Vzhled extends Modul
     public const string IKONA = 'identita';
     public const bool JEN_ADMIN = true;
 
-    private const array KLICE = ['layout', 'logo_webu', 'favicon', 'brand_akcent', 'brand_pismo_titulky', 'brand_pismo_text', 'nazev_webu'];
+    private const array KLICE = ['layout', 'logo_webu', 'favicon', 'brand_akcent', 'brand_pismo_titulky', 'brand_pismo_text', 'nazev_webu', 'tmavy_rezim'];
 
     protected function akceVypis(): Response
     {
@@ -51,6 +51,7 @@ final class Vzhled extends Modul
         $vlastni = $r->post('akcent_vlastni') === '1' && preg_match('/^#[0-9a-f]{6}$/i', $r->post('brand_akcent'));
         $web->set('brand_akcent', $vlastni ? strtolower($r->post('brand_akcent')) : '');
         $web->set('brand_pismo_titulky', isset(Identita::PISMA_TITULKU[$r->post('brand_pismo_titulky')]) ? $r->post('brand_pismo_titulky') : 'vychozi');
+        $web->set('tmavy_rezim', $r->post('tmavy_rezim') === 'auto' ? 'auto' : 'vypnuto');
         $web->set('brand_pismo_text', isset(Identita::PISMA_TEXTU[$r->post('brand_pismo_text')]) ? $r->post('brand_pismo_text') : 'vychozi');
 
         return $this->zpet('Identita webu byla uložena.');

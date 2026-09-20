@@ -96,6 +96,9 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   skripty nikdy). **E-maily** mají frontu (`rs_posta`, `Posta::zpracujFrontu()` z úloh na pozadí); jednorázové zprávy `doFronty: false`.
 - **Testy:** logiku bez databáze (kryptografie, parsování, převody textu) pokryj v `tools/testy.php`; průchod webem hlídá `tools/test.sh`.
 
+- **Tmavý režim webu:** šablona má na konci `style.css` blok `@media (prefers-color-scheme: dark) { :root[data-tmavy] { … } }` a `base.php`
+  dává `<html data-tmavy>` podle nastavení `tmavy_rezim`. Barvy v šablonách proto piš přes proměnné, ne natvrdo.
+
 ## Spuštění
 
 `php -S localhost:8080 system/dev-router.php` (preview: konfigurace `phprs3`). MySQL: `mysql.server start`,

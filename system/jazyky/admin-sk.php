@@ -688,4 +688,8 @@ return [
     'Nejnovější články' => 'Najnovšie články',
     'Žádné další články.' => 'Žiadne ďalšie články.',
     'Uložit titulní stranu' => 'Uložiť titulnú stranu',
+    'Tmavý vzhled webu' => 'Tmavý vzhľad webu',
+    'vypnutý – web je vždy světlý' => 'vypnutý – web je vždy svetlý',
+    'podle zařízení čtenáře' => 'podľa zariadenia čitateľa',
+    'Čtenář s tmavým režimem v telefonu nebo počítači uvidí tmavou verzi šablony. Zkontrolujte logo: tmavé logo na průhledném pozadí by na tmavém webu zaniklo.' => 'Čitateľ s tmavým režimom v telefóne alebo počítači uvidí tmavú verziu šablóny. Skontrolujte logo: tmavé logo na priehľadnom pozadí by na tmavom webe zaniklo.',
 ];

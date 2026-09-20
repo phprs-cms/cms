@@ -11,7 +11,7 @@
 	--pismo-titulky: var(--rs-pismo-titulky, Georgia, "Times New Roman", serif);
 }
 * { box-sizing: border-box; }
-body { margin: 0; font: 16px/1.6 var(--pismo); color: var(--text); background: #FFFFFF; }
+body { margin: 0; font: 16px/1.6 var(--pismo); color: var(--text); background: var(--pozadi, #FFFFFF); }
 a { color: var(--barva); }
 a:hover { color: var(--barva-tmava); }
 img { max-width: 100%; height: auto; }
@@ -168,3 +168,20 @@ img { max-width: 100%; height: auto; }
 .clanek-aktualizovano { margin: 0 auto 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.7; }
 
 .newsletter-zprava { margin: 0 0 8px; padding: 8px 10px; border: 1px solid currentColor; font-size: 14px; }
+
+/* ---------- tmavý režim (Identita webu → Tmavý režim: podle zařízení čtenáře) ---------- */
+@media (prefers-color-scheme: dark) {
+	:root[data-tmavy] {
+		color-scheme: dark;
+		--pozadi: #15171C;
+		--text: #E9EAEE;
+		--text-slaby: #A3A8B5;
+		--linka: #2F333D;
+		--podklad: #1E2128;
+		--barva: color-mix(in srgb, var(--rs-akcent, #0A2FC4) 55%, #FFFFFF);
+		--barva-tmava: color-mix(in srgb, var(--rs-akcent, #0A2FC4) 35%, #FFFFFF);
+	}
+	:root[data-tmavy] .hledani button, :root[data-tmavy] .komentar-formular button[type="submit"], :root[data-tmavy] .anketa button { color: #15171C; }
+	:root[data-tmavy] input, :root[data-tmavy] textarea, :root[data-tmavy] select { background: #1E2128; color: var(--text); border-color: var(--linka); }
+	:root[data-tmavy] .perex, :root[data-tmavy] .clanek-text blockquote { color: #C9CCD6; }
+}

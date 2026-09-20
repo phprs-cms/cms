@@ -789,4 +789,9 @@ return [
     'Nejnovější články' => 'Latest articles',
     'Žádné další články.' => 'No other articles.',
     'Uložit titulní stranu' => 'Save the front page',
+    'Tmavý režim' => 'Dark mode',
+    'Tmavý vzhled webu' => 'Dark look of the site',
+    'vypnutý – web je vždy světlý' => 'off – the site is always light',
+    'podle zařízení čtenáře' => 'follow the reader\'s device',
+    'Čtenář s tmavým režimem v telefonu nebo počítači uvidí tmavou verzi šablony. Zkontrolujte logo: tmavé logo na průhledném pozadí by na tmavém webu zaniklo.' => 'Readers with dark mode on their phone or computer see a dark version of the template. Check your logo: a dark logo on a transparent background would disappear on a dark site.',
 ];

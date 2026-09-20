@@ -8,7 +8,7 @@
  */
 use PhpRS\Admin\Moduly\Reklama;
 ?>
-<p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nová reklama')) ?></a></p>
+<p class="navigace-radek"><a class="tl" href="<?= e($modul->url('novy')) ?>"><?= e(t('Nová reklama')) ?></a> <a class="navigace" href="<?= e($modul->url('vykaz')) ?>"><?= e(t('Výkaz pro inzerenta (CSV)')) ?></a></p>
 <p class="smltxt"><?= e(t('Reklama pod článkem se zobrazuje sama. Ostatní pozice umístíte na web blokem „Reklama“ v sekci')) ?> <a href="<?= e($app->url('admin.php?modul=bloky')) ?>"><?= e(t('Bloky a rozvržení')) ?></a><?= e(t('. Každá reklama je na webu označena slovem „Reklama“.')) ?></p>
 <?php if ($reklamy !== []): ?>
 <div class="tab-obal">

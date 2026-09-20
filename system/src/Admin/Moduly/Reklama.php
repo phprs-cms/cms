@@ -36,10 +36,23 @@ final class Reklama extends Modul
         ]);
     }
 
+    /** Výkaz pro inzerenta: zobrazení, prokliky a míra prokliku všech bannerů jako CSV. */
+    protected function akceVykaz(): Response
+    {
+        $radky = ["nazev;pozice;od;do;zobrazeni;prokliky;mira_prokliku_procent;stav"];
+        foreach ($this->db->all('SELECT * FROM {reklama} ORDER BY idr DESC') as $b) {
+            $bunka = fn (string $v): string => '"' . str_replace('"', '""', preg_replace('/^[=+\-@\t]/', "'$0", $v) ?? '') . '"';
+            $radky[] = implode(';', [$bunka($b['nazev']), $b['pozice'], (string) $b['platna_od'], (string) $b['platna_do'], (int) $b['zobrazeni'], (int) $b['kliky'],
+                $b['zobrazeni'] > 0 ? number_format($b['kliky'] / $b['zobrazeni'] * 100, 2, ',', '') : '0', $b['aktivni'] ? 'aktivni' : 'vypnuta']);
+        }
+
+        return new Response("\u{FEFF}" . implode("\n", $radky) . "\n", 200, ['Content-Type' => 'text/csv; charset=utf-8', 'Content-Disposition' => 'attachment; filename="reklama-vykaz-' . date('Y-m-d') . '.csv"']);
+    }
+
     protected function akceNovy(): Response
     {
         return $this->formular(['idr' => 0, 'nazev' => '', 'pozice' => 'sloupec', 'typ' => 'obrazek', 'obrazek' => '', 'cil_url' => '', 'kod' => '',
-            'platna_od' => null, 'platna_do' => null, 'aktivni' => 1, 'vaha' => 1, 'max_zobrazeni' => null]);
+            'platna_od' => null, 'platna_do' => null, 'aktivni' => 1, 'vaha' => 1, 'max_zobrazeni' => null, 'jen_rubrika' => null, 'zarizeni' => 'vse']);
     }
 
     protected function akceEdit(): Response
@@ -69,6 +82,8 @@ final class Reklama extends Modul
             'aktivni' => (int) $r->postBool('aktivni'),
             'vaha' => max(1, min(10, $r->postInt('vaha', 1))),
             'max_zobrazeni' => $r->postInt('max_zobrazeni') > 0 ? $r->postInt('max_zobrazeni') : null,
+            'jen_rubrika' => $this->db->value('SELECT idt FROM {topic} WHERE idt = ?', [$r->postInt('jen_rubrika')]) !== null ? $r->postInt('jen_rubrika') : null,
+            'zarizeni' => in_array($r->post('zarizeni'), ['mobil', 'pocitac'], true) ? $r->post('zarizeni') : 'vse',
         ];
         $chyby = [];
         if ($data['nazev'] === '') {

@@ -18,7 +18,8 @@ final class Reklama
     {
     }
 
-    public function html(string $pozice): string
+    /** @param int|null $rubrika rubrika zobrazené stránky (výpis rubriky nebo článek) - kvůli reklamám cíleným na rubriku */
+    public function html(string $pozice, ?int $rubrika = null): string
     {
         if (!Rozsireni::je($this->app->settings(), 'reklama') || $this->app->request->get('nahled') !== '') {
             return '';
@@ -26,8 +27,9 @@ final class Reklama
         $db = $this->app->db();
         $bezici = $db->all(
             'SELECT * FROM {reklama} WHERE pozice = ? AND aktivni = 1 AND (platna_od IS NULL OR platna_od <= NOW())
-             AND (platna_do IS NULL OR platna_do > NOW()) AND (max_zobrazeni IS NULL OR zobrazeni < max_zobrazeni)',
-            [$pozice],
+             AND (platna_do IS NULL OR platna_do > NOW()) AND (max_zobrazeni IS NULL OR zobrazeni < max_zobrazeni)
+             AND (jen_rubrika IS NULL OR jen_rubrika = ?)',
+            [$pozice, $rubrika ?? 0],
         );
         if ($bezici === []) {
             return '';
@@ -49,7 +51,8 @@ final class Reklama
             $obsah = '<a href="' . e($this->app->url('r/' . (int) $r['idr'])) . '" rel="sponsored noopener" target="_blank"><img src="' . e($src) . '" alt="' . e($r['nazev']) . '" loading="lazy"></a>';
         }
 
-        return '<aside class="reklama reklama-' . e($pozice) . '" aria-label="Reklama"><span class="reklama-oznaceni">Reklama</span>' . $obsah . '</aside>';
+        // cílení na zařízení řeší styl (třídy jen-mobil / jen-pocitac z Front\Seo) - stránka z cache je pro všechny stejná
+        return '<aside class="reklama reklama-' . e($pozice) . (in_array($r['zarizeni'], ['mobil', 'pocitac'], true) ? ' jen-' . $r['zarizeni'] : '') . '" aria-label="Reklama"><span class="reklama-oznaceni">Reklama</span>' . $obsah . '</aside>';
     }
 
     /** Proklik banneru: započítat a přesměrovat na cíl. */

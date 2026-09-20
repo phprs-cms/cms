@@ -33,7 +33,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 | 19 | ✅ HOTOVO (uložené články; historie čtení se záměrně nevede – soukromí) · **Uložené články a historie čtení** pro přihlášené | důvod se registrovat i u nezamčeného webu | M |
 | 20 | ✅ HOTOVO (automatický výběr, naplánované odeslání, souhrnná statistika, šablona s logem a barvou) · **Newsletter: automatický týdenní výběr**, naplánované odeslání, statistika otevření a prokliků, šablona s logem a barvou webu | dnes jen ruční vydání bez měření | M–L |
 | 21 | ✅ HOTOVO · **Dobrovolný příspěvek čtenářů** (blok „Podpořte nás" s QR platbou / odkazem) | nejjednodušší monetizace malých magazínů | S |
-| 22 | **Reklama: cílení na rubriku a zařízení, limit zobrazení, výkaz pro inzerenta (PDF/CSV)** | dnes jen pozice a termín | M |
+| 22 | ✅ HOTOVO (rubrika, zařízení, limit zobrazení, výkaz CSV) · **Reklama: cílení na rubriku a zařízení, limit zobrazení, výkaz pro inzerenta (PDF/CSV)** | dnes jen pozice a termín | M |
 
 ## 3. Správa, provoz, bezpečnost
 
@@ -86,7 +86,7 @@ Seřazeno podle přínosu pro redakci malého až středního magazínu. U každ
 
 ## Stav k 2026-09-20
 
-Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
+Hotovo: 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 44, 47, 48; částečně 7 (video z adresy ano, příspěvky ze sítí ne).
 
 Další v pořadí: platební brána (15),
 

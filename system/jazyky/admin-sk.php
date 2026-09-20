@@ -782,4 +782,11 @@ return [
     'Zkontrolovat znovu' => 'Skontrolovať znova',
     'Hledat nefunkční odkazy' => 'Hľadať nefunkčné odkazy',
     'Na pozadí, jeden článek za pět minut. Výsledek je v Článcích → Nefunkční odkazy.' => 'Na pozadí, jeden článok za päť minút. Výsledok je v Článkoch → Nefunkčné odkazy.',
+    'Plánování, cílení a limity' => 'Plánovanie, cielenie a limity',
+    've všech' => 'vo všetkých',
+    'Reklama se ukáže jen ve výpisu této rubriky a u jejích článků.' => 'Reklama sa ukáže len vo výpise tejto rubriky a pri jej článkoch.',
+    'všechna' => 'všetky',
+    'jen telefony' => 'len telefóny',
+    'jen počítače a tablety' => 'len počítače a tablety',
+    'Výkaz pro inzerenta (CSV)' => 'Výkaz pre inzerenta (CSV)',
 ];

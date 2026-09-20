@@ -409,7 +409,7 @@ final class Kernel
             $clanek['text'] .= $this->ctenari->ulozitHtml($clanek);
         } // přehrávač, živá reportáž, hodnocení recenze
         $interakce = new Interakce($this->app, new View([PHPRS_SYSTEM . '/views/front']));
-        $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem');
+        $clanek['reklama_html'] = (new Reklama($this->app))->html('pod-clankem', (int) $clanek['tema']);
         $clanek['hodnoceni_html'] = $nahled ? '' : $interakce->hodnoceniHtml($clanek);
         $clanek['komentare_html'] = $nahled ? '' : $interakce->komentareHtml($clanek);
         $clanek['stitky'] = $this->app->db()->all('SELECT s.nazev, s.seo_link FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ? ORDER BY s.nazev', [$clanek['idc']]);

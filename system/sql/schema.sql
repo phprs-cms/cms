@@ -413,6 +413,8 @@ CREATE TABLE rs_reklama (
     max_zobrazeni INT UNSIGNED NULL,                      -- strop kampaně, NULL = bez omezení
     zobrazeni     INT UNSIGNED NOT NULL DEFAULT 0,
     kliky         INT UNSIGNED NOT NULL DEFAULT 0,
+    jen_rubrika   INT UNSIGNED NULL,                      -- cílení: jen v této rubrice (a jejích článcích)
+    zarizeni      VARCHAR(10) NOT NULL DEFAULT 'vse',     -- vse | mobil | pocitac
     PRIMARY KEY (idr),
     KEY ix_reklama_pozice (pozice, aktivni)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

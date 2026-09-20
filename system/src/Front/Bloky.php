@@ -21,6 +21,9 @@ final class Bloky
     {
     }
 
+    /** Rubrika právě skládané stránky - bloky s reklamou podle ní vybírají cílené bannery. */
+    private ?int $rubrika = null;
+
     public function rozvrzeni(): string
     {
         $rozvrzeni = $this->app->settings()->get('rozvrzeni');
@@ -35,6 +38,7 @@ final class Bloky
      */
     public function zony(bool $hlavniStranka, ?int $rubrika = null, bool $upravit = false): array
     {
+        $this->rubrika = $rubrika;
         $existujici = Nastaveni::ROZVRZENI[$this->rozvrzeni()][2];
         $html = array_fill_keys(array_keys(Nastaveni::ZONY), '');
 
@@ -97,7 +101,7 @@ final class Bloky
             'hle' => $this->view->render('blok_hle', ['url' => $url, 'q' => $this->app->request->get('q')]),
             'nej' => $this->view->render('blok_nej', ['clanky' => $clanky->nejctenejsi($pocet), 'url' => $url]),
             'ank' => (new Interakce($this->app, $this->view))->anketaHtml(),
-            'rek' => (new Reklama($this->app))->html($data !== '' ? $data : 'sloupec'),
+            'rek' => (new Reklama($this->app))->html($data !== '' ? $data : 'sloupec', $this->rubrika),
             'cla' => (function () use ($clanky, $data, $url): string {
                 [$idt, $kolik] = array_map(intval(...), explode(':', $data . ':5'));
                 $seznam = $idt > 0 ? $clanky->zRubriky($idt, 1, max(1, min(20, $kolik)))[0] : $clanky->naHlavniStranku(1, max(1, min(20, $kolik)))[0];

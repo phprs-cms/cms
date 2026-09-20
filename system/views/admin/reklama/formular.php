@@ -15,7 +15,7 @@ $pozice = [
     'hlavicka' => ['V hlavičce', 'Široký pruh nahoře, např. 970×210.'],
     'paticka' => ['V patičce', 'Široký pruh dole.'],
 ];
-$planovani = $reklama['platna_od'] || $reklama['platna_do'] || $reklama['max_zobrazeni'] !== null || (int) $reklama['vaha'] !== 1 || !$reklama['aktivni'];
+$planovani = ($reklama['jen_rubrika'] ?? null) !== null || ($reklama['zarizeni'] ?? 'vse') !== 'vse' || $reklama['platna_od'] || $reklama['platna_do'] || $reklama['max_zobrazeni'] !== null || (int) $reklama['vaha'] !== 1 || !$reklama['aktivni'];
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled')) ?></a></p>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>" data-prepinac="typ">
@@ -48,7 +48,18 @@ $planovani = $reklama['platna_od'] || $reklama['platna_do'] || $reklama['max_zob
 </fieldset>
 
 <details class="pokrocile"<?= $planovani ? ' open' : '' ?>>
-<summary><?= e(t('Plánování a limity')) ?></summary>
+<summary><?= e(t('Plánování, cílení a limity')) ?></summary>
+<div class="radek"><label for="jen_rubrika"><?= e(t('Jen v rubrice')) ?></label><div><select id="jen_rubrika" name="jen_rubrika">
+	<option value="0"><?= e(t('ve všech')) ?></option>
+<?php foreach (PhpRS\Admin\Moduly\Rubriky::strom($modul->app()->db()) as $rub): ?>
+	<option value="<?= (int) $rub['idt'] ?>"<?= (int) ($reklama['jen_rubrika'] ?? 0) === (int) $rub['idt'] ? ' selected' : '' ?>><?= e(str_repeat('– ', (int) $rub['uroven']) . $rub['nazev']) ?></option>
+<?php endforeach ?>
+</select><span class="napoveda"><?= e(t('Reklama se ukáže jen ve výpisu této rubriky a u jejích článků.')) ?></span></div></div>
+<div class="radek"><label for="zarizeni"><?= e(t('Zařízení')) ?></label><select id="zarizeni" name="zarizeni">
+	<option value="vse"><?= e(t('všechna')) ?></option>
+	<option value="mobil"<?= ($reklama['zarizeni'] ?? '') === 'mobil' ? ' selected' : '' ?>><?= e(t('jen telefony')) ?></option>
+	<option value="pocitac"<?= ($reklama['zarizeni'] ?? '') === 'pocitac' ? ' selected' : '' ?>><?= e(t('jen počítače a tablety')) ?></option>
+</select></div>
 <div class="radek"><label for="platna_od"><?= e(t('Zobrazovat od')) ?></label><input class="textpole" type="datetime-local" id="platna_od" name="platna_od" value="<?= e($dt($reklama['platna_od'])) ?>"></div>
 <div class="radek"><label for="platna_do"><?= e(t('Zobrazovat do')) ?></label><input class="textpole" type="datetime-local" id="platna_do" name="platna_do" value="<?= e($dt($reklama['platna_do'])) ?>"></div>
 <div class="radek"><label for="max_zobrazeni"><?= e(t('Nejvýše zobrazení')) ?></label><div><input class="textpole" type="number" id="max_zobrazeni" name="max_zobrazeni" value="<?= e((string) $reklama['max_zobrazeni']) ?>" min="0" style="width:140px"><span class="napoveda"><?= e(t('Po dosažení se reklama vypne sama.')) ?></span></div></div>

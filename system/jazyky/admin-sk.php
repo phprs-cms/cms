@@ -1457,4 +1457,5 @@ return [
     'Nevratně smazat komentáře, odběr a účet tohoto čtenáře?' => 'Nenávratne zmazať komentáre, odber a účet tohto čitateľa?',
     'V cílovém jazyce zatím není žádná rubrika, do které smíte psát. Založte ji v Rubrikách (pole Jazyková verze).' => 'V cieľovom jazyku zatiaľ nie je žiadna rubrika, do ktorej smiete písať. Založte ju v Rubrikách (pole Jazyková verzia).',
     'Dokud je rozšíření Reklama zapnuté, cache stránek se nepoužívá – reklamy se střídají a počítají při každém zobrazení.' => 'Kým je rozšírenie Reklama zapnuté, cache stránok sa nepoužíva – reklamy sa striedajú a počítajú pri každom zobrazení.',
+    'úprava přímo na webu' => 'úprava priamo na webe',
 ];

@@ -1655,4 +1655,5 @@ return [
     'Nevratně smazat komentáře, odběr a účet tohoto čtenáře?' => 'Permanently delete this reader\'s comments, subscription and account?',
     'V cílovém jazyce zatím není žádná rubrika, do které smíte psát. Založte ji v Rubrikách (pole Jazyková verze).' => 'There is no section in the target language that you may write in yet. Create one in Sections (the Language version field).',
     'Dokud je rozšíření Reklama zapnuté, cache stránek se nepoužívá – reklamy se střídají a počítají při každém zobrazení.' => 'While the Advertising extension is on, the page cache is not used – ads rotate and are counted on every view.',
+    'úprava přímo na webu' => 'edited directly on the site',
 ];

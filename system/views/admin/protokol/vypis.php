@@ -28,7 +28,7 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 	<td class="cislo"><?= e(datum($z['cas'], true)) ?></td>
 	<td><?= e($z['jmeno'] !== '' ? $z['jmeno'] : '–') ?></td>
 	<td><?= e(isset($nazvy[$z['modul']]) ? t($nazvy[$z['modul']]) : $z['modul']) ?></td>
-	<td><?= e(isset($akce[$z['akce']]) ? t($akce[$z['akce']]) : $z['akce']) ?></td>
+	<td><?= e(t($akce[$z['akce']] ?? $z['akce'])) ?></td>
 	<td><?= e($z['popis']) ?></td>
 </tr>
 <?php endforeach ?>

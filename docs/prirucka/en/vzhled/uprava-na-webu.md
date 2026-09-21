@@ -51,7 +51,7 @@ Pages have no lock.
 
 Saving an article in which the headline, the standfirst or the text has changed creates a revision, just like saving in the administration. You return to a previous wording in the full article form – see [Scheduling and revisions](../psani/planovani-a-revize.md). Pages have no revisions.
 
-Every save is recorded in the **Change log** as “úprava přímo na webu” (editing right on the site) with the headline of the article or the title of the page. An administrator sees the log in **Administration → Change log**.
+Every save is recorded in the **Change log** as “edited directly on the site” with the headline of the article or the title of the page. An administrator sees the log in **Administration → Change log**.
 
 After a published article is saved, the system also:
 

@@ -1351,4 +1351,5 @@ return [
     'Služba Claude má výpadek. Zkuste to za chvíli.' => 'Služba Claude má výpadok. Skúste to o chvíľu.',
     'schváleno – čeká na vydání' => 'schválené – čaká na vydanie',
     'Zeleně vydané, modře naplánované, oranžově koncepty, fialově články ke korektuře a schválené (schválené plnou čarou). Datum článku změníte v jeho úpravě.' => 'Zelenou vydané, modrou naplánované, oranžovou koncepty, fialovou články na korektúru a schválené (schválené plnou čiarou). Dátum článku zmeníte v jeho úprave.',
+    'Zrušit token' => 'Zrušiť token',
 ];

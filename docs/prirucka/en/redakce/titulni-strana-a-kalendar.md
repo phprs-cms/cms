@@ -42,7 +42,7 @@ The calendar is also useful for planning ahead: create a draft with a working he
 
 ## Article list and bulk actions
 
-The list shows 20 articles per page. You narrow it down with the status tabs (**All**, **Published**, **Scheduled**, **Drafts**, **For proofreading**, **Approved**), the **Section:** field, the **Headline contains:** field and the option **Show only my articles**; confirm with the **Filter** button.
+The list shows 20 articles per page. You narrow it down with the status tabs (**All**, **Published**, **Scheduled**, **Drafts**, **For review**, **Approved**), the **Section:** field, the **Headline contains:** field and the option **Show only my articles**; confirm with the **Filter** button.
 
 A bulk action:
 

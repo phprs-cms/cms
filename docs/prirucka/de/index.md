@@ -8,8 +8,10 @@ Der **Administrator der Website** – wer das System installiert hat und es betr
 ## Kapitel
 
 - **Erste Schritte** – Anforderungen an das Hosting, Installation, erste Schritte nach der Installation, Aktualisierungen und Umzug der Website.
+- **Schreiben** – Artikeleditor, Bilder, Galerien und Anhänge, Einbetten von Videos und Beiträgen aus sozialen Netzwerken, Inhaltstypen, Ressorts, Schlagwörter und Serien, Planung und Versionen, KI-Assistent.
+- **Redaktion** – Rollen und Berechtigungen, Übergabe und Korrektur, Titelseite und Kalender, Kommentare, Konto und Anmeldung.
 - **Betrieb** – E-Mail, Sicherungen, Hintergrundaufgaben, Systemstatus, nginx, Sicherheit und Problemlösung.
-- *Schreiben, Redaktion, Design, Leser und Einnahmen, Sprachversionen, SEO und KI, Für Entwickler* – in Vorbereitung.
+- *Design, Leser und Einnahmen, Sprachversionen, SEO und KI, Für Entwickler* – in Vorbereitung.
 
 ## Wie das Handbuch geschrieben ist
 

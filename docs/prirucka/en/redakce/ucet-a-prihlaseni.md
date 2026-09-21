@@ -81,7 +81,7 @@ The **Claude connection** panel is visible only with the **Claude connection** e
 1. Fill in the **Name of the new token** (for example *Claude on the laptop*) and click **Create token**.
 2. The token is displayed only once, together with instructions for connecting. Copy it straight away.
 
-A token works without a password and without two-factor sign-in – protect it like a password. You revoke a token you no longer need with the **Cancel** button. If you have any tokens, the change-password form offers the option **also revoke connection tokens (Claude, API)**; leave it ticked if you suspect misuse.
+A token works without a password and without two-factor sign-in – protect it like a password. You revoke a token you no longer need with the **Revoke token** button. If you have any tokens, the change-password form offers the option **also revoke connection tokens (Claude, API)**; leave it ticked if you suspect misuse.
 
 ## Related
 

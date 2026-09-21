@@ -1536,4 +1536,5 @@ return [
     'Služba Claude má výpadek. Zkuste to za chvíli.' => 'Der Dienst Claude ist ausgefallen. Versuchen Sie es gleich noch einmal.',
     'schváleno – čeká na vydání' => 'freigegeben – wartet auf Veröffentlichung',
     'Zeleně vydané, modře naplánované, oranžově koncepty, fialově články ke korektuře a schválené (schválené plnou čarou). Datum článku změníte v jeho úpravě.' => 'Grün: veröffentlicht, blau: geplant, orange: Entwürfe, violett: Artikel zur Korrektur und freigegebene (freigegebene mit durchgezogener Linie). Das Datum eines Artikels ändern Sie in seiner Bearbeitung.',
+    'Zrušit token' => 'Token widerrufen',
 ];

@@ -6,7 +6,7 @@ In an editorial team where authors do not publish by themselves, an article pass
 
 1. **The author writes.** The article has the status **Draft – in progress**. Only the editorial team sees it.
 2. **The author hands over.** They switch the **Status** to **For review – done, please check** and save. The system confirms that the article will appear on the site once an editor publishes it. People with the right to publish receive an e-mail.
-3. **The editor checks.** They find the article on the **Dashboard** in the **Waiting for you** table and in the article list under the **For proofreading** tab. They open it, read it and edit it.
+3. **The editor checks.** They find the article on the **Dashboard** in the **Waiting for you** table and in the article list under the **For review** tab. They open it, read it and edit it.
 4. **The editor decides:**
    - **Published** – the article is published immediately, or at the time set in the **Publish date** field,
    - **Approved – waiting to be published** – the text is fine, but publication is waiting (for a photo, an embargo, a decision about the front page),
@@ -52,8 +52,8 @@ Everyone controls notifications for themselves: **My account → E-mail notifica
 ## Where you see what is waiting for you
 
 - **Dashboard → Waiting for you** – articles for review, approved and scheduled, with the author and date. An author sees only their own articles here.
-- The counts **For proofreading**, **Drafts** and **Scheduled** on the Dashboard.
-- **Content → Articles** – the tabs **For proofreading** and **Approved**. The option **Show only my articles** narrows the list down to your texts.
+- The counts **For review**, **Drafts** and **Scheduled** on the Dashboard.
+- **Content → Articles** – the tabs **For review** and **Approved**. The option **Show only my articles** narrows the list down to your texts.
 - [Editorial calendar](titulni-strana-a-kalendar.md) – an overview by publish date.
 
 ## When two people work on an article

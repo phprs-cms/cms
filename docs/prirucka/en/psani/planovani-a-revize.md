@@ -13,7 +13,7 @@ Whether and when an article is on the site is decided by two fields in the **Pub
 
 An author without the right to publish has only the first two options in the menu. Who has the right to publish is explained on the page [Roles and permissions](../redakce/role-a-opravneni.md); how the editorial team hands an article over is described in [Handover and review](../redakce/predavka-a-korektura.md).
 
-In the article list the statuses correspond to the tabs **All**, **Published**, **Scheduled**, **Drafts**, **For proofreading** and **Approved**.
+In the article list the statuses correspond to the tabs **All**, **Published**, **Scheduled**, **Drafts**, **For review** and **Approved**.
 
 ## Scheduled publishing
 

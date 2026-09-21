@@ -81,7 +81,7 @@ Oddíl **Napojení na Claude** je vidět jen se zapnutým rozšířením **Napoj
 1. Vyplňte **Název nového tokenu** (například *Claude na notebooku*) a klepněte na **Vytvořit token**.
 2. Token se zobrazí jen jednou, spolu s návodem k připojení. Zkopírujte si ho hned.
 
-Token funguje bez hesla i bez dvoufázového přihlášení – chraňte ho jako heslo. Nepotřebný token zrušíte tlačítkem **Zrušit**. Máte-li nějaké tokeny, nabídne formulář změny hesla volbu **zrušit i tokeny napojení (Claude, API)**; při podezření na zneužití ji nechte zaškrtnutou.
+Token funguje bez hesla i bez dvoufázového přihlášení – chraňte ho jako heslo. Nepotřebný token zrušíte tlačítkem **Zrušit token**. Máte-li nějaké tokeny, nabídne formulář změny hesla volbu **zrušit i tokeny napojení (Claude, API)**; při podezření na zneužití ji nechte zaškrtnutou.
 
 ## Související
 

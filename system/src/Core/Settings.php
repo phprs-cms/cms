@@ -124,6 +124,7 @@ final class Settings
         'ads_txt' => '',
         'pruvodce_skryt' => '0',      // administrátor skryl první kroky na přehledu
         'demo_obsah' => '',           // co založil ukázkový obsah (JSON: články, rubriky, obrázky) - podle toho ho Core\Demo smaže
+        'uklizeno_verze' => '',       // verze, po jejímž nasazení už proběhl jednorázový úklid zrušených souborů
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 

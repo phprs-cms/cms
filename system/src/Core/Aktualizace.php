@@ -257,6 +257,41 @@ final class Aktualizace
         return $soubory;
     }
 
+    /**
+     * Soubory, které z balíčku odešly dřív, než aktualizace uměla po sobě uklízet (nebo je web přeskočil): cesta => otisky
+     * všech vydaných podob. Seznam souborů jádra o nich už neví, proto se uklízejí podle tohoto výčtu.
+     */
+    private const array ZRUSENE = [
+        'layout/default/base.php' => ['bb9b53e94c4e6a95f3b24cb86ebbc05c41febe9c5ebb5a33b11f8cc4087d87c0'],
+        'layout/default/blok.php' => ['82ce6bcb3e9e7109a1f03ab8bf3c239af3abc17b87dcd9f51018a3b28efe1864'],
+        'layout/default/cla_standard.php' => ['0657c07a05eff6755708f9a68b5d900b7b8ae92ee3b611176d6a9af25abe1198'],
+        'layout/default/info.php' => ['b56137a8894992ab2013ac7d8eb2abd10d6ba1645c3f572c0c72adb9744f5a03'],
+        'layout/default/style.css' => ['af384a9f8dc0b8a0b429a290b9dce8608273f63310f6fc4eee0433a50fca31dc'],
+    ];
+
+    /**
+     * Jednorázový úklid po přechodu na novou verzi: smaže známé zrušené soubory, ale jen když jsou přesně takové, jaké
+     * jsme je vydali. Soubor, který si správce upravil (nebo šablonu, kterou web právě používá), nechává být.
+     *
+     * @return int počet smazaných souborů
+     */
+    public static function uklidZrusene(string $koren, string $pouzivanaSablona = ''): int
+    {
+        $smazano = 0;
+        foreach (self::ZRUSENE as $relativni => $otisky) {
+            $soubor = $koren . '/' . $relativni;
+            if (str_starts_with($relativni, 'layout/' . $pouzivanaSablona . '/') && $pouzivanaSablona !== '') {
+                continue;
+            }
+            if (is_file($soubor) && in_array(hash_file('sha256', $soubor), $otisky, true) && @unlink($soubor)) {
+                $smazano++;
+                @rmdir(dirname($soubor)); // složka zmizí, jen když zůstala prázdná
+            }
+        }
+
+        return $smazano;
+    }
+
     /** @return list<string> soubory jádra podle seznamu právě nainstalovaného vydání (system/soubory.json); bez seznamu prázdné */
     private function souboryVydani(): array
     {

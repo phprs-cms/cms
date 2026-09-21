@@ -82,6 +82,12 @@ final class Kernel
             return Response::redirect($app->url('admin.php'));
         }
 
+        // po přechodu na novou verzi jednorázově uklidit známé zrušené soubory (viz Aktualizace::ZRUSENE)
+        if ($app->auth()->isAdmin() && $app->settings()->get('uklizeno_verze') !== PHPRS_VERSION) {
+            \PhpRS\Core\Aktualizace::uklidZrusene(PHPRS_ROOT, $app->settings()->get('layout'));
+            $app->settings()->set('uklizeno_verze', PHPRS_VERSION);
+        }
+
         // aktualizace struktury databáze po nahrání nové verze systému
         if ($app->auth()->isAdmin() && $app->settings()->int('verze_db') < Migrace::posledni()) {
             foreach (Migrace::proved($app->db(), $app->settings()) as $migrace) {

@@ -401,6 +401,27 @@ PhpRS\Core\Jazyk::nastav('en', 'admin-');
 over('Cesty: v angličtině se odkazuje přeložená cesta', str_contains(PhpRS\Admin\Cesty::odkazy('/admin.php', t('Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.', '3.0.1'), ['config']), '>Settings → Backups and updates</a>'), true);
 PhpRS\Core\Jazyk::nastav('cs', 'admin-');
 
+/* ---------- aktualizace: úklid známých zrušených souborů (sirotci po přeskočené verzi) ---------- */
+$zr = sys_get_temp_dir() . '/phprs-zrusene-' . bin2hex(random_bytes(4));
+mkdir($zr . '/layout/default', 0775, true);
+file_put_contents($zr . '/layout/default/info.php', 'upraveno správcem');
+over('Aktualizace: upravený zrušený soubor zůstává', [PhpRS\Core\Aktualizace::uklidZrusene($zr), is_file($zr . '/layout/default/info.php')], [0, true]);
+exec('rm -rf ' . escapeshellarg($zr));
+if (is_file(PHPRS_ROOT . '/dist/phprs-3.0.0-beta.3.zip') && class_exists(ZipArchive::class)) {
+    // skutečné soubory z vydané bety: musí zmizet i se složkou; používaná šablona se nemaže
+    foreach (['', 'default'] as $pouzivana) {
+        mkdir($zr . '/layout/default', 0775, true);
+        $zipZr = new ZipArchive();
+        $zipZr->open(PHPRS_ROOT . '/dist/phprs-3.0.0-beta.3.zip');
+        foreach (['base.php', 'blok.php', 'cla_standard.php', 'info.php', 'style.css'] as $f) {
+            file_put_contents($zr . '/layout/default/' . $f, $zipZr->getFromName('layout/default/' . $f));
+        }
+        $zipZr->close();
+        over('Aktualizace: zrušená šablona ' . ($pouzivana === '' ? 'zmizí i se složkou' : 'zůstane, když ji web používá'), [PhpRS\Core\Aktualizace::uklidZrusene($zr, $pouzivana), is_dir($zr . '/layout/default')], $pouzivana === '' ? [5, false] : [0, true]);
+        exec('rm -rf ' . escapeshellarg($zr));
+    }
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

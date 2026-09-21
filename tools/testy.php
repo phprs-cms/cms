@@ -92,6 +92,8 @@ foreach (glob(dirname(__DIR__) . '/layout/*/*.php') as $soubor) {
     }
 }
 over('SablonaKontrola: vestavěné šablony dialektem projdou', $vadne, []);
+over('Šablony: výchozí šablona existuje a je i výchozí hodnotou nastavení', [is_file(dirname(__DIR__) . '/layout/' . \PhpRS\Front\Layouty::VYCHOZI . '/base.php'), \PhpRS\Core\Settings::DEFAULTS['layout']], [true, \PhpRS\Front\Layouty::VYCHOZI]);
+over('Šablony: zrušená šablona „default“ se nevrátila', is_dir(dirname(__DIR__) . '/layout/default'), false);
 $utoky = [
     '<?php file_put_contents(PHPRS_ROOT . "/system/x.php", "x");', '<?= file_get_contents("../config.php") ?>', '<?php eval($_GET["c"]);', '<?php include "../config.php";',
     '<?php system("id");', '<?php echo `id`;', '<?php $f = "sys" . "tem"; $f("id");', '<?php array_map("system", ["id"]);', '<?php array_map("sys" . "tem", ["id"]);',

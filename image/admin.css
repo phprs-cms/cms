@@ -330,6 +330,16 @@ table.vypis button.navigace {
 	padding: 2px 8px;
 	font-size: 12px;
 	font-weight: 500;
+}
+/* červená patří jen nevratným akcím (mazání) - ostatní tlačítka ve výpisu jsou neutrální */
+button.nebezpecne,
+a.nebezpecne {
+	color: var(--chyba);
+}
+button.nebezpecne:hover,
+a.nebezpecne:hover {
+	border-color: color-mix(in srgb, var(--chyba) 45%, transparent);
+	background: var(--chyba-podklad);
 	color: var(--chyba);
 }
 .navigace-radek {

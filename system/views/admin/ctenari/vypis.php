@@ -48,7 +48,7 @@
 			<noscript><button class="navigace" type="submit">OK</button></noscript>
 		</form>
 	</td>
-	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Smazat účet čtenáře <?= e($c['email']) ?>?"><?= $csrf ?><input type="hidden" name="idct" value="<?= (int) $c['idct'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Smazat účet čtenáře <?= e($c['email']) ?>?"><?= $csrf ?><input type="hidden" name="idct" value="<?= (int) $c['idct'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

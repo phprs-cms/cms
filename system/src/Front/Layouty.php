@@ -11,6 +11,9 @@ namespace PhpRS\Front;
  */
 final class Layouty
 {
+    /** Šablona nové instalace a náhrada, když nastavená šablona ve složce layout/ chybí. */
+    public const string VYCHOZI = 'classic-newspaper';
+
     /** @return array<string, array{nazev:string, popis:string, rozvrzeni:string}> složka => informace, výchozí layout první */
     public static function seznam(): array
     {
@@ -25,7 +28,7 @@ final class Layouty
                 'rozvrzeni' => in_array($info['rozvrzeni'] ?? '', ['tri', 'dva', 'jeden', 'plna'], true) ? $info['rozvrzeni'] : 'tri',
             ];
         }
-        uksort($layouty, fn (string $a, string $b): int => [$a !== 'default', $a] <=> [$b !== 'default', $b]);
+        uksort($layouty, fn (string $a, string $b): int => [$a !== self::VYCHOZI, $a] <=> [$b !== self::VYCHOZI, $b]);
 
         return $layouty;
     }

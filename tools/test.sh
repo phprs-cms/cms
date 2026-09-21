@@ -17,7 +17,7 @@ find "$KOREN" -name '*.php' -not -path '*/.git/*' -not -path '*/dist/*' -print0 
 echo "== čistá databáze a kopie projektu"
 MYSQL=(mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER"); [ -n "$DB_PASS" ] && MYSQL+=(-p"$DB_PASS")
 "${MYSQL[@]}" -e "DROP DATABASE IF EXISTS \`$DB_NAME\`; CREATE DATABASE \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci"
-mkdir "$PRACE/web" && (cd "$KOREN" && git ls-files -z --cached --others --exclude-standard | tar --null -T - -cf - | tar -xf - -C "$PRACE/web")
+mkdir "$PRACE/web" && (cd "$KOREN" && git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d '' s; do if [ -e "$s" ]; then printf '%s\0' "$s"; fi; done | tar --null -T - -cf - | tar -xf - -C "$PRACE/web") # soubory smazané a ještě nezapsané do gitu se nekopírují
 mkdir -p "$PRACE/web/media" "$PRACE/web/storage/log" "$PRACE/web/storage/cache"
 (cd "$PRACE/web" && exec php -S "127.0.0.1:$PORT" system/dev-router.php > "$PRACE/server.log" 2>&1) & SERVER_PID=$!
 for i in $(seq 1 30); do curl -s -o /dev/null "$B/install.php" && break; sleep 0.3; done
@@ -41,6 +41,7 @@ curl -s -o "$PRACE/odpoved" -X POST "$B/install.php" --data-urlencode "db_host=$
   --data-urlencode "nazev_webu=Testovací magazín" -d user=admin -d jmeno=Tester -d email= --data-urlencode "password=$HESLO" --data-urlencode "password2=$HESLO" -d layout=classic-newspaper
 grep -q "Hotovo, magazín běží" "$PRACE/odpoved" || { echo "  CHYBA  instalace selhala"; sed 's/<[^>]*>//g' "$PRACE/odpoved" | grep -v '^\s*$' | head -20; exit 1; }
 echo "  ok     instalace"
+[ ! -f "$PRACE/web/install.php" ] && echo "  ok     instalátor se po sobě smazal" || { echo "  CHYBA  install.php po instalaci zůstal na místě"; CHYB=$((CHYB+1)); }
 
 echo "== web"
 over "hlavní stránka" 200 / "Testovací magazín"
@@ -51,8 +52,11 @@ for u in /rss.xml /feed.json /sitemap.xml /sitemap-news.xml /robots.txt /llms.tx
 over "neexistující stránka" 404 /tohle-neexistuje
 over "system/ není přístupný" 403 /system/sql/schema.sql
 over "config.php není přístupný" 403 /config.php
-for l in default minimal classic-newspaper modern-magazine; do
-  "${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_config SET hodnota='$l' WHERE promenna='layout'"; over "šablona $l" 200 /; over "šablona $l – článek" 200 /clanek/vitejte-v-phprs-3
+# nastavená šablona, která ve složce layout/ není (zrušená vestavěná „default“ před migrací, smazaná vlastní): web se vykreslí výchozí šablonou
+"${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_config SET hodnota='default' WHERE promenna='layout'"
+over "chybějící šablona – web běží na výchozí" 200 / "layout/classic-newspaper/style.css"
+for l in minimal classic-newspaper modern-magazine; do
+  "${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_config SET hodnota='$l' WHERE promenna='layout'"; over "šablona $l" 200 / "layout/$l/style.css"; over "šablona $l – článek" 200 /clanek/vitejte-v-phprs-3
 done
 
 echo "== administrace"

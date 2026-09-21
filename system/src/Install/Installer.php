@@ -62,7 +62,7 @@ final class Installer
         $data = [
             'db_host' => 'localhost', 'db_port' => '3306', 'db_name' => '', 'db_user' => '', 'db_password' => '', 'db_prefix' => 'rs_',
             'nazev_webu' => t('Můj magazín'), 'user' => 'admin', 'jmeno' => '', 'email' => '',
-            'casove_pasmo' => self::PASMA[$this->jazyk], 'layout' => 'default',
+            'casove_pasmo' => self::PASMA[$this->jazyk], 'layout' => Layouty::VYCHOZI,
             'demo' => '', // '1' = místo uvítacího článku nahrát ukázkový obsah (Core\Demo)
         ];
         $chyby = [];
@@ -134,7 +134,7 @@ final class Installer
             $chyby['email'] = t('E-mail nemá platný tvar.');
         }
         if (!isset(Layouty::seznam()[$d['layout']])) {
-            $d['layout'] = 'default';
+            $d['layout'] = Layouty::VYCHOZI;
         }
         if ($chyby !== []) {
             return $chyby;

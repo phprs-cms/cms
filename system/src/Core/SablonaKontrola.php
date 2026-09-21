@@ -16,7 +16,7 @@ final class SablonaKontrola
     /** Funkce, které šablona smí volat. */
     private const array FUNKCE = [
         // pomocné funkce systému
-        'e', 't', 'datum', 'datum_slovy', 'slugify', 'bez_diakritiky',
+        'e', 't', 'datum', 'datum_slovy', 'cislo', 'slugify', 'bez_diakritiky',
         // text
         'strlen', 'mb_strlen', 'substr', 'mb_substr', 'mb_strimwidth', 'mb_strtolower', 'mb_strtoupper', 'mb_str_split', 'strtolower', 'strtoupper', 'ucfirst', 'ucwords', 'lcfirst',
         'trim', 'ltrim', 'rtrim', 'nl2br', 'strip_tags', 'htmlspecialchars', 'htmlspecialchars_decode', 'html_entity_decode', 'sprintf', 'number_format', 'str_replace', 'str_contains',

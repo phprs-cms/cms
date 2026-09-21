@@ -35,6 +35,7 @@ window.PHPRS_PREKLAD = {
 	"obrázek": "obrázok",
 	"galerie": "galéria",
 	"Vložit obrázek z médií": "Vložiť obrázok z médií",
+	"Fotogalerie": "Fotogaléria",
 	"Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku": "Vložiť fotogalériu – čitateľ si fotky prelistuje na celej obrazovke",
 	"Oddělovací čára": "Oddeľovacia čiara",
 	"Odstranit formátování": "Odstrániť formátovanie",

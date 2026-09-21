@@ -28,7 +28,7 @@
 	<td><?= e(preg_match('#^https?://#i', $z['na_adresu']) ? $z['na_adresu'] : '/' . $z['na_adresu']) ?></td>
 	<td class="cislo"><?= (int) $z['pocet'] ?>×</td>
 	<td class="cislo"><?= e(datum($z['vytvoreno'])) ?></td>
-	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>"><?= $csrf ?><input type="hidden" name="idp" value="<?= (int) $z['idp'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>"><?= $csrf ?><input type="hidden" name="idp" value="<?= (int) $z['idp'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>
@@ -45,5 +45,5 @@
 	<td class="akce"><a href="<?= e($modul->url('', ['z' => $n['cesta']])) ?>"><?= e(t('Přesměrovat')) ?></a></td></tr>
 <?php endforeach ?>
 </tbody></table></div>
-<form method="post" action="<?= e($modul->url('vycisti')) ?>" data-potvrdit="<?= e(t('Vyprázdnit přehled nenalezených adres?')) ?>"><?= $csrf ?><p><button class="navigace" type="submit"><?= e(t('Vyprázdnit přehled')) ?></button></p></form>
+<form method="post" action="<?= e($modul->url('vycisti')) ?>" data-potvrdit="<?= e(t('Vyprázdnit přehled nenalezených adres?')) ?>"><?= $csrf ?><p><button class="navigace nebezpecne" type="submit"><?= e(t('Vyprázdnit přehled')) ?></button></p></form>
 <?php endif ?>

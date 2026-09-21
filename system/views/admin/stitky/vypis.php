@@ -41,7 +41,7 @@
 	<td class="cislo"><?= (int) $s['pocet'] ?></td>
 	<td><?= trim((string) $s['popis']) !== '' ? '<span class="stitek stitek-vydano">' . e(t('má úvod')) . '</span>' : '' ?></td>
 	<td class="akce"><a href="<?= e($modul->url('', ['uprav' => $s['ids']])) ?>#uprav"><?= e(t('Upravit')) ?></a>
-		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Smazat štítek? Články zůstanou, jen ho už nebudou mít.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Smazat štítek? Články zůstanou, jen ho už nebudou mít.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

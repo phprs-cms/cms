@@ -31,7 +31,7 @@ use PhpRS\Admin\Moduly\Reklama;
 	<td><span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= $bezi ? 'běží' : 'neběží' ?></span></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $r['idr']])) ?>"><?= e(t('Upravit')) ?></a> ·
 		<form class="vradku" method="post" action="<?= e($modul->url('prepni')) ?>"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit"><?= $r['aktivni'] ? 'Vypnout' : 'Zapnout' ?></button></form> ·
-		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat reklamu i s jejími počty?')) ?>"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat reklamu i s jejími počty?')) ?>"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>

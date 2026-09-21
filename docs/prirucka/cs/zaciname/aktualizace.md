@@ -17,7 +17,9 @@ phpRS se umí aktualizovat sám. Každý balíček je podepsaný vydavatelem a s
 3. web na několik vteřin odpovídá hláškou o údržbě,
 4. soubory systému se přepíšou, soubory, které nové vydání už neobsahuje, se smažou, a databáze se při prvním požadavku upraví na novou strukturu.
 
-**Nepřepisuje se** `config.php`, složky `media/` a `storage/`, ani vaše vlastní šablony ve složce `layout/`. Vestavěné šablony (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) se přepisují – proto je neupravujte; vlastní vzhled dělejte jako kopii pod jiným názvem.
+**Nepřepisuje se** `config.php`, složky `media/` a `storage/`, ani vaše vlastní šablony ve složce `layout/`. Vestavěné šablony (`classic-newspaper`, `modern-magazine`, `minimal`) se přepisují – proto je neupravujte; vlastní vzhled dělejte jako kopii pod jiným názvem.
+
+Původní třísloupcová šablona `default` byla ze systému vyřazena. Web, který ji používal, aktualizace sama přepne na Classic Newspaper; rozvržení bloků i obsah zůstávají. Vlastních šablon (i těch, které vznikly jako její kopie) se změna netýká. Výjimka: pokud jste šablonu kopírovali ručně a její `base.php` stále načítá styl z `layout/default/style.css`, zkopírujte si ten soubor před aktualizací do vlastní složky a odkaz v `base.php` opravte – po aktualizaci už původní soubor neexistuje.
 
 Tlačítko **Zkontrolovat teď** se na novou verzi zeptá okamžitě.
 

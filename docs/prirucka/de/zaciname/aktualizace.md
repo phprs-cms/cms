@@ -17,7 +17,9 @@ phpRS kann sich selbst aktualisieren. Jedes Paket ist vom Herausgeber signiert, 
 3. antwortet die Website einige Sekunden lang mit einem Wartungshinweis,
 4. werden die Dateien des Systems überschrieben, Dateien, die die neue Version nicht mehr enthält, gelöscht, und die Datenbank wird bei der ersten Anfrage an die neue Struktur angepasst.
 
-**Nicht überschrieben** werden `config.php`, die Ordner `media/` und `storage/` und Ihre eigenen Vorlagen im Ordner `layout/`. Die eingebauten Vorlagen (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) werden überschrieben – ändern Sie sie deshalb nicht; ein eigenes Design legen Sie als Kopie unter einem anderen Namen an.
+**Nicht überschrieben** werden `config.php`, die Ordner `media/` und `storage/` und Ihre eigenen Vorlagen im Ordner `layout/`. Die eingebauten Vorlagen (`classic-newspaper`, `modern-magazine`, `minimal`) werden überschrieben – ändern Sie sie deshalb nicht; ein eigenes Design legen Sie als Kopie unter einem anderen Namen an.
+
+Die ursprüngliche dreispaltige Vorlage `default` wurde aus dem System entfernt. Eine Website, die sie verwendet hat, stellt das Update selbst auf Classic Newspaper um; die Anordnung der Blöcke und alle Inhalte bleiben erhalten. Eigene Vorlagen (auch solche, die als ihre Kopie entstanden sind) sind davon nicht betroffen. Eine Ausnahme: Wenn Sie die Vorlage von Hand kopiert haben und ihre `base.php` das Stylesheet weiterhin aus `layout/default/style.css` lädt, kopieren Sie diese Datei vor dem Update in Ihren eigenen Ordner und korrigieren Sie den Verweis in `base.php` – nach dem Update existiert die ursprüngliche Datei nicht mehr.
 
 Die Schaltfläche **Jetzt prüfen** fragt sofort nach einer neuen Version.
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Miniaturní náhledy pro instalátor: prostředí administrace a šablony webu.
+ * Miniaturní náhledy šablon webu pro instalátor a Vzhled → Identita webu.
  *
  * @return array<string, string> klíč => SVG
  */
@@ -17,7 +17,8 @@ return [
         . '<rect x="70" y="112" width="100" height="1" fill="#E6E6EA"/>'
         . '<rect x="70" y="120" width="16" height="3" fill="#2F5BEA"/><rect x="70" y="127" width="80" height="6" rx="1" fill="#1B1B1F"/>'
     ),
-    'default' => $svg(
+    // obecný náhled pro vlastní šablony (vestavěné mají svůj)
+    'vlastni' => $svg(
         '<rect width="240" height="150" fill="#fff"/>'
         . '<rect x="14" y="12" width="80" height="9" rx="1" fill="#1B1B1F"/><rect y="30" width="240" height="2" fill="#0A2FC4"/>'
         . '<g fill="#DADDE5"><rect x="14" y="44" width="40" height="3"/><rect x="14" y="54" width="34" height="3"/><rect x="14" y="64" width="38" height="3"/><rect x="186" y="44" width="40" height="3"/><rect x="186" y="54" width="36" height="3"/><rect x="186" y="64" width="40" height="3"/></g>'

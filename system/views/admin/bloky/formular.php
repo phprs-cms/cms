@@ -31,7 +31,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<select id="sys_funkce" name="sys_funkce">
 		<option value=""><?= e(t('Vlastní obsah (HTML, vložený kód, video…)')) ?></option>
 <?php foreach (Bloky::SYSTEMOVE as $zkratka => $nazev): ?>
-		<option value="<?= e($zkratka) ?>"<?= $blok['sys_funkce'] === $zkratka ? ' selected' : '' ?>><?= e($nazev) ?></option>
+		<option value="<?= e($zkratka) ?>"<?= $blok['sys_funkce'] === $zkratka ? ' selected' : '' ?>><?= e(t($nazev)) ?></option>
 <?php endforeach ?>
 	</select>
 </div>
@@ -60,7 +60,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="data_sys"><?= e(t('Reklamní pozice')) ?></label>
 	<select id="data_sys" name="data_sys">
 <?php foreach (Reklama::POZICE as $klic => $nazev): if ($klic === 'pod-clankem') { continue; } ?>
-		<option value="<?= e($klic) ?>"<?= $data === $klic ? ' selected' : '' ?>><?= e($nazev) ?></option>
+		<option value="<?= e($klic) ?>"<?= $data === $klic ? ' selected' : '' ?>><?= e(t($nazev)) ?></option>
 <?php endforeach ?>
 	</select>
 </div>
@@ -71,7 +71,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="zona"><?= e(t('Umístění')) ?></label>
 	<div><select id="zona" name="zona">
 <?php foreach ($zony as $klic => $nazev): ?>
-		<option value="<?= e($klic) ?>"<?= $blok['zona'] === $klic ? ' selected' : '' ?>><?= e($nazev) ?></option>
+		<option value="<?= e($klic) ?>"<?= $blok['zona'] === $klic ? ' selected' : '' ?>><?= e(t($nazev)) ?></option>
 <?php endforeach ?>
 	</select>
 	<span class="napoveda"><?= e(t('Pořadí uvnitř zóny změníte přetažením v přehledu bloků.')) ?></span></div>
@@ -80,7 +80,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="typ"><?= e(t('Vzhled bloku')) ?></label>
 	<select id="typ" name="typ">
 <?php foreach (Bloky::VZHLEDY as $cislo => $nazev): ?>
-		<option value="<?= $cislo ?>"<?= (int) $blok['typ'] === $cislo ? ' selected' : '' ?>><?= e($nazev) ?></option>
+		<option value="<?= $cislo ?>"<?= (int) $blok['typ'] === $cislo ? ' selected' : '' ?>><?= e(t($nazev)) ?></option>
 <?php endforeach ?>
 	</select>
 </div>
@@ -88,7 +88,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="zobrazit_kde"><?= e(t('Na kterých stránkách')) ?></label>
 	<select id="zobrazit_kde" name="zobrazit_kde">
 <?php foreach (Bloky::KDE as $hodnota => $popis): ?>
-		<option value="<?= $hodnota ?>"<?= (int) $blok['zobrazit_kde'] === $hodnota ? ' selected' : '' ?>><?= e($popis) ?></option>
+		<option value="<?= $hodnota ?>"<?= (int) $blok['zobrazit_kde'] === $hodnota ? ' selected' : '' ?>><?= e(t($popis)) ?></option>
 <?php endforeach ?>
 	</select>
 </div>
@@ -101,7 +101,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="zarizeni"><?= e(t('Zařízení')) ?></label>
 	<select id="zarizeni" name="zarizeni">
 <?php foreach (Bloky::ZARIZENI as $klic => $popis): ?>
-		<option value="<?= e($klic) ?>"<?= ($blok['zarizeni'] ?? 'vse') === $klic ? ' selected' : '' ?>><?= e($popis) ?></option>
+		<option value="<?= e($klic) ?>"<?= ($blok['zarizeni'] ?? 'vse') === $klic ? ' selected' : '' ?>><?= e(t($popis)) ?></option>
 <?php endforeach ?>
 	</select>
 </div>

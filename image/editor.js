@@ -294,6 +294,7 @@
 		var plocha = document.createElement('div');
 		plocha.className = 'editor-plocha';
 		plocha.contentEditable = 'true';
+		plocha.style.setProperty('--ed-popis-galerie', JSON.stringify(T('Fotogalerie'))); // štítek nad fotogalerií kreslí editor.css; text v CSS by přeložit nešel
 		plocha.setAttribute('role', 'textbox');
 		plocha.setAttribute('aria-multiline', 'true');
 		plocha.setAttribute('aria-label', (pole.labels && pole.labels[0] ? pole.labels[0].textContent : 'Text'));

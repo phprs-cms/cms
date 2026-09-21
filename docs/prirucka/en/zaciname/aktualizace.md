@@ -17,7 +17,9 @@ phpRS can update itself. Every package is signed by the publisher and the system
 3. for a few seconds the site responds with a maintenance message,
 4. the system files are overwritten, files the new release no longer contains are removed, and the database is adjusted to the new structure on the first request.
 
-The update **does not overwrite** `config.php`, the folders `media/` and `storage/`, or your own templates in the `layout/` folder. The built-in templates (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) are overwritten – so do not edit them; make your own design as a copy under a different name.
+The update **does not overwrite** `config.php`, the folders `media/` and `storage/`, or your own templates in the `layout/` folder. The built-in templates (`classic-newspaper`, `modern-magazine`, `minimal`) are overwritten – so do not edit them; make your own design as a copy under a different name.
+
+The original three-column template `default` has been removed from the system. A site that used it is switched to Classic Newspaper by the update itself; the block layout and all content stay as they were. Your own templates (including those created as a copy of it) are not affected. One exception: if you copied the template by hand and its `base.php` still loads the stylesheet from `layout/default/style.css`, copy that file into your own folder before updating and fix the link in `base.php` – after the update the original file no longer exists.
 
 The **Check now** button asks for a new version immediately.
 

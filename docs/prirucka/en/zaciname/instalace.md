@@ -35,7 +35,7 @@ Change the **Table prefix** (`rs_`) only if several installations will run in th
 
 ### Step 4 – Site template
 
-Choose one of the four built-in templates. You can change it at any time later in **Appearance → Site identity** without losing any content.
+Choose one of the three built-in templates: Classic Newspaper (a daily), Modern Magazine (a bold magazine) or Minimal (a blog or personal magazine). You can change it at any time later in **Appearance → Site identity** without losing any content.
 
 The **Install phpRS 3** button creates the database tables and the `config.php` file with the database access details.
 

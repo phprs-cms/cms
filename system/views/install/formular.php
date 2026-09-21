@@ -95,7 +95,7 @@ $nahledy = require __DIR__ . '/nahledy.php';
 <?php foreach ($layouty as $slozka => $l): ?>
 		<label class="volba">
 			<input type="radio" name="layout" value="<?= e($slozka) ?>"<?= $data['layout'] === $slozka ? ' checked' : '' ?>>
-			<?= $nahledy[$slozka] ?? $nahledy['default'] ?>
+			<?= $nahledy[$slozka] ?? $nahledy['vlastni'] ?>
 			<strong><?= e($l['nazev']) ?></strong>
 			<span><?= e(t($l['popis'])) ?></span>
 		</label>

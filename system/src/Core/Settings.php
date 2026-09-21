@@ -31,7 +31,7 @@ final class Settings
         'casove_pasmo' => 'Europe/Prague', // časové pásmo webu: data článků, plánované vydání, statistiky (App::casovePasmo)
         'jazyk_webu' => 'cs',         // jazyk webu: texty šablon, <html lang>, strukturovaná data (Core\Jazyk)
         'jazyky_dalsi' => '',         // další jazykové verze na /en/, /de/… (rozšíření Jazykové verze), kódy oddělené čárkou
-        'layout' => 'default',
+        'layout' => 'classic-newspaper', // = Front\Layouty::VYCHOZI
         'rozvrzeni' => 'tri',         // tri | dva | jeden | plna (Úprava bloků)
         'pocet_clanku' => '7',        // článků na hlavní stránce
         'pocet_novinek' => '3',

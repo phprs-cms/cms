@@ -67,7 +67,6 @@ return [
     'Rubriky' => 'Ressorts',
     'Vyhledávání' => 'Suche',
     'Nejčtenější články' => 'Meistgelesen',
-    'Klasické rozvržení: tři sloupce, bloky po stranách, články uprostřed.' => 'Klassisches Layout: drei Spalten, Blöcke an den Seiten, Artikel in der Mitte.',
     'Seriózní deník: patkové titulky, tenké linky, otvírák a sloupcová sazba ve stylu velkých světových novin.' => 'Seriöse Tageszeitung: Serifen-Überschriften, feine Linien, Aufmacher und Spaltensatz im Stil der großen Zeitungen der Welt.',
     'Osobní magazín, blog nebo newsletterový web: jeden úzký sloupec, klidná typografie, seznam článků bez rušivých prvků.' => 'Persönliches Magazin, Blog oder Newsletter-Website: eine schmale Spalte, ruhige Typografie, Artikelliste ohne Ablenkung.',
     'Výrazný online magazín: černá lišta, obří titulky, velké fotografie a mřížka karet.' => 'Markantes Online-Magazin: schwarze Leiste, riesige Überschriften, große Fotos und ein Kartenraster.',

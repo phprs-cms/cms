@@ -23,8 +23,15 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
 - **Identita webu** (`Front\Identita`, modul `vzhled`): šablony berou hlavní barvu a písma z proměnných `--rs-akcent`,
   `--rs-pismo-titulky`, `--rs-pismo-text` s vlastní výchozí hodnotou (`--akcent: var(--rs-akcent, #326891)`). Nová šablona
   je musí použít také. Žádná externí písma – jen sady v `Identita::PISMA_*`.
-- **Čtyři layouty webu** (`default`, `classic-newspaper`, `modern-magazine`, `minimal`): nová proměnná pro šablony
-  nebo nový systémový blok se musí promítnout do všech čtyř (vestavěné vyjmenovává i `Mcp\Nastroje::VESTAVENE_SABLONY`). Žádná externí písma ani CDN.
+- **Tři layouty webu** (`classic-newspaper`, `modern-magazine`, `minimal`): nová proměnná pro šablony
+  nebo nový systémový blok se musí promítnout do všech tří (vestavěné vyjmenovává i `Mcp\Nastroje::VESTAVENE_SABLONY`). Žádná externí písma ani CDN.
+  Výchozí šablona instalace a náhrada za chybějící složku je `Front\Layouty::VYCHOZI` (`classic-newspaper`); původní třísloupcová `default`
+  byla zrušena (migrace 0041), vlastní šablony vzniklé jako její kopie fungují dál – nic z ní za běhu nedědily.
+- **Co se nevypisuje, nemá styl ani skript.** Do `image/web.css` a `style.css` šablon nepatří selektor, který nevzniká v žádné šabloně,
+  pohledu `views/front/`, třídě `Front\*` ani v editoru. Společný vzhled prvků (štítky článku, Ve zkratce, otázky a odpovědi, hodnocení,
+  komentáře, anketa, reklama, typy bloků) je na konci `image/web.css` v `:where()` s nulovou vahou – `web.css` se načítá až PO `style.css`
+  šablony, takže jen nulová váha zaručí, že pravidlo šablony (i vlastní) vyhraje. Šablona nese jen to, co se liší; nový společný prvek
+  = základ do tohoto úseku, ne kopie do tří šablon.
 - Identifikátory v kódu (metody `akce*`, proměnné domény, šablony) česky bez diakritiky; komentáře a
   texty česky s diakritikou. Jádro (`Core/`) má API anglicky.
 - **Změna databáze = dva zápisy:** úplné schéma v `system/sql/schema.sql` (nové instalace) a migrace

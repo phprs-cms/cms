@@ -66,7 +66,6 @@ return [
     'Rubriky' => 'Sections',
     'Vyhledávání' => 'Search',
     'Nejčtenější články' => 'Most read',
-    'Klasické rozvržení: tři sloupce, bloky po stranách, články uprostřed.' => 'Classic layout: three columns, blocks on the sides, articles in the middle.',
     'Seriózní deník: patkové titulky, tenké linky, otvírák a sloupcová sazba ve stylu velkých světových novin.' => 'A serious daily: serif headlines, thin rules, a lead story and column setting in the style of the great newspapers.',
     'Osobní magazín, blog nebo newsletterový web: jeden úzký sloupec, klidná typografie, seznam článků bez rušivých prvků.' => 'A personal magazine, blog or newsletter site: one narrow column, calm typography, a list of articles without distractions.',
     'Výrazný online magazín: černá lišta, obří titulky, velké fotografie a mřížka karet.' => 'A bold online magazine: black bar, huge headlines, large photographs and a grid of cards.',

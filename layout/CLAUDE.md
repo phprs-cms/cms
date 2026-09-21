@@ -5,8 +5,8 @@ Pracuješ ve složce šablon redakčního systému phpRS 3. **Upravovat smíš j
 
 ## Co se nedělá
 
-- Neupravuj `system/`, `admin.php`, `index.php`, `install.php`, `image/` ani vestavěné šablony `default`,
-  `classic-newspaper`, `modern-magazine` a `minimal`. Aktualizace systému je přepíše a Stav systému takový zásah hlásí
+- Neupravuj `system/`, `admin.php`, `index.php`, `install.php`, `image/` ani vestavěné šablony `classic-newspaper`,
+  `modern-magazine` a `minimal`. Aktualizace systému je přepíše a Stav systému takový zásah hlásí
   jako porušené jádro.
 - Nepřidávej do CMS vlastní funkce, moduly, tabulky ani úpravy databáze. Systém má být pro všechny stejný
   a aktualizovatelný. Chybí-li funkce, patří jako námět autorům phpRS – ne do kódu jedné instalace.
@@ -43,3 +43,8 @@ pomocné funkce `e()`, `t()`, `datum()`, `datum_slovy()`, `slugify()` a běžné
 Každý text pro čtenáře obal `e()` (ochrana před XSS) a `t()` (překlad do jazyka webu). Barvy a písma ber
 z proměnných `--rs-akcent`, `--rs-pismo-titulky`, `--rs-pismo-text`; na konec `style.css` patří blok tmavého
 režimu `@media (prefers-color-scheme: dark) { :root[data-tmavy] { … } }`. Žádná externí písma ani skripty z CDN.
+
+Základní vzhled společných prvků (štítky článku, Ve zkratce, otázky a odpovědi, hodnocení, komentáře, anketa, reklama, typy bloků)
+dodává `image/web.css`, který se načítá až po `style.css` šablony. Tato pravidla mají nulovou váhu (`:where()`), takže je přepíše
+jakékoli pravidlo šablony – do `style.css` piš jen to, co má vypadat jinak, a nepoužívej `!important`. Prvky s třídou `rs-…`
+(fotogalerie, přehrávač, zámek, účet čtenáře…) mají v `web.css` běžnou váhu jedné třídy; přepíšeš je selektorem o třídu silnějším.

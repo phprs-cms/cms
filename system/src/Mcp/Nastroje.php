@@ -19,7 +19,7 @@ use PhpRS\Front\Layouty;
 final class Nastroje
 {
     /** Šablony dodávané se systémem - přepsala by je aktualizace, proto se upravují jen jejich kopie. */
-    private const array VESTAVENE_SABLONY = ['default', 'classic-newspaper', 'modern-magazine', 'minimal'];
+    private const array VESTAVENE_SABLONY = ['classic-newspaper', 'modern-magazine', 'minimal'];
 
     public function __construct(private readonly App $app)
     {
@@ -53,7 +53,7 @@ final class Nastroje
                 'obsah' => $text('HTML bloku, u typu "men" řádky "text | adresa"'), 'zona' => $text(implode(' | ', array_keys(Bloky::ZONY))), 'zobrazit' => ['type' => 'boolean'],
             ], ['nazev'])],
             ['seznam_sablon', 'Šablony webu (layouty), která je aktivní a které jdou upravovat (administrátor).', $s([])],
-            ['vytvor_sablonu', 'Zkopíruje existující šablonu pod novým názvem, aby se dala upravovat (administrátor).', $s(['nazev' => $text('složka nové šablony: malá písmena, číslice, pomlčky'), 'podle' => $text('zdrojová šablona, výchozí "default"'), 'popisny_nazev' => $text('název zobrazený v administraci')], ['nazev'])],
+            ['vytvor_sablonu', 'Zkopíruje existující šablonu pod novým názvem, aby se dala upravovat (administrátor).', $s(['nazev' => $text('složka nové šablony: malá písmena, číslice, pomlčky'), 'podle' => $text('zdrojová šablona, výchozí "classic-newspaper"'), 'popisny_nazev' => $text('název zobrazený v administraci')], ['nazev'])],
             ['nacti_soubor_sablony', 'Přečte soubor šablony (base.php, blok.php, cla_standard.php, style.css, info.php…).', $s(['sablona' => $text('složka šablony'), 'soubor' => $text('název souboru; bez něj vrátí seznam souborů')], ['sablona'])],
             ['uloz_soubor_sablony', 'Uloží soubor vlastní šablony (.php nebo .css). PHP se před uložením kontroluje na syntaxi. Vestavěné šablony upravit nejde.', $s(['sablona' => $text('složka šablony'), 'soubor' => $text('název souboru'), 'obsah' => $text('celý nový obsah souboru')], ['sablona', 'soubor', 'obsah'])],
             ['aktivuj_sablonu', 'Přepne web na danou šablonu (administrátor). Před tím ji ukaž uživateli v náhledu: adresa webu s ?sablona=<složka> funguje přihlášenému administrátorovi.', $s(['sablona' => $text('složka šablony')], ['sablona'])],
@@ -179,7 +179,7 @@ final class Nastroje
             case 'vytvor_sablonu':
                 $jenAdmin();
                 $nova = (string) ($a['nazev'] ?? '');
-                $podle = (string) ($a['podle'] ?? 'default');
+                $podle = (string) ($a['podle'] ?? Layouty::VYCHOZI);
                 if (!preg_match('/^[a-z][a-z0-9-]{2,40}$/', $nova) || is_dir(PHPRS_ROOT . '/layout/' . $nova)) {
                     throw new \InvalidArgumentException('Název šablony: 3-40 znaků, malá písmena, číslice a pomlčky; složka ještě nesmí existovat.');
                 }

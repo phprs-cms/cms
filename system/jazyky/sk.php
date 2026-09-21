@@ -228,4 +228,13 @@ return [
     'Vydáno' => 'Vydané',
     'aktualizováno' => 'aktualizované',
     'hodnoceno %s×' => 'hodnotené %s×',
+    'Předchozí fotka' => 'Predchádzajúca fotka',
+    'Další fotka' => 'Ďalšia fotka',
+    'Zavřít' => 'Zavrieť',
+    'Vypnout oznámení' => 'Vypnúť oznámenia',
+    'Oznámení jsou v tomto prohlížeči zapnutá.' => 'Oznámenia sú v tomto prehliadači zapnuté.',
+    'Oznámení jsou vypnutá.' => 'Oznámenia sú vypnuté.',
+    'Oznámení se nepodařilo zapnout.' => 'Oznámenia sa nepodarilo zapnúť.',
+    'Oznámení se nepodařilo zapnout. Zkuste to později.' => 'Oznámenia sa nepodarilo zapnúť. Skúste to neskôr.',
+    'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.' => 'Oznámenia máte pre tento web v prehliadači zakázané. Povolíte ich v nastaveniach webu pri adresnom riadku.',
 ];

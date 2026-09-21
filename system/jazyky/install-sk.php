@@ -57,7 +57,6 @@ return [
     'Dlouhé čtení' => 'Dlhé čítanie',
     'Vyhledávání' => 'Vyhľadávanie',
     'Nejčtenější články' => 'Najčítanejšie články',
-    'Klasické rozvržení: tři sloupce, bloky po stranách, články uprostřed.' => 'Klasické rozloženie: tri stĺpce, bloky po stranách, články uprostred.',
     'Seriózní deník: patkové titulky, tenké linky, otvírák a sloupcová sazba ve stylu velkých světových novin.' => 'Seriózny denník: pätkové titulky, tenké linky, otvárák a stĺpcová sadzba v štýle veľkých svetových novín.',
     'Osobní magazín, blog nebo newsletterový web: jeden úzký sloupec, klidná typografie, seznam článků bez rušivých prvků.' => 'Osobný magazín, blog alebo newsletterový web: jeden úzky stĺpec, pokojná typografia, zoznam článkov bez rušivých prvkov.',
     'Výrazný online magazín: černá lišta, obří titulky, velké fotografie a mřížka karet.' => 'Výrazný online magazín: čierna lišta, obrie titulky, veľké fotografie a mriežka kariet.',

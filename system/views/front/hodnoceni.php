@@ -11,7 +11,7 @@
 ?>
 <section class="hodnoceni obal-uzky" id="hodnoceni" aria-label="<?= e(t('Hodnocení článku')) ?>">
 <?php if ($clanek['mn_hodnoceni'] > 0): ?>
-	<p class="hodnoceni-vysledek"><span class="hvezdy" style="--hodnota:<?= number_format($prumer, 2, '.', '') ?>" aria-hidden="true">★★★★★</span> <?= e(t('%s z 5', number_format($prumer, 1, ',', ''))) ?> <small>(<?= e(t('hodnoceno %s×', (int) $clanek['mn_hodnoceni'])) ?>)</small></p>
+	<p class="hodnoceni-vysledek"><span class="hvezdy" style="--hodnota:<?= number_format($prumer, 2, '.', '') ?>" aria-hidden="true">★★★★★</span> <?= e(t('%s z 5', cislo($prumer))) ?> <small>(<?= e(t('hodnoceno %s×', (int) $clanek['mn_hodnoceni'])) ?>)</small></p>
 <?php endif ?>
 <?php if ($hlasoval): ?>
 	<p><small><?= e(t('Děkujeme za váš hlas.')) ?></small></p>

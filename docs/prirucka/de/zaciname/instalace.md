@@ -35,7 +35,7 @@ Das **Tabellenpräfix** (`rs_`) ändern Sie nur dann, wenn in derselben Datenban
 
 ### Schritt 4 – Vorlage der Website
 
-Wählen Sie eine der vier eingebauten Vorlagen. Sie können sie jederzeit später unter **Design → Website-Identität** ändern, die Inhalte bleiben erhalten.
+Wählen Sie eine der drei eingebauten Vorlagen: Classic Newspaper (Tageszeitung), Modern Magazine (auffälliges Magazin) oder Minimal (Blog, persönliches Magazin). Sie können sie jederzeit später unter **Design → Website-Identität** ändern, die Inhalte bleiben erhalten.
 
 Die Schaltfläche **phpRS 3 installieren** legt die Tabellen in der Datenbank und die Datei `config.php` mit dem Zugang zur Datenbank an.
 

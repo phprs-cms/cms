@@ -2,6 +2,17 @@
 (function () {
 	'use strict';
 
+	/* ---------- texty: česky v kódu, překlad jazykové verze posílá Front\Seo::hlava() v atributu data-texty značky <script> ---------- */
+
+	var texty = {};
+	try {
+		var znacka = document.currentScript || document.querySelector('script[data-texty]');
+		texty = JSON.parse((znacka && znacka.getAttribute('data-texty')) || '{}') || {};
+	} catch (e) { texty = {}; }
+	/* bez atributu (vlastní šablona načítá skript jinak) zůstanou texty česky */
+	function T(cesky) { return typeof texty[cesky] === 'string' && texty[cesky] !== '' ? texty[cesky] : cesky; }
+	function A(cesky) { return T(cesky).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
 	/* ---------- prohlížečka fotek: fotogalerie i jednotlivé obrázky v textu článku ---------- */
 
 	var okno = null, fotky = [], pozice = 0;
@@ -19,8 +30,8 @@
 		if (!okno) {
 			okno = document.createElement('dialog');
 			okno.className = 'rs-prohlizecka';
-			okno.innerHTML = '<img alt=""><p aria-live="polite"></p><button type="button" data-krok="-1" aria-label="Předchozí fotka">‹</button>'
-				+ '<button type="button" data-krok="1" aria-label="Další fotka">›</button><button type="button" data-zavrit aria-label="Zavřít">×</button>';
+			okno.innerHTML = '<img alt=""><p aria-live="polite"></p><button type="button" data-krok="-1" aria-label="' + A('Předchozí fotka') + '">‹</button>'
+				+ '<button type="button" data-krok="1" aria-label="' + A('Další fotka') + '">›</button><button type="button" data-zavrit aria-label="' + A('Zavřít') + '">×</button>';
 			document.body.appendChild(okno);
 			okno.addEventListener('click', function (e) {
 				var krok = e.target.getAttribute('data-krok');
@@ -179,9 +190,9 @@
 		var prekresli = function (odber, zprava) {
 			bloky.forEach(function (b) {
 				b.hidden = false;
-				b.querySelector('[data-push-tl]').textContent = odber ? 'Vypnout oznámení' : 'Zapnout oznámení';
+				b.querySelector('[data-push-tl]').textContent = odber ? T('Vypnout oznámení') : T('Zapnout oznámení');
 				b.querySelector('[data-push-tl]').classList.toggle('rs-tl-vedlejsi', !!odber);
-				b.querySelector('[data-push-stav]').textContent = zprava || (odber ? 'Oznámení jsou v tomto prohlížeči zapnutá.' : '');
+				b.querySelector('[data-push-stav]').textContent = zprava || (odber ? T('Oznámení jsou v tomto prohlížeči zapnutá.') : '');
 			});
 		};
 		navigator.serviceWorker.register(koren + 'sw.js', { scope: koren }).then(function (reg) {
@@ -190,16 +201,16 @@
 				b.querySelector('[data-push-tl]').addEventListener('click', function () {
 					reg.pushManager.getSubscription().then(function (odber) {
 						if (odber) {
-							return posli('push/zrusit', odber).then(function () { return odber.unsubscribe(); }).then(function () { prekresli(null, 'Oznámení jsou vypnutá.'); });
+							return posli('push/zrusit', odber).then(function () { return odber.unsubscribe(); }).then(function () { prekresli(null, T('Oznámení jsou vypnutá.')); });
 						}
 						return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: naBajty(klic) }).then(function (novy) {
 							return posli('push/odber', novy).then(function (r) {
-								if (!r.ok) { return novy.unsubscribe().then(function () { prekresli(null, 'Oznámení se nepodařilo zapnout. Zkuste to později.'); }); }
+								if (!r.ok) { return novy.unsubscribe().then(function () { prekresli(null, T('Oznámení se nepodařilo zapnout. Zkuste to později.')); }); }
 								prekresli(novy);
 							});
 						});
 					}).catch(function () {
-						prekresli(null, Notification.permission === 'denied' ? 'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.' : 'Oznámení se nepodařilo zapnout.');
+						prekresli(null, Notification.permission === 'denied' ? T('Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.') : T('Oznámení se nepodařilo zapnout.'));
 					});
 				});
 			});

@@ -69,7 +69,7 @@ $pole('zaloha_region', 'Region (jen S3)', 'text', 'Například eu-central-1. U C
 	<td><?= e($z['soubor']) ?></td>
 	<td class="cislo"><?= e(date('j. n. Y H:i', $z['cas'])) ?></td>
 	<td class="cislo"><?= number_format($z['velikost'] / 1024, 0, ',', ' ') ?> kB</td>
-	<td class="akce"><a href="<?= e($modul->url('stahni_zalohu', ['soubor' => $z['soubor']])) ?>"><?= e(t('Stáhnout')) ?></a> · <button class="navigace" type="submit" formaction="<?= e($modul->url('obnov_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.')) ?>"><?= e(t('Obnovit')) ?></button> · <button class="navigace" type="submit" formaction="<?= e($modul->url('smaz_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Smazat zálohu?')) ?>"><?= e(t('Smaž')) ?></button></td>
+	<td class="akce"><a href="<?= e($modul->url('stahni_zalohu', ['soubor' => $z['soubor']])) ?>"><?= e(t('Stáhnout')) ?></a> · <button class="navigace" type="submit" formaction="<?= e($modul->url('obnov_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.')) ?>"><?= e(t('Obnovit')) ?></button> · <button class="navigace nebezpecne" type="submit" formaction="<?= e($modul->url('smaz_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Smazat zálohu?')) ?>"><?= e(t('Smazat')) ?></button></td>
 </tr>
 <?php endforeach ?>
 </tbody>

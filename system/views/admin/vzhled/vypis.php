@@ -23,7 +23,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 <?php foreach ($layouty as $slozka => $l): ?>
 	<label class="karta-volba">
 		<input type="radio" name="layout" value="<?= e($slozka) ?>"<?= $hodnoty['layout'] === $slozka ? ' checked' : '' ?>>
-		<?= $nahledy[$slozka] ?? $nahledy['default'] ?>
+		<?= $nahledy[$slozka] ?? $nahledy['vlastni'] ?>
 		<strong><?= e($l['nazev']) ?></strong>
 		<span><?= e($l['popis']) ?></span>
 	</label>

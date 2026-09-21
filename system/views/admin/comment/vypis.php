@@ -40,7 +40,7 @@
 <p class="media-hromadne"><?= e(t('S označenými:')) ?>
 	<button class="tl" type="submit" name="provest" value="schvalit"><?= e(t('Schválit')) ?></button>
 	<button class="navigace" type="submit" name="provest" value="skryt"><?= e(t('Skrýt')) ?></button>
-	<button class="navigace" type="submit" name="provest" value="smazat" data-potvrdit="<?= e(t('Opravdu smazat označené komentáře? Smažou se i reakce na ně.')) ?>"><?= e(t('Smazat')) ?></button>
+	<button class="navigace nebezpecne" type="submit" name="provest" value="smazat" data-potvrdit="<?= e(t('Opravdu smazat označené komentáře? Smažou se i reakce na ně.')) ?>"><?= e(t('Smazat')) ?></button>
 </p>
 </form>
 <?php if ($stran > 1): ?>

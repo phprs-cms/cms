@@ -91,7 +91,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 	</select>
 	<input class="textpole" type="text" name="stitek" maxlength="80" placeholder="<?= e(t('štítek')) ?>" aria-label="<?= e(t('Štítek')) ?>" data-pro-akci="stitek" hidden>
 	<input class="tl" type="submit" value="<?= e(t('Provést')) ?>">
-	<button class="navigace" type="submit" formaction="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu vymazat všechny označené články?')) ?>"><?= e(t('Smazat označené')) ?></button>
+	<button class="navigace nebezpecne" type="submit" formaction="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu vymazat všechny označené články?')) ?>"><?= e(t('Smazat označené')) ?></button>
 </p>
 </form>
 

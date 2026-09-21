@@ -41,6 +41,12 @@ function slugify(string $text, int $maxLength = 120): string
     return $text !== '' ? $text : 'n-a';
 }
 
+/** Desetinné číslo v jazyce webu: 4,5 česky, slovensky a německy, 4.5 anglicky. */
+function cislo(float|int $cislo, int $desetinna = 1): string
+{
+    return number_format((float) $cislo, $desetinna, PhpRS\Core\Jazyk::kod() === 'en' ? '.' : ',', '');
+}
+
 /** České datum: 18. 9. 2026, volitelně s časem. */
 function datum(string|\DateTimeInterface|null $value, bool $withTime = false): string
 {

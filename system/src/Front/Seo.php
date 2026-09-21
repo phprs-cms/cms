@@ -239,10 +239,11 @@ final class Seo
         $verze = rawurlencode(PHPRS_VERSION);
         $h[] = '<link rel="stylesheet" href="' . e($this->app->url('image/web.css')) . '?v=' . $verze . '">';
         $push = new \PhpRS\Core\Push($this->app->db(), $s);
-        if ($push->zapnuto() && $push->verejnyKlic() !== '') {
+        $sPush = $push->zapnuto() && $push->verejnyKlic() !== '';
+        if ($sPush) {
             $h[] = '<link rel="manifest" href="' . e($this->app->url('manifest.webmanifest')) . '"><meta name="rs-push" content="' . e($push->verejnyKlic()) . '" data-koren="' . e($this->app->url('')) . '">';
         }
-        $h[] = '<script src="' . e($this->app->url('image/web.js')) . '?v=' . $verze . '" defer></script>';
+        $h[] = '<script src="' . e($this->app->url('image/web.js')) . '?v=' . $verze . '" defer' . self::textySkriptu($sPush) . '></script>';
         $h[] = '<style>@media (max-width: 760px) { .jen-pocitac { display: none !important; } } @media (min-width: 761px) { .jen-mobil { display: none !important; } }</style>';
         $h[] = $this->mereni();
         if (trim($s->get('kod_hlava')) !== '') {
@@ -250,6 +251,32 @@ final class Seo
         }
 
         return implode("\n", array_filter($h)) . "\n";
+    }
+
+    /** České texty, které čtenáři vypisuje image/web.js (tam jsou obalené T() nebo A()); slovník webu je překládá jako každý jiný text. */
+    public const array TEXTY_SKRIPTU = ['Předchozí fotka', 'Další fotka', 'Zavřít'];
+
+    /** Totéž pro oznámení Web Push – posílají se jen na webu, kde jsou oznámení zapnutá. */
+    public const array TEXTY_SKRIPTU_PUSH = [
+        'Zapnout oznámení', 'Vypnout oznámení', 'Oznámení jsou v tomto prohlížeči zapnutá.', 'Oznámení jsou vypnutá.',
+        'Oznámení se nepodařilo zapnout.', 'Oznámení se nepodařilo zapnout. Zkuste to později.',
+        'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.',
+    ];
+
+    /**
+     * Atribut data-texty pro značku <script> s image/web.js: překlady textů skriptu (česky => překlad) jako JSON.
+     * Bez dalšího požadavku a bez inline skriptu; česká verze nepotřebuje nic – skript má češtinu v sobě.
+     */
+    private static function textySkriptu(bool $sPush): string
+    {
+        $preklady = [];
+        foreach ([...self::TEXTY_SKRIPTU, ...($sPush ? self::TEXTY_SKRIPTU_PUSH : [])] as $cesky) {
+            if (t($cesky) !== $cesky) {
+                $preklady[$cesky] = t($cesky);
+            }
+        }
+
+        return $preklady === [] ? '' : ' data-texty="' . e((string) json_encode($preklady, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) . '"';
     }
 
     /** Cookie lišta vestavěného řešení a marketingové kódy; vkládá se před </body>. */

@@ -26,7 +26,7 @@ final class Bloky extends Modul
 
     /** Rozvržení stránky: název, popis a zóny, které v něm existují. */
     public const array ROZVRZENI = [
-        'tri' => ['3 sloupce', 'Klasické phpRS: bloky vlevo i vpravo, obsah uprostřed.', ['hlavicka', 'leva', 'nad', 'pod', 'prava', 'paticka']],
+        'tri' => ['3 sloupce', 'Bloky vlevo i vpravo, obsah uprostřed.', ['hlavicka', 'leva', 'nad', 'pod', 'prava', 'paticka']],
         'dva' => ['2 sloupce', 'Obsah a vpravo úzký sloupec s bloky.', ['hlavicka', 'nad', 'pod', 'prava', 'paticka']],
         'jeden' => ['1 sloupec', 'Úzký sloupec pro pohodlné čtení, bloky pod obsahem.', ['hlavicka', 'nad', 'pod', 'paticka']],
         'plna' => ['Plná šířka', 'Obsah přes celou šířku stránky, bloky pod obsahem.', ['hlavicka', 'nad', 'pod', 'paticka']],

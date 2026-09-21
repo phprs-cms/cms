@@ -53,15 +53,15 @@ Nový modul administrace: třída v `system/src/Admin/Moduly/` dědící z `Modu
 
 | složka | název | vzhled |
 | --- | --- | --- |
-| `layout/default` | phpRS | původní rozvržení: tři sloupce, bloky po stranách |
 | `layout/classic-newspaper` | Classic Newspaper | seriózní deník – patkové titulky, tenké linky, otvírák, pravý sloupec |
 | `layout/modern-magazine` | Modern Magazine | výrazný magazín – černá lišta, hero článek, mřížka karet, pás bloků dole |
 | `layout/minimal` | Minimal | osobní magazín, blog, newsletterový web – jeden úzký sloupec, klidná typografie, čistý seznam článků |
 
 Layout = `base.php` (stránka), `blok.php` (jeden blok), `cla_*.php` (šablony článku s režimy
 náhled / krátký / celý; `$poradi === 0` je první článek titulní strany), `style.css` a `info.php`
-(název a popis). Vybírá se při instalaci a v Konfiguraci. Vlastní layout: zkopírujte některou složku pod
-jiným názvem. Layout může přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
+(název a popis). Vybírá se při instalaci a ve Vzhled → Identita webu. Vlastní layout: zkopírujte některou složku pod
+jiným názvem a v `base.php` opravte odkaz na `style.css` na novou složku. Základní vzhled společných prvků (komentáře, anketa,
+hodnocení, typy bloků…) je v `image/web.css` s nulovou vahou – `style.css` šablony nese jen to, co se liší. Layout může přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
 Layouty nepoužívají externí písma ani skripty (GDPR, rychlost).
 
 ### Vzhled administrace
@@ -136,7 +136,7 @@ Hotovo:
 - **Právo:** žádost čtenáře o osobní údaje – export a výmaz podle e-mailu (komentáře, newsletter).
 - **Provoz:** režim údržby, záloha médií do ZIP, úlohy spouštěné návštěvou (aktualizace, zálohy).
 - **Identita webu** (Vzhled → Identita webu): šablona, logo, ikona webu, hlavní barva (vzorník + kontrola čitelnosti)
-  a písma titulků a textu s živou ukázkou; propisuje se do všech čtyř šablon přes `--rs-akcent`, `--rs-pismo-titulky`,
+  a písma titulků a textu s živou ukázkou; propisuje se do všech tří šablon přes `--rs-akcent`, `--rs-pismo-titulky`,
   `--rs-pismo-text`. Jen systémová písma – nic se nestahuje z cizích serverů.
 - **Jednoduché ovládání:** vizuální editor bloků ve stránce webu, volby jako karty, pokročilá nastavení schovaná.
 
@@ -192,8 +192,8 @@ Hotovo:
   přehled s grafem návštěvnosti za 14 dní a frontou práce.
 - **Newsletter:** automatický výběr nových článků (týdně/denně), naplánované odeslání na pozadí, souhrnná statistika otevření
   a prokliků bez sledování jednotlivců, šablona s logem a barvou webu.
-- **Šablony článku:** Standardní, Dlouhé čtení, Fotoreportáž, Rozhovor – fungují ve všech čtyřech layoutech.
-- **Tmavý režim webu** ve všech čtyřech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
+- **Šablony článku:** Standardní, Dlouhé čtení, Fotoreportáž, Rozhovor – fungují ve všech třech layoutech.
+- **Tmavý režim webu** ve všech třech šablonách podle zařízení čtenáře (Vzhled → Identita webu, výchozí vypnuto).
 - **Čtenáři a diskuse:** přihlášení odkazem z e-mailu (bez hesla), odběr newsletteru při registraci, komentáře pod účtem čtenáře
   (volitelně jen pro přihlášené), upozornění na odpověď e-mailem, nahlášení komentáře (po třech nahlášeních čeká na redakci).
 - **Oprávnění podle rubriky:** uživateli jde vymezit rubriky (včetně podrubrik), ve kterých smí psát a upravovat – platí v administraci i přes napojení na Claude.

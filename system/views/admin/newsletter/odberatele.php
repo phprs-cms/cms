@@ -12,6 +12,6 @@
 <?php foreach ($odberatele as $o): ?>
 <tr><td><?= e($o['email']) ?></td><td class="cislo"><?= e(datum($o['prihlasen'], true)) ?></td>
 	<td><span class="stitek stitek-<?= $o['potvrzen'] ? 'vydano' : 'koncept' ?>"><?= e(t($o['potvrzen'] ? 'odebírá' : 'nepotvrdil')) ?></span></td>
-	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz_odberatele')) ?>" data-potvrdit="<?= e(t('Odstranit odběratele?')) ?>"><?= $csrf ?><input type="hidden" name="ido" value="<?= (int) $o['ido'] ?>"><button class="navigace" type="submit"><?= e(t('Odstranit')) ?></button></form></td></tr>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz_odberatele')) ?>" data-potvrdit="<?= e(t('Odstranit odběratele?')) ?>"><?= $csrf ?><input type="hidden" name="ido" value="<?= (int) $o['ido'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td></tr>
 <?php endforeach ?>
 </tbody></table></div>

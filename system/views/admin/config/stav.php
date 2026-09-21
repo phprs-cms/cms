@@ -32,7 +32,7 @@ $skupina = '';
 <p><?= e(t('Žádné chyby – záznam je prázdný.')) ?></p>
 <?php else: ?>
 <pre class="log-chyb"><?php foreach (array_reverse($chybyLog) as $radek): ?><?= e(mb_strimwidth(str_replace(PHPRS_ROOT, '', $radek), 0, 400, '…')) . "\n" ?><?php endforeach ?></pre>
-<p><button class="navigace" type="submit" formaction="<?= e($modul->url('smaz_log')) ?>" data-potvrdit="<?= e(t('Vyprázdnit záznam chyb?')) ?>"><?= e(t('Vyprázdnit záznam')) ?></button> <span class="smltxt"><?= e(t('Nejnovější nahoře, posledních 40 záznamů ze souboru storage/log/chyby.log.')) ?></span></p>
+<p><button class="navigace nebezpecne" type="submit" formaction="<?= e($modul->url('smaz_log')) ?>" data-potvrdit="<?= e(t('Vyprázdnit záznam chyb?')) ?>"><?= e(t('Vyprázdnit záznam')) ?></button> <span class="smltxt"><?= e(t('Nejnovější nahoře, posledních 40 záznamů ze souboru storage/log/chyby.log.')) ?></span></p>
 <?php endif ?>
 </fieldset>
 <fieldset>

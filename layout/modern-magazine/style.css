@@ -162,89 +162,19 @@ img { display: block; max-width: 100%; height: auto; }
 	:where(.obal) .obal-uzky { padding-left: 0; padding-right: 0; }
 }
 
-/* obrázky v textu článku */
+/* Společné prvky (štítky, Ve zkratce, otázky a odpovědi, hodnocení, komentáře, anketa, reklama, typy bloků) mají základní vzhled
+ * v image/web.css s nulovou vahou (:where) - tady je jen to, co se od něj liší. Vlastní pravidlo šablony má vždy přednost. */
+
+/* obrázky v textu článku: odsazení zůstává tady, protože má přebít i .rs-medium z web.css; ostatní je ve společném základu */
 .clanek-text figure, .perex figure { margin: 1.6em 0; }
-.clanek-text figure img { width: 100%; }
-.clanek-text figcaption { margin-top: 6px; font-size: 13px; line-height: 1.4; color: var(--text-slaby); }
-.clanek-text .obrazek-vlevo { float: left; max-width: 45%; margin: 0.4em 1.4em 1em 0; }
-.clanek-text .obrazek-vpravo { float: right; max-width: 45%; margin: 0.4em 0 1em 1.4em; }
-.clanek-text hr { clear: both; border: 0; border-top: 1px solid var(--linka); margin: 2em 0; }
-.clanek-text iframe { max-width: 100%; }
+
+/* Ve zkratce nese i třídu .obal-uzky: vlastní odsazení musí přebít to její (společné pravidlo z web.css má nulovou váhu) */
+.ve-zkratce { padding: 16px 20px; }
 
 /* logo z Nastavení a odkazy v patičce */
 .logo-obrazek { display: inline-block; max-height: 34px; width: auto; vertical-align: middle; }
 .paticka a { margin-right: 12px; }
 .paticka .obal > span { margin-right: 12px; }
-
-/* štítky pod článkem */
-.clanek-stitky { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
-.clanek-stitky a { text-decoration: none; }
-.clanek-stitky a:hover { text-decoration: underline; }
-
-/* blok Ve zkratce a otázky s odpověďmi */
-.ve-zkratce { margin: 24px auto; padding: 16px 20px; border-left: 4px solid currentColor; background: rgb(127 127 127 / 0.08); font-size: 16px; line-height: 1.5; }
-.ve-zkratce h2 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; }
-.ve-zkratce ul { margin: 0; padding-left: 20px; }
-.ve-zkratce li { margin: 4px 0; }
-.faq { margin-top: 36px; }
-.faq h2 { font-size: 22px; }
-.faq details { border-top: 1px solid rgb(127 127 127 / 0.35); padding: 12px 0; }
-.faq summary { font-weight: 700; cursor: pointer; }
-.faq details p { margin: 8px 0 0; }
-
-/* hodnocení, komentáře a anketa (M3) */
-.hodnoceni { margin-top: 32px; }
-.hvezdy { position: relative; display: inline-block; color: rgb(127 127 127 / 0.35); letter-spacing: 2px; }
-.hvezdy::before { content: "★★★★★"; position: absolute; inset: 0; width: calc(var(--hodnota) / 5 * 100%); overflow: hidden; color: #E8A400; }
-.hodnoceni-formular { display: flex; align-items: center; gap: 2px; }
-.hodnoceni-formular span { margin-right: 8px; }
-.hodnoceni-formular button { border: 0; background: none; padding: 0 2px; font-size: 24px; line-height: 1; color: rgb(127 127 127 / 0.45); cursor: pointer; }
-.hodnoceni-formular button:hover, .hodnoceni-formular button:has(~ button:hover) { color: #E8A400; }
-.komentare { margin-top: 40px; font-size: 16px; line-height: 1.55; }
-.komentare h2 { font-size: 22px; }
-.komentare-seznam, .komentare-reakce { list-style: none; margin: 0; padding: 0; }
-.komentare-reakce { margin: 12px 0 0 28px; }
-.komentar { padding: 14px 0; border-top: 1px solid rgb(127 127 127 / 0.3); }
-.komentar-hlava { margin: 0 0 4px; font-size: 14px; }
-.komentar-hlava time { opacity: 0.65; margin-left: 6px; }
-.komentar-reagovat, [data-zrusit-reakci] { border: 0; background: none; padding: 0; margin-left: 10px; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; color: inherit; opacity: 0.75; }
-.komentar-text { overflow-wrap: anywhere; }
-.komentare-zprava { padding: 10px 14px; border: 1px solid #1A7F4B; color: #1A7F4B; }
-.komentare-chyba { border-color: #C4281C; color: #C4281C; }
-.komentar-formular { margin-top: 24px; padding-top: 18px; border-top: 2px solid currentColor; }
-.komentar-formular p { margin: 0 0 12px; }
-.komentar-formular label { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; }
-.komentar-formular input, .komentar-formular textarea { width: 100%; max-width: 100%; padding: 9px 10px; border: 1px solid rgb(127 127 127 / 0.6); border-radius: 0; background: transparent; color: inherit; font: inherit; }
-.komentar-formular button[type="submit"], .anketa button { padding: 10px 20px; border: 0; background: var(--text, #111); color: #FFFFFF; font: inherit; font-weight: 700; cursor: pointer; }
-.anketa-volba { display: block; padding: 4px 0; }
-.anketa-vysledek { position: relative; display: flex; justify-content: space-between; gap: 10px; margin: 6px 0; padding: 5px 8px; font-size: 14px; background: rgb(127 127 127 / 0.12); }
-.anketa-vysledek span { position: relative; z-index: 1; }
-.anketa-vysledek i { position: absolute; inset: 0 auto 0 0; background: rgb(127 127 127 / 0.3); }
-
-/* reklama */
-.reklama { margin: 24px auto; text-align: center; }
-.reklama-oznaceni { display: block; margin-bottom: 4px; font: 10px/1.2 system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.55; }
-.reklama img { display: inline-block; max-width: 100%; height: auto; }
-
-/* nové typy bloků (M6) */
-.blok-clanky, .blok-menu { margin: 0; padding: 0; list-style: none; }
-.blok-clanky li, .blok-menu li { padding: 6px 0; border-bottom: 1px solid rgb(127 127 127 / 0.25); }
-.blok-clanky a, .blok-menu a { text-decoration: none; font-weight: 600; }
-.blok-clanky a:hover, .blok-menu a:hover { text-decoration: underline; }
-.blok-clanky small { opacity: 0.65; white-space: nowrap; }
-.zona-hlavicka .blok-menu, .zona-paticka .blok-menu { display: flex; flex-wrap: wrap; gap: 4px 22px; }
-.zona-hlavicka .blok-menu li, .zona-paticka .blok-menu li { border: 0; padding: 0; }
-.blok-stitky { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-weight: 600; }
-.blok-stitky a { text-decoration: none; }
-.blok-otvirak { display: block; text-decoration: none; color: inherit; }
-.blok-otvirak img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 10px; }
-.blok-otvirak strong { display: block; font-size: 1.35em; line-height: 1.2; margin-bottom: 6px; }
-.blok-otvirak span { opacity: 0.8; }
-.blok-otvirak:hover strong { text-decoration: underline; }
-
-.clanek-aktualizovano { margin: 0 auto 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.7; }
-
-.newsletter-zprava { margin: 0 0 8px; padding: 8px 10px; border: 1px solid currentColor; font-size: 14px; }
 
 /* písmo titulků z Identity webu */
 h1, h2, h3, .logo, .blok-nadpis, .clanek-text blockquote { font-family: var(--titulky); }
@@ -272,6 +202,4 @@ h1, h2, h3, .logo, .blok-nadpis, .clanek-text blockquote { font-family: var(--ti
 	:root[data-tmavy] .vypis-titulni .karta-hero .perex { color: #E4E4E4; }
 	:root[data-tmavy] .rubriky li, :root[data-tmavy] .nejctenejsi li, :root[data-tmavy] .novinka { border-bottom-color: var(--linka); }
 	:root[data-tmavy] .karta-foto span { color: #2E2E2E; }
-	:root[data-tmavy] .komentare-zprava { border-color: #4CC38A; color: #4CC38A; }
-	:root[data-tmavy] .komentare-chyba { border-color: #FF8A80; color: #FF8A80; }
 }

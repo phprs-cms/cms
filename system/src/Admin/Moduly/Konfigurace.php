@@ -359,7 +359,12 @@ final class Konfigurace extends Modul
             return $this->zpet('Nejprve vyplňte E-mail redakce v záložce Základní.', '', ['zalozka' => $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav'], 'chyba');
         }
         $web = $this->app->settings()->get('nazev_webu');
-        $ok = \PhpRS\Core\Posta::odesli($this->app->settings(), $komu, 'Zkušební zpráva z ' . $web, "Dobrý den,\n\ntato zpráva potvrzuje, že web {$web} umí odesílat e-maily.\n\nphpRS " . PHPRS_VERSION, doFronty: false);
+        // adresa redakce nemá účet s jazykem: zpráva jde ve výchozím jazyce webu (stejně jako ostatní pošta redakci)
+        [$predmet, $text] = \PhpRS\Core\Jazyk::docasne(\PhpRS\Core\Jazyk::vychozi($this->app->settings()), fn (): array => [
+            t('Zkušební zpráva z %s', $web),
+            t('Dobrý den,') . "\n\n" . t('tato zpráva potvrzuje, že web %s umí odesílat e-maily.', $web) . "\n\nphpRS " . PHPRS_VERSION,
+        ], 'admin-');
+        $ok = \PhpRS\Core\Posta::odesli($this->app->settings(), $komu, $predmet, $text, doFronty: false);
         $zpet = $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav';
 
         return $this->zpet(

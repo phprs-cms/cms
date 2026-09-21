@@ -42,7 +42,7 @@ $bezi = (int) $clanek['zive'] === 1;
 	<td class="cislo"><?= e(datum($z['cas'], true)) ?></td>
 	<td><?= $z['dulezite'] ? '<strong>' : '' ?><?= e(mb_strimwidth(trim(strip_tags($z['text'])), 0, 160, '…')) ?><?= $z['dulezite'] ? '</strong>' : '' ?></td>
 	<td><?= e((string) $z['autor_jm']) ?></td>
-	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('zive')) ?>" data-potvrdit="<?= e(t('Smazat zápis?')) ?>"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>"><input type="hidden" name="smazat" value="<?= (int) $z['idz'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('zive')) ?>" data-potvrdit="<?= e(t('Smazat zápis?')) ?>"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>"><input type="hidden" name="smazat" value="<?= (int) $z['idz'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

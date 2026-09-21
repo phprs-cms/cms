@@ -35,7 +35,7 @@ Vyplňte údaje k prázdné databázi. **Server** bývá `localhost`, ale řada 
 
 ### Krok 4 – Šablona webu
 
-Vyberte jednu ze čtyř vestavěných šablon. Kdykoli později ji změníte ve **Vzhled → Identita webu**, o obsah nepřijdete.
+Vyberte jednu ze tří vestavěných šablon: Classic Newspaper (deník), Modern Magazine (výrazný magazín) nebo Minimal (blog, osobní magazín). Kdykoli později ji změníte ve **Vzhled → Identita webu**, o obsah nepřijdete.
 
 Tlačítko **Nainstalovat phpRS 3** vytvoří tabulky v databázi a soubor `config.php` s přístupem k databázi.
 

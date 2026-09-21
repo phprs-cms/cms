@@ -35,5 +35,5 @@ $pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Čas, náhodný identifik
 <p class="napoveda"><?= e(t('Když čtenář požádá o výpis nebo výmaz svých údajů (GDPR), zadejte jeho e-mail. Týká se komentářů a odběru newsletteru.')) ?></p>
 <div class="radek"><label for="gdpr_email"><?= e(t('E-mail čtenáře')) ?></label><input class="textpole siroke" type="email" id="gdpr_email" name="gdpr_email" maxlength="190"></div>
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('osobni_udaje')) ?>" name="gdpr_co" value="export" formnovalidate><?= e(t('Stáhnout jeho údaje')) ?></button>
-<button class="navigace" type="submit" formaction="<?= e($modul->url('osobni_udaje')) ?>" name="gdpr_co" value="smazat" data-potvrdit="<?= e(t('Nevratně smazat komentáře a odběr tohoto čtenáře?')) ?>"><?= e(t('Smazat jeho údaje')) ?></button></p>
+<button class="navigace nebezpecne" type="submit" formaction="<?= e($modul->url('osobni_udaje')) ?>" name="gdpr_co" value="smazat" data-potvrdit="<?= e(t('Nevratně smazat komentáře a odběr tohoto čtenáře?')) ?>"><?= e(t('Smazat jeho údaje')) ?></button></p>
 </fieldset>

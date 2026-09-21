@@ -45,7 +45,6 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .rs-zamek { margin: 8px 0 32px; padding: 24px; border: 1px solid rgb(128 128 128 / 0.35); border-top: 4px solid var(--rs-akcent, #1f4fe0); border-radius: 4px; text-align: center; font: 16px/1.5 system-ui, sans-serif; }
 .rs-zamek strong { display: block; font-size: 20px; }
 .rs-zamek p { margin: 8px 0 0; }
-.rs-stitek-zamek { display: inline-block; margin-left: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 99px; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; opacity: 0.75; }
 .clanek-text a.rs-tl, .blok a.rs-tl, a.rs-tl { color: #fff; text-decoration: none; }
 .clanek-text a.rs-tl-vedlejsi, .blok a.rs-tl-vedlejsi, a.rs-tl-vedlejsi { color: inherit; }
 
@@ -253,3 +252,81 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 
 /* viditelný fokus při ovládání klávesnicí - společný všem šablonám, šablona ho smí přepsat */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--rs-akcent, #1f4fe0); outline-offset: 2px; }
+
+/* ---------- základní vzhled prvků, které dřív nesla každá šablona zvlášť ----------
+ * Štítky článku, Ve zkratce, otázky a odpovědi, hodnocení, komentáře, anketa, reklama, typy bloků, obrázky v textu.
+ * Všechno má díky :where() NULOVOU váhu: jakékoli pravidlo šablony (i vlastní, i starší kopie těchto pravidel) má přednost,
+ * přestože se web.css načítá až po style.css šablony. Proměnné --text, --text-slaby a --linka jsou proměnné šablony; bez nich platí náhrada.
+ * Úsek musí zůstat na konci souboru - při stejné (nulové) váze rozhoduje pořadí. */
+/* obrázky v textu článku */
+:where(.clanek-text figure img) { width: 100%; }
+:where(.clanek-text figcaption) { margin-top: 6px; font-size: 13px; line-height: 1.4; color: var(--text-slaby, inherit); }
+:where(.clanek-text hr) { clear: both; border: 0; border-top: 1px solid var(--linka, rgb(128 128 128 / 0.35)); margin: 2em 0; }
+/* štítky pod článkem */
+:where(.clanek-stitky) { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
+:where(.clanek-stitky a) { text-decoration: none; }
+:where(.clanek-stitky a:hover) { text-decoration: underline; }
+/* blok Ve zkratce a otázky s odpověďmi */
+:where(.ve-zkratce) { margin: 24px auto; padding: 16px 20px; border-left: 4px solid currentColor; background: rgb(127 127 127 / 0.08); font-size: 16px; line-height: 1.5; }
+:where(.ve-zkratce h2) { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; }
+:where(.ve-zkratce ul) { margin: 0; padding-left: 20px; }
+:where(.ve-zkratce li) { margin: 4px 0; }
+:where(.faq) { margin-top: 36px; }
+:where(.faq h2) { font-size: 22px; }
+:where(.faq details) { border-top: 1px solid rgb(127 127 127 / 0.35); padding: 12px 0; }
+:where(.faq summary) { font-weight: 700; cursor: pointer; }
+:where(.faq details p) { margin: 8px 0 0; }
+/* hodnocení, komentáře a anketa (M3) */
+:where(.hodnoceni) { margin-top: 32px; }
+:where(.hvezdy) { position: relative; display: inline-block; color: rgb(127 127 127 / 0.35); letter-spacing: 2px; }
+:where(.hvezdy)::before { content: "★★★★★"; position: absolute; inset: 0; width: calc(var(--hodnota) / 5 * 100%); overflow: hidden; color: #E8A400; }
+:where(.hodnoceni-formular) { display: flex; align-items: center; gap: 2px; }
+:where(.hodnoceni-formular span) { margin-right: 8px; }
+:where(.hodnoceni-formular button) { border: 0; background: none; padding: 0 2px; font-size: 24px; line-height: 1; color: rgb(127 127 127 / 0.45); cursor: pointer; }
+:where(.hodnoceni-formular button:hover, .hodnoceni-formular button:has(~ button:hover)) { color: #E8A400; }
+:where(.komentare) { margin-top: 40px; font-size: 16px; line-height: 1.55; }
+:where(.komentare h2) { font-size: 22px; }
+:where(.komentare-seznam, .komentare-reakce) { list-style: none; margin: 0; padding: 0; }
+:where(.komentare-reakce) { margin: 12px 0 0 28px; }
+:where(.komentar) { padding: 14px 0; border-top: 1px solid rgb(127 127 127 / 0.3); }
+:where(.komentar-hlava) { margin: 0 0 4px; font-size: 14px; }
+:where(.komentar-hlava time) { opacity: 0.65; margin-left: 6px; }
+:where(.komentar-reagovat, [data-zrusit-reakci]) { border: 0; background: none; padding: 0; margin-left: 10px; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; color: inherit; opacity: 0.75; }
+:where(.komentar-text) { overflow-wrap: anywhere; }
+:where(.komentare-zprava) { padding: 10px 14px; border: 1px solid #1A7F4B; color: #1A7F4B; }
+:where(.komentare-chyba) { border-color: #C4281C; color: #C4281C; }
+:where(.komentar-formular) { margin-top: 24px; padding-top: 18px; border-top: 2px solid currentColor; }
+:where(.komentar-formular p) { margin: 0 0 12px; }
+:where(.komentar-formular label) { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; }
+:where(.komentar-formular input, .komentar-formular textarea) { width: 100%; max-width: 100%; padding: 9px 10px; border: 1px solid rgb(127 127 127 / 0.6); border-radius: 0; background: transparent; color: inherit; font: inherit; }
+:where(.komentar-formular button[type="submit"], .anketa button) { padding: 10px 20px; border: 0; background: var(--text, #111); color: #FFFFFF; font: inherit; font-weight: 700; cursor: pointer; }
+:where(.anketa-volba) { display: block; padding: 4px 0; }
+:where(.anketa-vysledek) { position: relative; display: flex; justify-content: space-between; gap: 10px; margin: 6px 0; padding: 5px 8px; font-size: 14px; background: rgb(127 127 127 / 0.12); }
+:where(.anketa-vysledek span) { position: relative; z-index: 1; }
+:where(.anketa-vysledek i) { position: absolute; inset: 0 auto 0 0; background: rgb(127 127 127 / 0.3); }
+/* reklama */
+:where(.reklama) { margin: 24px auto; text-align: center; }
+:where(.reklama-oznaceni) { display: block; margin-bottom: 4px; font: 10px/1.2 system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.55; }
+:where(.reklama) img { display: inline-block; max-width: 100%; height: auto; }
+/* nové typy bloků (M6) */
+:where(.blok-clanky, .blok-menu) { margin: 0; padding: 0; list-style: none; }
+:where(.blok-clanky li, .blok-menu li) { padding: 6px 0; border-bottom: 1px solid rgb(127 127 127 / 0.25); }
+:where(.blok-clanky a, .blok-menu a) { text-decoration: none; font-weight: 600; }
+:where(.blok-clanky a:hover, .blok-menu a:hover) { text-decoration: underline; }
+:where(.blok-clanky small) { opacity: 0.65; white-space: nowrap; }
+:where(.zona-hlavicka .blok-menu, .zona-paticka .blok-menu) { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+:where(.zona-hlavicka .blok-menu li, .zona-paticka .blok-menu li) { border: 0; padding: 0; }
+:where(.blok-stitky) { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-weight: 600; }
+:where(.blok-stitky a) { text-decoration: none; }
+:where(.blok-otvirak) { display: block; text-decoration: none; color: inherit; }
+:where(.blok-otvirak img) { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 10px; }
+:where(.blok-otvirak strong) { display: block; font-size: 1.35em; line-height: 1.2; margin-bottom: 6px; }
+:where(.blok-otvirak span) { opacity: 0.8; }
+:where(.blok-otvirak:hover strong) { text-decoration: underline; }
+/* poznámka „Aktualizováno“ u článku, zpráva po přihlášení k odběru */
+:where(.clanek-aktualizovano) { margin: 0 auto 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.7; }
+:where(.newsletter-zprava) { margin: 0 0 8px; padding: 8px 10px; border: 1px solid currentColor; font-size: 14px; }
+@media (prefers-color-scheme: dark) {
+	:where(:root[data-tmavy]) :where(.komentare-zprava) { border-color: #4CC38A; color: #4CC38A; }
+	:where(:root[data-tmavy]) :where(.komentare-chyba) { border-color: #FF8A80; color: #FF8A80; }
+}

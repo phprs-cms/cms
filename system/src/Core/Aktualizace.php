@@ -90,19 +90,28 @@ final class Aktualizace
             return;
         }
         $s->set('aktualizace_pokus', (string) $nova['verze']); // každá verze se zkouší a oznamuje jen jednou
-        $vysledek = 'Je k dispozici bezpečnostní aktualizace ' . $nova['verze'] . '. Nainstalujte ji v administraci: Nastavení → Zálohy a aktualizace.';
-        if ($s->bool('aktualizace_auto')) {
-            try {
-                Zaloha::vytvor($app->db(), 'predaktualizaci');
-                $a->nainstaluj();
-                $vysledek = 'Bezpečnostní aktualizace ' . $nova['verze'] . ' byla nainstalována automaticky. Před instalací vznikla záloha databáze.';
-            } catch (\Throwable $e) {
-                $vysledek .= ' Automatická instalace se nezdařila: ' . $e->getMessage();
+        // píše se redakci (adresa bez účtu): texty administrace ve výchozím jazyce webu. Úloha běží i z veřejného webu,
+        // kde slovník administrace načtený není – Jazyk::docasne() ho načte jen na tuto chvíli (i pro hlášky chyb instalace).
+        [$predmet, $text] = Jazyk::docasne(Jazyk::vychozi($s), function () use ($app, $a, $s, $nova): array {
+            $vysledek = t('Je k dispozici bezpečnostní aktualizace %s. Nainstalujte ji v administraci: Nastavení → Zálohy a aktualizace.', (string) $nova['verze']);
+            if ($s->bool('aktualizace_auto')) {
+                try {
+                    Zaloha::vytvor($app->db(), 'predaktualizaci');
+                    $a->nainstaluj();
+                    $vysledek = t('Bezpečnostní aktualizace %s byla nainstalována automaticky. Před instalací vznikla záloha databáze.', (string) $nova['verze']);
+                } catch (\Throwable $e) {
+                    $vysledek .= ' ' . t('Automatická instalace se nezdařila: %s', $e->getMessage());
+                }
             }
-        }
+
+            return [
+                t('phpRS: bezpečnostní aktualizace %s', (string) $nova['verze']),
+                $vysledek . "\n\n" . t('Změny:') . "\n- " . implode("\n- ", $nova['zmeny']) . "\n\n" . $s->get('nazev_webu'),
+            ];
+        }, 'admin-');
         $komu = $s->get('email_webu');
         if ($komu !== '') {
-            Posta::odesli($s, $komu, 'phpRS: bezpečnostní aktualizace ' . $nova['verze'], $vysledek . "\n\nZměny:\n- " . implode("\n- ", $nova['zmeny']) . "\n\n" . $s->get('nazev_webu'));
+            Posta::odesli($s, $komu, $predmet, $text);
         }
     }
 

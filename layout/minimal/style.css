@@ -54,16 +54,19 @@ img { display: block; max-width: 100%; height: auto; }
 .blok-typ4 { padding: 18px 20px; border: 1px solid var(--linka); border-radius: 10px; }
 .blok-typ5 .blok-nadpis { display: none; }
 .blok ul { margin: 0; padding: 0; list-style: none; }
-.blok li { padding: 5px 0; }
+.blok li { padding: 5px 0; border-bottom: 0; }
 .blok li + li { border-top: 1px solid var(--linka); }
 .blok a { text-decoration: none; }
 .blok a:hover { text-decoration: underline; }
+.blok-clanky a, .blok-menu a { font-weight: inherit; }
+.zona-hlavicka .blok-menu, .zona-paticka .blok-menu { display: block; }
+.blok-stitky { display: block; margin: 1em 0; font-weight: inherit; }
 .blok-stitky a { display: inline-block; margin: 0 8px 6px 0; color: var(--text-slaby); }
-.blok-clanky small, .nejctenejsi small { color: var(--text-slaby); white-space: nowrap; }
+.blok-clanky small, .nejctenejsi small { color: var(--text-slaby); white-space: nowrap; opacity: 1; }
 .blok-otvirak { display: block; color: inherit; }
 .blok-otvirak img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 10px; border-radius: 10px; }
 .blok-otvirak strong { display: block; margin: 8px 0 4px; font: 800 24px/1.2 var(--titulky); letter-spacing: -0.02em; }
-.blok-otvirak span { color: var(--text-slaby); }
+.blok-otvirak span { color: var(--text-slaby); opacity: 1; }
 .novinka { padding: 8px 0; }
 .novinka + .novinka { border-top: 1px solid var(--linka); }
 .novinka time { display: block; color: var(--text-slaby); font-size: 13px; }
@@ -107,15 +110,14 @@ img { display: block; max-width: 100%; height: auto; }
 .clanek-text blockquote { margin: 1.6em 0; padding: 2px 0 2px 22px; border-left: 3px solid var(--akcent); color: var(--text-slaby); font-style: italic; }
 .clanek-text figure { margin: 1.8em 0; }
 .clanek-text img { border-radius: 10px; }
+.clanek-text figure img { width: auto; }
 .clanek-text figcaption { margin-top: 8px; color: var(--text-slaby); font: 13px/1.45 var(--ui); text-align: center; }
 .clanek-text hr { margin: 2.4em auto; width: 80px; border: 0; border-top: 1px solid var(--linka); }
 .clanek-text pre, .clanek-text code { font: 15px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .clanek-text pre { padding: 14px 16px; border-radius: 10px; background: var(--plocha); overflow-x: auto; }
-.clanek-text .obrazek-vlevo { float: left; max-width: 45%; margin: 0.4em 1.4em 1em 0; }
-.clanek-text .obrazek-vpravo { float: right; max-width: 45%; margin: 0.4em 0 1em 1.4em; }
 .clanek-text hr { clear: both; }
-.clanek-aktualizovano { padding: 0; color: var(--text-slaby); font: 13px var(--ui); }
-.clanek-stitky { margin: 32px 0 0; font: 14px var(--ui); }
+.clanek-aktualizovano { padding: 0; color: var(--text-slaby); font: 13px var(--ui); letter-spacing: normal; text-transform: none; opacity: 1; }
+.clanek-stitky { display: block; margin: 32px 0 0; font: 14px var(--ui); }
 .clanek-stitky a { margin-right: 10px; color: var(--text-slaby); text-decoration: none; }
 .clanek-paticka { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--linka); color: var(--text-slaby); font: 13px var(--ui); }
 .clanek-paticka p { margin: 0 0 4px; }
@@ -126,6 +128,9 @@ img { display: block; max-width: 100%; height: auto; }
 .souvisejici a { font-weight: 600; text-decoration: none; }
 .souvisejici small { color: var(--text-slaby); }
 .stranka-staticka h1 { margin: 8px 0 24px; font: 800 38px/1.12 var(--titulky); letter-spacing: -0.035em; }
+
+/* Společné prvky (štítky, Ve zkratce, otázky a odpovědi, hodnocení, komentáře, anketa, reklama, typy bloků) mají základní vzhled
+ * v image/web.css s nulovou vahou (:where) - tady je jen to, co se od něj liší. Vlastní pravidlo šablony má vždy přednost. */
 
 /* formuláře, komentáře, anketa, hledání */
 
@@ -141,44 +146,33 @@ input, textarea, select, button { font: 16px/1.4 var(--ui); }
 .komentar-hlava { color: var(--text-slaby); font-size: 13px; }
 .komentar-hlava strong { color: var(--text); font-size: 15px; }
 .komentar-hlava { margin: 0 0 4px; }
-.komentar-hlava time { margin-left: 6px; }
-.komentar-reagovat, [data-zrusit-reakci] { margin-left: 10px; padding: 0; border: 0; background: none; color: var(--text-slaby); font-size: 13px; text-decoration: underline; cursor: pointer; }
+.komentar-hlava time { margin-left: 6px; opacity: 1; }
+.komentar-reagovat, [data-zrusit-reakci] { margin-left: 10px; padding: 0; border: 0; background: none; color: var(--text-slaby); font-size: 13px; text-decoration: underline; cursor: pointer; opacity: 1; }
 .komentar-reagovat:hover, [data-zrusit-reakci]:hover { color: var(--akcent); }
-.komentar-text { overflow-wrap: anywhere; }
 .komentare-reakce { margin: 12px 0 0 24px; }
 .komentare-zprava { padding: 10px 14px; border: 1px solid #1A7F4B; border-radius: 8px; color: #1A7F4B; }
 .komentare-chyba { border-color: #C4281C; color: #C4281C; }
-.komentar-formular { margin-top: 24px; }
-.komentar-formular p { margin: 0 0 12px; }
+.komentar-formular { margin-top: 24px; padding-top: 0; border-top: 0; }
 .komentar-formular label { display: block; margin-bottom: 4px; color: var(--text-slaby); font-size: 13px; font-weight: 600; }
 .komentar-formular input, .komentar-formular textarea, .newsletter input[type="email"] { width: 100%; max-width: 100%; padding: 10px 12px; border: 1px solid var(--linka); border-radius: 8px; background: var(--podklad); color: inherit; }
 .newsletter { display: grid; gap: 8px; }
-.anketa-volba { display: block; padding: 4px 0; }
 .anketa-vysledek { position: relative; display: flex; justify-content: space-between; gap: 10px; margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: var(--plocha); font-size: 14px; }
-.anketa-vysledek span { position: relative; z-index: 1; }
 .anketa-vysledek i { position: absolute; inset: 0 auto 0 0; border-radius: 6px; background: rgb(127 127 127 / 0.25); }
 .newsletter-zprava { margin: 0 0 8px; padding: 8px 12px; border: 1px solid var(--linka); border-radius: 8px; font-size: 14px; }
 .hodnoceni { margin-top: 28px; font: 15px var(--ui); }
-.hvezdy { position: relative; display: inline-block; color: rgb(127 127 127 / 0.35); letter-spacing: 2px; }
-.hvezdy::before { content: "★★★★★"; position: absolute; inset: 0; width: calc(var(--hodnota) / 5 * 100%); overflow: hidden; color: #E8A400; }
-.hodnoceni-formular { display: flex; align-items: center; gap: 2px; }
-.hodnoceni-formular span { margin-right: 8px; }
 .hodnoceni-formular button { padding: 0 2px; border: 0; background: none; color: rgb(127 127 127 / 0.45); font-size: 24px; line-height: 1; cursor: pointer; }
 .hodnoceni-formular button:hover, .hodnoceni-formular button:has(~ button:hover) { color: #E8A400; }
 
 /* blok Ve zkratce, otázky s odpověďmi, reklama */
 
-.ve-zkratce { margin: 0 0 28px; padding: 16px 20px; border-radius: 10px; background: var(--plocha); font: 16px/1.55 var(--ui); }
+.ve-zkratce { margin: 0 0 28px; padding: 16px 20px; border-left: 0; border-radius: 10px; background: var(--plocha); font: 16px/1.55 var(--ui); }
 .ve-zkratce h2 { margin: 0 0 8px; color: var(--text-slaby); font: 700 12px/1.3 var(--ui); letter-spacing: 0.1em; text-transform: uppercase; }
-.ve-zkratce ul { margin: 0; padding-left: 20px; }
-.ve-zkratce li { margin: 4px 0; }
 .faq { margin-top: 40px; font-family: var(--ui); }
 .faq h2 { margin: 0 0 10px; font: 800 22px/1.2 var(--titulky); }
 .faq details { padding: 12px 0; border-top: 1px solid var(--linka); font-size: 16px; }
 .faq summary { font-weight: 600; cursor: pointer; }
-.faq details p { margin: 8px 0 0; }
 .reklama { margin: 28px auto; text-align: center; }
-.reklama-oznaceni { display: block; margin-bottom: 4px; color: var(--text-slaby); font: 10px/1.2 var(--ui); letter-spacing: 0.08em; text-transform: uppercase; }
+.reklama-oznaceni { display: block; margin-bottom: 4px; color: var(--text-slaby); font: 10px/1.2 var(--ui); letter-spacing: 0.08em; text-transform: uppercase; opacity: 1; }
 .reklama img { display: inline-block; }
 
 /* patička */

@@ -13,18 +13,18 @@ $zona = function (string $klic) use ($bloky, $modul, $csrf): void {
     if (!isset($bloky[$klic])) {
         return;
     } ?>
-	<section class="zona zona-<?= e($klic) ?>" data-zona="<?= e($klic) ?>" aria-label="<?= e(Bloky::ZONY[$klic]) ?>">
-		<h3><?= e(Bloky::ZONY[$klic]) ?></h3>
+	<section class="zona zona-<?= e($klic) ?>" data-zona="<?= e($klic) ?>" aria-label="<?= e(t(Bloky::ZONY[$klic])) ?>">
+		<h3><?= e(t(Bloky::ZONY[$klic])) ?></h3>
 		<div class="zona-bloky">
 <?php foreach ($bloky[$klic] as $b): ?>
 			<article class="blok-karta<?= $b['sys_funkce'] !== '' ? ' blok-karta-sys' : '' ?><?= $b['zobrazit'] ? '' : ' blok-skryty' ?>" draggable="true" data-idb="<?= (int) $b['idb'] ?>">
 				<strong><?= e($b['nazev']) ?></strong>
-				<span><?= $b['sys_funkce'] !== '' ? e(t('systémový')) . ' · ' . e(explode(' – ', Bloky::SYSTEMOVE[$b['sys_funkce']] ?? $b['sys_funkce'])[0]) : e(t('vlastní HTML')) ?><?= $b['zobrazit'] ? ((int) $b['zobrazit_kde'] !== 0 ? ' · ' . e(Bloky::KDE[(int) $b['zobrazit_kde']]) : '') : ' · <b>' . e(t('skrytý')) . '</b>' ?></span>
+				<span><?= $b['sys_funkce'] !== '' ? e(t('systémový')) . ' · ' . e(explode(' – ', t(Bloky::SYSTEMOVE[$b['sys_funkce']] ?? $b['sys_funkce']))[0]) : e(t('vlastní HTML')) ?><?= $b['zobrazit'] ? ((int) $b['zobrazit_kde'] !== 0 ? ' · ' . e(t(Bloky::KDE[(int) $b['zobrazit_kde']] ?? '')) : '') : ' · <b>' . e(t('skrytý')) . '</b>' ?></span>
 				<span class="blok-karta-akce">
-					<button type="button" class="navigace" data-posun="-1" title="<?= e(t('Posunout výš')) ?>" aria-label="Posunout blok <?= e($b['nazev']) ?> výš">↑</button>
-					<button type="button" class="navigace" data-posun="1" title="<?= e(t('Posunout níž')) ?>" aria-label="Posunout blok <?= e($b['nazev']) ?> níž">↓</button>
+					<button type="button" class="navigace" data-posun="-1" title="<?= e(t('Posunout výš')) ?>" aria-label="<?= e(t('Posunout blok %s výš', $b['nazev'])) ?>">↑</button>
+					<button type="button" class="navigace" data-posun="1" title="<?= e(t('Posunout níž')) ?>" aria-label="<?= e(t('Posunout blok %s níž', $b['nazev'])) ?>">↓</button>
 					<a href="<?= e($modul->url('edit', ['id' => $b['idb']])) ?>"><?= e(t('Upravit')) ?></a>
-					<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat blok?')) ?>"><?= $csrf ?><input type="hidden" name="idb" value="<?= (int) $b['idb'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form>
+					<form method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat blok?')) ?>"><?= $csrf ?><input type="hidden" name="idb" value="<?= (int) $b['idb'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form>
 				</span>
 			</article>
 <?php endforeach ?>
@@ -38,8 +38,8 @@ $zona = function (string $klic) use ($bloky, $modul, $csrf): void {
 	<?= $csrf ?>
 	<span class="popisek"><?= e(t('Rozvržení stránky:')) ?></span>
 <?php foreach (Bloky::ROZVRZENI as $klic => [$nazev, $popis]): ?>
-	<button type="submit" name="rozvrzeni" value="<?= e($klic) ?>" class="rozvrzeni-tl<?= $klic === $rozvrzeni ? ' aktivni' : '' ?>" aria-pressed="<?= $klic === $rozvrzeni ? 'true' : 'false' ?>" title="<?= e($popis) ?>">
-		<i class="rozvrzeni-ikona rozvrzeni-ikona-<?= e($klic) ?>" aria-hidden="true"><b></b><b></b><b></b></i><?= e($nazev) ?>
+	<button type="submit" name="rozvrzeni" value="<?= e($klic) ?>" class="rozvrzeni-tl<?= $klic === $rozvrzeni ? ' aktivni' : '' ?>" aria-pressed="<?= $klic === $rozvrzeni ? 'true' : 'false' ?>" title="<?= e(t($popis)) ?>">
+		<i class="rozvrzeni-ikona rozvrzeni-ikona-<?= e($klic) ?>" aria-hidden="true"><b></b><b></b><b></b></i><?= e(t($nazev)) ?>
 	</button>
 <?php endforeach ?>
 </form>

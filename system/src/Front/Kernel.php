@@ -58,8 +58,9 @@ final class Kernel
         if ($nahled !== '' && preg_match('/^[a-z0-9_-]+$/i', $nahled) && is_file(PHPRS_ROOT . '/layout/' . $nahled . '/base.php') && $app->auth()->isAdmin()) {
             $layout = $nahled;
         }
-        if (!preg_match('/^[a-z0-9_-]+$/i', $layout) || !is_dir(PHPRS_ROOT . '/layout/' . $layout)) {
-            $layout = 'default';
+        // nastavená šablona chybí (smazaná složka, zrušená vestavěná šablona „default“ před provedením migrace) - web se vykreslí výchozí
+        if (!preg_match('/^[a-z0-9_-]+$/i', $layout) || !is_file(PHPRS_ROOT . '/layout/' . $layout . '/base.php')) {
+            $layout = Layouty::VYCHOZI;
         }
         // šablona se hledá nejdřív v layoutu webu, potom mezi systémovými - layout tak může přepsat cokoli
         $this->view = new View([PHPRS_ROOT . '/layout/' . $layout, PHPRS_SYSTEM . '/views/front']);

@@ -72,3 +72,34 @@ verzi podepsanou provozním klíčem.
 
 Automatická cesta pak neexistuje. Instalace jde aktualizovat ručně (nahrát soubory přes FTP), a první ručně nahraná verze
 přinese nový `system/aktualizace.pub`. Proto záložní klíč zálohujte na dvou nezávislých místech.
+
+## Denní kontrola a bezpečnostní záplaty (3.0.x)
+
+Každou noc běží `.github/workflows/denni-kontrola.yml`. **Nic nevydává ani nepodepisuje** – podpisový klíč zůstává mimo GitHub –
+jen včas řekne, že je potřeba jednat:
+
+| kontrola | co odhalí |
+| --- | --- |
+| **Kanál aktualizací** (`tools/over-kanal.php`) | `aktualizace.json` na phprs.eu není podepsaný naším klíčem, balíček neodpovídá otisku nebo nese cizí veřejný klíč – tedy podvržení nebo poškození toho, co si instalace stahují |
+| **Testy** na podporovaných verzích PHP a na připravované (`nightly`, smí selhat) | změnu v PHP, která systém rozbije, dřív než dorazí na hostingy |
+| **Statická analýza** (Semgrep s denně čerstvými pravidly, Gitleaks) | nově popsané zranitelné vzory v našem kódu; nálezy jdou do *Security → Code scanning*, kam vidí jen správci – záznam běhu je záměrně tichý, protože je u veřejného repozitáře veřejný |
+| **Web a demo zvenku** | chybějící bezpečnostní hlavičky, otevřený `config.php`, `system/`, `storage/`, `.git/` |
+
+Když něco selže, založí se (nebo oživí) úkol „Denní kontrola selhala“ s odkazem na běh a GitHub pošle e-mail.
+Spustit ji jde i ručně: *Actions → Denní kontrola → Run workflow*.
+
+### Od nálezu k záplatě
+
+1. **Posoudit** (do 3 pracovních dnů, viz `SECURITY.md`): je to skutečná zranitelnost? Koho se týká? Dá se zneužít bez přihlášení?
+   Planý nález v Code scanning zavřít s důvodem, ať se nevrací.
+2. **Neřešit veřejně.** Založit *Security → Advisories → New draft* (soukromé); oprava vzniká v soukromé větvi, kterou k oznámení GitHub nabídne.
+   Hlášení od lidí chodí stejnou cestou (*Report a vulnerability*).
+3. **Opravit a otestovat** – `tools/test.sh`, k chybě přidat test, který by ji příště chytil.
+4. **Vydat záplatu** z udržované řady: číslo `3.0.x`, a pokud jde o bezpečnost, s příznakem, který ji instalacím nainstaluje samu:
+   `php tools/vydani.php 3.0.x --url=… --zmena="Bezpečnostní oprava: …" --bezpecnostni`
+   Podpis je lokální; potom ZIP do GitHub Releases a `aktualizace.json` na web (viz Běžné vydání).
+5. **Ověřit** na demu, že se záplata nainstalovala sama, a ručně pustit Denní kontrolu – musí projít kanál aktualizací.
+6. **Zveřejnit oznámení** (advisory) s popisem, zasaženými verzemi a poděkováním nálezci.
+
+Po vydání 3.0.0 se opravy dělají na `main` a přenášejí do větve `3.0` (`git cherry-pick`), ze které se vydávají verze 3.0.x;
+nové funkce jdou jen do `main` a vyjdou jako 3.1.

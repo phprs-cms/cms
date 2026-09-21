@@ -47,7 +47,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <div class="media-slozka-uprava">
 	<form method="post" action="<?= e($modul->url('slozka')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><input class="textpole" type="text" name="nazev" value="<?= e($aktivniSlozka['nazev']) ?>" maxlength="100" required aria-label="<?= e(t('Název složky')) ?>"> <button class="navigace" type="submit"><?= e(t('Přejmenovat')) ?></button></form>
 <?php if ($app->auth()->isAdmin()): ?>
-	<form method="post" action="<?= e($modul->url('slozka_smaz')) ?>" data-potvrdit="<?= e(t('Smazat složku? Obrázky v ní zůstanou a přejdou mezi nezařazené.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><button class="navigace" type="submit"><?= e(t('Smazat složku')) ?></button></form>
+	<form method="post" action="<?= e($modul->url('slozka_smaz')) ?>" data-potvrdit="<?= e(t('Smazat složku? Obrázky v ní zůstanou a přejdou mezi nezařazené.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $aktivniSlozka['ids'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat složku')) ?></button></form>
 <?php endif ?>
 </div>
 <?php endif ?>
@@ -91,7 +91,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 <?php endforeach ?>
 	</select>
 	<button class="navigace" type="submit" name="provest" value="presun"><?= e(t('Přesunout do složky')) ?></button>
-	<button class="navigace" type="submit" name="provest" value="smaz" data-potvrdit="<?= e(t('Opravdu smazat označené obrázky? Z článků, kde jsou použité, zmizí.')) ?>"><?= e(t('Smazat')) ?></button>
+	<button class="navigace nebezpecne" type="submit" name="provest" value="smaz" data-potvrdit="<?= e(t('Opravdu smazat označené obrázky? Z článků, kde jsou použité, zmizí.')) ?>"><?= e(t('Smazat')) ?></button>
 </p>
 </form>
 

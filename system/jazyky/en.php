@@ -254,4 +254,13 @@ return [
     'strana %s z %s' => 'page %s of %s',
     '%s z 5' => '%s out of 5',
     'hodnoceno %s×' => '%s ratings',
+    'Předchozí fotka' => 'Previous photo',
+    'Další fotka' => 'Next photo',
+    'Zavřít' => 'Close',
+    'Vypnout oznámení' => 'Turn off notifications',
+    'Oznámení jsou v tomto prohlížeči zapnutá.' => 'Notifications are turned on in this browser.',
+    'Oznámení jsou vypnutá.' => 'Notifications are turned off.',
+    'Oznámení se nepodařilo zapnout.' => 'Notifications could not be turned on.',
+    'Oznámení se nepodařilo zapnout. Zkuste to později.' => 'Notifications could not be turned on. Please try again later.',
+    'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.' => 'Notifications from this site are blocked in your browser. Allow them in the site settings next to the address bar.',
 ];

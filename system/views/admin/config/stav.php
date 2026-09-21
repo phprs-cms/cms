@@ -4,7 +4,8 @@ $ikony = ['ok' => '✓', 'varovani' => '!', 'chyba' => '✕'];
 $souhrn = PhpRS\Core\Stav::souhrn($kontroly);
 $skupina = '';
 ?>
-<p class="hlaska hlaska-<?= $souhrn === 'ok' ? 'ok' : 'chyba' ?>"><?= ['ok' => 'Vše v pořádku.', 'varovani' => 'Systém běží, některé položky si zaslouží pozornost.', 'chyba' => 'Nalezeny chyby, které brání správnému provozu.'][$souhrn] ?></p>
+<p class="hlaska hlaska-<?= $souhrn === 'ok' ? 'ok' : 'chyba' ?>"><?= e(t(['ok' => 'Vše v pořádku.', 'varovani' => 'Systém běží, některé položky si zaslouží pozornost.', 'chyba' => 'Nalezeny chyby, které brání správnému provozu.'][$souhrn])) ?></p>
+<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('provoz/stav-systemu', 'Stav systému') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/ulohy-na-pozadi', 'Úlohy na pozadí (cron)') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/reseni-potizi', 'Řešení potíží') ?></p>
 <div class="tab-obal">
 <table class="vypis">
 <tbody>
@@ -13,7 +14,7 @@ $skupina = '';
 <tr><th colspan="3"><?= e($skupina) ?></th></tr>
 <?php endif ?>
 <tr>
-	<td class="stred"><span class="stitek stitek-<?= ['ok' => 'vydano', 'varovani' => 'koncept', 'chyba' => 'chyba'][$k['stav']] ?>" title="<?= e($k['stav']) ?>"><?= $ikony[$k['stav']] ?></span></td>
+	<td class="stred"><span class="stitek stitek-<?= ['ok' => 'vydano', 'varovani' => 'koncept', 'chyba' => 'chyba'][$k['stav']] ?>" title="<?= e(t(['ok' => 'v pořádku', 'varovani' => 'varování', 'chyba' => 'chyba'][$k['stav']])) ?>"><?= $ikony[$k['stav']] ?></span></td>
 	<td><strong><?= e($k['nazev']) ?></strong></td>
 	<td><?= e($k['info']) ?></td>
 </tr>
@@ -50,5 +51,5 @@ $skupina = '';
 <p><?= e(t('Dohledový nástroj může stav číst jako JSON. Nejprve vytvořte přístupový token.')) ?></p>
 <?php endif ?>
 <input type="hidden" name="stav_token" value="<?= e($hodnoty['stav_token']) ?>">
-<p><button class="navigace" type="submit" name="novy_token" value="1"><?= $hodnoty['stav_token'] !== '' ? 'Vytvořit nový token (starý přestane platit)' : 'Vytvořit token' ?></button></p>
+<p><button class="navigace" type="submit" name="novy_token" value="1"><?= e(t($hodnoty['stav_token'] !== '' ? 'Vytvořit nový token (starý přestane platit)' : 'Vytvořit token')) ?></button></p>
 </fieldset>

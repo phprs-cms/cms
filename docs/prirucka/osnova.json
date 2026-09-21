@@ -1,0 +1,78 @@
+{
+  "_pozn": "Pořadí a zařazení stránek příručky. Cesty jsou bez jazyka a bez přípony; text je v docs/prirucka/<jazyk>/<cesta>.md. Titulek stránky je první nadpis # v souboru. Soubory se ve všech jazycích jmenují stejně (česky); \"adresy\" určují, jak se části cesty přeloží do adresy na webu.",
+  "kapitoly": [
+    {
+      "slug": "zaciname",
+      "stranky": [
+        "zaciname/pozadavky",
+        "zaciname/instalace",
+        "zaciname/prvni-kroky",
+        "zaciname/aktualizace",
+        "zaciname/presun-webu"
+      ],
+      "nazev": {
+        "cs": "Začínáme",
+        "en": "Getting started",
+        "de": "Erste Schritte"
+      }
+    },
+    {
+      "slug": "provoz",
+      "stranky": [
+        "provoz/posta",
+        "provoz/zalohy",
+        "provoz/ulohy-na-pozadi",
+        "provoz/stav-systemu",
+        "provoz/nginx",
+        "provoz/bezpecnost",
+        "provoz/reseni-potizi"
+      ],
+      "nazev": {
+        "cs": "Provoz",
+        "en": "Operations",
+        "de": "Betrieb"
+      }
+    }
+  ],
+  "pripravuje_se": [
+    "psani",
+    "redakce",
+    "vzhled",
+    "ctenari-a-prijmy",
+    "jazykove-verze",
+    "seo-a-ai",
+    "pro-vyvojare"
+  ],
+  "adresy": {
+    "en": {
+      "zaciname": "getting-started",
+      "pozadavky": "requirements",
+      "instalace": "installation",
+      "prvni-kroky": "first-steps",
+      "aktualizace": "updates",
+      "presun-webu": "moving-your-site",
+      "provoz": "operations",
+      "posta": "mail",
+      "zalohy": "backups",
+      "ulohy-na-pozadi": "background-tasks",
+      "stav-systemu": "system-status",
+      "bezpecnost": "security",
+      "reseni-potizi": "troubleshooting"
+    },
+    "de": {
+      "zaciname": "erste-schritte",
+      "pozadavky": "voraussetzungen",
+      "instalace": "installation",
+      "prvni-kroky": "nach-der-installation",
+      "aktualizace": "aktualisierungen",
+      "presun-webu": "umzug",
+      "provoz": "betrieb",
+      "posta": "e-mail",
+      "zalohy": "backups",
+      "ulohy-na-pozadi": "hintergrundaufgaben",
+      "stav-systemu": "systemstatus",
+      "bezpecnost": "sicherheit",
+      "reseni-potizi": "fehlerbehebung"
+    }
+  }
+}

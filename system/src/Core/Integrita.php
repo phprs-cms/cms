@@ -19,12 +19,12 @@ final class Integrita
     {
         $prazdne = ['zmenene' => [], 'chybi' => [], 'navic' => []];
         if (!is_file(self::SEZNAM)) {
-            return ['stav' => 'ok', 'info' => 'vývojová verze bez seznamu souborů – kontrola se týká jen vydaných balíčků'] + $prazdne;
+            return ['stav' => 'ok', 'info' => t('vývojová verze bez seznamu souborů – kontrola se týká jen vydaných balíčků')] + $prazdne;
         }
         $data = json_decode((string) file_get_contents(self::SEZNAM), true);
         $soubory = is_array($data['soubory'] ?? null) ? $data['soubory'] : null;
         if ($soubory === null || !Podpis::plati(self::kPodpisu((string) ($data['verze'] ?? ''), $soubory), (string) ($data['podpis'] ?? ''), $klicSoubor)) {
-            return ['stav' => 'chyba', 'info' => 'seznam souborů jádra (system/soubory.json) je poškozený nebo nemá platný podpis vydavatele'] + $prazdne;
+            return ['stav' => 'chyba', 'info' => t('seznam souborů jádra (system/soubory.json) je poškozený nebo nemá platný podpis vydavatele')] + $prazdne;
         }
         $zmenene = $chybi = [];
         foreach ($soubory as $cesta => $otisk) {
@@ -54,9 +54,9 @@ final class Integrita
 
         return [
             'stav' => $pocet === 0 ? 'ok' : 'varovani',
-            'info' => $pocet === 0 ? 'všech ' . count($soubory) . ' souborů jádra odpovídá vydání ' . ($data['verze'] ?? '')
-                : 'jádro se liší od vydání: změněno ' . count($zmenene) . ', chybí ' . count($chybi) . ', navíc ' . count($navic) . ' – ' . implode(', ', array_slice([...$zmenene, ...$chybi, ...$navic], 0, 6))
-                    . ($pocet > 6 ? '…' : '') . '. Úpravy jádra se nepodporují; do původní podoby je vrátí aktualizace (Zálohy a aktualizace).',
+            'info' => $pocet === 0 ? t('všech %d souborů jádra odpovídá vydání %s', count($soubory), (string) ($data['verze'] ?? ''))
+                : t('jádro se liší od vydání: změněno %d, chybí %d, navíc %d – %s', count($zmenene), count($chybi), count($navic), implode(', ', array_slice([...$zmenene, ...$chybi, ...$navic], 0, 6)) . ($pocet > 6 ? '…' : ''))
+                    . '. ' . t('Úpravy jádra se nepodporují; do původní podoby je vrátí aktualizace (Zálohy a aktualizace).'),
             'zmenene' => $zmenene, 'chybi' => $chybi, 'navic' => $navic,
         ];
     }

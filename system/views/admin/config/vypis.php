@@ -16,6 +16,7 @@
  * @var list<string> $chybyLog  poslední řádky záznamu chyb
  * @var string $vzdalenaStav  výsledek posledního nahrání zálohy mimo server
  * @var string $ulohyToken  tajná část adresy /ulohy pro cron
+ * @var bool $demoNahrano  na webu je ukázkový obsah (Core\Demo)
  */
 use PhpRS\Admin\Moduly\Konfigurace;
 

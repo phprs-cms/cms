@@ -2,6 +2,7 @@
 /**
  * @var string $base
  * @var bool $jizNainstalovano
+ * @var bool $smazano instalátor se po sobě smazal sám
  */
 ?>
 <!doctype html>
@@ -28,11 +29,16 @@
 	<p><?= e(t('Databáze je připravena a konfigurace zapsána.')) ?></p>
 <?php endif ?>
 </header>
+<?php if ($smazano): ?>
+<p class="hlaska hlaska-ok"><?= e(t('Soubor install.php se z bezpečnostních důvodů smazal sám – nic dalšího dělat nemusíte.')) ?></p>
+<?php else: ?>
 <p class="hlaska <?= $jizNainstalovano ? 'hlaska-chyba' : 'hlaska-ok' ?>"><?= e(t('Z bezpečnostních důvodů teď ze serveru smažte soubor')) ?> <strong>install.php</strong>.</p>
+<?php endif ?>
 <div class="akce">
 	<a class="tlacitko" href="<?= e($base) ?>/admin.php"><?= e(t('Přejít do administrace')) ?></a>
 	<a class="tlacitko druhe" href="<?= e($base) ?>/"><?= e(t('Zobrazit web')) ?></a>
 </div>
+<p class="napoveda-instalace"><a href="<?= e(PhpRS\Core\Napoveda::url('zaciname/prvni-kroky')) ?>" target="_blank" rel="noopener"><?= e(t('Příručka: první kroky po instalaci')) ?></a></p>
 </main>
 </body>
 </html>

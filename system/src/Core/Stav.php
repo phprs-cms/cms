@@ -22,40 +22,43 @@ final class Stav
         $db = $app->db();
         $web = $app->settings();
 
-        // --- server
-        $pridej('Server', 'Verze PHP', PHP_VERSION_ID >= 80400, PHP_VERSION . (PHP_VERSION_ID >= 80400 ? '' : ' - systém vyžaduje 8.4 nebo novější'));
-        foreach (['pdo_mysql' => 'databáze', 'mbstring' => 'čeština', 'gd' => 'zpracování obrázků'] as $ext => $ucel) {
-            $pridej('Server', "Rozšíření {$ext}", extension_loaded($ext), $ucel . (extension_loaded($ext) ? '' : ' - chybí'));
+        // --- server (názvy a texty jdou přes t(); hodnoty "stav" se nepřekládají - čte je monitoring)
+        $pridej(t('Server'), t('Verze PHP'), PHP_VERSION_ID >= 80400, PHP_VERSION_ID >= 80400 ? PHP_VERSION : t('%s - systém vyžaduje 8.4 nebo novější', PHP_VERSION));
+        foreach (['pdo_mysql' => t('databáze'), 'mbstring' => t('text s diakritikou'), 'gd' => t('zpracování obrázků')] as $ext => $ucel) {
+            $pridej(t('Server'), t('Rozšíření %s', $ext), extension_loaded($ext), extension_loaded($ext) ? $ucel : t('%s - chybí', $ucel));
         }
-        foreach (['exif' => 'správné otočení fotek z mobilu', 'intl' => 'řazení podle češtiny', 'curl' => 'oznamování novinek vyhledávačům'] as $ext => $ucel) {
-            $pridej('Server', "Rozšíření {$ext}", extension_loaded($ext) ? 'ok' : 'varovani', $ucel . (extension_loaded($ext) ? '' : ' - doporučeno doinstalovat'));
+        foreach (['exif' => t('správné otočení fotek z mobilu'), 'intl' => t('řazení podle češtiny'), 'curl' => t('oznamování novinek vyhledávačům')] as $ext => $ucel) {
+            $pridej(t('Server'), t('Rozšíření %s', $ext), extension_loaded($ext) ? 'ok' : 'varovani', extension_loaded($ext) ? $ucel : t('%s - doporučeno doinstalovat', $ucel));
         }
-        $pridej('Server', 'Limit nahrávaných souborů', self::bajty((string) ini_get('upload_max_filesize')) >= 8 * 1024 * 1024 ? 'ok' : 'varovani', 'upload_max_filesize = ' . ini_get('upload_max_filesize') . ', post_max_size = ' . ini_get('post_max_size'));
+        $pridej(t('Server'), t('Limit nahrávaných souborů'), self::bajty((string) ini_get('upload_max_filesize')) >= 8 * 1024 * 1024 ? 'ok' : 'varovani', 'upload_max_filesize = ' . ini_get('upload_max_filesize') . ', post_max_size = ' . ini_get('post_max_size'));
         $volno = @disk_free_space(PHPRS_ROOT);
         if ($volno !== false) {
-            $pridej('Server', 'Volné místo na disku', $volno > 200 * 1024 * 1024 ? 'ok' : 'varovani', self::velikost((int) $volno));
+            $pridej(t('Server'), t('Volné místo na disku'), $volno > 200 * 1024 * 1024 ? 'ok' : 'varovani', self::velikost((int) $volno));
         }
 
         // --- databáze
-        $pridej('Databáze', 'Server', 'ok', (string) $db->value('SELECT VERSION()'));
+        $pridej(t('Databáze'), t('Server'), 'ok', (string) $db->value('SELECT VERSION()'));
         $cekajici = Migrace::posledni() - max(1, $web->int('verze_db'));
-        $pridej('Databáze', 'Struktura databáze', $cekajici <= 0, $cekajici <= 0 ? 'aktuální (verze ' . $web->int('verze_db') . ')' : "čeká {$cekajici} aktualizací - proběhnou při příštím načtení administrace");
+        $pridej(t('Databáze'), t('Struktura databáze'), $cekajici <= 0, $cekajici <= 0 ? t('aktuální (verze %d)', $web->int('verze_db')) : t('čeká %d aktualizací - proběhnou při příštím načtení administrace', $cekajici));
         $velikost = (int) $db->value('SELECT COALESCE(SUM(data_length + index_length), 0) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name LIKE ?', [addcslashes($db->prefix, '_%') . '%']);
-        $pridej('Databáze', 'Velikost', 'ok', self::velikost($velikost) . ', článků: ' . (int) $db->value('SELECT COUNT(*) FROM {clanky}'));
+        $pridej(t('Databáze'), t('Velikost'), 'ok', t('%s, článků: %d', self::velikost($velikost), (int) $db->value('SELECT COUNT(*) FROM {clanky}')));
 
         // --- soubory a bezpečnost
-        foreach (['media' => 'nahrané obrázky', 'storage/log' => 'záznam chyb', 'storage/cache' => 'dočasná data'] as $slozka => $ucel) {
+        foreach (['media' => t('nahrané obrázky'), 'storage/log' => t('záznam chyb'), 'storage/cache' => t('dočasná data')] as $slozka => $ucel) {
             $ok = is_dir(PHPRS_ROOT . '/' . $slozka) ? is_writable(PHPRS_ROOT . '/' . $slozka) : is_writable(PHPRS_ROOT);
-            $pridej('Soubory', "Zápis do {$slozka}/", $ok, $ucel . ($ok ? '' : ' - nastavte práva k zápisu'));
+            $pridej(t('Soubory'), t('Zápis do %s/', $slozka), $ok, $ok ? $ucel : t('%s - nastavte práva k zápisu', $ucel));
         }
-        $pridej('Bezpečnost', 'Instalátor', !is_file(PHPRS_ROOT . '/install.php') ? 'ok' : 'varovani', is_file(PHPRS_ROOT . '/install.php') ? 'soubor install.php je stále na serveru - smažte ho' : 'install.php je odstraněn');
-        $pridej('Bezpečnost', 'HTTPS', $app->request->isHttps() ? 'ok' : 'varovani', $app->request->isHttps() ? 'web běží na šifrovaném spojení' : 'web neběží na HTTPS - přihlašovací údaje putují nešifrovaně');
-        $pridej('Bezpečnost', 'Ladicí režim', !$app->debug(), $app->debug() ? 'v config.php je debug = true; na ostrém webu vypněte' : 'vypnutý');
-        $pridej('Bezpečnost', 'Bezpečnostní hlavičky', 'ok', 'systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti');
+        $pridej(t('Bezpečnost'), t('Instalátor'), !is_file(PHPRS_ROOT . '/install.php') ? 'ok' : 'varovani', is_file(PHPRS_ROOT . '/install.php') ? t('soubor install.php je stále na serveru - smažte ho') : t('install.php je odstraněn'));
+        $pridej(t('Bezpečnost'), 'HTTPS', $app->request->isHttps() ? 'ok' : 'varovani', $app->request->isHttps() ? t('web běží na šifrovaném spojení') : t('web neběží na HTTPS - přihlašovací údaje putují nešifrovaně'));
+        $pridej(t('Bezpečnost'), t('Ladicí režim'), !$app->debug(), $app->debug() ? t('v config.php je debug = true; na ostrém webu vypněte') : t('vypnutý'));
+        $pridej(t('Bezpečnost'), t('Bezpečnostní hlavičky'), 'ok', t('systém odesílá X-Content-Type-Options, Referrer-Policy a X-Frame-Options; administrace navíc Content-Security-Policy a zákaz ukládání do mezipaměti'));
         $bez2fa = (int) $db->value("SELECT COUNT(*) FROM {user} WHERE admin = 2 AND blokovat = 0 AND totp_tajemstvi = ''");
-        $pridej('Bezpečnost', 'Dvoufázové přihlášení administrátorů', $bez2fa === 0 ? 'ok' : 'varovani', $bez2fa === 0 ? 'mají ho všichni administrátoři' : "{$bez2fa} administrátor(ů) ho nemá - zapíná se v nabídce Můj účet (avatar vpravo nahoře)");
+        $pridej(t('Bezpečnost'), t('Dvoufázové přihlášení administrátorů'), $bez2fa === 0 ? 'ok' : 'varovani', $bez2fa === 0 ? t('mají ho všichni administrátoři') : t('%d administrátor(ů) ho nemá - zapíná se v nabídce Můj účet (avatar vpravo nahoře)', $bez2fa));
         $slabi = (int) $db->value('SELECT COUNT(*) FROM {user} WHERE blokovat = 1');
-        $pridej('Bezpečnost', 'Zablokované účty', $slabi === 0 ? 'ok' : 'varovani', $slabi === 0 ? 'žádné' : "{$slabi} - po opakovaně chybném hesle; odblokujete je v Uživatelích");
+        $pridej(t('Bezpečnost'), t('Zablokované účty'), $slabi === 0 ? 'ok' : 'varovani', $slabi === 0 ? t('žádné') : t('%d - zablokoval je správce; odblokujete je v Uživatelích', $slabi));
+
+        $jadro = Integrita::kontrola();
+        $pridej(t('Bezpečnost'), t('Soubory jádra'), $jadro['stav'], $jadro['info']);
 
         // --- provoz
         $log = PHPRS_ROOT . '/storage/log/chyby.log';
@@ -66,42 +69,40 @@ final class Stav
                 $chyb += (int) (substr($radek, 1, 25) >= $od);
             }
         }
-        $pridej('Provoz', 'Chyby za posledních 24 hodin', $chyb === 0 ? 'ok' : 'varovani', $chyb === 0 ? 'žádné' : "{$chyb} - podrobnosti v storage/log/chyby.log");
+        $pridej(t('Provoz'), t('Chyby za posledních 24 hodin'), $chyb === 0 ? 'ok' : 'varovani', $chyb === 0 ? t('žádné') : t('%d - podrobnosti v storage/log/chyby.log', $chyb));
         $posledni = Zaloha::seznam()[0]['cas'] ?? 0;
         $stari = $posledni > 0 ? (int) floor((time() - $posledni) / 86400) : null;
-        $pridej('Provoz', 'Záloha databáze', $stari !== null && $stari <= 8 ? 'ok' : 'varovani', $stari === null ? 'zatím žádná - vytvořte ji v záložce Zálohy a aktualizace' : ($stari === 0 ? 'dnes' : "před {$stari} dny") . ($web->bool('zalohy_auto') ? ', automatické zálohy zapnuté' : ', automatické zálohy vypnuté'));
-        $pridej('Provoz', 'Indexování vyhledávači', $web->bool('indexovani') ? 'ok' : 'varovani', $web->bool('indexovani') ? 'povoleno' : 'zakázáno v záložce SEO a GEO - web se neobjeví ve vyhledávání');
+        $pridej(t('Provoz'), t('Záloha databáze'), $stari !== null && $stari <= 8 ? 'ok' : 'varovani', $stari === null ? t('zatím žádná - vytvořte ji v záložce Zálohy a aktualizace') : ($stari === 0 ? t('dnes') : t('před %d dny', $stari)) . ', ' . ($web->bool('zalohy_auto') ? t('automatické zálohy zapnuté') : t('automatické zálohy vypnuté')));
+        $pridej(t('Provoz'), t('Indexování vyhledávači'), $web->bool('indexovani') ? 'ok' : 'varovani', $web->bool('indexovani') ? t('povoleno') : t('zakázáno v záložce SEO a GEO - web se neobjeví ve vyhledávání'));
         $media = 0;
         if (is_dir(PHPRS_ROOT . '/media')) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(PHPRS_ROOT . '/media', \FilesystemIterator::SKIP_DOTS)) as $soubor) {
                 $media += $soubor->getSize();
             }
         }
-        $pridej('Provoz', 'Velikost médií', 'ok', self::velikost($media));
+        $pridej(t('Provoz'), t('Velikost médií'), 'ok', self::velikost($media));
         $vzdalena = explode('|', $app->settings()->get('zaloha_vzdalena_stav'), 2);
         if ($app->settings()->get('zaloha_vzdalena') !== 'vypnuto') {
-            $pridej('Provoz', 'Zálohy mimo server', ($vzdalena[1] ?? '') === 'ok' ? 'ok' : 'varovani', ($vzdalena[1] ?? '') === 'ok' ? 'poslední kopie nahrána ' . $vzdalena[0] : (($vzdalena[1] ?? '') !== '' ? 'poslední pokus ' . $vzdalena[0] . ' selhal: ' . $vzdalena[1] : 'zatím žádná kopie nevznikla'));
+            $pridej(t('Provoz'), t('Zálohy mimo server'), ($vzdalena[1] ?? '') === 'ok' ? 'ok' : 'varovani', ($vzdalena[1] ?? '') === 'ok' ? t('poslední kopie nahrána %s', $vzdalena[0]) : (($vzdalena[1] ?? '') !== '' ? t('poslední pokus %s selhal: %s', $vzdalena[0], $vzdalena[1]) : t('zatím žádná kopie nevznikla')));
         } else {
-            $pridej('Provoz', 'Zálohy mimo server', 'varovani', 'vypnuté – zálohy leží jen na stejném serveru jako web (Nastavení → Zálohy a aktualizace)');
+            $pridej(t('Provoz'), t('Zálohy mimo server'), 'varovani', t('vypnuté – zálohy leží jen na stejném serveru jako web (Nastavení → Zálohy a aktualizace)'));
         }
-        $jadro = Integrita::kontrola();
-        $pridej('Bezpečnost', 'Soubory jádra', $jadro['stav'], $jadro['info']);
         $smtp = $app->settings()->get('posta_rezim') === 'smtp' && $app->settings()->get('smtp_host') !== '';
         // úlohy na pozadí (naplánované články, fronta pošty, push, newsletter) spouští návštěvy webu nebo cron
         $naposledy = $web->int('oznameni_kontrola');
         $pred = $naposledy > 0 ? (int) floor((time() - $naposledy) / 60) : null;
-        $pridej('Provoz', 'Úlohy na pozadí', $pred !== null && $pred <= 30 ? 'ok' : 'varovani', $pred === null
-            ? 'zatím neproběhly – spustí je první návštěva webu'
-            : ($pred <= 30 ? 'naposledy před ' . $pred . ' min' : 'naposledy před ' . ($pred < 120 ? $pred . ' min' : (int) round($pred / 60) . ' h')
-                . ' – na webu s malou návštěvností nastavte cron na adresu úloh (Nastavení → Základní → Další možnosti)'));
+        $pridej(t('Provoz'), t('Úlohy na pozadí'), $pred !== null && $pred <= 30 ? 'ok' : 'varovani', $pred === null
+            ? t('zatím neproběhly – spustí je první návštěva webu')
+            : ($pred <= 30 ? t('naposledy před %d min', $pred) : ($pred < 120 ? t('naposledy před %d min', $pred) : t('naposledy před %d h', (int) round($pred / 60)))
+                . ' – ' . t('na webu s malou návštěvností nastavte cron, adresu najdete níže na této stránce')));
         $aktualizace = (new Aktualizace($web))->stav();
-        $pridej('Provoz', 'Aktualizace', !$aktualizace['nastaveno'] || $aktualizace['chyba'] !== null || $aktualizace['nova'] !== null ? 'varovani' : 'ok', match (true) {
-            !$aktualizace['nastaveno'] => 'zdroj aktualizací není nastaven',
-            $aktualizace['chyba'] !== null => 'zdroj aktualizací neodpovídá: ' . $aktualizace['chyba'],
-            $aktualizace['nova'] !== null => 'je k dispozici verze ' . $aktualizace['nova']['verze'] . ' (Nastavení → Zálohy a aktualizace)',
-            default => 'systém je aktuální (' . PHPRS_VERSION . ')' . ($aktualizace['overeno'] > 0 ? ', ověřeno ' . date('j. n. Y H:i', $aktualizace['overeno']) : ''),
+        $pridej(t('Provoz'), t('Aktualizace'), !$aktualizace['nastaveno'] || $aktualizace['chyba'] !== null || $aktualizace['nova'] !== null ? 'varovani' : 'ok', match (true) {
+            !$aktualizace['nastaveno'] => t('zdroj aktualizací není nastaven'),
+            $aktualizace['chyba'] !== null => t('zdroj aktualizací neodpovídá: %s', (string) $aktualizace['chyba']),
+            $aktualizace['nova'] !== null => t('je k dispozici verze %s (Nastavení → Zálohy a aktualizace)', (string) $aktualizace['nova']['verze']),
+            default => t('systém je aktuální (%s)', PHPRS_VERSION) . ($aktualizace['overeno'] > 0 ? ', ' . t('ověřeno %s', date('j. n. Y H:i', $aktualizace['overeno'])) : ''),
         });
-        $pridej('Provoz', 'Odesílání pošty', $smtp || function_exists('mail') ? 'ok' : 'varovani', $smtp ? 'přes SMTP server ' . $app->settings()->get('smtp_host') : (function_exists('mail') ? 'funkcí mail() serveru – spolehlivější je SMTP (Nastavení → Pošta)' : 'funkce mail() je vypnutá – nastavte SMTP (Nastavení → Pošta)'));
+        $pridej(t('Provoz'), t('Odesílání pošty'), $smtp || function_exists('mail') ? 'ok' : 'varovani', $smtp ? t('přes SMTP server %s', $app->settings()->get('smtp_host')) : (function_exists('mail') ? t('funkcí mail() serveru – spolehlivější je SMTP (Nastavení → Pošta)') : t('funkce mail() je vypnutá – nastavte SMTP (Nastavení → Pošta)')));
 
         return $k;
     }

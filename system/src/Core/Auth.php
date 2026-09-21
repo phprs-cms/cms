@@ -44,7 +44,7 @@ final class Auth
             [Antispam::otisk($ip)],
         );
         if ($pokusu >= 10) {
-            return 'Příliš mnoho pokusů o přihlášení. Zkuste to znovu za 15 minut.';
+            return t('Příliš mnoho pokusů o přihlášení. Zkuste to znovu za 15 minut.');
         }
 
         $user = $this->db->one('SELECT * FROM {user} WHERE user = ?', [$login]);
@@ -62,13 +62,13 @@ final class Auth
                     : ['pocet_chyb' => $chyb], ['idu' => $user['idu']]);
             }
 
-            return 'Chybné jméno nebo heslo.';
+            return t('Chybné jméno nebo heslo.');
         }
         if ($user['blokovat']) {
-            return 'Účet je zablokován. Obraťte se na administrátora.';
+            return t('Účet je zablokován. Obraťte se na administrátora.');
         }
         if ($user['zamceno_do'] !== null && strtotime($user['zamceno_do']) > time()) {
-            return 'Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.';
+            return t('Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.');
         }
 
         if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
@@ -119,17 +119,17 @@ final class Auth
     public function overKod(string $kod, string $ip): ?string
     {
         if (!$this->cekaNaKod()) {
-            return 'Přihlášení vypršelo, začněte prosím znovu.';
+            return t('Přihlášení vypršelo, začněte prosím znovu.');
         }
         $pokusu = (int) $this->db->value("SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE", [Antispam::otisk($ip)]);
         if ($pokusu >= 10) {
-            return 'Příliš mnoho pokusů. Zkuste to znovu za 15 minut.';
+            return t('Příliš mnoho pokusů. Zkuste to znovu za 15 minut.');
         }
         $user = $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [(int) $this->session->get('idu_ceka')['idu']]);
         if ($user !== null && $user['zamceno_do'] !== null && strtotime($user['zamceno_do']) > time()) {
             $this->session->remove('idu_ceka');
 
-            return 'Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.';
+            return t('Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.');
         }
         $zalozni = $user === null ? null : Totp::pouzijZalozni($user['totp_zalozni'], $kod);
         if ($user === null || (!Totp::over($user['totp_tajemstvi'], $kod) && $zalozni === null)) {
@@ -142,7 +142,7 @@ final class Auth
                     : ['pocet_chyb' => $chyb], ['idu' => $user['idu']]);
             }
 
-            return 'Kód není správný.';
+            return t('Kód není správný.');
         }
         $this->db->update('user', ['pocet_chyb' => 0], ['idu' => $user['idu']]);
         if ($zalozni !== null) {

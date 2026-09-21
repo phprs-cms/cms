@@ -78,7 +78,7 @@ if ($user !== null) {
 <div class="loginprouzek">
 	<button class="paleta-spustit" type="button" data-paleta title="<?= e(t('Rychlé hledání a příkazy')) ?>"><span><?= e(t('Hledat…')) ?></span> <kbd>Ctrl K</kbd></button>
 	<button class="tema-prepinac" type="button" data-tema-prepinac title="<?= e(t('Světlý / tmavý režim')) ?>" aria-label="<?= e(t('Přepnout světlý a tmavý režim')) ?>"><?= $ikona('tema') ?></button>
-	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '') ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
+	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(t(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
 </div>
 <?php endif ?>
 <?php if ($prikazy !== []): ?>
@@ -97,6 +97,7 @@ if ($user !== null) {
 <p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= e(t($hlaska['text'])) ?></p>
 <?php endforeach ?>
 <?= $obsah ?>
+<footer class="verze">phpRS <?= e(PHPRS_VERSION) ?> · <a href="<?= e(PhpRS\Core\Napoveda::url()) ?>" target="_blank" rel="noopener"><?= e(t('Nápověda')) ?></a> · <a href="<?= e(PhpRS\Core\Napoveda::WEB) ?>" target="_blank" rel="noopener">phprs.eu</a><?php if ($app->settings()->bool('odkaz_podpora')): ?> · <a href="https://github.com/sponsors/phprscms" target="_blank" rel="noopener"><?= e(t('Podpořit phpRS')) ?></a><?php endif ?></footer>
 </main>
 <?php if (PhpRS\Core\Jazyk::kod() !== 'cs' && is_file(PHPRS_ROOT . '/image/jazyky/admin-' . PhpRS\Core\Jazyk::kod() . '.js')): ?>
 <script src="<?= e($app->url('image/jazyky/admin-' . PhpRS\Core\Jazyk::kod() . '.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>

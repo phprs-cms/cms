@@ -53,7 +53,7 @@ final class Installer
         if (is_file(PHPRS_ROOT . '/config.php')) {
             \PhpRS\Core\Jazyk::nastav($this->zvolJazyk(), 'install-');
 
-            return $this->stranka('hotovo', ['jizNainstalovano' => true]);
+            return $this->stranka('hotovo', ['jizNainstalovano' => true, 'smazano' => $this->smazSe()]);
         }
 
         $this->jazyk = $this->zvolJazyk();
@@ -63,6 +63,7 @@ final class Installer
             'db_host' => 'localhost', 'db_port' => '3306', 'db_name' => '', 'db_user' => '', 'db_password' => '', 'db_prefix' => 'rs_',
             'nazev_webu' => t('Můj magazín'), 'user' => 'admin', 'jmeno' => '', 'email' => '',
             'casove_pasmo' => self::PASMA[$this->jazyk], 'layout' => 'default',
+            'demo' => '', // '1' = místo uvítacího článku nahrát ukázkový obsah (Core\Demo)
         ];
         $chyby = [];
 
@@ -71,13 +72,27 @@ final class Installer
                 // heslo k databázi se neořezává - může obsahovat mezery
                 $data[$klic] = $klic === 'db_password' ? (string) ($_POST[$klic] ?? '') : $this->request->post($klic);
             }
+            $data['demo'] = $this->request->postBool('demo') ? '1' : '';
             $chyby = $this->instaluj($data, (string) ($_POST['password'] ?? ''), (string) ($_POST['password2'] ?? ''));
             if ($chyby === []) {
-                return $this->stranka('hotovo', ['jizNainstalovano' => false]);
+                return $this->stranka('hotovo', ['jizNainstalovano' => false, 'smazano' => $this->smazSe()]);
             }
         }
 
         return $this->stranka('formular', ['pozadavky' => $pozadavky, 'data' => $data, 'chyby' => $chyby, 'layouty' => Layouty::seznam()]);
+    }
+
+    /**
+     * Po instalaci instalátor smaže sám sebe, ať správce nemusí na FTP. Když to hosting nedovolí (práva k souborům),
+     * zůstane výzva ke smazání a Stav systému na soubor dál upozorňuje. Ve vývojové kopii (složka .git) se nemaže.
+     */
+    private function smazSe(): bool
+    {
+        if (is_dir(PHPRS_ROOT . '/.git')) {
+            return false;
+        }
+
+        return !is_file(PHPRS_ROOT . '/install.php') || @unlink(PHPRS_ROOT . '/install.php');
     }
 
     /** @return list<array{nazev:string, ok:bool, info:string}> */
@@ -204,6 +219,12 @@ final class Installer
                 $db->insert('bloky', ['nazev' => t($nazev), 'obsah' => '', 'sys_funkce' => $sys, 'hodnost' => $hodnost, 'zona' => $zona]);
             }
 
+            if ($d['demo'] === '1') {
+                // ukázkový magazín nahrazuje uvítací článek: titulní strana pak vypadá jako skutečné noviny a vše jde později smazat najednou
+                \PhpRS\Core\Demo::nahraj($db, new \PhpRS\Core\Settings($db), $this->jazyk, $admin);
+
+                return;
+            }
             $rubrika = $db->insert('topic', ['nazev' => t('Aktuality'), 'seo_link' => slugify(t('Aktuality')), 'popis' => '']);
             $db->insert('clanky', [
                 'seo_link' => slugify(t('Vítejte v phpRS 3')),

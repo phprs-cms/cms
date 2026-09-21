@@ -62,7 +62,7 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <?= $csrf ?>
 <fieldset><legend><?= e(t('Dvoufázové přihlášení')) ?></legend>
 <?php if ($user['totp_tajemstvi'] !== ''): ?>
-<p><span class="stitek stitek-vydano"><?= e(t('zapnuté')) ?></span> Při přihlášení zadáváte kromě hesla i kód z aplikace. Zbývá záložních kódů: <?= $zbyvaKodu ?>.</p>
+<p><span class="stitek stitek-vydano"><?= e(t('zapnuté')) ?></span> <?= e(t('Při přihlášení zadáváte kromě hesla i kód z aplikace. Zbývá záložních kódů: %d.', $zbyvaKodu)) ?> <?= PhpRS\Core\Napoveda::odkaz('provoz/bezpecnost', 'Bezpečnost') ?></p>
 <input type="hidden" name="co" value="totp_vypni">
 <div class="radek"><label for="vyp-heslo"><?= e(t('Heslo pro potvrzení')) ?></label><input class="textpole" type="password" id="vyp-heslo" name="soucasne" size="30" autocomplete="current-password" required></div>
 <p class="tlacitka"><button class="navigace" type="submit"><?= e(t('Vypnout dvoufázové přihlášení')) ?></button></p>

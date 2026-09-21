@@ -1,6 +1,7 @@
 <?php
 /** Záložka Zálohy a aktualizace. */
 ?>
+<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('zaciname/aktualizace', 'Aktualizace') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/zalohy', 'Zálohy a obnova') ?></p>
 <fieldset>
 <legend><?= e(t('Aktualizace systému')) ?></legend>
 <p><?= e(t('Nainstalovaná verze:')) ?> <strong><?= e($aktualizace['aktualni']) ?></strong></p>
@@ -10,7 +11,7 @@
 <p class="hlaska hlaska-chyba"><?= e($aktualizace['chyba']) ?></p>
 <?php elseif ($aktualizace['nova'] !== null): ?>
 <div class="hlaska hlaska-ok">
-	<p><strong><?= !empty($aktualizace['nova']['bezpecnostni']) ? 'Bezpečnostní aktualizace: verze ' : 'K dispozici je verze ' ?><?= e($aktualizace['nova']['verze']) ?></strong><?= !empty($aktualizace['nova']['vydano']) ? ' (' . e(datum((string) $aktualizace['nova']['vydano'])) . ')' : '' ?></p>
+	<p><strong><?= e(t(!empty($aktualizace['nova']['bezpecnostni']) ? 'Bezpečnostní aktualizace: verze %s' : 'K dispozici je verze %s', (string) $aktualizace['nova']['verze'])) ?></strong><?= !empty($aktualizace['nova']['vydano']) ? ' (' . e(datum((string) $aktualizace['nova']['vydano'])) . ')' : '' ?></p>
 <?php if ($aktualizace['nova']['zmeny'] !== []): ?>
 	<ul><?php foreach ($aktualizace['nova']['zmeny'] as $zmena): ?><li><?= e($zmena) ?></li><?php endforeach ?></ul>
 <?php endif ?>
@@ -24,7 +25,7 @@
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('zkontroluj')) ?>"><?= e(t('Zkontrolovat teď')) ?></button></p>
 <?php endif ?>
 <?php $pole('aktualizace_auto', 'Bezpečnostní aktualizace instalovat automaticky', 'ano', 'Doporučeno. Týká se jen vydání označených jako bezpečnostní; běžné verze instalujete sami. Systém se po novinkách dívá dvakrát denně, před instalací zálohuje databázi a o výsledku pošle e-mail na adresu redakce.'); ?>
-<?php $pole('odkaz_podpora', 'Odkaz „Podpořit phpRS“ pod přehledem', 'ano', 'phpRS je zdarma a vzniká z dobrovolných příspěvků. Odkaz vidí jen přihlášení v administraci, na webu se nic nezobrazuje.'); ?>
+<?php $pole('odkaz_podpora', 'Odkaz „Podpořit phpRS“ v patičce administrace', 'ano', 'phpRS je zdarma a vzniká z dobrovolných příspěvků. Odkaz vidí jen přihlášení v administraci, na webu se nic nezobrazuje.'); ?>
 <?php $pole('aktualizace_url', 'Vlastní zdroj aktualizací', 'url', 'Nechte prázdné. Jinou adresu souboru aktualizace.json vyplňte jen tehdy, když si verze spravujete sami.', 'placeholder="https://"'); ?>
 </fieldset>
 

@@ -34,13 +34,14 @@ final class App
             header('Location: ' . $base . '/install.php');
             exit;
         }
-        // během aktualizace souborů web krátce odpovídá 503 (zámek starší než 10 minut je pozůstatek a ignoruje se)
+        // během aktualizace souborů web krátce odpovídá 503 (zámek starší než 10 minut je pozůstatek a ignoruje se);
+        // slovník tu ještě není načtený, proto je pod českým textem krátká anglická věta
         $zamek = PHPRS_ROOT . '/storage/udrzba.lock';
         if (is_file($zamek) && time() - (int) filemtime($zamek) < 600 && basename((string) ($_SERVER['SCRIPT_NAME'] ?? '')) !== 'admin.php') {
             http_response_code(503);
             header('Retry-After: 60');
             header('Content-Type: text/html; charset=utf-8');
-            exit('<!doctype html><meta charset="utf-8"><title>Probíhá aktualizace</title><body style="font:16px system-ui,sans-serif;margin:3em"><h1 style="font-size:22px">Web se právě aktualizuje</h1><p>Zkuste to prosím za minutu.</p>');
+            exit('<!doctype html><meta charset="utf-8"><title>Probíhá aktualizace</title><body style="font:16px system-ui,sans-serif;margin:3em"><h1 style="font-size:22px">Web se právě aktualizuje</h1><p>Zkuste to prosím za minutu.</p><p lang="en" style="color:#666">The site is being updated. Please try again in a minute.</p>');
         }
         $app = new self(require $file);
         $app->installErrorHandler();

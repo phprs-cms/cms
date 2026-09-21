@@ -34,7 +34,7 @@ $nahledy = require __DIR__ . '/nahledy.php';
 <header class="uvod">
 	<div class="znacka"><?php $vyska = 40; $jenZnacka = false; require PHPRS_SYSTEM . '/views/admin/logo.php'; ?></div>
 	<h1><?= e(t('Instalace redakčního systému')) ?></h1>
-	<p><?= e(t('Čtyři krátké kroky a váš magazín běží. Vše lze později změnit v administraci.')) ?></p>
+	<p><?= e(t('Čtyři krátké kroky a váš magazín běží. Vše lze později změnit v administraci.')) ?> <a href="<?= e(PhpRS\Core\Napoveda::url('zaciname/instalace')) ?>" target="_blank" rel="noopener"><?= e(t('Podrobný návod')) ?></a></p>
 </header>
 
 <section class="krok">
@@ -84,6 +84,7 @@ $nahledy = require __DIR__ . '/nahledy.php';
 			<option value="<?= e($pasmo) ?>"<?= $data['casove_pasmo'] === $pasmo ? ' selected' : '' ?>><?= e(str_replace('_', ' ', $pasmo)) ?></option>
 <?php endforeach ?>
 		</select><span class="napoveda"><?= e(t('Podle něj se vydávají naplánované články a zobrazují data.')) ?></span></div>
+		<div class="cele"><label class="zaskrtavaci" for="demo"><input type="checkbox" id="demo" name="demo" value="1"<?= ($data['demo'] ?? '') === '1' ? ' checked' : '' ?>> <?= e(t('Nahrát ukázkový obsah')) ?></label><span class="napoveda"><?= e(t('Rubriky, články a obrázky smyšleného magazínu, ať hned vidíte, jak web vypadá. Později ho jedním kliknutím smažete.')) ?></span></div>
 	</div>
 </section>
 

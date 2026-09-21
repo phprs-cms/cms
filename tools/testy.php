@@ -296,6 +296,36 @@ foreach (['sk', 'en', 'de'] as $kod) {
     over('instalátor: úplný slovník ' . $kod, $chybi, []);
 }
 
+/* ---------- ukázkový obsah (system/demo): úplný ve všech jazycích, obrázky na místě ---------- */
+$demo = require PHPRS_ROOT . '/system/demo/obsah.php';
+over('demo: deset článků, právě jeden otvírák', [count($demo['clanky']), count(array_filter(array_column($demo['clanky'], 'pripnout')))], [10, 1]);
+foreach ($demo['clanky'] as $klic => $spolecne) {
+    over("demo: článek {$klic} patří do existující rubriky", isset($demo['cs']['rubriky'][$spolecne['rubrika']]), true);
+    over("demo: obrázek článku {$klic} je v system/demo/img", $spolecne['obrazek'] === '' || is_file(PHPRS_ROOT . '/system/demo/img/' . $spolecne['obrazek']), true);
+}
+foreach (PhpRS\Core\Demo::JAZYKY as $kod) {
+    over("demo {$kod}: stejné rubriky jako čeština", array_keys($demo[$kod]['rubriky']), array_keys($demo['cs']['rubriky']));
+    over("demo {$kod}: pět rubrik s názvem", count(array_filter($demo[$kod]['rubriky'], fn (string $n): bool => trim($n) !== '')), 5);
+    over("demo {$kod}: texty ke všem článkům", array_keys($demo[$kod]['clanky']), array_keys($demo['clanky']));
+    foreach ($demo[$kod]['clanky'] as $klic => $clanek) {
+        $prazdne = array_filter(['titulek', 'uvod', 'text'], fn (string $cast): bool => trim(strip_tags($clanek[$cast] ?? '')) === '');
+        over("demo {$kod}/{$klic}: titulek, perex a text nejsou prázdné", array_values($prazdne), []);
+        over("demo {$kod}/{$klic}: text má aspoň tři odstavce a jeden mezititulek", [substr_count($clanek['text'], '<p>') >= 3, substr_count($clanek['text'], '<h2>')], [true, 1]);
+        over("demo {$kod}/{$klic}: titulek se vejde do sloupce", mb_strlen($clanek['titulek']) <= 160, true);
+    }
+}
+over('demo: obrázky se vejdou do 1 MB', array_sum(array_map(filesize(...), glob(PHPRS_ROOT . '/system/demo/img/*.jpg') ?: [])) < 1024 * 1024, true);
+
+/* ---------- nápověda: adresy příručky odpovídají osnově (docs/ nejsou v balíčku, test běží jen ve vývojové kopii) ---------- */
+if (is_file(PHPRS_ROOT . '/docs/prirucka/osnova.json')) {
+    $osnova = json_decode((string) file_get_contents(PHPRS_ROOT . '/docs/prirucka/osnova.json'), true);
+    foreach (['en', 'de'] as $kod) {
+        over('Napoveda: překlad adres ' . $kod . ' odpovídá osnova.json', PhpRS\Core\Napoveda::ADRESY[$kod][1], $osnova['adresy'][$kod]);
+    }
+    over('Napoveda: adresa stránky', PhpRS\Core\Napoveda::url('provoz/posta', 'en'), 'https://phprs.eu/en/docs/operations/mail/');
+    over('Napoveda: slovenština vede na českou příručku', PhpRS\Core\Napoveda::url('', 'sk'), 'https://phprs.eu/cs/dokumentace/');
+}
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

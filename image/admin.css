@@ -2,6 +2,8 @@
  * Názvy tříd (.menu, .loginprouzek, .tl, a.navigace, table.vypis…) jsou historické a drží je šablony v system/views/admin/.
  */
 
+@import url("pismo.css");
+
 :root {
 	--podklad: #F7F7F8;
 	--plocha: #FFFFFF;
@@ -31,7 +33,7 @@
 	--ed-radius: 8px;
 	--ed-radius-maly: 5px;
 	--ed-lista-top: 64px;
-	--pismo: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--pismo: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	color-scheme: light dark;
 }
 /* tmavý režim: podle systému, nebo ručně přepínačem v horní liště (data-tema na <html>) */
@@ -273,6 +275,16 @@ h3.stred {
 }
 .verze {
 	margin-top: 40px;
+	padding-top: 14px;
+	border-top: 1px solid var(--linka);
+}
+.napoveda-radek {
+	margin: 0 0 14px;
+	font-size: 13px;
+}
+.napoveda-odkaz {
+	font-weight: 400;
+	white-space: nowrap;
 }
 .logo {
 	display: block;

@@ -62,7 +62,7 @@ final class Bloky
             // blok ze zóny, kterou zvolené rozvržení nemá, se ukáže pod obsahem
             $zona = in_array($blok['zona'], $existujici, true) ? $blok['zona'] : 'pod';
             $blokHtml = trim($obsah) === ''
-                ? '<div class="rs-duch"><strong>' . e($blok['nazev']) . '</strong><br>' . e($duvod !== '' ? 'Teď se nezobrazuje: ' . $duvod . '.' : 'Zatím nemá co zobrazit.') . '</div>'
+                ? '<div class="rs-duch"><strong>' . e($blok['nazev']) . '</strong><br>' . e($duvod !== '' ? $this->ta('Teď se nezobrazuje: %s.', $this->ta($duvod)) : $this->ta('Zatím nemá co zobrazit.')) . '</div>'
                 : $this->view->render('blok', ['nadpis' => $blok['nazev'], 'obsah' => $obsah, 'typ' => (int) $blok['typ'], 'sys' => $blok['sys_funkce'], 'zona' => $zona]);
             if ($upravit) {
                 $blokHtml = '<div class="rs-blok" data-blok="' . (int) $blok['idb'] . '" data-nazev="' . e($blok['nazev']) . '" draggable="true">' . $blokHtml . '</div>';
@@ -79,6 +79,14 @@ final class Bloky
         }
 
         return $html;
+    }
+
+    /** Text pro vizuální editor: v jazyce administrace přihlášeného, ne v jazyce zobrazené verze webu. */
+    private function ta(string $text, string ...$hodnoty): string
+    {
+        $kod = (string) ($this->app->auth()->user()['jazyk'] ?? '') ?: Jazyk::vychozi($this->app->settings());
+
+        return Jazyk::docasne(isset(Jazyk::ADMINISTRACE[$kod]) ? $kod : 'cs', fn (): string => t($text, ...$hodnoty), 'admin-');
     }
 
     private function systemovy(string $zkratka, string $data, string $obsah): string

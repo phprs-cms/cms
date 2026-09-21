@@ -27,6 +27,9 @@ Options -Indexes
 </IfModule>
 
 # statické soubory: adresy nesou verzi (?v=…), prohlížeč si je smí nechat dlouho; sw.js se musí ověřovat vždy
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+</IfModule>
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType text/css "access plus 1 year"
@@ -37,6 +40,7 @@ Options -Indexes
     ExpiresByType image/png "access plus 1 month"
     ExpiresByType image/webp "access plus 1 month"
     ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
 <IfModule mod_headers.c>
     <Files "sw.js">

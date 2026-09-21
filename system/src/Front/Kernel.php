@@ -259,7 +259,8 @@ final class Kernel
             if ($token === '' || !hash_equals($token, $request->get('token'))) {
                 return Response::json(['chyba' => 'Neplatný token.'], 403);
             }
-            $kontroly = \PhpRS\Core\Stav::kontroly($this->app);
+            // monitoring dostává texty vždy česky - nesmí se měnit podle jazyka zobrazené verze webu
+            $kontroly = Jazyk::docasne('cs', fn (): array => \PhpRS\Core\Stav::kontroly($this->app));
 
             return Response::json(['stav' => \PhpRS\Core\Stav::souhrn($kontroly), 'verze' => PHPRS_VERSION, 'cas' => date('c'), 'kontroly' => $kontroly]);
         }

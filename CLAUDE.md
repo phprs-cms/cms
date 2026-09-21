@@ -162,3 +162,20 @@ databáze `phprs3`, uživatel `phprs3` (údaje v `config.php`, není v gitu). Č
 `config.php`, `DROP` tabulek `rs_*`, otevřít `/install.php`.
 
 Po změně: `tools/test.sh` (lint, jednotkové testy, čistá instalace a průchod webem; potřebuje MySQL), případně jen `php tools/testy.php`, a projít dotčené stránky v prohlížeči / přes curl.
+
+## Písmo prostředí
+
+Administrace, přihlášení, instalátor a ovládání vizuálního editoru používají **Noto Sans** hostované u sebe (`image/pismo.css`, soubory v `image/pisma/`, licence OFL v `image/pisma/OFL.txt`). Styly si ho berou přes `@import url("pismo.css")`. Šablon webu se to netýká – jejich písma řídí Identita webu a šablona sama.
+
+## Příručka
+
+Uživatelská dokumentace je v `docs/prirucka/<jazyk>/` (cs je zdroj, en a de překlady se stejnými názvy souborů), pořadí a překlad adres v `docs/prirucka/osnova.json`. Web projektu (repozitář `phprs-cms/web`, lokálně `../phprs-web`) ji při sestavení přebírá. Při změně chování nebo popisku v administraci upravte i příručku.
+
+## Nápověda a ukázkový obsah
+
+- `Core\Napoveda` skládá odkazy z administrace a instalátoru do příručky na phprs.eu v jazyce uživatele (sk → cs). Tabulka adres musí
+  odpovídat `docs/prirucka/osnova.json` (hlídá `tools/testy.php`). Nová stránka příručky = zvážit odkaz z místa, kterého se týká.
+  Patička administrace (verze · Nápověda · phprs.eu · Podpořit phpRS) je v `views/admin/layout.php`, tedy na každé stránce.
+- `Core\Demo` + `system/demo/` (texty `obsah.php` v cs/en/de, ilustrace v `img/` jsou vlastní dílo projektu): ukázkový magazín, který jde
+  nahrát při instalaci (zaškrtávátko) nebo v Nastavení → Základní a jedním kliknutím smazat. Co vzniklo, eviduje nastavení `demo_obsah`.
+- Instalátor se po dokončení smaže sám (`Installer::smazSe()`); ve vývojové kopii se složkou `.git` ne.

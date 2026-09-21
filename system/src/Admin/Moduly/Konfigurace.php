@@ -83,6 +83,7 @@ final class Konfigurace extends Modul
             'chybyLog' => $zalozka === 'stav' ? self::konecSouboru(PHPRS_ROOT . '/storage/log/chyby.log', 40) : [],
             'posta' => $zalozka === 'posta' ? $this->db->all('SELECT komu, predmet, vytvoreno, odeslano, pokusu, dalsi_pokus, chyba FROM {posta} ORDER BY idp DESC LIMIT 30') : [],
             'zapnutaRozsireni' => Rozsireni::zapnuta($nastaveni),
+            'demoNahrano' => \PhpRS\Core\Demo::jeNahrany($nastaveni),
             'zalohy' => $zalozka === 'zalohy' ? Zaloha::seznam() : [],
             'aktualizace' => $zalozka === 'zalohy' ? (new Aktualizace($nastaveni))->stav() : null,
             'adresaWebu' => $this->app->request->origin() . $this->app->url(''),
@@ -139,6 +140,31 @@ final class Konfigurace extends Modul
         return $chyby === []
             ? $this->zpet('Nastavení bylo uloženo.', '', ['zalozka' => $zalozka])
             : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', ['zalozka' => $zalozka], 'chyba');
+    }
+
+    /** Ukázkový obsah (smyšlený magazín ze system/demo) v jazyce webu; články bez hostujícího autora připadnou přihlášenému. */
+    protected function akceDemoNahraj(): Response
+    {
+        if (!$this->request->isPost()) {
+            return $this->zpet();
+        }
+        $nastaveni = $this->app->settings();
+        try {
+            $this->db->transaction(fn () => \PhpRS\Core\Demo::nahraj($this->db, $nastaveni, $nastaveni->get('jazyk_webu'), $this->app->auth()->id()));
+        } catch (\Throwable $e) {
+            return $this->zpet('Ukázkový obsah se nepodařilo nahrát: ' . $e->getMessage(), '', ['zalozka' => 'zakladni'], 'chyba');
+        }
+
+        return $this->zpet('Ukázkový obsah je nahraný. Najdete ho v Článcích, Rubrikách a Médiích.', '', ['zalozka' => 'zakladni']);
+    }
+
+    protected function akceDemoSmaz(): Response
+    {
+        if ($this->request->isPost()) {
+            \PhpRS\Core\Demo::smaz($this->db, $this->app->settings());
+        }
+
+        return $this->zpet('Ukázkový obsah byl smazán.', '', ['zalozka' => 'zakladni']);
     }
 
     protected function akceZalohuj(): Response

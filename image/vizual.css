@@ -1,13 +1,15 @@
 /* phpRS 3.0 - vizuální editor bloků (ve stránce webu). Všechno ovládání má třídu .rs-ui a vlastní písmo,
  * aby ho neovlivnil vzhled šablony webu. */
 
+@import url("pismo.css");
+
 :root {
 	--ed-linka: #CDD2DB; --ed-plocha: #FFFFFF; --ed-lista: #F2F4F7; --ed-text: #14171F; --ed-text-slaby: #667085; --ed-akcent: #1F4FE0; --ed-radius: 8px; --ed-radius-maly: 5px;
 	--rs-akcent: #1F4FE0;
 }
 html.rs-upravy { scroll-padding-top: 60px; }
 html.rs-upravy body { padding-top: 48px !important; }
-.rs-ui, .rs-ui * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important; letter-spacing: 0 !important; text-transform: none !important; }
+.rs-ui, .rs-ui * { box-sizing: border-box; font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important; letter-spacing: 0 !important; text-transform: none !important; }
 
 /* horní lišta */
 .rs-lista { position: fixed; z-index: 100000; top: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; gap: 16px; padding: 0 16px; background: #14171F; color: #FFFFFF; font-size: 14px; line-height: 1.3; }

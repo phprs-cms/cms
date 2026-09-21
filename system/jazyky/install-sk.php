@@ -66,4 +66,8 @@ return [
     'Rozšíření mbstring' => 'Rozšírenie mbstring',
     'Zápis do kořenové složky' => 'Zápis do koreňového priečinka',
     'Zápis do složky storage/' => 'Zápis do priečinka storage/',
+    'Soubor install.php se z bezpečnostních důvodů smazal sám – nic dalšího dělat nemusíte.' => 'Súbor install.php sa z bezpečnostných dôvodov zmazal sám – nič ďalšie robiť nemusíte.',
+    'Příručka: první kroky po instalaci' => 'Príručka: prvé kroky po inštalácii',
+    'Nahrát ukázkový obsah' => 'Nahrať ukážkový obsah',
+    'Rubriky, články a obrázky smyšleného magazínu, ať hned vidíte, jak web vypadá. Později ho jedním kliknutím smažete.' => 'Rubriky, články a obrázky vymysleného magazínu, aby ste hneď videli, ako web vyzerá. Neskôr ho jedným kliknutím zmažete.',
 ];

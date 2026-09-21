@@ -97,7 +97,7 @@ final class Settings
         'zalohy_auto' => '1',         // týdenní automatická záloha databáze
         'aktualizace_url' => '',      // adresa souboru aktualizace.json; prázdné = výchozí zdroj projektu
         'aktualizace_cache' => '',
-        'odkaz_podpora' => '1',       // nenápadný odkaz „Podpořit phpRS“ pod přehledem administrace
+        'odkaz_podpora' => '1',       // nenápadný odkaz „Podpořit phpRS“ v patičce administrace
         'aktualizace_auto' => '1',    // bezpečnostní vydání instalovat automaticky
         'aktualizace_pokus' => '',    // verze, kterou už údržba na pozadí zkoušela / oznámila
         'rozsireni' => '',            // zapnutá rozšíření (Core\Rozsireni); prázdné = výchozí sada
@@ -123,6 +123,7 @@ final class Settings
         'ai_model' => 'claude-sonnet-5',
         'ads_txt' => '',
         'pruvodce_skryt' => '0',      // administrátor skryl první kroky na přehledu
+        'demo_obsah' => '',           // co založil ukázkový obsah (JSON: články, rubriky, obrázky) - podle toho ho Core\Demo smaže
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 

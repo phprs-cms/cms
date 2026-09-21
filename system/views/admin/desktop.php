@@ -18,7 +18,7 @@
 <?php if (!empty($pruvodce)): $hotovych = count(array_filter($pruvodce, fn (array $k): bool => $k['hotovo'])); ?>
 <section class="pruvodce" aria-label="<?= e(t('První kroky')) ?>">
 	<div class="pruvodce-hlava">
-		<h3><?= e(t('První kroky')) ?> <small><?= $hotovych ?> / <?= count($pruvodce) ?></small></h3>
+		<h3><?= e(t('První kroky')) ?> <small><?= $hotovych ?> / <?= count($pruvodce) ?></small> <small><?= PhpRS\Core\Napoveda::odkaz('zaciname/prvni-kroky', 'První kroky') ?></small></h3>
 		<form method="post" action="<?= e($app->url('admin.php?akce=pruvodce_skryt')) ?>"><?= $app->session->csrfField() ?><button class="navigace" type="submit"><?= e(t('Skrýt')) ?></button></form>
 	</div>
 	<ol class="pruvodce-kroky">
@@ -78,7 +78,7 @@
 	<td><a href="<?= e($app->url('admin.php?modul=clanky&akce=edit&id=' . (int) $c['idc'])) ?>"><?= e($c['titulek']) ?></a></td>
 	<td><?= e($c['tema_jm']) ?></td>
 	<td class="cislo"><?= e(datum($c['datum'], true)) ?></td>
-	<td class="stred"><?= $c['visible'] ? 'Ano' : '<strong>Ne</strong>' ?></td>
+	<td class="stred"><?= $c['visible'] ? e(t('Ano')) : '<strong>' . e(t('Ne')) . '</strong>' ?></td>
 	<td class="cislo"><?= (int) $c['visit'] ?>x</td>
 </tr>
 <?php endforeach ?>
@@ -86,4 +86,3 @@
 </table>
 </div>
 <?php endif ?>
-<p class="verze">phpRS <?= e(PHPRS_VERSION) ?> · <a href="https://phprs.eu" target="_blank" rel="noopener">phprs.eu</a><?php if ($app->settings()->bool('odkaz_podpora')): ?> · <a href="https://github.com/sponsors/phprscms" target="_blank" rel="noopener"><?= e(t('Podpořit phpRS')) ?></a><?php endif ?></p>

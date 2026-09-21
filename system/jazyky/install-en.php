@@ -75,4 +75,9 @@ return [
     'Rozšíření mbstring' => 'mbstring extension',
     'Zápis do kořenové složky' => 'Write access to the root folder',
     'Zápis do složky storage/' => 'Write access to the storage/ folder',
+    'Soubor install.php se z bezpečnostních důvodů smazal sám – nic dalšího dělat nemusíte.' => 'For security reasons install.php has deleted itself – there is nothing else you need to do.',
+    'Příručka: první kroky po instalaci' => 'Manual: first steps after installation',
+    'Podrobný návod' => 'Detailed guide',
+    'Nahrát ukázkový obsah' => 'Load sample content',
+    'Rubriky, články a obrázky smyšleného magazínu, ať hned vidíte, jak web vypadá. Později ho jedním kliknutím smažete.' => 'Sections, articles and images of a fictional magazine, so you can see right away what the site looks like. You can delete it later with one click.',
 ];

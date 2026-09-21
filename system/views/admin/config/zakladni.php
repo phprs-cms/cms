@@ -107,3 +107,13 @@ $pole('kontrola_odkazu', 'Hledat nefunkční odkazy', 'ano', 'Na pozadí, jeden 
 $pole('cache_stranek', 'Cache stránek', 'ano', 'Hotové stránky se čtenářům podávají z paměti – web je rychlejší a vydrží nápor. Nechte zapnuté.');
 ?>
 </details>
+<fieldset>
+<legend><?= e(t('Ukázkový obsah')) ?></legend>
+<?php if ($demoNahrano): ?>
+<p class="napoveda"><?= e(t('Na webu jsou rubriky, články a obrázky smyšleného magazínu. Až je nebudete potřebovat, smažte je najednou – vaše vlastní články a rubriky zůstanou.')) ?></p>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('demo_smaz')) ?>" formnovalidate data-potvrdit="<?= e(t('Smazat ukázkový obsah? Zmizí ukázkové články včetně úprav, které jste v nich udělali, prázdné ukázkové rubriky a nepoužité ukázkové obrázky.')) ?>"><?= e(t('Smazat ukázkový obsah')) ?></button></p>
+<?php else: ?>
+<p class="napoveda"><?= e(t('Pět rubrik, deset článků a obrázky smyšleného magazínu v jazyce webu, ať hned vidíte, jak web vypadá. Později je tady jedním kliknutím smažete.')) ?></p>
+<p><button class="navigace" type="submit" formaction="<?= e($modul->url('demo_nahraj')) ?>" formnovalidate><?= e(t('Nahrát ukázkový obsah')) ?></button></p>
+<?php endif ?>
+</fieldset>

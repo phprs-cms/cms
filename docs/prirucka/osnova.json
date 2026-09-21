@@ -17,6 +17,38 @@
       }
     },
     {
+      "slug": "psani",
+      "stranky": [
+        "psani/editor",
+        "psani/obrazky-a-galerie",
+        "psani/vkladani-obsahu",
+        "psani/typy-obsahu",
+        "psani/rubriky-stitky-serialy",
+        "psani/planovani-a-revize",
+        "psani/ai-asistent"
+      ],
+      "nazev": {
+        "cs": "Psaní",
+        "en": "Writing",
+        "de": "Schreiben"
+      }
+    },
+    {
+      "slug": "redakce",
+      "stranky": [
+        "redakce/role-a-opravneni",
+        "redakce/predavka-a-korektura",
+        "redakce/titulni-strana-a-kalendar",
+        "redakce/komentare",
+        "redakce/ucet-a-prihlaseni"
+      ],
+      "nazev": {
+        "cs": "Redakce",
+        "en": "Newsroom",
+        "de": "Redaktion"
+      }
+    },
+    {
       "slug": "provoz",
       "stranky": [
         "provoz/posta",
@@ -35,8 +67,6 @@
     }
   ],
   "pripravuje_se": [
-    "psani",
-    "redakce",
     "vzhled",
     "ctenari-a-prijmy",
     "jazykove-verze",
@@ -57,7 +87,21 @@
       "ulohy-na-pozadi": "background-tasks",
       "stav-systemu": "system-status",
       "bezpecnost": "security",
-      "reseni-potizi": "troubleshooting"
+      "reseni-potizi": "troubleshooting",
+      "psani": "writing",
+      "editor": "editor",
+      "obrazky-a-galerie": "images-and-galleries",
+      "vkladani-obsahu": "embedding-content",
+      "typy-obsahu": "content-types",
+      "rubriky-stitky-serialy": "sections-tags-series",
+      "planovani-a-revize": "scheduling-and-revisions",
+      "ai-asistent": "ai-assistant",
+      "redakce": "newsroom",
+      "role-a-opravneni": "roles-and-permissions",
+      "predavka-a-korektura": "handoff-and-proofreading",
+      "titulni-strana-a-kalendar": "front-page-and-calendar",
+      "komentare": "comments",
+      "ucet-a-prihlaseni": "account-and-sign-in"
     },
     "de": {
       "zaciname": "erste-schritte",
@@ -72,7 +116,21 @@
       "ulohy-na-pozadi": "hintergrundaufgaben",
       "stav-systemu": "systemstatus",
       "bezpecnost": "sicherheit",
-      "reseni-potizi": "fehlerbehebung"
+      "reseni-potizi": "fehlerbehebung",
+      "psani": "schreiben",
+      "editor": "editor",
+      "obrazky-a-galerie": "bilder-und-galerien",
+      "vkladani-obsahu": "inhalte-einbetten",
+      "typy-obsahu": "inhaltstypen",
+      "rubriky-stitky-serialy": "rubriken-schlagwoerter-serien",
+      "planovani-a-revize": "planung-und-versionen",
+      "ai-asistent": "ki-assistent",
+      "redakce": "redaktion",
+      "role-a-opravneni": "rollen-und-rechte",
+      "predavka-a-korektura": "uebergabe-und-korrektur",
+      "titulni-strana-a-kalendar": "titelseite-und-kalender",
+      "komentare": "kommentare",
+      "ucet-a-prihlaseni": "konto-und-anmeldung"
     }
   }
 }

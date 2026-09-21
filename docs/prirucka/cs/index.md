@@ -8,8 +8,10 @@ Je psaná pro dva druhy čtenářů. **Redakce** – lidé, kteří píší, upr
 ## Kapitoly
 
 - **Začínáme** – požadavky na hosting, instalace, první kroky po instalaci, aktualizace a přesun webu jinam.
+- **Psaní** – editor článku, obrázky, galerie a přílohy, vkládání videa a příspěvků ze sítí, typy obsahu, rubriky, štítky a seriály, plánování a revize, AI asistent.
+- **Redakce** – role a oprávnění, předávka a korektura, titulní strana a kalendář, komentáře, účet a přihlášení.
 - **Provoz** – pošta, zálohy, úlohy na pozadí, Stav systému, nginx, bezpečnost a řešení potíží.
-- *Psaní, Redakce, Vzhled, Čtenáři a příjmy, Jazykové verze, SEO a AI, Pro vývojáře* – připravují se.
+- *Vzhled, Čtenáři a příjmy, Jazykové verze, SEO a AI, Pro vývojáře* – připravují se.
 
 ## Jak je příručka psaná
 

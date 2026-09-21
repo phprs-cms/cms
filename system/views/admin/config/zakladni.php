@@ -70,21 +70,6 @@ $pole('udrzba', 'Web je dočasně mimo provoz', 'ano', 'Návštěvníci uvidí j
 $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
 ?>
 </details>
-<?php if (PhpRS\Core\Rozsireni::je($app->settings(), 'ctenari')): ?>
-<details class="pokrocile">
-<summary><?= e(t('Čtenáři a zamčený obsah')) ?></summary>
-<?php
-$pole('komentare_jen_prihlaseni', 'Komentovat smí jen přihlášení čtenáři', 'ano', 'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.');
-$pole('ctenari_registrace', 'Povolit nové registrace', 'ano');
-$pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10"');
-$pole('paywall_zdarma', 'Článků zdarma měsíčně', 'cislo', 'Měkký paywall: tolik zamčených článků si každý měsíc přečte kdokoli bez přihlášení, potom uvidí výzvu. 0 = vypnuto. Počítá se v prohlížeči čtenáře, vyhledávače vidí články celé.', 'min="0" max="50"');
-$pole('predplatne_url', 'Kde získat předplatné', 'text', 'Stránka webu (např. /predplatne) nebo platební odkaz (https://…). U článků pro předplatitele a v účtu čtenáře se ukáže tlačítko „Získat předplatné“. Bez vyplnění čtenář neví, jak se předplatitelem stát.', 'maxlength="255" placeholder="/predplatne"');
-$pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – například proč se registrovat nebo jak získat předplatné.', 'maxlength="300"');
-?>
-</details>
-<?php else: ?>
-<input type="hidden" name="ctenari_registrace" value="<?= e($hodnoty['ctenari_registrace']) ?>"><input type="hidden" name="komentare_jen_prihlaseni" value="<?= e($hodnoty['komentare_jen_prihlaseni']) ?>"><input type="hidden" name="paywall_zdarma" value="<?= e($hodnoty['paywall_zdarma']) ?>"><input type="hidden" name="zamek_odstavcu" value="<?= e($hodnoty['zamek_odstavcu']) ?>"><input type="hidden" name="zamek_text" value="<?= e($hodnoty['zamek_text']) ?>">
-<?php endif ?>
 <details class="pokrocile">
 <summary><?= e(t('Sociální sítě')) ?></summary>
 <?php foreach (PhpRS\Admin\Moduly\Konfigurace::SITE as $klic => $nazev) { $pole($klic, $nazev, 'url', '', 'placeholder="https://"'); } ?>

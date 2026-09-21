@@ -1,7 +1,6 @@
 <?php
 /** Záložka Zálohy a aktualizace. */
 ?>
-<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('zaciname/aktualizace', 'Aktualizace') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/zalohy', 'Zálohy a obnova') ?></p>
 <fieldset>
 <legend><?= e(t('Aktualizace systému')) ?></legend>
 <p><?= e(t('Nainstalovaná verze:')) ?> <strong><?= e($aktualizace['aktualni']) ?></strong></p>

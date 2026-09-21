@@ -25,6 +25,12 @@ final class Prijmy extends Modul
         $web = $this->app->settings();
         $je = static fn (string $rozsireni): bool => Rozsireni::je($web, $rozsireni);
         $url = fn (string $dotaz): string => $this->app->url('admin.php?' . $dotaz);
+        $stripe = \PhpRS\Core\Stripe::nastaveno($web);
+        // součet přijatých plateb za 30 dní, zvlášť pro každou měnu: "1 490,00 CZK, 20,00 EUR"
+        $platby = implode(', ', array_map(
+            static fn (array $p): string => cislo(\PhpRS\Core\Stripe::castka((int) $p['soucet'], $p['mena']), 2) . ' ' . strtoupper($p['mena']),
+            $this->db->all('SELECT mena, SUM(castka) AS soucet FROM {platby} WHERE vytvoreno > NOW() - INTERVAL 30 DAY GROUP BY mena ORDER BY mena'),
+        ));
         $podpora = (int) $this->db->value("SELECT COUNT(*) FROM {bloky} WHERE sys_funkce = 'pod' AND zobrazit = 1");
 
         $karty = [
@@ -32,9 +38,17 @@ final class Prijmy extends Modul
                 'nazev' => 'Předplatné', 'zapnuto' => $je('ctenari'),
                 'cislo' => $je('ctenari') ? (int) $this->db->value('SELECT COUNT(*) FROM {ctenari} WHERE predplatne_do >= CURDATE()') : 0,
                 'popisek' => 'čtenářů s platným předplatným',
-                'text' => 'Zamčené články čtou jen předplatitelé. Předplatné zatím zapisujete ručně u čtenáře; kde ho čtenář získá, říká adresa v Nastavení → Základní.',
+                'text' => $stripe
+                    ? 'Zamčené články čtou jen předplatitelé. Předplatné si čtenáři platí kartou přes Stripe a prodlužuje se samo; ručně ho můžete zapsat komukoli dál.'
+                    : 'Zamčené články čtou jen předplatitelé. Předplatné zapisujete ručně u čtenáře, nebo si ho čtenáři platí sami přes Stripe (Nastavení → Čtenáři a platby); kde ho čtenář získá, říká adresa tamtéž.',
                 'odkaz' => $je('ctenari') ? [$url('modul=ctenari'), 'Čtenáři'] : [$url('modul=rozsireni'), 'Zapnout v Rozšířeních'],
-                'poznamka' => $je('ctenari') && $web->get('predplatne_url') === '' ? t('Není vyplněno, kde čtenář předplatné získá.') : '',
+                'poznamka' => match (true) {
+                    !$je('ctenari') => '',
+                    $stripe || $platby !== '' => t('Platí přes Stripe: %d.', (int) $this->db->value("SELECT COUNT(*) FROM {ctenari} WHERE stripe_predplatne IS NOT NULL AND predplatne_stav IN ('aktivni', 'konci', 'nezaplaceno')"))
+                        . ' ' . ($platby !== '' ? t('Platby za posledních 30 dní: %s.', $platby) : t('Za posledních 30 dní žádná platba.')),
+                    $web->get('predplatne_url') === '' => t('Není vyplněno, kde čtenář předplatné získá.'),
+                    default => '',
+                },
             ],
             [
                 'nazev' => 'Dobrovolná podpora', 'zapnuto' => $podpora > 0,

@@ -326,6 +326,31 @@ if (is_file(PHPRS_ROOT . '/docs/prirucka/osnova.json')) {
     }
     over('Napoveda: adresa stránky', PhpRS\Core\Napoveda::url('provoz/posta', 'en'), 'https://phprs.eu/en/docs/operations/mail/');
     over('Napoveda: slovenština vede na českou příručku', PhpRS\Core\Napoveda::url('', 'sk'), 'https://phprs.eu/cs/dokumentace/');
+    // nabídka Nápověda u nadpisu obrazovky: stránka existuje, titulek je její první nadpis, klíč je skutečný modul a titulek má překlad
+    $napovedaVady = [];
+    $napovedaModuly = array_map(static fn (string $t): string => $t::IDENT, PhpRS\Admin\Kernel::MODULY);
+    $napovedaSlovniky = array_map(static fn (string $k): array => require PHPRS_SYSTEM . '/jazyky/admin-' . $k . '.php', ['sk', 'en', 'de']);
+    foreach (PhpRS\Core\Napoveda::TEMATA as $klic => $stranky) {
+        if (!in_array(explode(':', $klic)[0], [...$napovedaModuly, 'prehled', 'ucet'], true)) {
+            $napovedaVady[] = "neznámý modul $klic";
+        }
+        foreach ($stranky as $cesta => $titulek) {
+            $soubor = PHPRS_ROOT . '/docs/prirucka/cs/' . $cesta . '.md';
+            if (!is_file($soubor) || trim(ltrim((string) fgets(fopen($soubor, 'r')), '# ')) !== $titulek) {
+                $napovedaVady[] = "$klic: $cesta";
+            }
+            foreach ($napovedaSlovniky as $i => $slovnik) {
+                // slovenština smí mít titulek shodný s češtinou (slovnik.py shodné položky nezapisuje)
+                if ($i > 0 && !isset($slovnik[$titulek]) && !in_array($titulek, ['SEO', 'Newsletter'], true)) {
+                    $napovedaVady[] = "bez překladu: $titulek";
+                }
+            }
+        }
+    }
+    over('Napoveda: témata obrazovek vedou na existující stránky se správným titulkem a překladem', $napovedaVady, []);
+    over('Napoveda: záložka má přednost před modulem', array_key_first(PhpRS\Core\Napoveda::temata('config', 'posta')), 'provoz/posta');
+    over('Napoveda: neznámá akce spadne na modul', PhpRS\Core\Napoveda::temata('clanky', 'edit'), PhpRS\Core\Napoveda::TEMATA['clanky']);
+    over('Napoveda: obrazovka bez témat nemá nabídku', PhpRS\Core\Napoveda::temata('neexistuje'), []);
 }
 
 /* ---------- aktualizace: úklid souborů, které nové vydání už neobsahuje ---------- */
@@ -577,6 +602,137 @@ over('StahovaniObrazku::typObrazku: prázdná odpověď', PhpRS\Core\StahovaniOb
 over('StahovaniObrazku: limity podle zadání (15 MB, 3 přesměrování, 5 s spojení, 20 s celkem)', [PhpRS\Core\StahovaniObrazku::MAX_BAJTU, PhpRS\Core\StahovaniObrazku::MAX_PRESMEROVANI, PhpRS\Core\StahovaniObrazku::CAS_SPOJENI, PhpRS\Core\StahovaniObrazku::CAS_CELKEM], [15 * 1024 * 1024, 3, 5, 20]);
 $wpZdrojak = (string) file_get_contents(PHPRS_ROOT . '/system/src/Core/StahovaniObrazku.php');
 over('StahovaniObrazku: přesměrování se nikdy nenásledují automaticky a nic se neposílá navíc', [substr_count($wpZdrojak, 'CURLOPT_FOLLOWLOCATION => false'), str_contains($wpZdrojak, "'follow_location' => 0"), (bool) preg_match('/CURLOPT_(COOKIE\w*|USERPWD|HTTPHEADER|HTTPAUTH)\b/', $wpZdrojak), str_contains($wpZdrojak, "'phpRS-import'")], [1, true, false, true]);
+
+/* ---------- platby přes Stripe: podpis webhooku, tvar klíčů a cen, zaplacené období, požadavek na platbu ---------- */
+$stTajemstvi = 'whsec_testovaciTajemstvi123';
+$stTelo = '{"id":"evt_test_1","type":"invoice.paid","data":{"object":{"id":"in_1"}}}';
+$stTed = 1790000000;
+$stPodpis = static fn (string $telo, int $cas, string $tajemstvi): string => hash_hmac('sha256', $cas . '.' . $telo, $tajemstvi);
+$stPlatny = $stPodpis($stTelo, $stTed, $stTajemstvi);
+foreach ([
+    'platný podpis' => [$stTelo, "t={$stTed},v1={$stPlatny}", $stTajemstvi, true],
+    'platný podpis s mezerami a schématem v0 navíc' => [$stTelo, "t={$stTed}, v1={$stPlatny}, v0=" . str_repeat('0', 64), $stTajemstvi, true],
+    'jiné tajemství' => [$stTelo, "t={$stTed},v1=" . $stPodpis($stTelo, $stTed, 'whsec_jineTajemstvi456'), $stTajemstvi, false],
+    'změněné tělo' => [str_replace('in_1', 'in_2', $stTelo), "t={$stTed},v1={$stPlatny}", $stTajemstvi, false],
+    'starý čas (za hranicí tolerance)' => [$stTelo, 't=' . ($stTed - 301) . ',v1=' . $stPodpis($stTelo, $stTed - 301, $stTajemstvi), $stTajemstvi, false],
+    'čas na hranici tolerance' => [$stTelo, 't=' . ($stTed - 300) . ',v1=' . $stPodpis($stTelo, $stTed - 300, $stTajemstvi), $stTajemstvi, true],
+    'čas z budoucnosti za hranicí tolerance' => [$stTelo, 't=' . ($stTed + 301) . ',v1=' . $stPodpis($stTelo, $stTed + 301, $stTajemstvi), $stTajemstvi, false],
+    'dva podpisy v1, platný je druhý (výměna tajemství)' => [$stTelo, "t={$stTed},v1=" . str_repeat('a', 64) . ",v1={$stPlatny}", $stTajemstvi, true],
+    'podpis platný pro jiný čas, než je v hlavičce' => [$stTelo, 't=' . ($stTed - 10) . ",v1={$stPlatny}", $stTajemstvi, false],
+    'druhé t v hlavičce se nepoužije' => [$stTelo, 't=' . ($stTed - 9999) . ",t={$stTed},v1={$stPlatny}", $stTajemstvi, false],
+    'chybí t' => [$stTelo, "v1={$stPlatny}", $stTajemstvi, false],
+    'chybí v1' => [$stTelo, "t={$stTed}", $stTajemstvi, false],
+    'jen schéma v0' => [$stTelo, "t={$stTed},v0={$stPlatny}", $stTajemstvi, false],
+    'prázdná hlavička' => [$stTelo, '', $stTajemstvi, false],
+    'prázdné tajemství' => [$stTelo, "t={$stTed},v1=" . $stPodpis($stTelo, $stTed, ''), '', false],
+    'nesmysl v hlavičce' => [$stTelo, "t={$stTed}\r\nX-Podvrh: 1,v1={$stPlatny}", $stTajemstvi, false],
+    'čas není číslo' => [$stTelo, "t=1e9,v1={$stPlatny}", $stTajemstvi, false],
+    'podpis velkými písmeny' => [$stTelo, "t={$stTed},v1=" . strtoupper($stPlatny), $stTajemstvi, false],
+    'zkrácený podpis' => [$stTelo, "t={$stTed},v1=" . substr($stPlatny, 0, 32), $stTajemstvi, false],
+    'přerostlá hlavička' => [$stTelo, "t={$stTed},v1={$stPlatny}" . str_repeat(',v1=' . str_repeat('b', 64), 20), $stTajemstvi, false],
+] as $popis => [$telo, $hlavicka, $tajemstvi, $ocekavano]) {
+    over('Stripe::overPodpis: ' . $popis, PhpRS\Core\Stripe::overPodpis($telo, $hlavicka, $tajemstvi, $stTed), $ocekavano);
+}
+over('Stripe::overPodpis: bez zadaného času se bere skutečný', PhpRS\Core\Stripe::overPodpis($stTelo, 't=' . time() . ',v1=' . $stPodpis($stTelo, time(), $stTajemstvi), $stTajemstvi), true);
+foreach ([
+    'sk_test_' . str_repeat('a1B2', 6) => true, 'sk_live_' . str_repeat('a1B2', 25) => true, 'rk_test_' . str_repeat('Z9', 12) => true, 'rk_live_' . str_repeat('Z9', 12) => true,
+    'pk_test_' . str_repeat('a1B2', 6) => false, 'sk_test_' => false, 'sk_test_kratky' => false, 'sk-ant-' . str_repeat('a', 30) => false, 'sk_prod_' . str_repeat('a', 30) => false,
+    ' sk_test_' . str_repeat('a', 30) => false, 'sk_test_' . str_repeat('a', 30) . "\n" => false, 'sk_test_' . str_repeat('a', 20) . ' x' => false, 'whsec_' . str_repeat('a', 30) => false,
+] as $hodnota => $ocekavano) {
+    over('Stripe: tvar tajného klíče ' . json_encode(substr((string) $hodnota, 0, 12)), preg_match(PhpRS\Core\Stripe::VZOR_KLIC, (string) $hodnota) === 1, $ocekavano);
+}
+foreach (['whsec_' . str_repeat('aB3', 11) => true, 'whsec_' . str_repeat('a', 20) . '+/=' => true, 'whsec_' => false, 'sk_test_' . str_repeat('a', 30) => false, 'whsec_' . str_repeat('a', 20) . ' ' => false, "whsec_" . str_repeat('a', 20) . "\r\nX: 1" => false] as $hodnota => $ocekavano) {
+    over('Stripe: tvar tajemství webhooku ' . json_encode(substr((string) $hodnota, 0, 10)), preg_match(PhpRS\Core\Stripe::VZOR_WEBHOOK, (string) $hodnota) === 1, $ocekavano);
+}
+foreach (['' => true, 'price_1QabCDefGHijKLmn' => true, 'price_' => false, 'prod_1QabCDefGHijKLmn' => false, 'price_1Qab CDef' => false, 'price_1QabCDefGH/../x' => false, '99 Kč' => false, "price_1QabCDefGHij\n" => false] as $hodnota => $ocekavano) {
+    over('Stripe: tvar čísla ceny ' . json_encode((string) $hodnota), preg_match(PhpRS\Core\Stripe::VZOR_CENA, (string) $hodnota) === 1, $ocekavano);
+}
+$stNastaveni = static function (array $hodnoty): PhpRS\Core\Settings {
+    $n = (new ReflectionClass(PhpRS\Core\Settings::class))->newInstanceWithoutConstructor();
+    (new ReflectionProperty(PhpRS\Core\Settings::class, 'values'))->setValue($n, $hodnoty);
+
+    return $n;
+};
+$stUplne = ['stripe_tajny_klic' => 'rk_test_' . str_repeat('a', 24), 'stripe_webhook_tajemstvi' => $stTajemstvi, 'stripe_cena_rok' => 'price_1QabCDefGHijKLmn'];
+over('Stripe::nastaveno: klíč, tajemství a jedna cena stačí', [PhpRS\Core\Stripe::nastaveno($stNastaveni($stUplne)), PhpRS\Core\Stripe::ceny($stNastaveni($stUplne))], [true, ['rok' => 'price_1QabCDefGHijKLmn']]);
+foreach (array_keys($stUplne) as $chybi) {
+    over('Stripe::nastaveno: bez ' . $chybi . ' ne', PhpRS\Core\Stripe::nastaveno($stNastaveni(array_diff_key($stUplne, [$chybi => 1]))), false);
+}
+over('Stripe::nabidka: období => popis ceny', PhpRS\Core\Stripe::nabidka($stNastaveni($stUplne + ['stripe_cena_mesic' => 'price_1QabCDefGHijKLmn', 'stripe_cena_mesic_text' => '99 Kč měsíčně'])), ['mesic' => '99 Kč měsíčně', 'rok' => '']);
+over('Stripe::ceny: hodnota v databázi s jiným tvarem se nenabídne', PhpRS\Core\Stripe::ceny($stNastaveni(['stripe_cena_mesic' => 'nesmysl', 'stripe_cena_rok' => 'price_1QabCDefGHijKLmn'])), ['rok' => 'price_1QabCDefGHijKLmn']);
+// zaplacené období → datum "předplatné do": den konce období + jeden den, než Stripe strhne další platbu
+$stPasmo = date_default_timezone_get();
+date_default_timezone_set('Europe/Prague');
+$stKonec = (int) strtotime('2026-10-21 14:00:00');
+over('Stripe::konecObdobi: faktura – nejpozdější konec z řádků', PhpRS\Core\Stripe::konecObdobi(['lines' => ['data' => [['period' => ['start' => 1, 'end' => $stKonec - 500]], ['period' => ['end' => $stKonec]], 'nesmysl']]]), $stKonec);
+over('Stripe::konecObdobi: předplatné starší verze API', PhpRS\Core\Stripe::konecObdobi(['id' => 'sub_1', 'current_period_end' => $stKonec]), $stKonec);
+over('Stripe::konecObdobi: předplatné novější verze API (na položkách)', PhpRS\Core\Stripe::konecObdobi(['id' => 'sub_1', 'items' => ['data' => [['current_period_end' => $stKonec]]]]), $stKonec);
+over('Stripe::konecObdobi: bez údaje', [PhpRS\Core\Stripe::konecObdobi([]), PhpRS\Core\Stripe::konecObdobi(['lines' => 'x', 'items' => ['data' => null]])], [0, 0]);
+over('Stripe::predplatneDo: konec období + den', PhpRS\Core\Stripe::predplatneDo($stKonec), '2026-10-22');
+over('Stripe::predplatneDo: těsně před půlnocí a přes konec roku', [PhpRS\Core\Stripe::predplatneDo((int) strtotime('2026-10-21 23:59:59')), PhpRS\Core\Stripe::predplatneDo((int) strtotime('2026-12-31 08:00:00'))], ['2026-10-22', '2027-01-01']);
+date_default_timezone_set($stPasmo);
+over('Stripe::stav', array_map(PhpRS\Core\Stripe::stav(...), [['status' => 'active'], ['status' => 'trialing'], ['status' => 'active', 'cancel_at_period_end' => true], ['status' => 'active', 'cancel_at' => 1800000000],
+    ['status' => 'past_due'], ['status' => 'unpaid'], ['status' => 'canceled'], ['status' => 'incomplete_expired'], ['status' => 'incomplete'], []]),
+    ['aktivni', 'aktivni', 'konci', 'konci', 'nezaplaceno', 'nezaplaceno', 'zruseno', 'zruseno', '', '']);
+over('Stripe::castka: haléře, centy a měna bez setin', [PhpRS\Core\Stripe::castka(9900, 'czk'), PhpRS\Core\Stripe::castka(1999, 'EUR'), PhpRS\Core\Stripe::castka(500, 'jpy')], [99.0, 19.99, 500.0]);
+$stPole = PhpRS\Core\Stripe::poleCheckout('price_1QabCDefGHijKLmn', ['idct' => 7, 'email' => 'ctenar@example.cz', 'stripe_zakaznik' => null], 'https://magazin.example/en/ctenar?zpet=clanek%2Fx', 'en');
+over('Stripe::poleCheckout: nový zákazník', $stPole, [
+    'mode' => 'subscription', 'line_items' => [['price' => 'price_1QabCDefGHijKLmn', 'quantity' => 1]], 'client_reference_id' => '7',
+    'success_url' => 'https://magazin.example/en/ctenar?zpet=clanek%2Fx&stav=zaplaceno', 'cancel_url' => 'https://magazin.example/en/ctenar?zpet=clanek%2Fx&stav=platba-zrusena',
+    'locale' => 'en', 'metadata' => ['idct' => '7'], 'subscription_data' => ['metadata' => ['idct' => '7']], 'customer_email' => 'ctenar@example.cz',
+]);
+$stPole = PhpRS\Core\Stripe::poleCheckout('price_1QabCDefGHijKLmn', ['idct' => '7', 'email' => 'ctenar@example.cz', 'stripe_zakaznik' => 'cus_ABC123'], 'https://magazin.example/ctenar', 'pl');
+over('Stripe::poleCheckout: známý zákazník, jazyk mimo nabídku, adresa bez dotazu', [$stPole['customer'] ?? null, isset($stPole['customer_email']), $stPole['locale'], $stPole['success_url']], ['cus_ABC123', false, 'auto', 'https://magazin.example/ctenar?stav=zaplaceno']);
+over('Stripe::poleCheckout: tvar těla požadavku', str_contains(urldecode(http_build_query($stPole)), 'line_items[0][price]=price_1QabCDefGHijKLmn&line_items[0][quantity]=1') && str_contains(urldecode(http_build_query($stPole)), 'subscription_data[metadata][idct]=7'), true);
+// volání API: klíč jde jen do hlavičky Authorization, adresa jen z konstanty, žádná přesměrování, ověřený certifikát
+$stZdrojak = (string) file_get_contents(PHPRS_ROOT . '/system/src/Core/Stripe.php');
+over('Stripe: přesměrování se nenásledují, certifikát se ověřuje, 10 s, adresa API není v Nastavení', [
+    substr_count($stZdrojak, 'CURLOPT_FOLLOWLOCATION => false'), str_contains($stZdrojak, "'follow_location' => 0"), str_contains($stZdrojak, 'CURLOPT_SSL_VERIFYPEER => true'), str_contains($stZdrojak, 'CURLOPT_TIMEOUT => 10'),
+    str_contains($stZdrojak, "defined('PHPRS_STRIPE_URL')"), (bool) preg_match('/settings->get\(\'stripe_(url|adresa)/', $stZdrojak),
+], [1, true, true, true, true, false]);
+$stVolani = new class($stNastaveni($stUplne)) extends PhpRS\Core\Stripe {
+    /** @var list<array{0:string, 1:string, 2:array<string, mixed>}> */
+    public array $volani = [];
+    public array $odpoved = ['url' => 'https://checkout.stripe.com/c/pay/cs_test_1'];
+
+    protected function zavolej(string $metoda, string $cesta, array $pole = []): array
+    {
+        $this->volani[] = [$metoda, $cesta, $pole];
+
+        return $this->odpoved;
+    }
+};
+over('Stripe::checkout: vrací adresu platební stránky', $stVolani->checkout('price_1QabCDefGHijKLmn', ['idct' => 7, 'email' => 'c@example.cz', 'stripe_zakaznik' => null], 'https://magazin.example/ctenar', 'cs'), 'https://checkout.stripe.com/c/pay/cs_test_1');
+$stVolani->portal('cus_ABC123', 'https://magazin.example/ctenar?stav=sprava', 'de');
+$stVolani->predplatne('sub_1QabCDefGHijKLmn');
+over('Stripe: právě tato tři volání API', array_map(static fn (array $v): string => $v[0] . ' ' . $v[1], $stVolani->volani), ['POST /v1/checkout/sessions', 'POST /v1/billing_portal/sessions', 'GET /v1/subscriptions/sub_1QabCDefGHijKLmn']);
+over('Stripe::portal: pole požadavku', $stVolani->volani[1][2], ['customer' => 'cus_ABC123', 'return_url' => 'https://magazin.example/ctenar?stav=sprava', 'locale' => 'de']);
+$stChyba = static function (callable $f): string {
+    try {
+        $f();
+    } catch (RuntimeException $e) {
+        return 'odmítnuto';
+    }
+
+    return 'prošlo';
+};
+over('Stripe::predplatne: číslo předplatného se nedá zneužít k jiné cestě API', [$stChyba(fn () => $stVolani->predplatne('sub_1/../../v1/customers')), $stChyba(fn () => $stVolani->predplatne('cus_ABC12345678'))], ['odmítnuto', 'odmítnuto']);
+$stVolani->odpoved = ['url' => 'javascript:alert(1)'];
+over('Stripe::checkout: čtenář se pošle jen na https adresu', $stChyba(fn () => $stVolani->checkout('price_1QabCDefGHijKLmn', ['idct' => 7, 'email' => 'c@example.cz'], 'https://magazin.example/ctenar', 'cs')), 'odmítnuto');
+// tajné hodnoty a platby nesmí do exportu webu ani do stránky nastavení
+$stExport = (new ReflectionClassConstant(PhpRS\Core\ExportWebu::class, 'NASTAVENI'))->getValue();
+over('ExportWebu: nastavení Stripe se neexportují', array_values(array_filter($stExport, static fn (string $k): bool => str_starts_with($k, 'stripe_'))), []);
+over('ExportWebu: platby ani údaje Stripe čtenářů se neexportují', (bool) preg_match('/platby|stripe/i', (string) file_get_contents(PHPRS_ROOT . '/system/src/Core/ExportWebu.php')), false);
+$stPoleNastaveni = (new ReflectionClassConstant(PhpRS\Admin\Moduly\Konfigurace::class, 'POLE'))->getValue()['ctenari'];
+over('Nastavení: klíč i tajemství Stripe jsou typu tajne s kontrolou tvaru', [str_starts_with($stPoleNastaveni['stripe_tajny_klic'], 'tajne:/'), str_starts_with($stPoleNastaveni['stripe_webhook_tajemstvi'], 'tajne:/')], [true, true]);
+over('Nastavení: všechny volby Stripe mají výchozí hodnotu v Settings::DEFAULTS', array_values(array_diff(array_filter(array_keys($stPoleNastaveni), static fn (string $k): bool => str_starts_with($k, 'stripe_')), array_keys(PhpRS\Core\Settings::DEFAULTS))), []);
+over('Stranky::VYHRAZENE: adresa webhooku je vyhrazená', in_array('platba', PhpRS\Admin\Moduly\Stranky::VYHRAZENE, true), true);
+$stLog = PHPRS_ROOT . '/storage/log/chyby.log';
+$stLogPred = is_file($stLog) ? (string) file_get_contents($stLog) : null;
+PhpRS\Core\Stripe::zaloguj("chyba 401: Invalid API Key provided: sk_test_" . str_repeat('x', 24) . "\nwhsec_" . str_repeat('y', 24));
+$stLogPo = (string) file_get_contents($stLog);
+$stLogPred === null ? unlink($stLog) : file_put_contents($stLog, $stLogPred);
+over('Stripe::zaloguj: klíče se do záznamu chyb nedostanou', [str_contains($stLogPo, str_repeat('x', 24)), str_contains($stLogPo, str_repeat('y', 24)), str_contains($stLogPo, 'sk_…'), substr_count(substr($stLogPo, strlen((string) $stLogPred)), "\n")], [false, false, true, 1]);
 
 echo $chyb === 0 ? "  ok     jednotkové testy ({$celkem})\n" : "  NALEZENO CHYB: {$chyb} z {$celkem}\n";
 exit($chyb === 0 ? 0 : 1);

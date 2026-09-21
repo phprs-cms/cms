@@ -25,7 +25,7 @@ class Konfigurace extends Modul
     public const bool JEN_ADMIN = true;
 
     public const array ZALOZKY = [
-        'zakladni' => 'Základní', 'seo' => 'SEO a GEO',
+        'zakladni' => 'Základní', 'ctenari' => 'Čtenáři a platby', 'seo' => 'SEO a GEO',
         'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'posta' => 'Pošta', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
@@ -33,15 +33,19 @@ class Konfigurace extends Modul
 
     /**
      * Pole jednotlivých záložek: klíč v rs_config => typ.
-     * text | tajne (klíč: nevypisuje se zpět, prázdné pole = beze změny) | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | seznam:a|b (zaškrtávací pole, ukládá se "a,b") | vzor:/regex/
+     * text | tajne (klíč: nevypisuje se zpět, prázdné pole = beze změny; tajne:/regex/ navíc hlídá tvar) | radky (víceřádkový text) | kod (HTML/JS - zadává jen administrátor) | url | email | ano | cislo:min:max | vyber:a|b | seznam:a|b (zaškrtávací pole, ukládá se "a,b") | vzor:/regex/
      */
     private const array POLE = [
         'zakladni' => [
             'nazev_webu' => 'text', 'adresa_webu' => 'vzor:#^https?://[a-z0-9.-]+(:\d+)?$#i', 'popis_webu' => 'radky', 'klicova_slova' => 'text', 'email_webu' => 'email', 'text_paticky' => 'text',
             'soc_facebook' => 'url', 'soc_instagram' => 'url', 'soc_x' => 'url', 'soc_youtube' => 'url', 'soc_linkedin' => 'url',
-            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'komentare_jen_prihlaseni' => 'ano', 'povolit_hodnoceni' => 'ano', 'sdileni' => 'ano', 'kontrola_odkazu' => 'ano', 'doba_cteni' => 'ano', 'osnova_clanku' => 'ano', 'souvisejici_auto' => 'ano', 'upozorneni_komentare' => 'vyber:schvaleni|vse|nic', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
+            'pocet_clanku' => 'cislo:1:100', 'pocet_novinek' => 'cislo:0:50', 'hlidat_platnost' => 'ano', 'povolit_komentare' => 'ano', 'komentare_rezim' => 'vyber:hned|schvalovat', 'povolit_hodnoceni' => 'ano', 'sdileni' => 'ano', 'kontrola_odkazu' => 'ano', 'doba_cteni' => 'ano', 'osnova_clanku' => 'ano', 'souvisejici_auto' => 'ano', 'upozorneni_komentare' => 'vyber:schvaleni|vse|nic', 'cache_stranek' => 'ano', 'udrzba' => 'ano', 'udrzba_text' => 'text', 'webhook_url' => 'url',
             'casove_pasmo' => 'pasmo', 'jazyk_webu' => 'vyber:cs|sk|en|de', 'jazyky_dalsi' => 'seznam:cs|sk|en|de',
-            'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'paywall_zdarma' => 'cislo:0:50', 'zamek_text' => 'text', 'predplatne_url' => 'text',
+        ],
+        'ctenari' => [
+            'komentare_jen_prihlaseni' => 'ano', 'ctenari_registrace' => 'ano', 'zamek_odstavcu' => 'cislo:0:10', 'paywall_zdarma' => 'cislo:0:50', 'zamek_text' => 'text', 'predplatne_url' => 'text',
+            'stripe_tajny_klic' => 'tajne:' . \PhpRS\Core\Stripe::VZOR_KLIC, 'stripe_webhook_tajemstvi' => 'tajne:' . \PhpRS\Core\Stripe::VZOR_WEBHOOK,
+            'stripe_cena_mesic' => 'vzor:' . \PhpRS\Core\Stripe::VZOR_CENA, 'stripe_cena_rok' => 'vzor:' . \PhpRS\Core\Stripe::VZOR_CENA, 'stripe_cena_mesic_text' => 'text', 'stripe_cena_rok_text' => 'text',
         ],
         'seo' => [
             'indexovani' => 'ano', 'schema_org' => 'ano', 'og_obrazek' => 'text', 'overeni_google' => 'vzor:/^[A-Za-z0-9_-]{0,100}$/',
@@ -88,7 +92,7 @@ class Konfigurace extends Modul
         $hodnoty = [];
         foreach ($this->pole($zalozka) as $klic => $typ) {
             $hodnoty[$klic] = $nastaveni->get($klic);
-            if ($typ === 'tajne' && $hodnoty[$klic] !== '') {
+            if (str_starts_with($typ, 'tajne') && $hodnoty[$klic] !== '') {
                 $hodnoty[$klic] = '…' . substr($hodnoty[$klic], -4); // do stránky jde jen konec klíče pro kontrolu
             }
         }
@@ -126,9 +130,11 @@ class Konfigurace extends Modul
                 $nastaveni->set($klic, implode(',', array_intersect($this->request->postList($klic), explode('|', substr($typ, 7)))));
                 continue;
             }
-            if ($typ === 'tajne') {
+            if (str_starts_with($typ, 'tajne')) {
                 if ($this->request->postBool($klic . '_smazat')) {
                     $nastaveni->set($klic, '');
+                } elseif ($hodnota !== '' && $typ !== 'tajne' && !preg_match(substr($typ, 6), $hodnota)) {
+                    $chyby[] = $klic; // hodnota se do hlášky nikdy nevypisuje, jen název pole
                 } elseif ($hodnota !== '') {
                     $nastaveni->set($klic, mb_substr($hodnota, 0, 300));
                 }
@@ -309,20 +315,25 @@ class Konfigurace extends Modul
         }
         $komentare = $this->db->all('SELECT k.idk, k.datum, k.od, k.od_mail, k.od_ip, k.obsah, c.titulek AS clanek FROM {komentare} k JOIN {clanky} c ON c.idc = k.clanek WHERE k.od_mail = ?', [$email]);
         $odber = $this->db->one('SELECT email, prihlasen, potvrzen FROM {odberatele} WHERE email = ?', [$email]);
-        $ucet = $this->db->one('SELECT email, jmeno, vytvoren, naposledy, potvrzen, predplatne_do FROM {ctenari} WHERE email = ?', [$email]);
+        $ucet = $this->db->one('SELECT email, jmeno, vytvoren, naposledy, potvrzen, predplatne_do, predplatne_stav, stripe_zakaznik, stripe_predplatne FROM {ctenari} WHERE email = ?', [$email]);
+        $platby = $this->db->all('SELECT p.vytvoreno AS datum, p.castka, p.mena FROM {platby} p JOIN {ctenari} c ON c.idct = p.idct WHERE c.email = ? ORDER BY p.id', [$email]);
         if ($this->request->post('gdpr_co') === 'smazat') {
             $clanky = array_unique(array_column($this->db->all('SELECT clanek FROM {komentare} WHERE od_mail = ?', [$email]), 'clanek'));
             $this->db->delete('komentare', ['od_mail' => $email]);
             $this->db->delete('odberatele', ['email' => $email]);
-            $this->db->delete('ctenari', ['email' => $email]);
+            $this->db->delete('ctenari', ['email' => $email]); // platby zůstávají kvůli účetnictví, ale bez vazby na čtenáře (idct = NULL)
             foreach ($clanky as $idc) {
                 \PhpRS\Front\Interakce::prepocitej($this->db, (int) $idc);
             }
+            $bezi = $ucet !== null && \PhpRS\Front\Ctenari::beziStripe($ucet);
 
-            return $this->zpet(t('Smazáno: komentářů %d, odběr newsletteru %s, účet čtenáře %s.', count($komentare), t($odber !== null ? 'ano' : 'ne'), t($ucet !== null ? 'ano' : 'ne')), '', ['zalozka' => 'cookies']);
+            return $this->zpet(t('Smazáno: komentářů %d, odběr newsletteru %s, účet čtenáře %s.', count($komentare), t($odber !== null ? 'ano' : 'ne'), t($ucet !== null ? 'ano' : 'ne'))
+                . ($platby !== [] ? ' ' . t('Plateb ponecháno bez vazby na čtenáře: %d.', count($platby)) : '')
+                . ($bezi ? ' ' . t('Čtenář má ve Stripe běžící předplatné (%s) – zrušte ho tam, jinak se mu budou dál strhávat platby.', (string) $ucet['stripe_predplatne']) : ''), '', ['zalozka' => 'cookies'], $bezi ? 'chyba' : 'ok');
         }
 
-        return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber, 'ucet_ctenare' => $ucet], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
+        return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber, 'ucet_ctenare' => $ucet,
+            'platby' => array_map(static fn (array $p): array => ['datum' => $p['datum'], 'castka' => \PhpRS\Core\Stripe::castka((int) $p['castka'], $p['mena']), 'mena' => strtoupper($p['mena'])], $platby)], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
             'Content-Type' => 'application/json; charset=utf-8', 'Content-Disposition' => 'attachment; filename="osobni-udaje.json"',
         ]);
     }

@@ -39,6 +39,9 @@ figure.galerie figcaption { grid-column: 1 / -1; }
 .rs-formular details[open] { display: grid; gap: 10px; }
 .rs-formular summary { cursor: pointer; }
 .rs-drobne { margin: 0; font-size: 13px; opacity: 0.75; }
+.rs-predplatne p { margin: 0; }
+.rs-predplatne-volby { display: flex; flex-wrap: wrap; gap: 10px; }
+.rs-predplatne-volby button small { display: block; margin-top: 3px; font-weight: 400; font-size: 13px; opacity: 0.9; }
 .rs-zprava { padding: 12px 14px; border-left: 4px solid #15803d; background: rgb(21 128 61 / 0.1); font: 15px/1.4 system-ui, sans-serif; }
 .rs-zprava-chyba { border-color: #b3261e; background: rgb(179 38 30 / 0.1); }
 .rs-ukazka { position: relative; max-height: 14em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 35%, transparent); mask-image: linear-gradient(#000 35%, transparent); }

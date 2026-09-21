@@ -514,12 +514,31 @@ CREATE TABLE rs_ctenari (
     token        CHAR(32) NOT NULL,                       -- potvrzení e-mailu a obnova hesla
     token_cas    DATETIME NULL,                           -- kdy byl odeslán odkaz pro obnovu hesla (platí 2 hodiny)
     potvrzen     BOOL NOT NULL DEFAULT 0,
-    predplatne_do DATE NULL,                              -- do kdy má čtenář předplatné; zapisuje administrátor
+    predplatne_do DATE NULL,                              -- do kdy má čtenář předplatné; zapisuje administrátor ručně, nebo platba přes Stripe
+    stripe_zakaznik VARCHAR(64) NULL,                     -- zákazník ve Stripe (cus_…); vzniká při první platbě
+    stripe_predplatne VARCHAR(64) NULL,                   -- předplatné ve Stripe (sub_…)
+    predplatne_stav VARCHAR(20) NOT NULL DEFAULT '',      -- '' = bez Stripe (ruční zápis) | aktivni | konci | nezaplaceno | zruseno
     vytvoren     DATETIME NOT NULL,
     naposledy    DATETIME NULL,
     PRIMARY KEY (idct),
     UNIQUE KEY uq_ctenari_email (email),
-    KEY ix_ctenari_token (token)
+    KEY ix_ctenari_token (token),
+    KEY ix_ctenari_stripe (stripe_zakaznik)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+-- Platby předplatného přijaté přes Stripe (zapisuje jen ověřený webhook). Žádné údaje o kartě ani adresy.
+CREATE TABLE rs_platby (
+    id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    udalost   VARCHAR(80) NOT NULL,                      -- číslo události Stripe (evt_…); unikátní = stejná událost se nezapíše dvakrát
+    idct      INT UNSIGNED NULL,                         -- čtenář; po smazání účtu NULL (platba zůstává kvůli účetnictví anonymní)
+    castka    INT NOT NULL,                              -- v nejmenších jednotkách měny (haléře, centy)
+    mena      CHAR(3) NOT NULL,
+    typ       VARCHAR(20) NOT NULL,                      -- predplatne
+    vytvoreno DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_platby_udalost (udalost),
+    KEY ix_platby_cas (vytvoreno),
+    CONSTRAINT fk_platby_ctenar FOREIGN KEY (idct) REFERENCES rs_ctenari (idct) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- ---------------------------------------------------------------------------

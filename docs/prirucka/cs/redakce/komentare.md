@@ -27,7 +27,7 @@ U citlivého tématu tedy stačí komentáře vypnout u jednoho článku.
 
 Ve výchozím stavu může komentovat kdokoli. Vyplní **Jméno**, nepovinný **E-mail** (nezveřejňuje se) a text o délce nejvýše 5 000 znaků.
 
-Se zapnutým rozšířením **Čtenáři a zamčený obsah** přibude v **Nastavení → Základní → Čtenáři a zamčený obsah** volba **Komentovat smí jen přihlášení čtenáři**. Nepřihlášený pak místo formuláře uvidí výzvu k přihlášení. Přihlášený čtenář komentuje pod jménem ze svého účtu a u jeho komentářů je značka ✓ (*registrovaný čtenář*).
+Se zapnutým rozšířením **Čtenáři a zamčený obsah** přibude v **Nastavení → Čtenáři a platby** volba **Komentovat smí jen přihlášení čtenáři**. Nepřihlášený pak místo formuláře uvidí výzvu k přihlášení. Přihlášený čtenář komentuje pod jménem ze svého účtu a u jeho komentářů je značka ✓ (*registrovaný čtenář*).
 
 ## Ochrana proti spamu
 

@@ -27,7 +27,7 @@ Dem Leser wird nach dem Absenden entweder ein Dank angezeigt oder die Mitteilung
 
 In der Standardeinstellung kann jeder kommentieren. Er füllt **Name**, die optionale **E-Mail** (wird nicht veröffentlicht) und einen Text von höchstens 5 000 Zeichen aus.
 
-Mit eingeschalteter Erweiterung **Leser und gesperrter Inhalt** kommt unter **Einstellungen → Allgemein → Leser und gesperrter Inhalt** die Option **Nur angemeldete Leser dürfen kommentieren** hinzu. Wer nicht angemeldet ist, sieht dann statt des Formulars eine Aufforderung zur Anmeldung. Ein angemeldeter Leser kommentiert unter dem Namen aus seinem Konto und bei seinen Kommentaren steht die Markierung ✓ (*registrierter Leser*).
+Mit eingeschalteter Erweiterung **Leser und gesperrter Inhalt** kommt unter **Einstellungen → Leser und Zahlungen** die Option **Nur angemeldete Leser dürfen kommentieren** hinzu. Wer nicht angemeldet ist, sieht dann statt des Formulars eine Aufforderung zur Anmeldung. Ein angemeldeter Leser kommentiert unter dem Namen aus seinem Konto und bei seinen Kommentaren steht die Markierung ✓ (*registrierter Leser*).
 
 ## Spamschutz
 

@@ -87,6 +87,12 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   `mcp`, `push/` jsou společné. Každý nový dotaz na webu, který vypisuje obsah, musí filtrovat podle jazyka.
 - **Zamčený obsah** řeší `Front\Ctenari::zamkni()` volané z `Front\Clanky::priprav()` – cokoli čte články jinudy, musí zámek
   respektovat samo. Čtenáři nemají session: podepsaná cookie `phprs_ctenar` (v podpisu je otisk hesla), formuláře přes `Antispam`.
+- **Platby předplatného přes Stripe** (`Core\Stripe`, `Front\Platby`): bez knihovny, jen hostovaný Checkout, Customer Portal a webhook `POST /platba/stripe`
+  (společná adresa bez jazykové předpony, běží i při údržbě). `predplatne_do`, stav a platby (`rs_platby`) se zapisují VÝHRADNĚ z webhooku s ověřeným
+  podpisem – nikdy z prohlížeče ani z návratové adresy; datum se nikdy nezkracuje (ruční zápis administrátora platí dál). Klíč a tajemství webhooku jsou typ
+  `tajne` (nelogovat, nevypisovat, nepatří do `ExportWebu::NASTAVENI`), adresu API jde změnit jen konstantou `PHPRS_STRIPE_URL` v `config.php` (testy).
+  Web do Stripe nikdy nevolá kvůli rušení – při mazání čtenáře s běžícím předplatným jen varuje. Tvar objektů ve webhooku určuje verze API účtu, ne naše
+  hlavička: čti je tolerantně (`Stripe::konecObdobi()`), každou novou větev pokryj v `tools/testy.php` a průchod v `tools/test.sh` (náhražka API `tools/fixtures/stripe-server.php`).
 - **Oznámení o vydání** (webhook, IndexNow, Web Push) odchází jen přes `Core\Oznameni::zpracuj()` a sloupec `rs_clanky.oznameno`;
   nevolej `Webhook::clanekVydan()` přímo. Web Push: adresa odběru smí vést jen na služby v `Push::SLUZBY` (ochrana proti SSRF).
 - **AI asistent** (`Core\Asistent`): klíč `ai_klic` je typ `tajne` – do HTML jde jen jeho konec. Odpověď modelu je nedůvěryhodný vstup
@@ -184,6 +190,9 @@ Uživatelská dokumentace je v `docs/prirucka/<jazyk>/` (cs je zdroj, en a de p�
 - `Core\Napoveda` skládá odkazy z administrace a instalátoru do příručky na phprs.eu v jazyce uživatele (sk → cs). Tabulka adres musí
   odpovídat `docs/prirucka/osnova.json` (hlídá `tools/testy.php`). Nová stránka příručky = zvážit odkaz z místa, kterého se týká.
   Patička administrace (verze · Nápověda · phprs.eu · Podpořit phpRS) je v `views/admin/layout.php`, tedy na každé stránce.
+  **Nápověda k obrazovce** je tlačítko vedle nadpisu stránky (layout, `<details class="napoveda-menu">`): které stránky příručky nabídne, říká `Napoveda::TEMATA`
+  (klíč = ident modulu, případně `modul:záložka` nebo `modul:akce`). Do šablon už NEPIŠ řádky s odkazy na příručku; nová obrazovka nebo stránka příručky = položka v `TEMATA`
+  (titulek = první nadpis české stránky, překlad do slovníků administrace; hlídá `tools/testy.php`). `Napoveda::odkaz()` zůstává jen pro odkaz uvnitř věty.
 - `Core\Demo` + `system/demo/` (texty `obsah.php` v cs/en/de, ilustrace v `img/` jsou vlastní dílo projektu): ukázkový magazín, který jde
   nahrát při instalaci (zaškrtávátko) nebo v Nastavení → Základní a jedním kliknutím smazat. Co vzniklo, eviduje nastavení `demo_obsah`.
 - Instalátor se po dokončení smaže sám (`Installer::smazSe()`); ve vývojové kopii se složkou `.git` ne.

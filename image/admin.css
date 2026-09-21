@@ -284,9 +284,107 @@ h3.stred {
 	padding-top: 14px;
 	border-top: 1px solid var(--linka);
 }
-.napoveda-radek {
-	margin: 0 0 14px;
+/* nadpis stránky a nabídka Nápověda: stránky příručky k právě otevřené obrazovce */
+.zahlavi-stranky {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px 16px;
+	margin: 0 0 20px;
+}
+.zahlavi-stranky h2 {
+	margin: 0;
+}
+.napoveda-menu {
+	position: relative;
+	font-size: 14px;
+}
+.napoveda-menu summary {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border: 1px solid var(--linka-pole);
+	border-radius: 999px;
+	background: var(--plocha);
+	color: var(--text-slaby);
+	font-weight: 600;
+	cursor: pointer;
+	list-style: none;
+	user-select: none;
+}
+.napoveda-menu summary::-webkit-details-marker {
+	display: none;
+}
+.napoveda-menu summary:hover,
+.napoveda-menu[open] summary {
+	border-color: var(--akcent);
+	color: var(--akcent);
+}
+.napoveda-panel {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 8px);
+	z-index: 30;
+	width: max-content;
+	min-width: 260px;
+	max-width: min(360px, calc(100vw - 32px));
+	padding: 8px;
+	border: 1px solid var(--linka);
+	border-radius: var(--radius);
+	background: var(--plocha);
+	box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+.napoveda-panel-nadpis {
+	margin: 4px 10px 6px;
+	color: var(--text-slaby);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.napoveda-panel a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 10px;
+	border-radius: 7px;
+	color: var(--text);
+	font-weight: 500;
+	text-decoration: none;
+}
+.napoveda-panel a .ikona {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	color: var(--text-slaby);
+}
+.napoveda-panel a:hover,
+.napoveda-panel a:focus-visible {
+	background: var(--akcent-svetly);
+	color: var(--akcent);
+}
+.napoveda-panel a.napoveda-panel-vse {
+	margin-top: 6px;
+	padding-top: 10px;
+	border-top: 1px solid var(--linka);
+	border-radius: 0 0 7px 7px;
+	color: var(--text-slaby);
 	font-size: 13px;
+}
+@media (max-width: 600px) {
+	.napoveda-menu summary span {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+	.napoveda-menu summary {
+		padding: 8px;
+	}
 }
 .napoveda-odkaz {
 	font-weight: 400;

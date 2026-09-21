@@ -2,7 +2,7 @@
 
 A site can live on subscriptions, on voluntary contributions from readers and on advertising. This page describes the **Support us** block and the **Revenue** screen, which shows all the sources together.
 
-phpRS itself neither accepts nor processes any payments. It contains no payment gateway and does not see who paid how much. The Support us block is an appeal with a button that takes the reader to where the payment takes place.
+phpRS neither accepts nor processes voluntary contributions and does not see who contributed how much. The Support us block is an appeal with a button that takes the reader to where the payment takes place. Subscriptions are different: readers can pay for them by card through the Stripe service and the site turns them on and extends them by itself – see [Payments with Stripe](platby-stripe.md).
 
 ## The Support us block
 
@@ -47,24 +47,25 @@ On a multilingual site have a separate block for every language and use the **La
 
 | Card | Number | Where the link leads |
 |---|---|---|
-| **Subscription** | readers with a valid subscription | **Readers** |
+| **Subscription** | readers with a valid subscription; with payments through Stripe also the number of paying readers and the sum of payments in the last 30 days by currency | **Readers** |
 | **Voluntary support** | “Support us” blocks on the site (only those shown, not hidden ones) | **Blocks and layout** |
 | **Advertising** | impressions of active ads; below it the number of active ads and clicks | **Advertising** |
 | **Newsletter** | confirmed subscribers | **Newsletter** |
 
 For an extension that is turned off, the link **Turn on in Extensions** leads to the **Extensions** area. The Voluntary support card is on as soon as there is at least one shown Support us block on the site.
 
-The Subscription card points out with the message **The place where readers get a subscription is not filled in.** when the address in **Settings → General** is missing. Without it a reader does not see the **Get a subscription** button on a locked article. The procedure is on the page [Locked content and subscriptions](zamceny-obsah.md).
+The Subscription card points out with the message **The place where readers get a subscription is not filled in.** when the address in **Settings → Readers and payments** is missing and payments through Stripe are not turned on either. Without it a reader does not see the **Get a subscription** button on a locked article. The procedure is on the page [Locked content and subscriptions](zamceny-obsah.md).
 
 The newsletter itself brings in no money. It is in the overview because it brings readers back to the site – and with them subscriptions, support and ad impressions.
 
 ### What the overview does not show
 
-The overview contains no amounts. You find out how much you have collected from your bank or payment service. You record subscriptions by hand according to the payments received; the number on the card is the count of readers whose subscription is valid right now.
+The only amounts in the overview are subscription payments received through Stripe in the last 30 days (before Stripe's fees are deducted). The overview does not see voluntary contributions and payments by bank transfer – you find out how much you have collected from your bank or payment service. The main number on the Subscription card is the count of readers whose subscription is valid right now, whether they paid for it through Stripe or you recorded it by hand.
 
 ## Related
 
 - [Locked content and subscriptions](zamceny-obsah.md)
+- [Payments with Stripe](platby-stripe.md)
 - [Advertising](reklama.md)
 - [Newsletter](newsletter.md)
 - [Blocks and layout](../vzhled/bloky-a-rozvrzeni.md)

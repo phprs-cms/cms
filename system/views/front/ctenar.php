@@ -13,6 +13,10 @@
  * @var string $koren  kořen webu bez předpony jazykové verze
  * @var list<array<string, mixed>> $ulozene  uložené články přihlášeného čtenáře
  * @var bool $newsletter  web má newsletter - při registraci jde rovnou přihlásit odběr
+ * @var array<string, string> $platby  platby přes Stripe: nabízené období (mesic|rok) => popis ceny z Nastavení; prázdné = platby nejsou nastavené
+ * @var bool $bezici  čtenář má ve Stripe běžící předplatné (místo placení ho spravuje)
+ * @var string $akcePlatby  kam se odesílá odchod na platební stránku
+ * @var bool $platbyZapnute  předplatné se platí v účtu čtenáře (nepřihlášenému se to řekne)
  * @var callable(string): string $url
  */
 $zpravy = [
@@ -29,6 +33,10 @@ $zpravy = [
     'heslo-chyba' => ['chyba', 'Stávající heslo nesouhlasí, nebo je nové kratší než 8 znaků.'],
     'pomalu' => ['chyba', 'Formulář se nepodařilo ověřit. Počkejte pár vteřin a zkuste to znovu.'],
     'zavreno' => ['chyba', 'Nové registrace jsou teď vypnuté.'],
+    'zaplaceno' => ['ok', 'Děkujeme, platba proběhla. Předplatné se zapne během chvilky – pokud ho tu ještě nevidíte, načtěte za okamžik stránku znovu.'],
+    'platba-zrusena' => ['chyba', 'Platba nebyla dokončena, nic jsme vám neúčtovali.'],
+    'platba-chyba' => ['chyba', 'Platební službu se teď nepodařilo kontaktovat. Zkuste to prosím za chvíli.'],
+    'nejdriv-zrusit' => ['chyba', 'Máte běžící předplatné. Nejdřív ho prosím zrušte tlačítkem Spravovat předplatné, potom půjde účet smazat.'],
 ];
 [$typ, $zprava] = $zpravy[$stav] ?? ['', ''];
 $zprava = t($zprava);
@@ -41,6 +49,9 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 	<p class="rs-zprava rs-zprava-<?= $typ ?>" role="status"><?= e($zprava) ?></p>
 <?php endif ?>
 <?php if ($ctenar === null): ?>
+<?php if ($platbyZapnute): ?>
+	<p><?= e(t('Předplatné si zaplatíte kartou hned po přihlášení. Účet ještě nemáte? Registrace je zdarma a zabere minutu.')) ?></p>
+<?php endif ?>
 	<div class="rs-ucet-sloupce">
 		<form class="rs-formular" method="post" action="<?= e($akce) ?>">
 			<h2><?= e(t('Přihlásit se')) ?></h2>
@@ -80,6 +91,29 @@ $skryte = $pole . '<input type="hidden" name="zpet" value="' . e($zpet) . '">';
 	</p>
 <?php if ($zpet !== ''): ?>
 	<p><a class="rs-tl" href="<?= e($url($zpet)) ?>"><?= e(t('Pokračovat ve čtení')) ?></a></p>
+<?php endif ?>
+<?php if ($bezici || $platby !== []): ?>
+	<form class="rs-formular rs-predplatne" method="post" action="<?= e($akcePlatby) ?>">
+		<h2><?= e(t('Předplatné')) ?></h2>
+		<input type="hidden" name="podpis" value="<?= e($podpis) ?>"><input type="hidden" name="zpet" value="<?= e($zpet) ?>">
+<?php if ($bezici): ?>
+		<p><?= e(match ($ctenar['predplatne_stav']) {
+		    'konci' => t('Předplatné se už neobnoví. Přístup máte do %s.', datum($ctenar['predplatne_do'])),
+		    'nezaplaceno' => t('Poslední platba neprošla. Zkontrolujte prosím platební kartu ve správě předplatného.'),
+		    default => t('Předplatné se obnovuje automaticky, dokud ho nezrušíte.'),
+		}) ?></p>
+		<button type="submit" name="plan" value="sprava"><?= e(t('Spravovat předplatné')) ?></button>
+		<p class="rs-drobne"><?= e(t('Změna karty, doklady o platbách a zrušení předplatného jsou na zabezpečené stránce služby Stripe.')) ?></p>
+<?php else: ?>
+		<p><?= e($predplatitel ? t('Nové předplatné začne platit dnem platby.') : t('Předplatné odemkne články pro předplatitele. Zrušit ho můžete kdykoli.')) ?></p>
+		<div class="rs-predplatne-volby">
+<?php foreach ($platby as $obdobi => $popis): ?>
+			<button type="submit" name="plan" value="<?= e($obdobi) ?>"><?= e(t($obdobi === 'rok' ? 'Předplatit ročně' : 'Předplatit měsíčně')) ?><?php if ($popis !== ''): ?> <small><?= e($popis) ?></small><?php endif ?></button>
+<?php endforeach ?>
+		</div>
+		<p class="rs-drobne"><?= e(t('Platí se kartou na zabezpečené stránce služby Stripe. Údaje o kartě se na tento web nedostanou.')) ?></p>
+<?php endif ?>
+	</form>
 <?php endif ?>
 <?php if ($ulozene !== []): ?>
 	<h2><?= e(t('Uložené články')) ?></h2>

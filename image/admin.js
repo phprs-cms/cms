@@ -361,4 +361,17 @@
 			Array.prototype.forEach.call(document.querySelectorAll('[data-paleta] kbd'), function (k) { k.textContent = '⌘K'; });
 		}
 	}
+	// Rozbalovací nabídky (<details data-zavrit-mimo>): zavře je klepnutí mimo a klávesa Esc
+	document.addEventListener('click', function (e) {
+		Array.prototype.forEach.call(document.querySelectorAll('details[data-zavrit-mimo][open]'), function (d) {
+			if (!d.contains(e.target)) { d.open = false; }
+		});
+	});
+	document.addEventListener('keydown', function (e) {
+		if (e.key !== 'Escape') { return; }
+		Array.prototype.forEach.call(document.querySelectorAll('details[data-zavrit-mimo][open]'), function (d) {
+			d.open = false;
+			d.querySelector('summary').focus();
+		});
+	});
 })();

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # phpRS 3 - kouřový test: čistá instalace do dočasné kopie a průchod hlavními stránkami.
 # Spouští se lokálně i v GitHub Actions. Databázi bere z proměnných prostředí:
-#   DB_HOST (127.0.0.1) DB_PORT (3306) DB_NAME (phprs3_test) DB_USER (root) DB_PASS (prázdné) PORT (8099)
+#   DB_HOST (127.0.0.1) DB_PORT (3306) DB_NAME (phprs3_test) DB_USER (root) DB_PASS (prázdné) PORT (8099) STRIPE_PORT (8098, náhražka API Stripe)
 # Databáze DB_NAME se při testu SMAŽE a vytvoří znovu.
 set -euo pipefail
 
 KOREN="$(cd "$(dirname "$0")/.." && pwd)"
 DB_HOST="${DB_HOST:-127.0.0.1}"; DB_PORT="${DB_PORT:-3306}"; DB_NAME="${DB_NAME:-phprs3_test}"; DB_USER="${DB_USER:-root}"; DB_PASS="${DB_PASS:-}"; PORT="${PORT:-8099}"
 PRACE="$(mktemp -d)"; JAR="$PRACE/cookies.txt"; B="http://127.0.0.1:$PORT"; CHYB=0
-uklid() { [ -n "${SERVER_PID:-}" ] && kill "$SERVER_PID" 2>/dev/null || true; rm -rf "$PRACE"; }
+uklid() { [ -n "${SERVER_PID:-}" ] && kill "$SERVER_PID" 2>/dev/null || true; [ -n "${STRIPE_PID:-}" ] && kill "$STRIPE_PID" 2>/dev/null || true; rm -rf "$PRACE"; }
 trap uklid EXIT
 
 echo "== syntaxe PHP"
@@ -41,6 +41,10 @@ curl -s -o "$PRACE/odpoved" -X POST "$B/install.php" --data-urlencode "db_host=$
   --data-urlencode "nazev_webu=Testovací magazín" -d user=admin -d jmeno=Tester -d email= --data-urlencode "password=$HESLO" --data-urlencode "password2=$HESLO" -d layout=classic-newspaper
 grep -q "Hotovo, magazín běží" "$PRACE/odpoved" || { echo "  CHYBA  instalace selhala"; sed 's/<[^>]*>//g' "$PRACE/odpoved" | grep -v '^\s*$' | head -20; exit 1; }
 echo "  ok     instalace"
+# API Stripe se v testu nahrazuje místním serverem (blok „platby přes Stripe“); konstanta se zapisuje hned tady, protože opcache vestavěného serveru drží config.php ještě 2 vteřiny
+STRIPE_PORT="${STRIPE_PORT:-8098}"
+php -r '$f = $argv[1]; file_put_contents($f, preg_replace("/^<\?php\n/", "<?php\ndefine(\"PHPRS_STRIPE_URL\", \"http://127.0.0.1:" . $argv[2] . "\");\n", file_get_contents($f), 1));' "$PRACE/web/config.php" "$STRIPE_PORT"
+grep -q "PHPRS_STRIPE_URL" "$PRACE/web/config.php" || { echo "  CHYBA  do config.php se nepodařilo zapsat PHPRS_STRIPE_URL"; exit 1; }
 [ ! -f "$PRACE/web/install.php" ] && echo "  ok     instalátor se po sobě smazal" || { echo "  CHYBA  install.php po instalaci zůstal na místě"; CHYB=$((CHYB+1)); }
 
 echo "== web"
@@ -145,6 +149,69 @@ curl -s -b "$JAR" -o "$PRACE/export" "$B/admin.php?modul=prenos&akce=stahni&soub
 if [ "${EXPORT##*.}" = zip ]; then unzip -p "$PRACE/export" obsah.json > "$PRACE/obsah.json" 2>/dev/null || true; else cp "$PRACE/export" "$PRACE/obsah.json"; fi
 grep -q '"format":"phprs-export"' "$PRACE/obsah.json" && ! grep -qE '"password"|od_mail|od_ip|smtp_heslo|tajny_klic|push_klic_soukromy' "$PRACE/obsah.json" && echo "  ok     export obsahuje data a žádná tajemství" || { echo "  CHYBA  export webu chybí nebo obsahuje tajné údaje"; CHYB=$((CHYB+1)); }
 curl -s -o "$PRACE/odpoved" "$B/admin.php?modul=prenos&akce=stahni&soubor=$EXPORT"; grep -q "Heslo" "$PRACE/odpoved" && echo "  ok     export jen pro přihlášeného správce" || { echo "  CHYBA  export jde stáhnout bez přihlášení"; CHYB=$((CHYB+1)); }
+
+echo "== platby přes Stripe (bez sítě: webhook podepsaný tady, API nahrazuje tools/fixtures/stripe-server.php)"
+WHSEC="whsec_testovaciTajemstvi$(date +%s)"; CENA="price_1TestMesicni0001"
+php -S "127.0.0.1:$STRIPE_PORT" "$KOREN/tools/fixtures/stripe-server.php" > "$PRACE/stripe.log" 2>&1 & STRIPE_PID=$!
+stripe_posli() { # stripe_posli <tělo> [tajemství] [čas] -> kód odpovědi; podpis je HMAC-SHA256 řetězce "čas.tělo"
+  local cas="${3:-$(date +%s)}" podpis
+  podpis=$(printf '%s' "$cas.$1" | openssl dgst -sha256 -hmac "${2:-$WHSEC}" | sed 's/^.*= *//')
+  curl -s -o "$PRACE/odpoved" -w '%{http_code}' -X POST -H 'Content-Type: application/json' -H "Stripe-Signature: t=$cas,v1=$podpis" --data-binary "$1" "$B/platba/stripe"
+}
+stripe_stav() { "${MYSQL[@]}" "$DB_NAME" -N -e "SELECT CONCAT_WS('/', (SELECT COUNT(*) FROM rs_platby), COALESCE(predplatne_do > CURDATE() + INTERVAL 20 DAY, 'NULL'), COALESCE(stripe_zakaznik, '-'), COALESCE(stripe_predplatne, '-'), predplatne_stav) FROM rs_ctenari WHERE email = 'platici@example.cz'"; }
+ocekavej() { [ "$2" = "$3" ] && echo "  ok     $1" || { echo "  CHYBA  $1: dostal jsem „$2“, čekal jsem „$3“"; CHYB=$((CHYB+1)); }; }
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_ctenari (email, jmeno, heslo, token, potvrzen, vytvoren) VALUES ('platici@example.cz', 'Platící', 'x-neplatny-otisk', REPEAT('a', 32), 1, NOW())"
+IDCT=$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT idct FROM rs_ctenari WHERE email = 'platici@example.cz'")
+KONEC=$(( $(date +%s) + 30 * 86400 ))
+SEZENI='{"id":"evt_test_sezeni1","object":"event","type":"checkout.session.completed","data":{"object":{"id":"cs_test_1","object":"checkout.session","mode":"subscription","client_reference_id":"'$IDCT'","customer":"cus_TestZakaznik1","subscription":"sub_TestPredplatne1","payment_status":"paid","metadata":{"idct":"'$IDCT'"}}}}'
+FAKTURA='{"id":"evt_test_faktura1","object":"event","type":"invoice.paid","data":{"object":{"id":"in_test_1","object":"invoice","customer":"cus_TestZakaznik1","amount_paid":9900,"currency":"czk","parent":{"type":"subscription_details","subscription_details":{"subscription":"sub_TestPredplatne1","metadata":{"idct":"'$IDCT'"}}},"lines":{"data":[{"id":"il_1","period":{"start":'$(date +%s)',"end":'$KONEC'}}]}}}}'
+ocekavej "webhook bez nastaveného tajemství odmítá vše" "$(stripe_posli "$FAKTURA")/$(stripe_stav)" "400/0/NULL/-/-/"
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('stripe_webhook_tajemstvi','$WHSEC'), ('stripe_cena_mesic','$CENA'), ('stripe_cena_mesic_text','99 CZK za mesic') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
+ocekavej "webhook: špatný podpis → 400 a nic se nezapíše" "$(stripe_posli "$FAKTURA" whsec_jineTajemstvi12345)/$(stripe_stav)" "400/0/NULL/-/-/"
+ocekavej "webhook: starý čas → 400 a nic se nezapíše" "$(stripe_posli "$FAKTURA" "$WHSEC" $(( $(date +%s) - 900 )))/$(stripe_stav)" "400/0/NULL/-/-/"
+kod=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data-binary "$FAKTURA" "$B/platba/stripe"); ocekavej "webhook: bez hlavičky s podpisem → 400" "$kod/$(stripe_stav)" "400/0/NULL/-/-/"
+kod=$(curl -s -o /dev/null -w '%{http_code}' "$B/platba/stripe"); ocekavej "webhook: jen POST" "$kod" "405"
+ocekavej "webhook: faktura dorazila dřív než dokončená platba – čtenář se najde podle metadat" "$(stripe_posli "$FAKTURA")/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/-/"
+ocekavej "webhook: checkout.session.completed" "$(stripe_posli "$SEZENI")/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/aktivni"
+ocekavej "webhook: stejná událost podruhé nic nezdvojí" "$(stripe_posli "$FAKTURA")/$(stripe_posli "$SEZENI")/$(stripe_stav)" "200/200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/aktivni"
+CIZI='{"id":"evt_test_cizi1","object":"event","type":"invoice.paid","data":{"object":{"id":"in_test_cizi","object":"invoice","customer":"cus_TestZakaznik1","amount_paid":50000,"currency":"czk","subscription":"sub_JinyProdej1","lines":{"data":[{"period":{"end":'$(( KONEC + 300 * 86400 ))'}}]}}}}'
+ocekavej "webhook: faktura jiného prodeje téhož zákazníka (bez čísla čtenáře) přístup neprodlouží" "$(stripe_posli "$CIZI")/$(stripe_stav)/$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT predplatne_do > CURDATE() + INTERVAL 200 DAY FROM rs_ctenari WHERE idct = $IDCT")" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/aktivni/0"
+ocekavej "webhook: neznámá událost → 200 a nic" "$(stripe_posli '{"id":"evt_test_jina1","type":"customer.created","data":{"object":{"id":"cus_X"}}}')/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/aktivni"
+ocekavej "webhook: zrušení ke konci období → stav „konci“, datum zůstává" "$(stripe_posli '{"id":"evt_test_zmena1","type":"customer.subscription.updated","data":{"object":{"id":"sub_TestPredplatne1","customer":"cus_TestZakaznik1","status":"active","cancel_at_period_end":true}}}')/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/konci"
+ocekavej "webhook: konec předplatného → „zruseno“, zaplacené období se nezkracuje" "$(stripe_posli '{"id":"evt_test_konec1","type":"customer.subscription.deleted","data":{"object":{"id":"sub_TestPredplatne1","customer":"cus_TestZakaznik1","status":"canceled"}}}')/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/zruseno"
+ocekavej "webhook: opožděná starší událost zrušené předplatné neoživí" "$(stripe_posli '{"id":"evt_test_zmena0","type":"customer.subscription.updated","data":{"object":{"id":"sub_TestPredplatne1","customer":"cus_TestZakaznik1","status":"active"}}}')/$(stripe_stav)" "200/1/1/cus_TestZakaznik1/sub_TestPredplatne1/zruseno"
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('udrzba','1') ON DUPLICATE KEY UPDATE hodnota='1'"
+ocekavej "webhook běží i při údržbě webu" "$(stripe_posli '{"id":"evt_test_jina2","type":"customer.created","data":{"object":{"id":"cus_X"}}}')" "200"
+"${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_config SET hodnota='0' WHERE promenna='udrzba'"
+# odchod na platební stránku: přihlášený čtenář (cookie i podpis formuláře spočítané stejně jako ve Front\Ctenari)
+TAJNY=$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT hodnota FROM rs_config WHERE promenna = 'tajny_klic'")
+hmac() { printf '%s' "$1" | openssl dgst -sha256 -hmac "$TAJNY" | sed 's/^.*= *//'; }
+PLATNOST=$(( $(date +%s) + 3600 )); COOKIE="phprs_ctenar=$IDCT.$PLATNOST.$(hmac "ctenar|$IDCT.$PLATNOST.x-neplatny-otisk")"; PODPIS=$(hmac "ctenar|formular.$IDCT")
+odchod() { curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -H "Cookie: $COOKIE" -X POST "$B/ctenar/predplatne" -d "plan=$1" -d "podpis=${2:-$PODPIS}"; }
+ocekavej "platba: bez tajného klíče se tlačítka nenabízejí" "$(curl -s -H "Cookie: $COOKIE" "$B/ctenar" | grep -c 'name="plan"')" "0"
+"${MYSQL[@]}" "$DB_NAME" -e "INSERT INTO rs_config VALUES ('stripe_tajny_klic','sk_test_NahrazkaKlice000000000000') ON DUPLICATE KEY UPDATE hodnota=VALUES(hodnota)"
+curl -s -H "Cookie: $COOKIE" -o "$PRACE/odpoved" "$B/ctenar"
+grep -q 'name="plan" value="mesic"' "$PRACE/odpoved" && grep -q '<small>99 CZK za mesic</small>' "$PRACE/odpoved" && ! grep -q 'value="rok"' "$PRACE/odpoved" && echo "  ok     platba: účet nabízí jen nastavené období i s popisem ceny" || { echo "  CHYBA  platba: tlačítka předplatného v účtu čtenáře"; CHYB=$((CHYB+1)); }
+VYSLEDEK=$(odchod mesic)
+case "$VYSLEDEK" in "303 https://checkout.stripe.com/c/pay/cs_test_nahrazka?ctenar=$IDCT&cena=$CENA&zakaznik=cus_TestZakaznik1&jazyk=cs&navrat="*"stav%3Dzaplaceno") echo "  ok     platba: přesměrování na Checkout se správnou cenou, čtenářem a zákazníkem";; *) echo "  CHYBA  platba: odchod na Checkout: $VYSLEDEK"; CHYB=$((CHYB+1));; esac
+ocekavej "platba: období bez nastavené ceny nikam nevede" "$(odchod rok)" "303 $B/ctenar"
+ocekavej "platba: bez podpisu formuláře nic" "$(odchod mesic podvrh)" "303 $B/ctenar"
+kod=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -X POST "$B/ctenar/predplatne" -d plan=mesic -d "podpis=$PODPIS"); ocekavej "platba: nepřihlášený nic" "$kod" "303 $B/ctenar"
+"${MYSQL[@]}" "$DB_NAME" -e "UPDATE rs_ctenari SET predplatne_stav = 'aktivni' WHERE idct = $IDCT"
+ocekavej "platba: kdo už platí, druhé předplatné nezaloží" "$(odchod mesic)" "303 $B/ctenar"
+ocekavej "správa předplatného: přesměrování do portálu Stripe" "$(odchod sprava)" "303 https://billing.stripe.com/p/session/test_nahrazka?zakaznik=cus_TestZakaznik1"
+curl -s -H "Cookie: $COOKIE" -o "$PRACE/odpoved" "$B/ctenar?stav=sprava"
+ocekavej "správa předplatného: po návratu se stav načte ze Stripe" "$(stripe_stav)" "1/1/cus_TestZakaznik1/sub_TestPredplatne1/konci"
+over "čtenáři: stav předplatného ze Stripe ve výpisu" 200 "/admin.php?modul=ctenari" "Stripe: neobnoví se"
+over "příjmy: součet plateb za 30 dní" 200 "/admin.php?modul=prijmy" "99,00 CZK"
+over "nastavení: záložka Čtenáři a platby s adresou webhooku" 200 "/admin.php?modul=config&zalozka=ctenari" "/platba/stripe"
+grep -qE "sk_test_Nahrazka|$WHSEC" "$PRACE/odpoved" && { echo "  CHYBA  nastavení vypisuje tajný klíč nebo tajemství webhooku"; CHYB=$((CHYB+1)); } || echo "  ok     nastavení tajné hodnoty nevypisuje (jen konec)"
+TOKEN=$(grep -o 'name="_csrf" value="[a-f0-9]*"' "$PRACE/odpoved" | head -1 | sed 's/.*value="//;s/"//')
+curl -s -b "$JAR" -c "$JAR" -o "$PRACE/gdpr.json" -X POST "$B/admin.php?modul=config&akce=osobni_udaje" -d "_csrf=$TOKEN" -d gdpr_email=platici@example.cz -d gdpr_co=export
+grep -q '"castka": 99' "$PRACE/gdpr.json" && grep -q '"mena": "CZK"' "$PRACE/gdpr.json" && echo "  ok     GDPR: výpis obsahuje platby" || { echo "  CHYBA  GDPR: ve výpisu chybí platby"; CHYB=$((CHYB+1)); }
+curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=config&akce=osobni_udaje" -d "_csrf=$TOKEN" -d gdpr_email=platici@example.cz -d gdpr_co=smazat
+ocekavej "GDPR: výmaz smaže čtenáře, platba zůstane anonymní" "$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT CONCAT((SELECT COUNT(*) FROM rs_ctenari WHERE email = 'platici@example.cz'), '/', (SELECT COUNT(*) FROM rs_platby WHERE idct IS NULL AND castka = 9900))")" "0/1"
+kill "$STRIPE_PID" 2>/dev/null || true; STRIPE_PID=
 
 if [ -s "$PRACE/web/storage/log/chyby.log" ]; then echo "== záznam chyb aplikace:"; cat "$PRACE/web/storage/log/chyby.log"; CHYB=$((CHYB+1)); fi
 echo; [ "$CHYB" -eq 0 ] && echo "VŠE V POŘÁDKU" || { echo "NALEZENO CHYB: $CHYB"; exit 1; }

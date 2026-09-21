@@ -27,7 +27,7 @@ After sending, the reader sees either a thank-you or a message that the comment 
 
 By default anyone can comment. They fill in a **Name**, an optional **E-mail** (it is not published) and a text of at most 5,000 characters.
 
-With the **Readers and locked content** extension turned on, the option **Only signed-in readers may comment** is added in **Settings → General → Readers and locked content**. A reader who is not signed in then sees a prompt to sign in instead of the form. A signed-in reader comments under the name from their account, and their comments carry the mark ✓ (*registered reader*).
+With the **Readers and locked content** extension turned on, the option **Only signed-in readers may comment** is added in **Settings → Readers and payments**. A reader who is not signed in then sees a prompt to sign in instead of the form. A signed-in reader comments under the name from their account, and their comments carry the mark ✓ (*registered reader*).
 
 ## Spam protection
 

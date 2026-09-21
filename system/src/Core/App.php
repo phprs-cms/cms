@@ -88,14 +88,14 @@ final class App
     /**
      * Absolutní cesta v rámci instalace: url('admin.php') -> "/magazin/admin.php".
      * V jazykové verzi dostanou adresy stránek webu předponu jazyka (url('clanek/x') -> "/en/clanek/x");
-     * soubory a služby (cokoli s příponou, api/, mcp, push/) zůstávají společné.
+     * soubory a služby (cokoli s příponou, api/, mcp, push/, platba/) zůstávají společné.
      */
     public function url(string $path = ''): string
     {
         $path = ltrim($path, '/');
         if ($this->jazykPrefix !== '') {
             $cesta = explode('?', $path, 2)[0];
-            if ((!str_contains($cesta, '.') || $cesta === 'rss.xml' || $cesta === 'feed.json') && !preg_match('#^(api/|mcp$|push/)#', $cesta)) {
+            if ((!str_contains($cesta, '.') || $cesta === 'rss.xml' || $cesta === 'feed.json') && !preg_match('#^(api/|mcp$|push/|platba/)#', $cesta)) {
                 $path = $this->jazykPrefix . ($path === '' ? '/' : '/' . $path);
             }
         }

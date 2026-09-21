@@ -8,12 +8,14 @@ use PhpRS\Core\Antispam;
 use PhpRS\Core\App;
 use PhpRS\Core\Posta;
 use PhpRS\Core\Response;
+use PhpRS\Core\Stripe;
 use PhpRS\Core\View;
 
 /**
  * Účty čtenářů a uzamčený obsah (rozšíření "ctenari").
  *
  *   /ctenar              přihlášení + registrace, po přihlášení Můj účet
+ *   /ctenar/predplatne   (POST) přihlášený čtenář odchází zaplatit předplatné nebo ho spravovat na stránky Stripe
  *   /ctenar/heslo/<token>  nastavení hesla: dokončení registrace (odkaz platí 3 dny) i zapomenuté heslo (2 hodiny)
  *
  * Přihlášení drží podepsaná cookie phprs_ctenar (id.platnost.podpis) - bez PHP session, aby web zůstal
@@ -149,9 +151,15 @@ final class Ctenari
         return implode("\n", array_slice($m[0], 0, $pocet));
     }
 
-    /** Kam vede tlačítko „Získat předplatné“: stránka webu nebo https odkaz z Nastavení; cokoli jiného se ignoruje. */
-    public function predplatneUrl(): string
+    /**
+     * Kam vede tlačítko „Získat předplatné“: s nastavenými platbami přes Stripe do účtu čtenáře (tam se platí, nepřihlášený se
+     * nejdřív přihlásí nebo zaregistruje), jinak na stránku webu nebo https odkaz z Nastavení; cokoli jiného se ignoruje.
+     */
+    public function predplatneUrl(string $zpet = ''): string
     {
+        if (Stripe::nastaveno($this->app->settings())) {
+            return $this->app->url('ctenar') . ($zpet !== '' ? '?zpet=' . rawurlencode($zpet) : '');
+        }
         $cil = trim($this->app->settings()->get('predplatne_url'));
         if (preg_match('#^https://[^\s"<>]+$#i', $cil)) {
             return $cil;
@@ -167,7 +175,7 @@ final class Ctenari
             'predplatne' => (int) $clanek['pristup'] === 2,
             'prihlasen' => $this->prihlaseny() !== null,
             'text' => $this->app->settings()->get('zamek_text'),
-            'predplatneUrl' => $this->predplatneUrl(),
+            'predplatneUrl' => $this->predplatneUrl('clanek/' . $clanek['seo_link']),
             'ucet' => $this->app->url('ctenar') . '?zpet=' . rawurlencode('clanek/' . $clanek['seo_link']),
             'registrace' => $this->app->settings()->bool('ctenari_registrace'),
             'zdarma' => $this->stavZdarma,
@@ -187,6 +195,9 @@ final class Ctenari
         }
         if (preg_match('#^/ctenar/heslo/([a-f0-9]{32})$#', $path, $m)) {
             return $this->noveHeslo($m[1], $view);
+        }
+        if ($path === '/ctenar/predplatne' && $r->isPost()) {
+            return $this->predplatne();
         }
         if ($path !== '/ctenar') {
             return $this->zprava($view, t('Stránka nenalezena'), t('Tahle adresa neexistuje.'));
@@ -209,11 +220,20 @@ final class Ctenari
 
         $ctenar = $this->prihlaseny();
         $antispam = new Antispam($this->app->db(), $this->app->settings());
+        $web = $this->app->settings();
+        if ($ctenar !== null && $r->get('stav') === 'sprava') {
+            $ctenar = $this->srovnejPredplatne($ctenar);
+        }
 
         return [t($ctenar === null ? 'Přihlášení čtenáře' : 'Můj účet'), $view->render('ctenar', [
             'ctenar' => $ctenar,
             'predplatitel' => $this->jePredplatitel(),
-            'predplatneUrl' => $this->predplatneUrl(),
+            'predplatneUrl' => Stripe::nastaveno($web) ? '' : $this->predplatneUrl(),
+            // platby přes Stripe: nabízená období s popisem ceny; kdo už přes Stripe platí, předplatné místo toho spravuje
+            'platby' => $ctenar !== null && Stripe::nastaveno($web) ? Stripe::nabidka($web) : [],
+            'bezici' => $ctenar !== null && self::beziStripe($ctenar),
+            'platbyZapnute' => Stripe::nastaveno($web),
+            'akcePlatby' => $this->app->url('ctenar/predplatne'),
             'akce' => $this->app->url('ctenar'),
             'zpet' => $this->zpet($r->get('zpet')),
             'stav' => $r->get('stav'),
@@ -370,6 +390,75 @@ final class Ctenari
         return [t('Nové heslo'), $view->render('ctenar_heslo', ['akce' => $this->app->url('ctenar/heslo/' . $token), 'chyba' => $r->isPost()])];
     }
 
+    /** Má čtenář ve Stripe předplatné, ze kterého se (ještě) platí? */
+    public static function beziStripe(array $ctenar): bool
+    {
+        return (string) $ctenar['stripe_predplatne'] !== '' && in_array($ctenar['predplatne_stav'], ['aktivni', 'konci', 'nezaplaceno'], true);
+    }
+
+    /**
+     * Přihlášený čtenář odchází na stránky Stripe: zaplatit předplatné (plan = mesic | rok), nebo ho spravovat (plan = sprava).
+     * Odsud se nic nezapisuje - předplatné zapne až ověřený webhook (Front\Platby).
+     */
+    private function predplatne(): Response
+    {
+        $r = $this->app->request;
+        $web = $this->app->settings();
+        $ctenar = $this->overPrihlaseneho();
+        if ($ctenar === null || !Stripe::nastaveno($web)) {
+            return $this->na('');
+        }
+        // odchozí volání na cizí službu: nejvýš 10 za čtvrt hodiny z jedné adresy
+        $antispam = new Antispam($this->app->db(), $web);
+        if ($antispam->pocet($r->ip(), 'ctenar-platba', 0, 15) >= 10) {
+            return $this->na('pomalu');
+        }
+        $antispam->zapis($r->ip(), 'ctenar-platba', 0);
+        $zpet = $this->zpet($r->post('zpet'));
+        $navrat = $r->origin() . $this->app->url('ctenar') . ($zpet !== '' ? '?zpet=' . rawurlencode($zpet) : '');
+        $jazyk = \PhpRS\Core\Jazyk::kod();
+        try {
+            $stripe = new Stripe($web);
+            if ($r->post('plan') === 'sprava') {
+                $cil = (string) $ctenar['stripe_zakaznik'] === '' ? null : $stripe->portal((string) $ctenar['stripe_zakaznik'], $navrat . ($zpet !== '' ? '&' : '?') . 'stav=sprava', $jazyk);
+            } else {
+                // kdo už přes Stripe platí, nesmí si založit druhé předplatné vedle prvního
+                $cena = self::beziStripe($ctenar) ? null : (Stripe::ceny($web)[$r->post('plan')] ?? null);
+                $cil = $cena === null ? null : $stripe->checkout($cena, $ctenar, $navrat, $jazyk);
+            }
+        } catch (\RuntimeException $e) {
+            Stripe::zaloguj($e->getMessage());
+
+            return $this->na('platba-chyba');
+        }
+
+        return $cil === null ? $this->na('') : Response::redirect($cil, 303);
+    }
+
+    /**
+     * Po návratu ze správy předplatného se stav načte rovnou ze Stripe - webhook se změnou může dorazit až za chvíli.
+     * Číslo předplatného je z naší databáze, ne z prohlížeče; když Stripe neodpoví, zůstane stav, jaký je.
+     *
+     * @param array<string, mixed> $ctenar
+     * @return array<string, mixed>
+     */
+    private function srovnejPredplatne(array $ctenar): array
+    {
+        $web = $this->app->settings();
+        $antispam = new Antispam($this->app->db(), $web);
+        if (!self::beziStripe($ctenar) || !Stripe::nastaveno($web) || $antispam->pocet($this->app->request->ip(), 'ctenar-platba', 0, 15) >= 10) {
+            return $ctenar;
+        }
+        $antispam->zapis($this->app->request->ip(), 'ctenar-platba', 0);
+        try {
+            (new Platby($this->app->db(), $web))->zapisStav($ctenar, (new Stripe($web))->predplatne((string) $ctenar['stripe_predplatne']));
+        } catch (\RuntimeException $e) {
+            Stripe::zaloguj($e->getMessage());
+        }
+
+        return $this->app->db()->one('SELECT * FROM {ctenari} WHERE idct = ?', [$ctenar['idct']]) ?? $ctenar;
+    }
+
     private function ulozUcet(): Response
     {
         $r = $this->app->request;
@@ -429,6 +518,9 @@ final class Ctenari
         $ctenar = $this->overPrihlaseneho();
         if ($ctenar === null || !password_verify($this->app->request->post('heslo'), $ctenar['heslo'])) {
             return $this->na('heslo-chyba');
+        }
+        if (in_array($ctenar['predplatne_stav'], ['aktivni', 'nezaplaceno'], true) && (string) $ctenar['stripe_predplatne'] !== '') {
+            return $this->na('nejdriv-zrusit'); // jinak by Stripe strhával platby za účet, který už neexistuje
         }
         $this->app->db()->delete('ctenari', ['idct' => $ctenar['idct']]);
         $this->cookie('', 1);

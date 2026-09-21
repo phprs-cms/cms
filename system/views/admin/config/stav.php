@@ -5,7 +5,6 @@ $souhrn = PhpRS\Core\Stav::souhrn($kontroly);
 $skupina = '';
 ?>
 <p class="hlaska hlaska-<?= ['ok' => 'ok', 'varovani' => 'varovani', 'chyba' => 'chyba'][$souhrn] ?>"><?= e(t(['ok' => 'Vše v pořádku.', 'varovani' => 'Systém běží, některé položky si zaslouží pozornost.', 'chyba' => 'Nalezeny chyby, které brání správnému provozu.'][$souhrn])) ?></p>
-<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('provoz/stav-systemu', 'Stav systému') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/ulohy-na-pozadi', 'Úlohy na pozadí (cron)') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/reseni-potizi', 'Řešení potíží') ?></p>
 <div class="tab-obal">
 <table class="vypis">
 <tbody>

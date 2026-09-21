@@ -9,7 +9,8 @@ use PhpRS\Core\Response;
 
 /**
  * Registrovaní čtenáři: přehled, zápis předplatného, odstranění účtu, export.
- * Platební brána v systému záměrně není - předplatné (datum "do") zapisuje administrátor ručně.
+ * Předplatné (datum "do") zapisuje administrátor ručně, nebo ho s nastavenými platbami zapíná a prodlužuje Stripe (Front\Platby);
+ * ruční zápis funguje vedle toho dál. Odsud se do Stripe nikdy nevolá - běžící předplatné se ruší ve Stripe.
  */
 final class CtenariAdmin extends Modul
 {
@@ -36,9 +37,11 @@ final class CtenariAdmin extends Modul
         return $this->view('vypis', 'Čtenáři', [
             'q' => $q,
             'ctenari' => $this->db->all("SELECT * FROM {ctenari} WHERE {$kde} ORDER BY idct DESC LIMIT 300", $q === '' ? [] : [$like, $like]),
+            'stripe' => \PhpRS\Core\Stripe::nastaveno($this->app->settings()),
             'pocty' => [
                 'Registrovaní' => (int) $this->db->value('SELECT COUNT(*) FROM {ctenari} WHERE potvrzen = 1'),
                 'Předplatitelé' => (int) $this->db->value('SELECT COUNT(*) FROM {ctenari} WHERE potvrzen = 1 AND predplatne_do >= CURDATE()'),
+                'Platí přes Stripe' => (int) $this->db->value("SELECT COUNT(*) FROM {ctenari} WHERE stripe_predplatne IS NOT NULL AND predplatne_stav IN ('aktivni', 'konci', 'nezaplaceno')"),
                 'Zamčené články' => (int) $this->db->value('SELECT COUNT(*) FROM {clanky} WHERE pristup > 0'),
             ],
         ]);
@@ -65,10 +68,14 @@ final class CtenariAdmin extends Modul
 
     protected function akceSmaz(): Response
     {
-        if ($this->request->isPost()) {
-            $this->db->delete('ctenari', ['idct' => $this->request->postInt('idct')]);
+        $ctenar = $this->db->one('SELECT * FROM {ctenari} WHERE idct = ?', [$this->request->postInt('idct')]);
+        if (!$this->request->isPost() || $ctenar === null) {
+            return $this->zpet();
         }
+        $this->db->delete('ctenari', ['idct' => $ctenar['idct']]); // platby zůstávají bez vazby na čtenáře (účetnictví)
 
-        return $this->zpet('Účet čtenáře byl smazán.');
+        return \PhpRS\Front\Ctenari::beziStripe($ctenar)
+            ? $this->zpet(t('Účet čtenáře byl smazán. Jeho předplatné ve Stripe (%s) ale běží dál – zrušte ho ve Stripe, jinak se mu budou strhávat další platby.', (string) $ctenar['stripe_predplatne']), '', [], 'chyba')
+            : $this->zpet('Účet čtenáře byl smazán.');
     }
 }

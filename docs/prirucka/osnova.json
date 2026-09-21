@@ -72,7 +72,8 @@
         "ctenari-a-prijmy/newsletter",
         "ctenari-a-prijmy/web-push",
         "ctenari-a-prijmy/reklama",
-        "ctenari-a-prijmy/podpora-a-prijmy"
+        "ctenari-a-prijmy/podpora-a-prijmy",
+        "ctenari-a-prijmy/platby-stripe"
       ],
       "nazev": {
         "cs": "Čtenáři a příjmy",
@@ -182,6 +183,7 @@
       "web-push": "web-push",
       "reklama": "advertising",
       "podpora-a-prijmy": "support-and-revenue",
+      "platby-stripe": "payments-with-stripe",
       "jazykove-verze": "language-versions",
       "jazyky-webu": "site-languages",
       "preklad-obsahu": "translating-content",
@@ -238,6 +240,7 @@
       "web-push": "web-push",
       "reklama": "werbung",
       "podpora-a-prijmy": "unterstuetzung-und-einnahmen",
+      "platby-stripe": "zahlungen-mit-stripe",
       "jazykove-verze": "sprachversionen",
       "jazyky-webu": "sprachen-der-website",
       "preklad-obsahu": "inhalte-uebersetzen",

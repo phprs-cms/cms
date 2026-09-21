@@ -2,7 +2,7 @@
 
 Web může žít z předplatného, z dobrovolných příspěvků čtenářů a z reklamy. Tato stránka popisuje blok **Podpořte nás** a obrazovku **Příjmy**, která všechny zdroje ukazuje pohromadě.
 
-phpRS sám žádné platby nepřijímá ani nezpracovává. Neobsahuje platební bránu a nevidí, kdo kolik zaplatil. Blok Podpořte nás je výzva s tlačítkem, které čtenáře zavede tam, kde platba proběhne.
+Dobrovolné příspěvky phpRS nepřijímá ani nezpracovává a nevidí, kdo kolik přispěl. Blok Podpořte nás je výzva s tlačítkem, které čtenáře zavede tam, kde platba proběhne. Jinak je to u předplatného: to si čtenáři mohou platit kartou přes službu Stripe a web jim ho sám zapíná a prodlužuje – viz [Platby přes Stripe](platby-stripe.md).
 
 ## Blok Podpořte nás
 
@@ -47,24 +47,25 @@ Na vícejazyčném webu mějte blok pro každý jazyk zvlášť a polem **Jazyko
 
 | Karta | Číslo | Kam vede odkaz |
 |---|---|---|
-| **Předplatné** | čtenářů s platným předplatným | **Čtenáři** |
+| **Předplatné** | čtenářů s platným předplatným; s platbami přes Stripe navíc počet platících a součet plateb za posledních 30 dní podle měn | **Čtenáři** |
 | **Dobrovolná podpora** | bloků „Podpořte nás“ na webu (jen zobrazené, ne skryté) | **Bloky a rozvržení** |
 | **Reklama** | zobrazení aktivních reklam; pod tím počet aktivních reklam a prokliků | **Reklama** |
 | **Newsletter** | potvrzených odběratelů | **Newsletter** |
 
 U vypnutého rozšíření vede odkaz **Zapnout v Rozšířeních** do sekce **Rozšíření**. Karta Dobrovolná podpora je zapnutá, jakmile je na webu aspoň jeden zobrazený blok Podpořte nás.
 
-Karta Předplatné upozorní hlášením **Není vyplněno, kde čtenář předplatné získá.**, když chybí adresa v **Nastavení → Základní**. Bez ní čtenář u zamčeného článku nevidí tlačítko **Získat předplatné**. Postup je na stránce [Zamčený obsah a předplatné](zamceny-obsah.md).
+Karta Předplatné upozorní hlášením **Není vyplněno, kde čtenář předplatné získá.**, když chybí adresa v **Nastavení → Čtenáři a platby** a nejsou zapnuté ani platby přes Stripe. Bez ní čtenář u zamčeného článku nevidí tlačítko **Získat předplatné**. Postup je na stránce [Zamčený obsah a předplatné](zamceny-obsah.md).
 
 Newsletter sám peníze nepřináší. Na přehledu je proto, že vrací čtenáře na web – a s nimi předplatné, podporu i zobrazení reklam.
 
 ### Co přehled neukazuje
 
-Přehled neobsahuje částky. Kolik jste vybrali, zjistíte u své banky nebo platební služby. Předplatné zapisujete ručně podle přijatých plateb; číslo na kartě je počet čtenářů, kterým předplatné právě platí.
+Jediné částky na přehledu jsou platby předplatného přijaté přes Stripe za posledních 30 dní (před odečtením poplatků Stripe). Dobrovolné příspěvky a platby převodem přehled nevidí – kolik jste vybrali, zjistíte u své banky nebo platební služby. Hlavní číslo na kartě Předplatné je počet čtenářů, kterým předplatné právě platí, ať už ho zaplatili přes Stripe, nebo jste ho zapsali ručně.
 
 ## Související
 
 - [Zamčený obsah a předplatné](zamceny-obsah.md)
+- [Platby přes Stripe](platby-stripe.md)
 - [Reklama](reklama.md)
 - [Newsletter](newsletter.md)
 - [Bloky a rozvržení](../vzhled/bloky-a-rozvrzeni.md)

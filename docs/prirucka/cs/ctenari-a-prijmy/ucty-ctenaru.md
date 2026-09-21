@@ -8,7 +8,7 @@
 2. Přidejte na web blok **Účet čtenáře** (**Vzhled → Bloky a rozvržení**). Vypíše tlačítko **Přihlášení / Můj účet**. Bez bloku se čtenář k přihlášení dostane jen z výzvy u zamčeného článku, z odkazu **Uložit na později** pod článkem a přímo na adrese `/ctenar`.
 3. Ověřte, že web odesílá e-maily – registrace i přihlášení odkazem na nich stojí. Viz [Pošta](../provoz/posta.md).
 
-V administraci přibude sekce **Čtenáři → Čtenáři** a v **Nastavení → Základní** oddíl **Čtenáři a zamčený obsah**. Obojí vidí jen administrátor.
+V administraci přibude sekce **Čtenáři → Čtenáři** a v Nastavení záložka **Čtenáři a platby**. Obojí vidí jen administrátor.
 
 ## Registrace
 
@@ -18,7 +18,7 @@ Heslo se při registraci nezadává. Čtenáři přijde e-mail s odkazem, na kte
 
 Pokusí-li se někdo zaregistrovat e-mail, který už účet má, web odpoví stejně jako u nové registrace. Majitel adresy dostane e-mail, že účet už má. Web tak neprozrazuje, které adresy jsou registrované.
 
-Nové registrace zastavíte volbou **Povolit nové registrace** v **Nastavení → Základní → Čtenáři a zamčený obsah**. Stávající čtenáři se přihlašují dál.
+Nové registrace zastavíte volbou **Povolit nové registrace** v **Nastavení → Čtenáři a platby**. Stávající čtenáři se přihlašují dál.
 
 ## Přihlášení
 
@@ -41,10 +41,11 @@ Přihlášení drží cookie `phprs_ctenar` po dobu 60 dnů. Je to technická co
 Stránka `/ctenar` po přihlášení ukazuje:
 
 - e-mail a případně datum, do kdy platí předplatné (nebo tlačítko **Získat předplatné**),
+- se zapnutými [platbami přes Stripe](platby-stripe.md) oddíl **Předplatné**: tlačítka **Předplatit měsíčně** a **Předplatit ročně**, u platícího čtenáře **Spravovat předplatné**,
 - **Uložené články** – seznam s možností **Odebrat z uložených**,
 - změnu jména a hesla (**Změnit heslo** vyžaduje stávající heslo),
 - **Odhlásit se**,
-- **Smazat účet** – po zadání hesla smaže účet i všechny údaje o něm; nejde to vrátit.
+- **Smazat účet** – po zadání hesla smaže účet i všechny údaje o něm; nejde to vrátit. Čtenář s běžícím předplatným přes Stripe ho musí nejdřív zrušit (**Spravovat předplatné**), jinak by se mu platby strhávaly dál.
 
 ### Uložené články
 
@@ -69,7 +70,7 @@ Administrátor heslo čtenáře nevidí a nemůže ho změnit. Čtenář si nov�
 
 ## Komentáře jen pro přihlášené
 
-Volba **Komentovat smí jen přihlášení čtenáři** (**Nastavení → Základní → Čtenáři a zamčený obsah**) omezí diskusi na registrované. Čtenář pak komentuje pod svým účtem. Více na stránce [Komentáře](../redakce/komentare.md).
+Volba **Komentovat smí jen přihlášení čtenáři** (**Nastavení → Čtenáři a platby**) omezí diskusi na registrované. Čtenář pak komentuje pod svým účtem. Více na stránce [Komentáře](../redakce/komentare.md).
 
 ## Žádost o výpis nebo výmaz údajů
 

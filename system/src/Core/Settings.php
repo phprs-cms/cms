@@ -58,6 +58,12 @@ final class Settings
         'paywall_zdarma' => '0',      // měkký paywall: kolik zamčených článků měsíčně smí číst kdokoli zdarma (0 = vypnuto)
         'predplatne_url' => '',       // kde čtenář získá předplatné: stránka webu (/predplatne) nebo platební odkaz (https://…)
         'zamek_text' => '',           // vlastní text výzvy pod ukázkou
+        'stripe_tajny_klic' => '',    // platby předplatného přes Stripe (Core\Stripe): tajný nebo omezený klíč (typ "tajne")
+        'stripe_webhook_tajemstvi' => '', // tajemství webhooku whsec_… (typ "tajne") - ověřuje se jím každá zpráva o platbě
+        'stripe_cena_mesic' => '',    // číslo měsíční ceny ve Stripe (price_…); prázdné = nenabízí se
+        'stripe_cena_rok' => '',      // číslo roční ceny
+        'stripe_cena_mesic_text' => '', // popis ceny u tlačítka, např. "99 Kč měsíčně"
+        'stripe_cena_rok_text' => '',
         'statistika' => '1',          // vlastní měření návštěvnosti bez cookies
         'tajny_klic' => '',           // vznikne sám; podepisuje formuláře čtenářů a solí otisky statistiky
         'aktivni_anketa' => '0',

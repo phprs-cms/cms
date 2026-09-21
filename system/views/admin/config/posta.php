@@ -1,6 +1,5 @@
 <?php /** Záložka Pošta: odkud a jak web odesílá e-maily. Proměnné a funkce $pole viz vypis.php. */ ?>
 <p class="hlaska"><?= e(t('Web posílá potvrzení odběru newsletteru a registrace čtenářů, nová hesla, newslettery a upozornění redakci. Přes vlastní SMTP server zprávy odcházejí z ověřené schránky a nekončí ve spamu.')) ?></p>
-<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('provoz/posta', 'Pošta') ?></p>
 <fieldset>
 <legend><?= e(t('Způsob odesílání')) ?></legend>
 <div class="karty-volby">

@@ -2,7 +2,7 @@
 
 Eine Website kann von Abonnements, von freiwilligen Beiträgen der Leser und von Werbung leben. Diese Seite beschreibt den Block **Unterstützen Sie uns** und den Bildschirm **Einnahmen**, der alle Quellen beisammen zeigt.
 
-phpRS selbst nimmt keine Zahlungen entgegen und verarbeitet keine. Es enthält kein Zahlungsgateway und sieht nicht, wer wie viel gezahlt hat. Der Block Unterstützen Sie uns ist ein Aufruf mit einer Schaltfläche, die den Leser dorthin führt, wo die Zahlung stattfindet.
+Freiwillige Beiträge nimmt phpRS nicht entgegen, verarbeitet sie nicht und sieht nicht, wer wie viel beigetragen hat. Der Block Unterstützen Sie uns ist ein Aufruf mit einer Schaltfläche, die den Leser dorthin führt, wo die Zahlung stattfindet. Anders ist es beim Abonnement: Das können die Leser mit Karte über den Dienst Stripe bezahlen und die Website schaltet es ihnen von selbst ein und verlängert es – siehe [Zahlungen mit Stripe](platby-stripe.md).
 
 ## Block Unterstützen Sie uns
 
@@ -47,24 +47,25 @@ Auf einer mehrsprachigen Website halten Sie für jede Sprache einen eigenen Bloc
 
 | Karte | Zahl | Wohin der Link führt |
 |---|---|---|
-| **Abonnement** | Leser mit gültigem Abonnement | **Leser** |
+| **Abonnement** | Leser mit gültigem Abonnement; mit Zahlungen über Stripe zusätzlich die Zahl der Zahlenden und die Summe der Zahlungen der letzten 30 Tage nach Währungen | **Leser** |
 | **Freiwillige Unterstützung** | Blöcke „Unterstützen Sie uns“ auf der Website (nur angezeigte, keine ausgeblendeten) | **Blöcke und Layout** |
 | **Werbung** | Einblendungen der aktiven Anzeigen; darunter die Zahl der aktiven Anzeigen und der Klicks | **Werbung** |
 | **Newsletter** | bestätigte Empfänger | **Newsletter** |
 
 Bei einer ausgeschalteten Erweiterung führt der Link **In den Erweiterungen einschalten** in den Bereich **Erweiterungen**. Die Karte Freiwillige Unterstützung ist eingeschaltet, sobald auf der Website mindestens ein angezeigter Block Unterstützen Sie uns steht.
 
-Die Karte Abonnement weist mit der Meldung **Es ist nicht ausgefüllt, wo Leser ein Abonnement erhalten.** darauf hin, wenn die Adresse unter **Einstellungen → Allgemein** fehlt. Ohne sie sieht der Leser bei einem gesperrten Artikel die Schaltfläche **Abonnement abschließen** nicht. Das Vorgehen steht auf der Seite [Gesperrte Inhalte und Abonnement](zamceny-obsah.md).
+Die Karte Abonnement weist mit der Meldung **Es ist nicht ausgefüllt, wo Leser ein Abonnement erhalten.** darauf hin, wenn die Adresse unter **Einstellungen → Leser und Zahlungen** fehlt und auch die Zahlungen mit Stripe nicht eingeschaltet sind. Ohne sie sieht der Leser bei einem gesperrten Artikel die Schaltfläche **Abonnement abschließen** nicht. Das Vorgehen steht auf der Seite [Gesperrte Inhalte und Abonnement](zamceny-obsah.md).
 
 Der Newsletter selbst bringt kein Geld. In der Übersicht steht er, weil er Leser auf die Website zurückbringt – und mit ihnen Abonnements, Unterstützung und Einblendungen von Anzeigen.
 
 ### Was die Übersicht nicht zeigt
 
-Die Übersicht enthält keine Beträge. Wie viel Sie eingenommen haben, erfahren Sie bei Ihrer Bank oder Ihrem Zahlungsdienst. Abonnements tragen Sie von Hand nach den eingegangenen Zahlungen ein; die Zahl auf der Karte ist die Zahl der Leser, deren Abonnement gerade gilt.
+Die einzigen Beträge in der Übersicht sind die über Stripe eingegangenen Abonnementzahlungen der letzten 30 Tage (vor Abzug der Stripe-Gebühren). Freiwillige Beiträge und Zahlungen per Überweisung sieht die Übersicht nicht – wie viel Sie eingenommen haben, erfahren Sie bei Ihrer Bank oder Ihrem Zahlungsdienst. Die Hauptzahl auf der Karte Abonnement ist die Zahl der Leser, deren Abonnement gerade gilt, gleich ob sie es über Stripe bezahlt haben oder Sie es von Hand eingetragen haben.
 
 ## Siehe auch
 
 - [Gesperrte Inhalte und Abonnement](zamceny-obsah.md)
+- [Zahlungen mit Stripe](platby-stripe.md)
 - [Werbung](reklama.md)
 - [Newsletter](newsletter.md)
 - [Blöcke und Layout](../vzhled/bloky-a-rozvrzeni.md)

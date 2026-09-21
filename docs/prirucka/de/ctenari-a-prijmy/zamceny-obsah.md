@@ -1,6 +1,6 @@
 # Gesperrte Inhalte und Abonnement
 
-Einen Artikel können Sie angemeldeten Lesern oder Abonnenten vorbehalten. Die anderen sehen Titel, Vorspann, den Anfang des Textes und eine Aufforderung. Das System verkauft kein Abonnement und rechnet es nicht ab – die Zahlung nehmen Sie auf Ihre Weise entgegen und das Abonnement tragen Sie dem Leser von Hand ein.
+Einen Artikel können Sie angemeldeten Lesern oder Abonnenten vorbehalten. Die anderen sehen Titel, Vorspann, den Anfang des Textes und eine Aufforderung. Ein Abonnement bekommt der Leser auf einem von zwei Wegen: Er bezahlt es selbst mit Karte über den Dienst Stripe und die Website schaltet es ihm von selbst ein und verlängert es (siehe [Zahlungen mit Stripe](platby-stripe.md)), oder Sie nehmen die Zahlung auf Ihre Weise entgegen und tragen ihm das Abonnement von Hand ein. Beide Wege lassen sich gleichzeitig nutzen.
 
 Alles auf dieser Seite erfordert die Erweiterung **Leser und gesperrter Inhalt** (Hauptmenü **Erweiterungen**). Registrierung und Konten beschreibt die Seite [Leserkonten](ucty-ctenaru.md).
 
@@ -29,31 +29,37 @@ Die Aufforderung unterscheidet sich je nach Sperre:
 | Nur angemeldete Leser | **Weiterlesen nach der Anmeldung** | **Anmelden**, **Registrieren** (wenn Registrierungen erlaubt sind) |
 | Nur Abonnenten | **Dieser Artikel ist für Abonnenten** | **Abonnement abschließen** und für nicht Angemeldete **Ich habe schon ein Abo – anmelden** |
 
+Die Schaltfläche **Abonnement abschließen** führt bei eingeschalteten Zahlungen mit Stripe ins Leserkonto, wo das Abonnement bezahlt wird; sonst zur Adresse aus dem Feld **Wo man ein Abonnement bekommt**.
+
 Nach der Anmeldung kehrt der Leser zu dem Artikel zurück, von dem er gekommen ist. Aus einem gesperrten Artikel werden auch die Fragen und Antworten nicht ausgegeben.
 
 ### Einstellungen
 
-Klappen Sie unter **Einstellungen → Allgemein** den Abschnitt **Leser und gesperrter Inhalt** auf:
+Öffnen Sie **Einstellungen → Leser und Zahlungen**, Abschnitt **Leser und gesperrter Inhalt**:
 
 | Feld | Bedeutung | Standard |
 |---|---|---|
 | **Vorschau eines gesperrten Artikels** | wie viele Absätze des Textes ein Leser ohne Zugang sieht; den Vorspann sieht er immer; 0 = nur Vorspann; höchstens 10 | 2 |
 | **Kostenlose Artikel pro Monat** | weiche Paywall, siehe unten; 0 = aus; höchstens 50 | 0 |
-| **Wo man ein Abonnement bekommt** | wohin die Schaltfläche **Abonnement abschließen** führt | leer |
+| **Wo man ein Abonnement bekommt** | wohin die Schaltfläche **Abonnement abschließen** führt, solange die Zahlungen mit Stripe nicht eingeschaltet sind | leer |
 | **Text der Aufforderung unter der Vorschau** | ein eigener Satz in der Aufforderung, höchstens 300 Zeichen; leer = Standardtext | leer |
+
+Im selben Abschnitt befindet sich auch der Teil **Zahlungen mit Stripe** – ihn beschreibt eine [eigene Seite](platby-stripe.md).
 
 ## Wo man ein Abonnement bekommt
 
-Geben Sie in das Feld **Wo man ein Abonnement bekommt** eine der folgenden Möglichkeiten ein:
+Mit eingeschalteten [Zahlungen mit Stripe](platby-stripe.md) wird dieses Feld nicht verwendet: Die Schaltfläche **Abonnement abschließen** führt ins Leserkonto, wo ein angemeldeter Leser das Monats- oder Jahresabonnement wählt und mit Karte bezahlt. Ein nicht angemeldeter Leser meldet sich zuerst an oder registriert sich.
+
+Ohne Zahlungen mit Stripe geben Sie in das Feld **Wo man ein Abonnement bekommt** eine der folgenden Möglichkeiten ein:
 
 - eine Seite Ihrer Website, zum Beispiel `/predplatne` – legen Sie sie unter **Inhalt → Seiten** an und beschreiben Sie darauf Preis und Zahlungsweise (Kontonummer, QR-Code),
 - einen Zahlungslink, der mit `https://` beginnt.
 
-Eine andere Form der Adresse wird ignoriert. Solange Sie das Feld nicht ausfüllen, wird die Schaltfläche **Abonnement abschließen** nicht angezeigt – weder bei gesperrten Artikeln noch im Leserkonto – und der Leser weiß nicht, wie er Abonnent wird. Der Bildschirm **Einnahmen** weist darauf mit der Meldung **Es ist nicht ausgefüllt, wo Leser ein Abonnement erhalten.** hin.
+Eine andere Form der Adresse wird ignoriert. Solange Sie das Feld nicht ausfüllen (und die Zahlungen mit Stripe nicht eingeschaltet haben), wird die Schaltfläche **Abonnement abschließen** nicht angezeigt – weder bei gesperrten Artikeln noch im Leserkonto – und der Leser weiß nicht, wie er Abonnent wird. Der Bildschirm **Einnahmen** weist darauf mit der Meldung **Es ist nicht ausgefüllt, wo Leser ein Abonnement erhalten.** hin.
 
-## Abonnement eintragen
+## Abonnement von Hand eintragen
 
-Ein Abonnement wird von Hand eingetragen, typischerweise nach Eingang der Zahlung.
+Von Hand tragen Sie ein Abonnement typischerweise nach Eingang der Zahlung auf dem Konto ein oder wenn Sie es jemandem schenken möchten. Das funktioniert auch mit eingeschalteten Zahlungen mit Stripe: Ein von Hand eingetragenes Datum verkürzt eine Zahlung nie – es gilt das spätere von beiden.
 
 1. Öffnen Sie **Leser → Leser** und suchen Sie den Leser nach seiner E-Mail.
 2. Wählen Sie in der Spalte **Abonnement** im Menü **ändern…** eine der Möglichkeiten **+ 1 Monat**, **+ 3 Monate** oder **+ 1 Jahr**. Die Änderung wird sofort gespeichert.
@@ -61,7 +67,7 @@ Ein Abonnement wird von Hand eingetragen, typischerweise nach Eingang der Zahlun
 
 Die Verlängerung wird ab dem Ende des laufenden Abonnements gerechnet; bei einem Leser ohne Abonnement oder mit abgelaufenem ab heute. Durch wiederholte Auswahl addieren Sie also die Dauer. Die Option **beenden** nimmt das Abonnement weg.
 
-Das Etikett in der Spalte zeigt den Status: **bis** mit Datum, **abgelaufen** oder **keines**. Das Abonnement gilt bis zum Ende des angegebenen Tages. Nach dessen Ablauf verliert der Leser ohne weiteren Eingriff den Zugang zu Artikeln für Abonnenten; das Konto bleibt ihm. Der Leser muss ein Konto haben, bevor Sie ihm das Abonnement eintragen – bitten Sie ihn, sich mit der E-Mail-Adresse zu registrieren, von der er gezahlt hat oder die er bei der Zahlung angegeben hat.
+Das Etikett in der Spalte zeigt den Status: **bis** mit Datum, **abgelaufen** oder **keines**. Bei Lesern, die über Stripe zahlen, steht darunter noch der Status des Abonnements aus Stripe (zum Beispiel **Stripe: zahlt**); bei den übrigen mit gültigem Abonnement der Hinweis **manuell eingetragen**. Das Abonnement gilt bis zum Ende des angegebenen Tages. Nach dessen Ablauf verliert der Leser ohne weiteren Eingriff den Zugang zu Artikeln für Abonnenten; das Konto bleibt ihm. Der Leser muss ein Konto haben, bevor Sie ihm das Abonnement eintragen – bitten Sie ihn, sich mit der E-Mail-Adresse zu registrieren, von der er gezahlt hat oder die er bei der Zahlung angegeben hat.
 
 ## Weiche Paywall
 
@@ -90,6 +96,7 @@ Der Text eines gesperrten Artikels wird an einer einzigen Stelle gekürzt, bevor
 ## Siehe auch
 
 - [Leserkonten](ucty-ctenaru.md)
+- [Zahlungen mit Stripe](platby-stripe.md)
 - [Unterstützung und Einnahmen](podpora-a-prijmy.md)
 - [SEO](../seo-a-ai/seo.md)
 - [Kommentare](../redakce/komentare.md)

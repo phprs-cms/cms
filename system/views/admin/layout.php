@@ -93,7 +93,28 @@ if ($user !== null) {
 <?php endif ?>
 <main class="obsah">
 <?php if ($nadpis !== ''): ?>
+<?php
+    // nápověda k obrazovce: stránky příručky podle modulu a záložky či akce (Core\Napoveda::TEMATA)
+    $temata = $user === null ? [] : PhpRS\Core\Napoveda::temata(
+        $aktivni !== '' ? $aktivni : ((string) $app->request->get('akce') === 'ucet' ? 'ucet' : 'prehled'),
+        (string) ($app->request->get('zalozka') ?: $app->request->get('akce')),
+    );
+?>
+<div class="zahlavi-stranky">
 <h2><?= e($nadpis) ?></h2>
+<?php if ($temata !== []): ?>
+<details class="napoveda-menu" data-zavrit-mimo>
+	<summary><?= $ikona('napoveda') ?><span><?= e(t('Nápověda')) ?></span></summary>
+	<div class="napoveda-panel">
+		<p class="napoveda-panel-nadpis"><?= e(t('K této obrazovce v příručce')) ?></p>
+<?php foreach ($temata as $cesta => $titulek): ?>
+		<a href="<?= e(PhpRS\Core\Napoveda::url($cesta)) ?>" target="_blank" rel="noopener"><?= e(t($titulek)) ?><?= $ikona('ven') ?></a>
+<?php endforeach ?>
+		<a class="napoveda-panel-vse" href="<?= e(PhpRS\Core\Napoveda::url()) ?>" target="_blank" rel="noopener"><?= e(t('Celá příručka')) ?></a>
+	</div>
+</details>
+<?php endif ?>
+</div>
 <?php endif ?>
 <?php foreach ($hlasky as $hlaska): ?>
 <p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= PhpRS\Admin\Cesty::odkazy($app->url('admin.php'), t($hlaska['text']), array_keys($moduly)) ?></p>

@@ -23,6 +23,7 @@ final class Cesty
         [['Nastavení', 'Soukromí a cookies'], 'config', 'modul=config&zalozka=cookies'],
         [['Nastavení', 'SEO a GEO'], 'config', 'modul=config&zalozka=seo'],
         [['Nastavení', 'Základní'], 'config', 'modul=config&zalozka=zakladni'],
+        [['Nastavení', 'Čtenáři a platby'], 'config', 'modul=config&zalozka=ctenari'],
         [['Nastavení', 'Měření'], 'config', 'modul=config&zalozka=mereni'],
         [['Nastavení', 'Pošta'], 'config', 'modul=config&zalozka=posta'],
         [['Vzhled', 'Identita webu'], 'vzhled', 'modul=vzhled'],

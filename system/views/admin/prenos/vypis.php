@@ -16,7 +16,6 @@ $faze = [
     'obrazky' => 'stahují se obrázky', 'obrazky-hotovo' => 'převeden včetně obrázků',
 ];
 ?>
-<p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('zaciname/import-z-wordpressu', 'Import z WordPressu') ?></p>
 <h3><?= e(t('Import z WordPressu')) ?></h3>
 <?= $app->view->render('admin/prenos/kroky', ['krok' => 1]) ?>
 <p><?= e(t('Ve WordPressu otevřete Nástroje → Export, zvolte „Veškerý obsah“ a stáhněte soubor .xml. Ten pak nahrajte sem. Převedou se rubriky, štítky, články, stránky a schválené komentáře; na webu se nic nezmění, dokud import v dalším kroku nepotvrdíte.')) ?></p>

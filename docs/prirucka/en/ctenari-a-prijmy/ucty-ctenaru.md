@@ -8,7 +8,7 @@ Readers can register on the site. An account lets them save articles for later, 
 2. Add the **Reader account** block to the site (**Appearance → Blocks and layout**). It outputs the **Sign in / My account** button. Without the block a reader gets to the sign-in only from the prompt on a locked article, from the **Save for later** link below an article and directly at the address `/ctenar`.
 3. Check that the site sends e-mails – both registration and sign-in by link depend on them. See [Mail](../provoz/posta.md).
 
-In the administration the **Readers → Readers** area is added, and in **Settings → General** the section **Readers and locked content**. Only an administrator sees both.
+In the administration the **Readers → Readers** area is added, and in Settings the **Readers and payments** tab. Only an administrator sees both.
 
 ## Registration
 
@@ -18,7 +18,7 @@ No password is entered during registration. The reader receives an e-mail with a
 
 If someone tries to register an e-mail that already has an account, the site answers the same way as for a new registration. The owner of the address receives an e-mail saying that they already have an account. This way the site does not reveal which addresses are registered.
 
-You stop new registrations with the option **Allow new registrations** in **Settings → General → Readers and locked content**. Existing readers keep signing in.
+You stop new registrations with the option **Allow new registrations** in **Settings → Readers and payments**. Existing readers keep signing in.
 
 ## Sign-in
 
@@ -41,10 +41,11 @@ The sign-in is held by the `phprs_ctenar` cookie for 60 days. It is a technical 
 After signing in, the `/ctenar` page shows:
 
 - the e-mail and, where applicable, the date until which the subscription is valid (or the **Get a subscription** button),
+- with [payments through Stripe](platby-stripe.md) turned on, the **Subscription** section: the buttons **Subscribe monthly** and **Subscribe yearly**, and for a paying reader **Manage subscription**,
 - **Saved articles** – a list with the option **Remove from saved**,
 - changing the name and the password (**Change password** requires the current password),
 - **Sign out**,
-- **Delete account** – after the password is entered, it deletes the account and all data about it; this cannot be undone.
+- **Delete account** – after the password is entered, it deletes the account and all data about it; this cannot be undone. A reader with a running subscription through Stripe must cancel it first (**Manage subscription**), otherwise payments would keep being taken from them.
 
 ### Saved articles
 
@@ -69,7 +70,7 @@ An administrator does not see a reader's password and cannot change it. The read
 
 ## Comments for signed-in readers only
 
-The option **Only signed-in readers may comment** (**Settings → General → Readers and locked content**) restricts the discussion to registered readers. A reader then comments under their account. More on the page [Comments](../redakce/komentare.md).
+The option **Only signed-in readers may comment** (**Settings → Readers and payments**) restricts the discussion to registered readers. A reader then comments under their account. More on the page [Comments](../redakce/komentare.md).
 
 ## A request for an export or erasure of data
 

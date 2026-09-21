@@ -8,7 +8,7 @@ Leser können sich auf der Website registrieren. Mit einem Konto können sie Art
 2. Fügen Sie der Website den Block **Leserkonto** hinzu (**Design → Blöcke und Layout**). Er gibt die Schaltfläche **Anmelden / Mein Konto** aus. Ohne den Block gelangt der Leser zur Anmeldung nur über die Aufforderung bei einem gesperrten Artikel, über den Link **Für später speichern** unter dem Artikel und direkt unter der Adresse `/ctenar`.
 3. Prüfen Sie, dass die Website E-Mails versendet – Registrierung und Anmeldung per Link beruhen darauf. Siehe [E-Mail](../provoz/posta.md).
 
-In der Administration kommt der Bereich **Leser → Leser** hinzu und unter **Einstellungen → Allgemein** der Abschnitt **Leser und gesperrter Inhalt**. Beides sieht nur der Administrator.
+In der Administration kommt der Bereich **Leser → Leser** hinzu und in den Einstellungen der Reiter **Leser und Zahlungen**. Beides sieht nur der Administrator.
 
 ## Registrierung
 
@@ -18,7 +18,7 @@ Ein Passwort wird bei der Registrierung nicht eingegeben. Der Leser erhält eine
 
 Versucht jemand, eine E-Mail-Adresse zu registrieren, die schon ein Konto hat, antwortet die Website genauso wie bei einer neuen Registrierung. Der Inhaber der Adresse erhält eine E-Mail, dass er bereits ein Konto hat. Die Website verrät so nicht, welche Adressen registriert sind.
 
-Neue Registrierungen stoppen Sie mit der Option **Neue Registrierungen erlauben** unter **Einstellungen → Allgemein → Leser und gesperrter Inhalt**. Bestehende Leser melden sich weiterhin an.
+Neue Registrierungen stoppen Sie mit der Option **Neue Registrierungen erlauben** unter **Einstellungen → Leser und Zahlungen**. Bestehende Leser melden sich weiterhin an.
 
 ## Anmeldung
 
@@ -41,10 +41,11 @@ Die Anmeldung hält das Cookie `phprs_ctenar` für 60 Tage. Es ist ein technisch
 Die Seite `/ctenar` zeigt nach der Anmeldung:
 
 - die E-Mail und gegebenenfalls das Datum, bis zu dem das Abonnement gilt (oder die Schaltfläche **Abonnement abschließen**),
+- mit eingeschalteten [Zahlungen mit Stripe](platby-stripe.md) den Abschnitt **Abonnement**: die Schaltflächen **Monatlich abonnieren** und **Jährlich abonnieren**, bei einem zahlenden Leser **Abonnement verwalten**,
 - **Gespeicherte Artikel** – eine Liste mit der Möglichkeit **Aus Gespeicherten entfernen**,
 - die Änderung von Name und Passwort (**Passwort ändern** verlangt das bisherige Passwort),
 - **Abmelden**,
-- **Konto löschen** – löscht nach Eingabe des Passworts das Konto und alle Daten dazu; das lässt sich nicht rückgängig machen.
+- **Konto löschen** – löscht nach Eingabe des Passworts das Konto und alle Daten dazu; das lässt sich nicht rückgängig machen. Ein Leser mit laufendem Abonnement über Stripe muss es zuerst kündigen (**Abonnement verwalten**), sonst würden ihm die Zahlungen weiter abgebucht.
 
 ### Gespeicherte Artikel
 
@@ -69,7 +70,7 @@ Der Administrator sieht das Passwort eines Lesers nicht und kann es nicht änder
 
 ## Kommentare nur für Angemeldete
 
-Die Option **Nur angemeldete Leser dürfen kommentieren** (**Einstellungen → Allgemein → Leser und gesperrter Inhalt**) beschränkt die Diskussion auf Registrierte. Der Leser kommentiert dann unter seinem Konto. Mehr auf der Seite [Kommentare](../redakce/komentare.md).
+Die Option **Nur angemeldete Leser dürfen kommentieren** (**Einstellungen → Leser und Zahlungen**) beschränkt die Diskussion auf Registrierte. Der Leser kommentiert dann unter seinem Konto. Mehr auf der Seite [Kommentare](../redakce/komentare.md).
 
 ## Anfrage auf Auskunft oder Löschung von Daten
 

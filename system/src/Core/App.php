@@ -103,6 +103,21 @@ final class App
         return $this->request->basePath() . '/' . $path;
     }
 
+    /**
+     * Adresa článku v JEHO jazykové verzi – nezávisle na tom, ze které verze přišel právě běžící požadavek
+     * (oznámení o vydání se rozesílají na pozadí cizí návštěvy).
+     */
+    public function urlClanku(string $seo, string $jazyk): string
+    {
+        $puvodni = $this->jazykPrefix;
+        $this->jazykPrefix = in_array($jazyk, Jazyk::dalsi($this->settings()), true) ? $jazyk : '';
+        try {
+            return $this->url('clanek/' . $seo);
+        } finally {
+            $this->jazykPrefix = $puvodni;
+        }
+    }
+
     private function installErrorHandler(): void
     {
         error_reporting(E_ALL);

@@ -118,6 +118,23 @@ final class Bloky extends Modul
         return $this->view('vypis', 'Bloky a rozvržení', ['rozvrzeni' => $rozvrzeni, 'bloky' => $bloky]);
     }
 
+    /**
+     * Nastaví rozvržení a bloky ze zón, které v něm nejsou, přesune do nejbližší existující – jinak by z webu tiše zmizely.
+     * Volá se i při přepnutí šablony (Vzhled, MCP), protože šablona si rozvržení nese s sebou.
+     */
+    public static function prepniRozvrzeni(\PhpRS\Core\Db $db, \PhpRS\Core\Settings $web, string $nove): void
+    {
+        if (!isset(self::ROZVRZENI[$nove])) {
+            return;
+        }
+        foreach (self::NAHRADNI_ZONA[$nove] ?? [] as $z => $do) {
+            // přesunuté bloky se zařadí za ty, které v cílové zóně už jsou
+            $nejniz = (int) $db->value('SELECT COALESCE(MIN(hodnost), 1000) FROM {bloky} WHERE zona = ?', [$do]);
+            $db->run('UPDATE {bloky} SET zona = ?, hodnost = GREATEST(0, ? - 10 - (1000 - LEAST(hodnost, 1000)) DIV 10) WHERE zona = ?', [$do, $nejniz, $z]);
+        }
+        $web->set('rozvrzeni', $nove);
+    }
+
     /** Změna rozvržení stránky; bloky ze zrušených zón se přesunou do nejbližší existující. */
     protected function akceRozvrzeni(): Response
     {
@@ -125,12 +142,7 @@ final class Bloky extends Modul
         if (!$this->request->isPost() || !isset(self::ROZVRZENI[$nove])) {
             return $this->zpet();
         }
-        foreach (self::NAHRADNI_ZONA[$nove] ?? [] as $z => $do) {
-            // přesunuté bloky se zařadí za ty, které v cílové zóně už jsou
-            $nejniz = (int) $this->db->value('SELECT COALESCE(MIN(hodnost), 1000) FROM {bloky} WHERE zona = ?', [$do]);
-            $this->db->run('UPDATE {bloky} SET zona = ?, hodnost = GREATEST(0, ? - 10 - (1000 - LEAST(hodnost, 1000)) DIV 10) WHERE zona = ?', [$do, $nejniz, $z]);
-        }
-        $this->app->settings()->set('rozvrzeni', $nove);
+        self::prepniRozvrzeni($this->db, $this->app->settings(), $nove);
 
         return $this->zpet(t('Rozvržení stránky: %s.', t(self::ROZVRZENI[$nove][0])));
     }

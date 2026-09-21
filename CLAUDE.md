@@ -68,7 +68,8 @@ Redakční systém pro magazíny, který se hlásí k odkazu českého phpRS (v�
   chrání je `Core\Antispam` (podepsaný čas, honeypot, limit na otisk IP). Cokoli od čtenáře se vypisuje
   jen přes `e()`. Do `rs_kontrola_ip` a statistik se nikdy neukládá IP adresa, jen otisk.
 - Hotové kusy HTML pro šablony článku (`shrnuti_html`, `faq_html`, `hodnoceni_html`, `komentare_html`) mají
-  výchozí šablony v `system/views/front/` – layout je jen vypíše, nebo si šablonu přepíše vlastní.
+  šablony v `system/views/front/` a layout je jen vypíše (nebo vynechá). Přepsat je souborem v `layout/<šablona>/` NEJDE –
+  skládají se vždy ze systémových pohledů; vzhled se mění jen přes CSS.
 - Editor článků a galerie: `image/editor.js` + `image/editor.css` (barvy přes proměnné `--ed-*` z obou
   admin stylesheetů). Nahrané soubory jdou vždy přes `Core\Obrazky` (překódování GD, složka `media/`).
 - Bezpečnost: jen připravené dotazy (`{tabulka}` doplní předponu), výstup přes `e()`, každý POST
@@ -197,3 +198,25 @@ Uživatelská dokumentace je v `docs/prirucka/<jazyk>/` (cs je zdroj, en a de p�
   Ověřovací jádro hlídá softwarový autentikátor v `tools/testy.php` - každou změnu v `Passkey.php` doplňte o test včetně záporného případu.
 - Rozšíření jsou samostatná položka hlavní nabídky: `Moduly\RozsireniAdmin` dědí z `Konfigurace` a drží pevnou „záložku“ `rozsireni`
   (šablony dál v `views/admin/config/`); stará adresa `?modul=config&zalozka=rozsireni` přesměrovává.
+
+## Import z WordPressu a export webu
+
+Modul `Moduly\Prenos` (Správa → Import a export, jen správce) je jen obsluha formulářů; práci dělají třídy v `Core/`:
+
+- `WpSoubor` čte export WXR proudem (XMLReader, v paměti je vždy jediný `<item>`), `WpObsah` převádí obsah příspěvku na HTML editoru
+  (bloky Gutenbergu, `[caption]`, `[gallery]`, adresy videí, odstavce klasického editoru, povolovací seznam značek = `POVOLENE` z `image/editor.js` bez IFRAME),
+  `WpImport` zapisuje do databáze, `StahovaniObrazku` stahuje obrázky, `ExportWebu` dělá archiv `storage/zalohy/export-*.zip`.
+- **Dávky:** každý požadavek zpracuje nejvýš `WpImport::DAVKA` položek nebo `SEKUND` vteřin; pozice (kolikátý `<item>`) a volby jsou ve stavovém souboru
+  `storage/import/stav-<otisk>.json`, ne v session. Formulář průběhu se odesílá sám (`data-auto-odeslat`). Fáze: `analyza` → `nahled` → `import` → `hotovo` → `obrazky` → `obrazky-hotovo`.
+- **Idempotence:** tabulka `rs_import_mapa` (zdroj `wp:<doména>`, typ, cizí id → naše id). Už převedený a stále existující záznam se přeskočí a NEPŘEPISUJE
+  (redakce ho mohla upravit). Každý příspěvek je jedna transakce. Kdo přidá další typ obsahu, musí ho zapisovat do mapy také.
+- Importovaný článek vzniká jako v `Core\Demo`: `Hledani::indexuj`, `Galerie::zapisPouziti`, `oznameno` = teď (žádný webhook, IndexNow, push ani newsletter).
+  Účty se nezakládají (`externi_autor`), e-mail a IP komentujících `WpSoubor` vůbec nečte. Přesměrování jdou přes `Presmerovani::pridej`; číselnou adresu `/?p=123` obsluhuje `Front\Kernel::handle()`.
+- **Bezpečnostní pravidla, která se nesmí rozvolnit** (hlídá `tools/testy.php`): XML s DOCTYPE nebo entitou se odmítá celé, čte se s `LIBXML_NONET` a bez `LIBXML_NOENT`;
+  obsah exportu je nedůvěryhodný – do článku projde jen povolovací seznam značek a atributů, adresy jen http(s)/mailto/tel/místní;
+  `StahovaniObrazku` stahuje jen z domény starého webu (± `www.`), jen http(s) na výchozím portu a bez přihlašovacích údajů v adrese, všechny přeložené IP adresy musí být veřejné
+  (`ZAKAZANE_SITE`, včetně přechodových IPv6 rozsahů 6to4, Teredo a NAT64), spojení se připíná na ověřenou IP (`CURLOPT_RESOLVE`; bez curl přímo na IP s `Host` a `peer_name`), přesměrování nejvýš 3 a nikdy automaticky,
+  5 s spojení / 20 s celkem / 15 MB, typ podle hlavičky I obsahu (SVG nikdy), žádné cookies ani hlavičky z importu; stažená data jdou jen přes `Obrazky::ulozSoubor()` (překódování GD).
+- **Export** vybírá nastavení z povolovacího seznamu `ExportWebu::NASTAVENI` – nové tajné nastavení se tak do exportu nedostane samo. Nikdy do něj nepatří účty, čtenáři, odběratelé,
+  e-maily a otisky adres komentujících. Stahuje se přes `akceStahni` po kouscích (`readfile`), ne přes `Response` – archiv může mít stovky MB.
+- Ukázkový export pro testy je `tools/fixtures/wordpress-ukazka.xml` (smyšlený obsah); průchod importem má `tools/test.sh`.

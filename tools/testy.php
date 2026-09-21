@@ -426,5 +426,157 @@ if (is_file(PHPRS_ROOT . '/dist/phprs-3.0.0-beta.3.zip') && class_exists(ZipArch
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));
 
+/* ---------- import z WordPressu: čtení exportu (tools/fixtures/wordpress-ukazka.xml), náhled, bezpečné XML ---------- */
+$wpCesta = PHPRS_ROOT . '/tools/fixtures/wordpress-ukazka.xml';
+$wpOdmitne = static function (callable $f): bool { try { $f(); return false; } catch (RuntimeException) { return true; } };
+$wp = new PhpRS\Core\WpSoubor($wpCesta);
+over('WpSoubor: ukázkový export projde ověřením', $wpOdmitne(fn () => $wp->over()), false);
+$wpHlavicka = $wp->hlavicka();
+over('WpSoubor: starý web z <channel><link>', [$wpHlavicka['nazev'], $wpHlavicka['adresa']], ['Podhorský zpravodaj', 'https://www.podhorsky-zpravodaj.example']);
+over('WpSoubor: autoři jako přihlašovací jméno => zobrazované jméno', $wpHlavicka['autori'], ['redakce' => 'Redakce Zpravodaje', 'bhorakova' => 'Běla Horáková']);
+over('WpSoubor: rubriky s hierarchií', $wpHlavicka['rubriky'], ['zpravy' => ['nazev' => 'Zprávy', 'predek' => ''], 'z-radnice' => ['nazev' => 'Z radnice', 'predek' => 'zpravy']]);
+over('WpSoubor: tři štítky', array_keys($wpHlavicka['stitky']), ['most', 'doprava', 'slavnosti']);
+$wpPolozky = iterator_to_array($wp->polozky());
+over('WpSoubor: devět položek, typy v pořadí souboru', array_column($wpPolozky, 'typ'), ['post', 'post', 'post', 'post', 'page', 'nav_menu_item', 'attachment', 'attachment', 'attachment']);
+over('WpSoubor: přeskočení už zpracovaných položek drží pořadí', array_keys(iterator_to_array($wp->polozky(7))), [7, 8]);
+over('WpSoubor: první příspěvek', [$wpPolozky[0]['id'], $wpPolozky[0]['stav'], $wpPolozky[0]['pripnuty'], $wpPolozky[0]['nahled'], $wpPolozky[0]['rubriky'], array_keys($wpPolozky[0]['stitky'])], [101, 'publish', true, 201, ['z-radnice' => 'Z radnice'], ['most', 'doprava']]);
+over('WpSoubor: komentáře bez e-mailu a IP adresy', array_keys($wpPolozky[0]['komentare'][0]), ['id', 'autor', 'datum', 'text', 'predek', 'schvalen', 'typ']);
+over('WpSoubor: e-mail ani IP se z exportu nikam nedostanou', (bool) preg_match('/posta\.example|198\.51\.100|203\.0\.113/', (string) json_encode($wpPolozky)), false);
+over('WpImport: k importu jsou jen schválené komentáře (2 ze 3), odpověď zná svého předka', [count(array_filter($wpPolozky[0]['komentare'], PhpRS\Core\WpImport::jeKomentarKImportu(...))), $wpPolozky[0]['komentare'][1]['predek']], [2, 11]);
+$wpStav = PhpRS\Core\WpImport::novyStav('wordpress-ukazka.xml');
+PhpRS\Core\WpImport::analyzuj($wpStav, 30, $wpCesta);
+over('WpImport náhled: fáze a počet položek', [$wpStav['faze'], $wpStav['celkem'], $wpStav['pozice']], ['nahled', 9, 0]);
+over('WpImport náhled: příspěvky podle stavu a stránky', [$wpStav['prehled']['clanky'], $wpStav['prehled']['stranky']], [['publish' => 3, 'draft' => 1], ['publish' => 1]]);
+over('WpImport náhled: rubriky, štítky, autoři, schválené komentáře, přílohy', [$wpStav['prehled']['rubriky'], $wpStav['prehled']['stitky'], $wpStav['prehled']['autori'], $wpStav['prehled']['komentare'], $wpStav['prehled']['prilohy']], [2, 3, 2, 2, 3]);
+over('WpImport náhled: upozorní na cizí typ obsahu a zkratku doplňku', [$wpStav['prehled']['jine'], $wpStav['prehled']['zkratky']], [['nav_menu_item' => 1], ['kontaktni-formular' => 1]]);
+over('WpImport náhled: adresy příloh pro galerie a hlavní obrázky', $wpStav['prilohy'][202] ?? '', 'https://www.podhorsky-zpravodaj.example/wp-content/uploads/2026/05/pohled.jpg');
+
+$wpTmp = sys_get_temp_dir() . '/phprs-wp-' . bin2hex(random_bytes(4));
+mkdir($wpTmp);
+$wpHlava = '<rss version="2.0" xmlns:wp="http://wordpress.org/export/1.2/" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>T</title><link>https://stary.example</link>';
+file_put_contents($wpTmp . '/tajne.txt', 'TAJNY-OBSAH-SERVERU');
+$wpSkodlive = [
+    'vnější entita (XXE)' => '<?xml version="1.0"?><!DOCTYPE rss [<!ENTITY xxe SYSTEM "file://' . $wpTmp . '/tajne.txt">]>' . $wpHlava . '<item><title>&xxe;</title><content:encoded>&xxe;</content:encoded></item></channel></rss>',
+    'miliarda smíchů' => '<?xml version="1.0"?><!DOCTYPE rss [<!ENTITY a "haha"><!ENTITY b "&a;&a;&a;&a;&a;&a;&a;&a;"><!ENTITY c "&b;&b;&b;&b;&b;&b;&b;&b;">]>' . $wpHlava . '<item><title>&c;</title></item></channel></rss>',
+    'vnější DTD' => '<?xml version="1.0"?><!DOCTYPE rss SYSTEM "http://127.0.0.1:1/zly.dtd">' . $wpHlava . '</channel></rss>',
+    'nedefinovaná entita' => '<?xml version="1.0"?>' . $wpHlava . '<item><title>&neexistuje;</title></item></channel></rss>',
+    'jiné XML než export WordPressu' => '<?xml version="1.0"?><rss version="2.0"><channel><title>Obyčejné RSS</title><item><title>x</title></item></channel></rss>',
+    'poškozené XML' => '<?xml version="1.0"?>' . $wpHlava . '<item><title>neuzavřeno</item>',
+    'HTML místo XML' => '<html><body>xmlns:wp="http://wordpress.org/export/1.2/"</body></html>',
+];
+foreach ($wpSkodlive as $popis => $xml) {
+    file_put_contents($wpTmp . '/zly.xml', $xml);
+    $precteno = '';
+    $odmitnuto = $wpOdmitne(function () use ($wpTmp, &$precteno): void {
+        $zly = new PhpRS\Core\WpSoubor($wpTmp . '/zly.xml');
+        $zly->over();
+        $precteno = (string) json_encode([$zly->hlavicka(), iterator_to_array($zly->polozky())]);
+    });
+    over('WpSoubor odmítne: ' . $popis, [$odmitnuto, str_contains($precteno, 'TAJNY-OBSAH') || str_contains($precteno, 'hahahaha')], [true, false]);
+}
+file_put_contents($wpTmp . '/dobry.xml', '<?xml version="1.0"?>' . $wpHlava . '<item><title>A &amp; B</title></item></channel></rss>');
+over('WpSoubor: běžné entity (&amp;) jsou v pořádku', iterator_to_array((new PhpRS\Core\WpSoubor($wpTmp . '/dobry.xml'))->polozky())[0]['titulek'], 'A & B');
+exec('rm -rf ' . escapeshellarg($wpTmp));
+foreach (['export.xml' => true, 'Můj web.WordPress.2026-09-21.XML' => true, '../config.xml' => false, 'slozka/export.xml' => false, '.skryty.xml' => false, 'export.php' => false, 'export.xml.php' => false, "export\0.xml" => false, '' => false] as $nazev => $ocekavano) {
+    over('WpSoubor::platnyNazev ' . json_encode((string) $nazev), PhpRS\Core\WpSoubor::platnyNazev((string) $nazev), $ocekavano);
+}
+over('WpSoubor: název nahraného souboru bez diakritiky a vždy .xml', PhpRS\Core\WpSoubor::nazevProNahrani('Můj web.WordPress.2026-09-21.xml'), 'muj-web-wordpress-2026-09-21.xml');
+
+/* ---------- import z WordPressu: čištění obsahu ---------- */
+$wpCisti = PhpRS\Core\WpObsah::vycisti(...);
+over('WpObsah: klasický editor – odstavce z prázdných řádků, <br> z konců řádků', $wpCisti("První řádek\ndruhý řádek\n\nDruhý odstavec"), "<p>První řádek<br>\ndruhý řádek</p>\n<p>Druhý odstavec</p>");
+over('WpObsah: blokové značky se do <p> nebalí', $wpCisti("Úvod\n\n<h2>Titulek</h2>\n<ul>\n<li>a</li>\n<li>b</li>\n</ul>"), "<p>Úvod</p>\n<h2>Titulek</h2>\n<ul>\n<li>a</li>\n<li>b</li>\n</ul>");
+over('WpObsah: komentáře Gutenbergu mizí, odstavce zůstávají', $wpCisti("<!-- wp:paragraph -->\n<p>Text</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":1} -->\n<h1 class=\"wp-block-heading\">Nadpis</h1>\n<!-- /wp:heading -->"), "<p>Text</p>\n<h2>Nadpis</h2>");
+over('WpObsah: [caption] → figure s popiskem, odkaz na velký obrázek mizí', $wpCisti('[caption id="attachment_5" align="alignnone" width="300"]<a href="https://stary.example/wp-content/uploads/most.jpg"><img class="size-medium" src="https://stary.example/wp-content/uploads/most-300x200.jpg" alt="Most" width="300" height="200" /></a> Most přes řeku[/caption]'), '<figure><img src="https://stary.example/wp-content/uploads/most-300x200.jpg" alt="Most" width="300" height="200" loading="lazy"><figcaption>Most přes řeku</figcaption></figure>');
+over('WpObsah: [gallery ids] → naše galerie jen ze známých obrázků', $wpCisti('[gallery ids="5,6,7,99" columns="2"]', [5 => 'https://stary.example/a.jpg', 6 => 'https://stary.example/b.png', 7 => 'https://stary.example/dokument.pdf']), '<figure class="galerie"><img src="https://stary.example/a.jpg" alt="" loading="lazy"><img src="https://stary.example/b.png" alt="" loading="lazy"></figure>');
+over('WpObsah: blok galerie Gutenbergu → naše galerie', $wpCisti('<!-- wp:gallery {"linkTo":"none"} --><figure class="wp-block-gallery"><!-- wp:image {"id":5} --><figure class="wp-block-image"><img src="https://stary.example/a.jpg" alt="A" class="wp-image-5"/></figure><!-- /wp:image --></figure><!-- /wp:gallery -->'), '<figure class="galerie"><img src="https://stary.example/a.jpg" alt="A" loading="lazy"></figure>');
+over('WpObsah: adresa YouTube na samostatném řádku je vlastní odstavec', $wpCisti("Text před\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ\nText po"), "<p>Text před</p>\n<p>https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>\n<p>Text po</p>");
+over('WpObsah: takový odstavec web promění v přehrávač', str_contains((new ReflectionClass(TypyObsahu::class))->newInstanceWithoutConstructor()->vlozeneAdresy($wpCisti("https://www.youtube.com/watch?v=dQw4w9WgXcQ")), 'youtube-nocookie.com/embed/dQw4w9WgXcQ'), true);
+over('WpObsah: blok embed → adresa v odstavci', $wpCisti('<!-- wp:embed {"url":"https://vimeo.com/76979871","type":"video"} --><figure class="wp-block-embed"><div class="wp-block-embed__wrapper">https://vimeo.com/76979871</div></figure><!-- /wp:embed -->'), '<p>https://vimeo.com/76979871</p>');
+over('WpObsah: iframe YouTube → adresa, cizí iframe pryč', $wpCisti('<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="560"></iframe><iframe src="https://zly.example/"></iframe>'), '<p>https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>');
+over('WpObsah: zkratky doplňků mizí, jejich text a [sic] zůstávají', $wpCisti('[vc_row][vc_column width="1/2"]Text uvnitř[/vc_column][/vc_row] [contact-form-7 id="1"] citace [sic] a [[ukázka]]'), '<p>Text uvnitř  citace [sic] a [[ukázka]]</p>');
+over('WpObsah: v ukázce kódu se závorky nemění', $wpCisti("<pre>pole[muj_klic] = 1;\n\nkonec</pre>"), "<pre>pole[muj_klic] = 1;\n\nkonec</pre>");
+$wpNebezpecne = $wpCisti('<p onclick="x()" style="color:red">Klik <a href="java&#9;script:alert(1)" onmouseover="x()">odkaz</a> <a href="https://dobry.example/" target="_blank">ven</a></p><script>alert(1)</script><style>p{}</style><img src="data:image/svg+xml;base64,AAAA"><img src="https://stary.example/a.jpg" onerror="alert(1)" srcset="x 2x"><svg onload="alert(1)"><circle/></svg><form action="/x"><input name="a"></form><object data="x"></object><div class="obal"><span>Text v divu</span></div>');
+over('WpObsah: skripty, styly, obsluhy událostí, javascript: a data: adresy neprojdou', $wpNebezpecne, "<p>Klik odkaz <a href=\"https://dobry.example/\" target=\"_blank\" rel=\"noopener\">ven</a></p>\n<figure><img src=\"https://stary.example/a.jpg\" alt=\"\" loading=\"lazy\"></figure>\n<p>Text v divu</p>");
+over('WpObsah: po čištění nezbyde nic nebezpečného', (bool) preg_match('/<script|<style|<svg|<form|<iframe|<object|\son[a-z]+=|javascript:|data:|style=|srcset=/i', $wpNebezpecne), false);
+over('WpObsah::bezpecnaAdresa', array_map(PhpRS\Core\WpObsah::bezpecnaAdresa(...), ['https://a.cz/', '/clanek/x', '#kotva', 'mailto:a@b.cz', "java\nscript:alert(1)", ' JAVASCRIPT:alert(1)', 'data:text/html,x', 'vbscript:x', '']), [true, true, true, true, false, false, false, false, false]);
+over('WpObsah: perex z výtahu WordPressu, text celý', PhpRS\Core\WpObsah::perexAText('Ruční <b>výtah</b> &amp; spol.', "Odstavec jedna\n\nOdstavec dva"), ['<p>Ruční výtah &amp; spol.</p>', "<p>Odstavec jedna</p>\n<p>Odstavec dva</p>"]);
+over('WpObsah: bez výtahu je perexem první odstavec a v textu se neopakuje', PhpRS\Core\WpObsah::perexAText('', "[caption]<img src=\"https://stary.example/a.jpg\" alt=\"\"> Popisek[/caption]\n\nOdstavec jedna\n\nOdstavec dva"), ['<p>Odstavec jedna</p>', "<figure><img src=\"https://stary.example/a.jpg\" alt=\"\" loading=\"lazy\"><figcaption>Popisek</figcaption></figure>\n<p>Odstavec dva</p>"]);
+over('WpObsah: značka „Číst dál“ dělí perex a text', PhpRS\Core\WpObsah::perexAText('', "Před značkou\n<!--more-->\nZa značkou"), ['<p>Před značkou</p>', '<p>Za značkou</p>']);
+over('WpObsah: cizí zkratky pro varování v náhledu', PhpRS\Core\WpObsah::ciziZkratky('[gallery ids="1"] [caption]x[/caption] [et_pb_section]a[/et_pb_section] [sic] <code>[muj_klic]</code>'), ['et_pb_section']);
+[$wpUvod, $wpText] = PhpRS\Core\WpObsah::perexAText($wpPolozky[0]['perex'], $wpPolozky[0]['obsah'], $wpStav['prilohy']);
+over('WpObsah: ukázkový příspěvek – perex, obrázek s popiskem, video, galerie, bez skriptu a zkratky', [str_starts_with($wpUvod, '<p>Po dvanácti měsících'), substr_count($wpText, '<figcaption>'), str_contains($wpText, '<p>https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>'), substr_count($wpText, 'class="galerie"'), (bool) preg_match('/script|onclick|kontaktni-formular|javascript/i', $wpText)], [true, 1, true, 1, false]);
+
+/* ---------- import z WordPressu: stav, datum, adresy ---------- */
+$wpStavy = [];
+foreach (['publish', 'future', 'draft', 'pending', 'private', 'trash', 'auto-draft', 'inherit', 'nesmysl'] as $wpS) {
+    $wpM = PhpRS\Core\WpImport::stavClanku($wpS);
+    $wpStavy[$wpS] = $wpM === null ? 'vynechat' : ($wpM['visible'] ? 'vydany' : 'koncept' . ($wpM['stav_redakce'] !== '' ? ':' . $wpM['stav_redakce'] : ''));
+}
+over('WpImport::stavClanku', $wpStavy, ['publish' => 'vydany', 'future' => 'vydany', 'draft' => 'koncept', 'pending' => 'koncept:korektura', 'private' => 'vynechat', 'trash' => 'vynechat', 'auto-draft' => 'vynechat', 'inherit' => 'vynechat', 'nesmysl' => 'vynechat']);
+over('WpImport::stavClanku: příspěvek chráněný heslem se nezveřejní', PhpRS\Core\WpImport::stavClanku('publish', true), ['visible' => 0, 'stav_redakce' => '']);
+over('WpImport::datum: místní čas starého webu', PhpRS\Core\WpImport::datum(['datum' => '2026-05-12 09:30:00', 'datum_gmt' => '2026-05-12 07:30:00']), '2026-05-12 09:30:00');
+over('WpImport::datum: koncept s nulovým datem dostane dnešek', PhpRS\Core\WpImport::datum(['datum' => '0000-00-00 00:00:00', 'datum_gmt' => '0000-00-00 00:00:00', 'vydano' => ''], 1789000000), date('Y-m-d H:i:s', 1789000000));
+$wpObsazene = ['lavka', 'lavka-2'];
+over('WpImport::volnaAdresa: obsazená adresa dostane číslo', PhpRS\Core\WpImport::volnaAdresa('lavka', fn (string $a): bool => in_array($a, $wpObsazene, true)), 'lavka-3');
+over('WpImport::volnaAdresa: volná zůstává', PhpRS\Core\WpImport::volnaAdresa('most', fn (string $a): bool => in_array($a, $wpObsazene, true)), 'most');
+over('WpImport::staraCesta', array_map(PhpRS\Core\WpImport::staraCesta(...), ['https://stary.example/2026/05/lavka/', 'https://stary.example/?p=104', 'https://stary.example/blog/p%C5%99%C3%ADklad/', 'https://stary.example/' . str_repeat('x', 300)]), ['2026/05/lavka', '', 'blog/příklad', '']);
+over('WpImport::bezRozmeru', array_map(PhpRS\Core\WpImport::bezRozmeru(...), ['https://s.example/u/foto-300x200.jpg', 'https://s.example/u/foto-1024x683.JPG?ver=2', 'https://s.example/u/foto.png', 'https://s.example/u/plan-2x4.pdf']), ['https://s.example/u/foto.jpg', 'https://s.example/u/foto.JPG', 'https://s.example/u/foto.png', 'https://s.example/u/plan-2x4.pdf']);
+over('WpImport::zdroj: doména starého webu, nejvýš 40 znaků', [PhpRS\Core\WpImport::zdroj('https://WWW.Stary.example/blog'), PhpRS\Core\WpImport::zdroj(''), strlen(PhpRS\Core\WpImport::zdroj('https://' . str_repeat('a', 60) . '.example'))], ['wp:stary.example', 'wp', 40]);
+over('ExportWebu::cesta: jen názvy exportů, nic mimo složku', [PhpRS\Core\ExportWebu::cesta('../config.php'), PhpRS\Core\ExportWebu::cesta('export-20260921-101500.zip/../../config.php'), PhpRS\Core\ExportWebu::cesta('phprs-20260918-130917-rucni-7d777965.sql.gz')], [null, null, null]);
+
+/* ---------- import z WordPressu: stahování obrázků jen ze starého webu a jen z veřejných adres (ochrana před SSRF) ---------- */
+$wpStahovani = new PhpRS\Core\StahovaniObrazku('https://www.stary-web.example/blog/');
+over('StahovaniObrazku: doména starého webu bez www', $wpStahovani->domena(), 'stary-web.example');
+foreach ([
+    'https://www.stary-web.example/wp-content/uploads/a.jpg' => true,
+    'http://stary-web.example/a.png' => true,
+    'https://STARY-WEB.example./a.png' => true,
+    'https://stary-web.example:443/a.png' => true,
+    'https://stary-web.example:8443/a.png' => false,                 // jiný port
+    'http://stary-web.example:22/a.png' => false,
+    'https://cdn.stary-web.example/a.png' => false,                  // jiná (pod)doména
+    'https://stary-web.example.utocnik.example/a.png' => false,
+    'https://utocnik.example/stary-web.example/a.png' => false,
+    'https://stary-web.example@utocnik.example/a.png' => false,      // doména schovaná za jménem
+    'https://uzivatel:heslo@stary-web.example/a.png' => false,       // přihlašovací údaje v adrese
+    'ftp://stary-web.example/a.png' => false,
+    'file:///etc/passwd' => false,
+    'gopher://stary-web.example/' => false,
+    '//stary-web.example/a.png' => false,
+    'http://127.0.0.1/a.png' => false,
+    'http://169.254.169.254/latest/meta-data/' => false,
+    "https://stary-web.example/a.png\r\nHost: jinam" => false,       // vložené hlavičky
+    'https://stary-web.example\\@utocnik.example/a.png' => false,
+    '' => false,
+] as $wpUrl => $ocekavano) {
+    over('StahovaniObrazku::povolenaAdresa ' . json_encode((string) $wpUrl), $wpStahovani->povolenaAdresa((string) $wpUrl), $ocekavano);
+}
+over('StahovaniObrazku: bez adresy starého webu se nestahuje nic', (new PhpRS\Core\StahovaniObrazku(''))->povolenaAdresa('https://cokoli.example/a.png'), false);
+foreach ([
+    '93.184.216.34' => true, '8.8.8.8' => true, '172.32.0.1' => true, '100.128.0.1' => true, '2606:4700:4700::1111' => true, '::ffff:93.184.216.34' => true,
+    '10.0.0.5' => false, '172.16.0.1' => false, '172.31.255.255' => false, '192.168.1.1' => false, '127.0.0.1' => false, '127.255.255.254' => false,
+    '169.254.169.254' => false, '100.64.0.1' => false, '100.127.255.255' => false, '0.0.0.0' => false, '0.1.2.3' => false, '224.0.0.1' => false, '255.255.255.255' => false,
+    '192.0.2.10' => false, '198.18.0.1' => false, '::1' => false, '::' => false, 'fc00::1' => false, 'fd12:3456::1' => false, 'fe80::1' => false, 'ff02::1' => false,
+    '::ffff:10.0.0.1' => false, '::ffff:127.0.0.1' => false, '64:ff9b::a00:1' => false, '::10.0.0.1' => false, '2002:a00:1::1' => false, '2001:0:4136:e378:8000:63bf:3fff:fdd2' => false,
+    '2001:4860:4860::8888' => true, '[::1]' => false, 'neni-ip' => false, '' => false,
+] as $wpIp => $ocekavano) {
+    over('StahovaniObrazku::verejnaIp ' . $wpIp, PhpRS\Core\StahovaniObrazku::verejnaIp((string) $wpIp), $ocekavano);
+}
+over('StahovaniObrazku: IP adresa místo domény se posuzuje stejně', [$wpStahovani->overenaIp('127.0.0.1'), $wpStahovani->overenaIp('[::1]'), $wpStahovani->overenaIp('93.184.216.34')], [null, null, '93.184.216.34']);
+over('StahovaniObrazku: přesměrování na jinou doménu neprojde dalším kolem kontroly', $wpStahovani->povolenaAdresa(PhpRS\Core\StahovaniObrazku::cilPresmerovani('https://stary-web.example/a.png', 'https://utocnik.example/a.png')), false);
+over('StahovaniObrazku: přesměrování //jinam a do vnitřní sítě neprojde', [$wpStahovani->povolenaAdresa(PhpRS\Core\StahovaniObrazku::cilPresmerovani('https://stary-web.example/a.png', '//utocnik.example/a.png')), $wpStahovani->povolenaAdresa(PhpRS\Core\StahovaniObrazku::cilPresmerovani('https://stary-web.example/a.png', 'http://169.254.169.254/'))], [false, false]);
+over('StahovaniObrazku: relativní přesměrování zůstává na starém webu', [PhpRS\Core\StahovaniObrazku::cilPresmerovani('https://stary-web.example/u/a.png', '/jinde/b.png'), PhpRS\Core\StahovaniObrazku::cilPresmerovani('https://stary-web.example/u/a.png', 'b.png')], ['https://stary-web.example/jinde/b.png', 'https://stary-web.example/u/b.png']);
+$wpPng = (string) base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+$wpSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><script>alert(1)</script></svg>';
+over('StahovaniObrazku::typObrazku: PNG podle hlavičky i obsahu', PhpRS\Core\StahovaniObrazku::typObrazku('image/png; charset=binary', $wpPng), 'image/png');
+over('StahovaniObrazku::typObrazku: hlavička tvrdí obrázek, obsah je HTML', PhpRS\Core\StahovaniObrazku::typObrazku('image/jpeg', '<html><body>přihlášení</body></html>'), null);
+over('StahovaniObrazku::typObrazku: obsah je obrázek, hlavička ne', PhpRS\Core\StahovaniObrazku::typObrazku('text/html', $wpPng), null);
+over('StahovaniObrazku::typObrazku: SVG se odmítá vždy', [PhpRS\Core\StahovaniObrazku::typObrazku('image/svg+xml', $wpSvg), PhpRS\Core\StahovaniObrazku::typObrazku('image/png', $wpSvg)], [null, null]);
+over('StahovaniObrazku::typObrazku: prázdná odpověď', PhpRS\Core\StahovaniObrazku::typObrazku('image/png', ''), null);
+over('StahovaniObrazku: limity podle zadání (15 MB, 3 přesměrování, 5 s spojení, 20 s celkem)', [PhpRS\Core\StahovaniObrazku::MAX_BAJTU, PhpRS\Core\StahovaniObrazku::MAX_PRESMEROVANI, PhpRS\Core\StahovaniObrazku::CAS_SPOJENI, PhpRS\Core\StahovaniObrazku::CAS_CELKEM], [15 * 1024 * 1024, 3, 5, 20]);
+$wpZdrojak = (string) file_get_contents(PHPRS_ROOT . '/system/src/Core/StahovaniObrazku.php');
+over('StahovaniObrazku: přesměrování se nikdy nenásledují automaticky a nic se neposílá navíc', [substr_count($wpZdrojak, 'CURLOPT_FOLLOWLOCATION => false'), str_contains($wpZdrojak, "'follow_location' => 0"), (bool) preg_match('/CURLOPT_(COOKIE\w*|USERPWD|HTTPHEADER|HTTPAUTH)\b/', $wpZdrojak), str_contains($wpZdrojak, "'phpRS-import'")], [1, true, false, true]);
+
 echo $chyb === 0 ? "  ok     jednotkové testy ({$celkem})\n" : "  NALEZENO CHYB: {$chyb} z {$celkem}\n";
 exit($chyb === 0 ? 0 : 1);

@@ -8,7 +8,8 @@
         "zaciname/instalace",
         "zaciname/prvni-kroky",
         "zaciname/aktualizace",
-        "zaciname/presun-webu"
+        "zaciname/presun-webu",
+        "zaciname/import-z-wordpressu"
       ],
       "nazev": {
         "cs": "Začínáme",
@@ -146,6 +147,7 @@
       "prvni-kroky": "first-steps",
       "aktualizace": "updates",
       "presun-webu": "moving-your-site",
+      "import-z-wordpressu": "importing-from-wordpress",
       "provoz": "operations",
       "posta": "mail",
       "zalohy": "backups",
@@ -201,6 +203,7 @@
       "prvni-kroky": "nach-der-installation",
       "aktualizace": "aktualisierungen",
       "presun-webu": "umzug",
+      "import-z-wordpressu": "import-aus-wordpress",
       "provoz": "betrieb",
       "posta": "e-mail",
       "zalohy": "backups",

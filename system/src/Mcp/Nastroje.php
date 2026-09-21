@@ -237,7 +237,7 @@ final class Nastroje
                 $jenAdmin();
                 $slozka = $this->sablona((string) ($a['sablona'] ?? ''));
                 $web->set('layout', $slozka);
-                $web->set('rozvrzeni', Layouty::seznam()[$slozka]['rozvrzeni']);
+                \PhpRS\Admin\Moduly\Bloky::prepniRozvrzeni($this->app->db(), $web, Layouty::seznam()[$slozka]['rozvrzeni']);
 
                 return 'Web nyní používá šablonu ' . $slozka . '.';
         }
@@ -264,6 +264,8 @@ final class Nastroje
         }
         if (array_key_exists('rubrika', $a)) {
             $data['tema'] = $this->rubrika((string) $a['rubrika']);
+            // článek přebírá jazykovou verzi rubriky – stejně jako při uložení v administraci
+            $data['jazyk'] = (string) $db->value('SELECT jazyk FROM {topic} WHERE idt = ?', [$data['tema']]);
         }
         if (!empty($a['datum'])) {
             $ts = strtotime((string) $a['datum']);

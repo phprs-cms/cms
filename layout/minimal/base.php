@@ -73,9 +73,6 @@ $nazevWebu = $web->get('nazev_webu');
 <div class="obal zona zona-hlavicka"><?= $zony['hlavicka'] ?></div>
 <?php endif ?>
 <div class="obal stranka rozvrzeni-<?= e($rozvrzeni) ?><?= $zony['leva'] !== '' ? ' ma-levou' : '' ?><?= $zony['prava'] !== '' ? ' ma-pravou' : '' ?><?= $meta['typ'] === 'article' ? ' stranka-clanek' : '' ?>">
-<?php if ($zony['leva'] !== ''): ?>
-	<aside class="zona zona-leva" aria-label="<?= e(t('Levý sloupec')) ?>"><?= $zony['leva'] ?></aside>
-<?php endif ?>
 	<main id="obsah" class="hlavni">
 <?php if ($zony['nad'] !== ''): ?>
 		<div class="zona zona-nad"><?= $zony['nad'] ?></div>
@@ -85,6 +82,10 @@ $nazevWebu = $web->get('nazev_webu');
 		<div class="zona zona-pod"><?= $zony['pod'] ?></div>
 <?php endif ?>
 	</main>
+<?php /* šablona je jednosloupcová: postranní zóny následují až za obsahem */ ?>
+<?php if ($zony['leva'] !== ''): ?>
+	<aside class="zona zona-leva" aria-label="<?= e(t('Levý sloupec')) ?>"><?= $zony['leva'] ?></aside>
+<?php endif ?>
 <?php if ($zony['prava'] !== ''): ?>
 	<aside class="zona zona-prava" aria-label="<?= e(t('Pravý sloupec')) ?>"><?= $zony['prava'] ?></aside>
 <?php endif ?>

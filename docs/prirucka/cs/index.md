@@ -8,7 +8,7 @@ a pokračuje kapitolami Vzhled až SEO a AI. **Vývojář** najde mapu kódu a p
 
 ## Kapitoly
 
-- **Začínáme** – požadavky na hosting, instalace, první kroky po instalaci, aktualizace a přesun webu jinam.
+- **Začínáme** – požadavky na hosting, instalace, první kroky po instalaci, aktualizace, přesun webu jinam a import z WordPressu.
 - **Psaní** – editor článku, obrázky, galerie a přílohy, vkládání videa a příspěvků ze sítí, typy obsahu, rubriky, štítky a seriály, plánování a revize, AI asistent.
 - **Redakce** – role a oprávnění, předávka a korektura, titulní strana a kalendář, komentáře, účet a přihlášení.
 - **Vzhled** – šablony webu, Identita webu, bloky a rozvržení, úprava textu přímo na webu a vlastní šablona.

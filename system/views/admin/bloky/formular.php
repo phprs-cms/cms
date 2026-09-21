@@ -9,10 +9,13 @@
  */
 use PhpRS\Admin\Moduly\Bloky;
 use PhpRS\Admin\Moduly\Reklama;
+use PhpRS\Core\Jazyk;
 
 $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba-pole" role="alert">' . e(t($chyby[$pole])) . '</span>' : '';
 $data = (string) ($blok['data_sys'] ?? '');
 [$dataRubrika, $dataPocet] = $blok['sys_funkce'] === 'cla' ? array_map(intval(...), explode(':', $data . ':5')) : [0, (int) $data ?: 5];
+[$podTlacitko, $podAdresa] = $blok['sys_funkce'] === 'pod' ? explode('|', $data . '|') : ['', ''];
+$dalsiJazyky = Jazyk::dalsi($app->settings());
 $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($rubriky): void { ?>
 	<select id="<?= e($name) ?>" name="<?= e($name) ?>">
 		<option value="0"><?= e($prazdna) ?></option>
@@ -64,6 +67,15 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 <?php endforeach ?>
 	</select>
 </div>
+<div class="radek" data-pro="pod">
+	<label for="pod_tlacitko"><?= e(t('Text tlačítka')) ?></label>
+	<input class="textpole" type="text" id="pod_tlacitko" name="pod_tlacitko" value="<?= e($podTlacitko) ?>" maxlength="60" placeholder="<?= e(t('Podpořit redakci')) ?>">
+</div>
+<div class="radek" data-pro="pod">
+	<label for="pod_adresa"><?= e(t('Kam tlačítko vede')) ?></label>
+	<div><input class="textpole siroke" type="text" id="pod_adresa" name="pod_adresa" value="<?= e($podAdresa) ?>" maxlength="190" placeholder="https://… /podporte-nas">
+	<span class="napoveda"><?= e(t('Platební odkaz (Stripe, Donio, Darujme, Ko-fi…) nebo vlastní stránka s číslem účtu a QR kódem.')) ?></span></div>
+</div>
 
 <fieldset>
 <legend><?= e(t('Umístění a zobrazení')) ?></legend>
@@ -97,6 +109,17 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<div><?php $rubrikySelect('jen_rubrika', (int) ($blok['jen_rubrika'] ?? 0), t('– ve všech –')) ?>
 	<span class="napoveda"><?= e(t('Blok se ukáže jen na stránce rubriky a u jejích článků – např. partner sportovní rubriky.')) ?></span></div>
 </div>
+<?php if ($dalsiJazyky !== []): ?>
+<div class="radek">
+	<label for="jen_jazyk"><?= e(t('Jazyková verze')) ?></label>
+	<select id="jen_jazyk" name="jen_jazyk">
+		<option value=""><?= e(t('ve všech jazycích')) ?></option>
+<?php foreach (['vy' => Jazyk::vychozi($app->settings())] + array_combine($dalsiJazyky, $dalsiJazyky) as $hodnota => $kod): ?>
+		<option value="<?= e($hodnota) ?>"<?= ($blok['jen_jazyk'] ?? '') === $hodnota ? ' selected' : '' ?>><?= e(Jazyk::DOSTUPNE[$kod][0]) ?></option>
+<?php endforeach ?>
+	</select>
+</div>
+<?php endif ?>
 <div class="radek">
 	<label for="zarizeni"><?= e(t('Zařízení')) ?></label>
 	<select id="zarizeni" name="zarizeni">

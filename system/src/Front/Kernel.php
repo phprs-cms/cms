@@ -75,6 +75,16 @@ final class Kernel
                 . '<body style="font:18px/1.5 system-ui,sans-serif;display:grid;place-items:center;min-height:90vh;margin:0;padding:24px;text-align:center"><div><h1 style="font-size:28px">' . e($this->app->settings()->get('nazev_webu'))
                 . '</h1><p>' . e($this->app->settings()->get('udrzba_text')) . '</p></div>', 503, ['Content-Type' => 'text/html; charset=utf-8', 'Retry-After' => '3600']);
         }
+        // stará číselná adresa WordPressu /?p=123 (po importu): její cesta je hlavní stránka, která existuje vždy, takže by se na
+        // přesměrování při chybě 404 nikdy nedostalo – hledá se proto podle parametru, ještě před cache
+        if ($request->getInt('p') > 0 && $request->path() === '/' && Rozsireni::je($this->app->settings(), 'presmerovani')) {
+            $cil = $this->app->db()->one('SELECT idp, na_adresu FROM {presmerovani} WHERE z_adresy = ?', ['?p=' . $request->getInt('p')]);
+            if ($cil !== null) {
+                $this->app->db()->run('UPDATE {presmerovani} SET pocet = pocet + 1 WHERE idp = ?', [$cil['idp']]);
+
+                return Response::redirect(preg_match('#^https?://#i', $cil['na_adresu']) ? $cil['na_adresu'] : $this->app->url($cil['na_adresu']), 301);
+            }
+        }
         if (($zCache = Cache::nacti($this->app)) !== null) {
             return $zCache;
         }
@@ -393,7 +403,11 @@ final class Kernel
         }
         if ($clanek['jazyk'] !== Jazyk::sloupecWebu()) {
             // článek patří do jiné jazykové verze, než ze které přišel požadavek
-            $this->app->jazykPrefix = in_array($clanek['jazyk'], Jazyk::dalsi($this->app->settings()), true) ? $clanek['jazyk'] : '';
+            if ($clanek['jazyk'] !== '' && !in_array($clanek['jazyk'], Jazyk::dalsi($this->app->settings()), true)) {
+                // jeho jazyková verze je vypnutá: přesměrování by vedlo zpět na tutéž adresu
+                return $this->nenalezeno();
+            }
+            $this->app->jazykPrefix = $clanek['jazyk'];
 
             return Response::redirect($this->app->url('clanek/' . $clanek['seo_link']) . ($nahled ? '?nahled=1' : ''), 301);
         }
@@ -592,7 +606,8 @@ final class Kernel
         }
         $adresa = $this->app->url($cesta);
         if ($this->app->request->get('upravit') !== 'text') {
-            $this->upravitZde = $adresa . '?upravit=text';
+            // koncept je vidět jen v náhledu – bez něj by „Upravit zde“ skončilo na stránce Nenalezeno
+            $this->upravitZde = $adresa . ($this->app->request->get('nahled') === '1' ? '?nahled=1&upravit=text' : '?upravit=text');
 
             return null;
         }
@@ -607,7 +622,8 @@ final class Kernel
         }
 
         return $this->view->render('upravit', [
-            'app' => $this->app, 'typ' => $typ, 'zaznam' => $zaznam, 'zpet' => $adresa, 'zamceno' => $zamceno,
+            'app' => $this->app, 'typ' => $typ, 'zaznam' => $zaznam, 'zamceno' => $zamceno,
+            'zpet' => $adresa . ($this->app->request->get('nahled') === '1' ? '?nahled=1' : ''),
             'akce' => $this->app->url('admin.php?modul=' . ($typ === 'clanek' ? 'clanky' : 'stranky') . '&akce=uloz_text'),
             'chyba' => $this->app->request->get('chyba') === '1',
         ]);

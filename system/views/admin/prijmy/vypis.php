@@ -15,7 +15,7 @@
 <?php endif ?>
 		<p><?= e(t($k['text'])) ?></p>
 <?php if ($k['poznamka'] !== ''): ?>
-		<p class="smltxt"><?= e(t($k['poznamka'])) ?></p>
+		<p class="smltxt"><?= e($k['poznamka']) ?></p>
 <?php endif ?>
 		<p><a class="navigace" href="<?= e($k['odkaz'][0]) ?>"><?= e(t($k['odkaz'][1])) ?></a></p>
 	</section>

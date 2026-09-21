@@ -29,6 +29,7 @@ if ($user !== null) {
         'reklama' => [['Nová reklama', 'modul=reklama&akce=novy']],
         'users' => [['Nový uživatel', 'modul=users&akce=novy']],
         'newsletter' => [['Odběratelé', 'modul=newsletter&akce=odberatele']],
+        'prenos' => [['Import z WordPressu', 'modul=prenos']],
     ];
     foreach ($rychle as $ident => $polozky) {
         foreach (isset($moduly[$ident]) ? $polozky : [] as [$nazev, $dotaz]) {

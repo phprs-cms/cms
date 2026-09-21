@@ -10,3 +10,6 @@
 /dist/
 /tools/klice/
 /storage/zalohy/
+/storage/import/*
+!/storage/import/.htaccess
+!/storage/import/.gitkeep

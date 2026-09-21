@@ -102,7 +102,7 @@ final class Rozesilka
             $prvni = (string) $db->value('SELECT titulek FROM {clanky} WHERE idc = ?', [$ids[0]]);
             $dalsi = ['' => ' a další – ', 'sk' => ' a ďalšie – ', 'en' => ' and more – ', 'de' => ' und mehr – '][$jazyk === '' ? (Jazyk::vychozi($s) === 'cs' ? '' : Jazyk::vychozi($s)) : $jazyk] ?? ' – ';
             $db->insert('newsletter', [
-                'predmet' => mb_substr($prvni . (count($ids) > 1 ? $dalsi : ' – ') . $s->get('nazev_webu'), 0, 200), 'uvod' => $jazyk === '' ? $s->get('newsletter_uvod') : '',
+                'predmet' => mb_substr($prvni . (count($ids) > 1 ? $dalsi : ' – ') . $s->proJazyk('nazev_webu', $jazyk), 0, 200), 'uvod' => $jazyk === '' ? $s->get('newsletter_uvod') : '',
                 'clanky' => implode(',', $ids), 'vytvoreno' => date('Y-m-d H:i:s'), 'auto' => 1, 'odeslat_v' => date('Y-m-d H:i:s'), 'jazyk' => $jazyk,
             ]);
         }

@@ -40,7 +40,7 @@ final class Oznameni
     public static function zpracuj(App $app): void
     {
         $db = $app->db();
-        $clanky = $db->all('SELECT idc, titulek, uvod, seo_link, obrazek, noindex, pristup FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND oznameno IS NULL ORDER BY datum LIMIT 5');
+        $clanky = $db->all('SELECT idc, titulek, uvod, seo_link, jazyk, obrazek, noindex, pristup FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND oznameno IS NULL ORDER BY datum LIMIT 5');
         foreach ($clanky as $c) {
             // nejdřív označit: kdyby oznámení spadlo, nesmí se opakovat donekonečna
             if ($db->run('UPDATE {clanky} SET oznameno = NOW() WHERE idc = ? AND oznameno IS NULL', [$c['idc']])->rowCount() === 0) {
@@ -51,14 +51,14 @@ final class Oznameni
                 continue;
             }
             Webhook::clanekVydan($app, (int) $c['idc']);
-            (new \PhpRS\Front\Seo($app))->indexNow('clanek/' . $c['seo_link']);
+            (new \PhpRS\Front\Seo($app))->indexNow($app->urlClanku($c['seo_link'], $c['jazyk']));
             $push = new Push($db, $app->settings());
             if ($push->zapnuto()) {
-                $koren = $app->request->origin() . $app->url('');
+                $koren = $app->request->origin() . $app->request->basePath() . '/'; // soubory jsou společné všem jazykům
                 $push->oznam([
                     'titulek' => $c['titulek'],
                     'text' => mb_strimwidth(trim(html_entity_decode(strip_tags($c['uvod']), ENT_QUOTES | ENT_HTML5)), 0, 160, '…'),
-                    'url' => $koren . 'clanek/' . $c['seo_link'],
+                    'url' => $app->request->origin() . $app->urlClanku($c['seo_link'], $c['jazyk']),
                     'obrazek' => $c['obrazek'] === '' ? '' : (preg_match('#^https?://#i', $c['obrazek']) ? $c['obrazek'] : rtrim($koren, '/') . '/' . ltrim($c['obrazek'], '/')),
                 ]);
                 $push->rozesli();

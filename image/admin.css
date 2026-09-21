@@ -1028,3 +1028,37 @@ body.login {
 	.formular-clanek .ulozit-lista .tl { flex: 1; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
 	.formular-clanek .titulek-pole { font-size: 17px; letter-spacing: -0.01em; }
 }
+
+/* Import a export: ukazatel kroků importu a průběh dávek */
+.prenos-kroky {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 20px;
+	margin: 0 0 16px;
+	padding: 0;
+	list-style: none;
+	color: var(--text-slaby);
+	font-size: 14px;
+}
+.prenos-kroky span {
+	display: inline-grid;
+	place-items: center;
+	width: 22px;
+	height: 22px;
+	margin-right: 4px;
+	border: 1px solid var(--linka-pole);
+	border-radius: 50%;
+	font-size: 12px;
+	font-weight: 700;
+}
+.prenos-kroky .aktivni { color: var(--text); font-weight: 600; }
+.prenos-kroky .aktivni span { border-color: var(--akcent); background: var(--akcent); color: var(--na-akcentu); }
+.prenos-kroky .hotovy span { border-color: var(--ok); color: var(--ok); }
+.prenos-prubeh {
+	display: block;
+	width: 100%;
+	max-width: 520px;
+	height: 10px;
+	margin: 0 0 16px;
+	accent-color: var(--akcent);
+}

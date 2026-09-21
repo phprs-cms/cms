@@ -34,10 +34,35 @@ final class Obrazky
                 default => 'Soubor se nepodařilo nahrát.',
             });
         }
+
+        return self::zpracuj((string) $file['tmp_name'], (string) ($file['name'] ?? 'obrazek'), true);
+    }
+
+    /**
+     * Obrázek, který už na serveru leží (stažený při importu z WordPressu): projde stejnou cestou jako nahraný,
+     * takže je od něj k nerozeznání - překódování přes GD, zmenšení, náhled, WebP. Zdrojový soubor zůstává na místě.
+     *
+     * @return array{obr_poloha:string, obr_width:int, obr_height:int, obr_vel:int, nahl_poloha:string, nahl_width:int, nahl_height:int, nazev:string}
+     * @throws \RuntimeException s českou hláškou pro uživatele
+     */
+    public static function ulozSoubor(string $cesta, string $nazev): array
+    {
+        if (!is_file($cesta)) {
+            throw new \RuntimeException('Soubor se nepodařilo nahrát.');
+        }
+
+        return self::zpracuj($cesta, $nazev, false);
+    }
+
+    /**
+     * @param bool $nahrany soubor přišel formulářem (přesouvá se přes move_uploaded_file); jinak se jen kopíruje
+     * @return array{obr_poloha:string, obr_width:int, obr_height:int, obr_vel:int, nahl_poloha:string, nahl_width:int, nahl_height:int, nazev:string}
+     */
+    private static function zpracuj(string $tmp, string $jmenoSouboru, bool $nahrany): array
+    {
         if (!extension_loaded('gd')) {
             throw new \RuntimeException('Na serveru chybí rozšíření GD pro práci s obrázky.');
         }
-        $tmp = (string) $file['tmp_name'];
         $info = @getimagesize($tmp);
         if ($info === false || !isset(self::TYPY[$info[2]])) {
             throw new \RuntimeException('Povolené jsou jen obrázky JPG, PNG, WebP a GIF.');
@@ -47,7 +72,7 @@ final class Obrazky
         }
 
         $pripona = self::TYPY[$info[2]];
-        $nazev = pathinfo((string) ($file['name'] ?? 'obrazek'), PATHINFO_FILENAME);
+        $nazev = pathinfo($jmenoSouboru, PATHINFO_FILENAME);
         $slozka = 'media/' . date('Y/m');
         if (!is_dir(PHPRS_ROOT . '/' . $slozka) && !mkdir(PHPRS_ROOT . '/' . $slozka, 0775, true)) {
             throw new \RuntimeException('Nelze vytvořit složku ' . $slozka . ' - zkontrolujte práva k zápisu.');
@@ -57,7 +82,7 @@ final class Obrazky
         if ($pripona === 'gif') {
             // GIF může být animovaný - ukládá se beze změny, náhled je první snímek
             $cil = $zaklad . '.gif';
-            if (!move_uploaded_file($tmp, PHPRS_ROOT . '/' . $cil)) {
+            if (!($nahrany ? move_uploaded_file($tmp, PHPRS_ROOT . '/' . $cil) : copy($tmp, PHPRS_ROOT . '/' . $cil))) {
                 throw new \RuntimeException('Soubor se nepodařilo uložit.');
             }
             $obr = imagecreatefromgif(PHPRS_ROOT . '/' . $cil);

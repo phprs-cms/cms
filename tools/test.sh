@@ -112,5 +112,39 @@ over "úprava na místě – formulář" 200 "/clanek/vitejte-v-phprs-3?upravit=
 curl -s -o "$PRACE/odpoved" "$B/clanek/vitejte-v-phprs-3?upravit=text"; grep -q "rs-upravit" "$PRACE/odpoved" && { echo "  CHYBA  úprava na místě je vidět bez přihlášení"; CHYB=$((CHYB+1)); } || echo "  ok     úprava na místě jen pro přihlášené"
 kod=$(curl -s -o "$PRACE/odpoved" -w '%{http_code}' "$B/?upravit=1"); grep -q "rs-nastaveni" "$PRACE/odpoved" && { echo "  CHYBA  vizuální editor je vidět bez přihlášení"; CHYB=$((CHYB+1)); } || echo "  ok     vizuální editor jen pro přihlášené"
 
+echo "== import z WordPressu a export"
+over "import a export" 200 "/admin.php?modul=prenos" "WordPress"
+TOKEN=$(grep -o 'name="_csrf" value="[a-f0-9]*"' "$PRACE/odpoved" | head -1 | sed 's/.*value="//;s/"//')
+wp_davka() { curl -s -b "$JAR" -c "$JAR" -o "$PRACE/odpoved" -X POST "$B/admin.php?modul=prenos&akce=prubeh&soubor=wordpress-ukazka.xml" -d "_csrf=$TOKEN"; }
+wp_import() { # náhled (čtení souboru) → volby → import; ukázkový soubor se vejde do jedné dávky
+  wp_davka
+  curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=prenos&akce=spust" -d "_csrf=$TOKEN" -d soubor=wordpress-ukazka.xml -d koncepty=1 -d stranky=1 -d komentare=1 -d presmerovani=1 -d rubrika=0
+  wp_davka
+}
+curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=prenos&akce=nahraj" -F "_csrf=$TOKEN" -F "soubor=@$KOREN/tools/fixtures/wordpress-ukazka.xml"
+wp_davka
+over "import z WordPressu – náhled upozorní na nepřevoditelný typ" 200 "/admin.php?modul=prenos&akce=nahled&soubor=wordpress-ukazka.xml" "nav_menu_item"
+wp_import
+grep -q "Import obsahu je hotový" "$PRACE/odpoved" && echo "  ok     import z WordPressu doběhl" || { echo "  CHYBA  import z WordPressu nedoběhl"; CHYB=$((CHYB+1)); }
+over "importovaný článek" 200 /clanek/lavka-pres-bystrinu "Lávka přes Bystřinu"
+over "importovaný článek – galerie a video" 200 /clanek/lavka-pres-bystrinu 'class="galerie"'
+over "importovaná stránka" 200 /o-zpravodaji "Kontakt"
+curl -s -o "$PRACE/odpoved" "$B/clanek/lavka-pres-bystrinu"; grep -qE "podvrh|onclick|kontaktni-formular|posta\.example" "$PRACE/odpoved" && { echo "  CHYBA  importovaný článek obsahuje skript, zkratku doplňku nebo e-mail komentujícího"; CHYB=$((CHYB+1)); } || echo "  ok     importovaný obsah je vyčištěný"
+kod=$(curl -s -o /dev/null -w '%{http_code}' "$B/2026/05/lavka-pres-bystrinu/"); [ "$kod" = 301 ] && echo "  ok     stará adresa WordPressu přesměruje" || { echo "  CHYBA  přesměrování staré adresy: $kod"; CHYB=$((CHYB+1)); }
+kod=$(curl -s -o /dev/null -w '%{http_code}' "$B/?p=102"); [ "$kod" = 301 ] && echo "  ok     stará adresa /?p=102 přesměruje" || { echo "  CHYBA  přesměrování /?p=102: $kod"; CHYB=$((CHYB+1)); }
+# druhý import téhož souboru nesmí nic zdvojit
+curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=prenos&akce=vyber" -d "_csrf=$TOKEN" -d soubor=wordpress-ukazka.xml
+wp_import
+POCTY=$("${MYSQL[@]}" "$DB_NAME" -N -e "SELECT CONCAT((SELECT COUNT(*) FROM rs_clanky WHERE seo_link LIKE 'lavka-pres-bystrinu%' OR seo_link LIKE 'slavnosti-syra%' OR seo_link LIKE 'rozpocet-obce%'), '/', (SELECT COUNT(*) FROM rs_komentare k JOIN rs_clanky c ON c.idc = k.clanek WHERE c.seo_link = 'lavka-pres-bystrinu' AND k.od_mail = '' AND k.od_ip = ''), '/', (SELECT COUNT(*) FROM rs_stranky WHERE seo_link LIKE 'o-zpravodaji%'))")
+[ "$POCTY" = "4/2/1" ] && echo "  ok     opakovaný import nic nezdvojil" || { echo "  CHYBA  opakovaný import: články/komentáře/stránky = $POCTY, čekal jsem 4/2/1"; CHYB=$((CHYB+1)); }
+over "složka importu není přístupná z webu" 403 /storage/import/wordpress-ukazka.xml
+curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$B/admin.php?modul=prenos&akce=export" -d "_csrf=$TOKEN"
+over "export webu je v seznamu" 200 "/admin.php?modul=prenos" "akce=stahni"
+EXPORT=$(grep -o 'export-[0-9]*-[0-9]*\.[a-z]*' "$PRACE/odpoved" | head -1)
+curl -s -b "$JAR" -o "$PRACE/export" "$B/admin.php?modul=prenos&akce=stahni&soubor=$EXPORT"
+if [ "${EXPORT##*.}" = zip ]; then unzip -p "$PRACE/export" obsah.json > "$PRACE/obsah.json" 2>/dev/null || true; else cp "$PRACE/export" "$PRACE/obsah.json"; fi
+grep -q '"format":"phprs-export"' "$PRACE/obsah.json" && ! grep -qE '"password"|od_mail|od_ip|smtp_heslo|tajny_klic|push_klic_soukromy' "$PRACE/obsah.json" && echo "  ok     export obsahuje data a žádná tajemství" || { echo "  CHYBA  export webu chybí nebo obsahuje tajné údaje"; CHYB=$((CHYB+1)); }
+curl -s -o "$PRACE/odpoved" "$B/admin.php?modul=prenos&akce=stahni&soubor=$EXPORT"; grep -q "Heslo" "$PRACE/odpoved" && echo "  ok     export jen pro přihlášeného správce" || { echo "  CHYBA  export jde stáhnout bez přihlášení"; CHYB=$((CHYB+1)); }
+
 if [ -s "$PRACE/web/storage/log/chyby.log" ]; then echo "== záznam chyb aplikace:"; cat "$PRACE/web/storage/log/chyby.log"; CHYB=$((CHYB+1)); fi
 echo; [ "$CHYB" -eq 0 ] && echo "VŠE V POŘÁDKU" || { echo "NALEZENO CHYB: $CHYB"; exit 1; }

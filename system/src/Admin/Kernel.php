@@ -39,6 +39,7 @@ final class Kernel
         Moduly\Autori::class,
         Moduly\Presmerovani::class,
         Moduly\ProtokolZmen::class,
+        Moduly\Prenos::class,
         Moduly\RozsireniAdmin::class,
         Moduly\Konfigurace::class,
     ];

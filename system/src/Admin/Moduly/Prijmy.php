@@ -34,7 +34,7 @@ final class Prijmy extends Modul
                 'popisek' => 'čtenářů s platným předplatným',
                 'text' => 'Zamčené články čtou jen předplatitelé. Předplatné zatím zapisujete ručně u čtenáře; kde ho čtenář získá, říká adresa v Nastavení → Základní.',
                 'odkaz' => $je('ctenari') ? [$url('modul=ctenari'), 'Čtenáři'] : [$url('modul=rozsireni'), 'Zapnout v Rozšířeních'],
-                'poznamka' => $je('ctenari') && $web->get('predplatne_url') === '' ? 'Není vyplněno, kde čtenář předplatné získá.' : '',
+                'poznamka' => $je('ctenari') && $web->get('predplatne_url') === '' ? t('Není vyplněno, kde čtenář předplatné získá.') : '',
             ],
             [
                 'nazev' => 'Dobrovolná podpora', 'zapnuto' => $podpora > 0,

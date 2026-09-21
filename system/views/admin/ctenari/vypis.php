@@ -28,7 +28,7 @@
 <tbody>
 <?php foreach ($ctenari as $c): $plati = $c['predplatne_do'] !== null && $c['predplatne_do'] >= date('Y-m-d'); ?>
 <tr>
-	<td><?= e($c['email']) ?><?= $c['potvrzen'] ? '' : ' <span class="stitek stitek-koncept">nepotvrdil e-mail</span>' ?></td>
+	<td><?= e($c['email']) ?><?= $c['potvrzen'] ? '' : ' <span class="stitek stitek-koncept">' . e(t('nepotvrdil e-mail')) . '</span>' ?></td>
 	<td><?= e($c['jmeno']) ?></td>
 	<td class="cislo"><?= e(datum($c['vytvoren'])) ?></td>
 	<td class="cislo"><?= $c['naposledy'] ? e(datum($c['naposledy'])) : '–' ?></td>
@@ -48,7 +48,7 @@
 			<noscript><button class="navigace" type="submit">OK</button></noscript>
 		</form>
 	</td>
-	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="Smazat účet čtenáře <?= e($c['email']) ?>?"><?= $csrf ?><input type="hidden" name="idct" value="<?= (int) $c['idct'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Smazat účet čtenáře %s?', $c['email'])) ?>"><?= $csrf ?><input type="hidden" name="idct" value="<?= (int) $c['idct'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

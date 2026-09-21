@@ -23,10 +23,10 @@ final class Webhook
         if ($c === null) {
             return; // koncept nebo článek naplánovaný do budoucna
         }
-        $koren = $app->request->origin() . $app->url('');
+        $koren = $app->request->origin() . $app->request->basePath() . '/'; // soubory jsou společné všem jazykům
         $data = [
             'udalost' => 'clanek_vydan', 'web' => $app->settings()->get('nazev_webu'), 'titulek' => $c['titulek'],
-            'adresa' => $koren . 'clanek/' . $c['seo_link'], 'perex' => trim(strip_tags($c['uvod'])), 'rubrika' => $c['rubrika'],
+            'adresa' => $app->request->origin() . $app->urlClanku($c['seo_link'], $c['jazyk']), 'perex' => trim(strip_tags($c['uvod'])), 'rubrika' => $c['rubrika'],
             'obrazek' => $c['obrazek'] === '' ? '' : (preg_match('#^https?://#i', $c['obrazek']) ? $c['obrazek'] : rtrim($koren, '/') . '/' . ltrim($c['obrazek'], '/')),
             'stitky' => array_column($app->db()->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ?', [$idc]), 'nazev'),
             'vydano' => date('c', strtotime($c['datum'])),

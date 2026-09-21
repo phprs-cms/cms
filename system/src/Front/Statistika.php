@@ -35,7 +35,8 @@ final class Statistika
         }
         $zdroj = strtolower((string) parse_url((string) ($server['HTTP_REFERER'] ?? ''), PHP_URL_HOST));
         $zdroj = preg_replace('/^www\./', '', $zdroj) ?? '';
-        $vlastni = preg_replace('/^www\.|:\d+$/', '', strtolower((string) ($server['HTTP_HOST'] ?? ''))) ?? '';
+        // vlastní web je nastavená adresa webu, ne hlavička Host – tu si může klient napsat, jak chce
+        $vlastni = preg_replace('/^www\./', '', strtolower((string) parse_url($app->request->origin(), PHP_URL_HOST))) ?? '';
         if ($novy && $zdroj !== '' && $zdroj !== $vlastni) {
             $db->run('INSERT INTO {stat_zdroje} (den, zdroj, pocet) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE pocet = pocet + 1', [$dnes, mb_substr($zdroj, 0, 100)]);
         }

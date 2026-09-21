@@ -52,7 +52,7 @@ final class Reklama
         }
 
         // cílení na zařízení řeší styl (třídy jen-mobil / jen-pocitac z Front\Seo) - stránka z cache je pro všechny stejná
-        return '<aside class="reklama reklama-' . e($pozice) . (in_array($r['zarizeni'], ['mobil', 'pocitac'], true) ? ' jen-' . $r['zarizeni'] : '') . '" aria-label="Reklama"><span class="reklama-oznaceni">Reklama</span>' . $obsah . '</aside>';
+        return '<aside class="reklama reklama-' . e($pozice) . (in_array($r['zarizeni'], ['mobil', 'pocitac'], true) ? ' jen-' . $r['zarizeni'] : '') . '" aria-label="' . e(t('Reklama')) . '"><span class="reklama-oznaceni">' . e(t('Reklama')) . '</span>' . $obsah . '</aside>';
     }
 
     /** Proklik banneru: započítat a přesměrovat na cíl. */

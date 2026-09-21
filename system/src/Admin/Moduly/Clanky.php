@@ -242,7 +242,7 @@ final class Clanky extends Modul
         // nově vydaný článek se oznámí (webhook, IndexNow, Web Push); naplánovaný počká na svůj čas - viz Core\Oznameni
         \PhpRS\Core\Oznameni::zpracuj($this->app);
         if ($data['visible'] && !empty($puvodni['visible']) && !$data['noindex'] && strtotime($data['datum']) <= time()) {
-            (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $data['seo_link']); // úprava vydaného článku
+            (new \PhpRS\Front\Seo($this->app))->indexNow($this->app->urlClanku($data['seo_link'], $data['jazyk'])); // úprava vydaného článku
         }
 
         $this->upozorniRedakci($puvodni, $data, $id);
@@ -308,8 +308,10 @@ final class Clanky extends Modul
             return $this->zpetNaWeb($r->post('zpet'));
         }
         $data = ['titulek' => mb_substr($r->post('titulek'), 0, 255), 'uvod' => $r->post('uvod'), 'text' => $r->post('text')];
+        // nevydaný článek je na webu vidět jen v náhledu
+        $nahled = $clanek['visible'] && strtotime((string) $clanek['datum']) <= time() ? '' : 'nahled=1';
         if ($data['titulek'] === '') {
-            return $this->zpetNaWeb($r->post('zpet'), '?upravit=text&chyba=1');
+            return $this->zpetNaWeb($r->post('zpet'), '?' . ($nahled !== '' ? $nahled . '&' : '') . 'upravit=text&chyba=1');
         }
         if ([$clanek['titulek'], $clanek['uvod'], $clanek['text']] !== array_values($data)) {
             $this->ulozRevizi($clanek);
@@ -319,10 +321,10 @@ final class Clanky extends Modul
         \PhpRS\Core\Hledani::indexuj($this->db, (int) $clanek['idc']);
         \PhpRS\Admin\Protokol::zapis($this->app, 'clanky', 'úprava přímo na webu', mb_substr($data['titulek'], 0, 80));
         if ($clanek['visible'] && !$clanek['noindex'] && strtotime((string) $clanek['datum']) <= time()) {
-            (new \PhpRS\Front\Seo($this->app))->indexNow('clanek/' . $clanek['seo_link']);
+            (new \PhpRS\Front\Seo($this->app))->indexNow($this->app->urlClanku($clanek['seo_link'], $clanek['jazyk']));
         }
 
-        return $this->zpetNaWeb($r->post('zpet'));
+        return $this->zpetNaWeb($r->post('zpet'), $nahled !== '' ? '?' . $nahled : '');
     }
 
     /** "Jsem tu" z otevřeného editoru - prodlužuje zámek článku. */
@@ -538,7 +540,7 @@ final class Clanky extends Modul
             }
         }
         if ($rubrika === null) {
-            return $zpetNaClanek('V cílovém jazyce zatím není žádná rubrika, do které smíte psát. Založte ji v Rubrikách (pole Jazyk).');
+            return $zpetNaClanek('V cílovém jazyce zatím není žádná rubrika, do které smíte psát. Založte ji v Rubrikách (pole Jazyková verze).');
         }
         $ja = $this->app->auth()->id();
         if ((int) $this->db->value("SELECT COUNT(*) FROM {protokol} WHERE kdo = ? AND modul = 'asistent' AND cas > NOW() - INTERVAL 1 HOUR", [$ja]) >= 60) {

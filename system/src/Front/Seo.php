@@ -137,14 +137,15 @@ final class Seo
      * IndexNow: oznámí vyhledávačům (Bing, Seznam, Yandex) novou nebo změněnou adresu.
      * Volá se po uložení vydaného článku; selhání se ignoruje, web kvůli němu nesmí čekat.
      */
-    public function indexNow(string $cesta): void
+    /** @param string $adresa adresa na webu od kořene serveru (App::urlClanku()) */
+    public function indexNow(string $adresa): void
     {
         $s = $this->app->settings();
         $host = (string) parse_url($this->web, PHP_URL_HOST);
         if (!$s->bool('indexnow') || $s->get('indexnow_klic') === '' || !$s->bool('indexovani') || in_array($host, ['localhost', '127.0.0.1'], true) || str_ends_with($host, '.test')) {
             return;
         }
-        $data = json_encode(['host' => $host, 'key' => $s->get('indexnow_klic'), 'keyLocation' => $this->web . $s->get('indexnow_klic') . '.txt', 'urlList' => [$this->web . $cesta]]);
+        $data = json_encode(['host' => $host, 'key' => $s->get('indexnow_klic'), 'keyLocation' => $this->app->request->origin() . $this->app->request->basePath() . '/' . $s->get('indexnow_klic') . '.txt', 'urlList' => [$this->app->request->origin() . $adresa]]);
         @file_get_contents('https://api.indexnow.org/indexnow', false, stream_context_create(['http' => [
             'method' => 'POST', 'header' => "Content-Type: application/json; charset=utf-8\r\n", 'content' => $data, 'timeout' => 3, 'ignore_errors' => true,
         ]]));
@@ -166,7 +167,7 @@ final class Seo
             $radky[] = '- [' . $r['nazev'] . '](' . $this->web . 'rubrika/' . $r['seo_link'] . ')' . ($popis !== '' ? ': ' . $popis : '');
         }
         array_push($radky, '', '## ' . t('Nejnovější články'));
-        foreach ($db->all('SELECT titulek, seo_link, uvod FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 AND jazyk = ? ORDER BY datum DESC LIMIT 30', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $c) {
+        foreach ($db->all('SELECT titulek, seo_link, uvod FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 AND noindex = 0 AND jazyk = ? ORDER BY datum DESC LIMIT 30', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $c) {
             $radky[] = '- [' . $c['titulek'] . '](' . $this->web . 'clanek/' . $c['seo_link'] . $md . '): ' . mb_strimwidth(trim(strip_tags($c['uvod'])), 0, 200, '…');
         }
 

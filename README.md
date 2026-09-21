@@ -16,8 +16,9 @@ hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné glo
 
 1. Nahrajte obsah složky na hosting (FTP stačí, Composer ani příkazová řádka nejsou potřeba).
 2. Založte prázdnou databázi.
-3. Otevřete `https://vas-web.cz/install.php` a vyplňte formulář.
-4. Smažte `install.php`.
+3. Otevřete `https://vas-web.cz/install.php` a vyplňte formulář. Na přání nahraje i ukázkový magazín, který jde později jedním kliknutím smazat.
+
+Instalátor se po dokončení smaže sám. Podrobný postup: [příručka na phprs.eu](https://phprs.eu/cs/dokumentace/).
 
 Apache používá přiložené soubory `.htaccess`. Nginx je nečte – použijte hotovou ukázku `system/nginx.priklad.conf`
 (zákazy přístupu, média bez spouštění skriptů, WebP, hezké adresy) a po nasazení ověřte, že `/config.php` a `/storage/log/chyby.log` vracejí 403.
@@ -36,7 +37,6 @@ config.php                          vytvoří instalátor
 image/                              CSS, JS a logo administrace
 layout/<název>/                     vzhled webu: base.php, blok.php, cla_*.php, style.css
 media/RRRR/MM/                      nahrané obrázky (galerie)
-plugins/                            plug-iny (připravuje se)
 storage/                            logy a cache, z webu nepřístupné
 system/src/Core/                    jádro: App, Db, Request, Response, Session, View, Auth, Settings
 system/src/Admin/Moduly/            moduly administrace - jeden modul = jedna třída
@@ -71,11 +71,13 @@ Layouty nepoužívají externí písma ani skripty (GDPR, rychlost).
 - **Každá změna:** `.github/workflows/kontrola.yml` – kouřový test `tools/test.sh` (čistá instalace + průchod webem
   a administrací) na PHP 8.4 a 8.5, Semgrep (bezpečnostní pravidla), Gitleaks (klíče a hesla v repozitáři).
   Běží i každé pondělí bez změn. Lokálně: `tools/test.sh` (potřebuje MySQL; databázi `phprs3_test` smaže a vytvoří).
-- **Vydání:** zvýšit `PHPRS_VERSION`, commit, `git tag -a v3.0.1 -m "- oprava …"` a push tagu →
-  `.github/workflows/vydani.yml` sestaví ZIP, podepíše `aktualizace.json` (tajemství `PHPRS_KLIC` v prostředí
-  `vydani` s povinným schválením), založí Release a zveřejní manifest na GitHub Pages. Ručně totéž umí
-  `php tools/vydani.php`.
-- **Bezpečnostní oprava:** do zprávy tagu přidat `[bezpecnostni]`. Instalace se po novinkách dívají dvakrát denně,
+- **Každý den:** `.github/workflows/denni-kontrola.yml` ověří podpis kanálu aktualizací, pustí testy i na vývojové verzi PHP,
+  Semgrep, Gitleaks a bezpečnostní hlavičky webu i dema; při selhání založí issue.
+- **Vydání:** zvýšit `PHPRS_VERSION`, commit, tag. Balíček a `aktualizace.json` se sestavují a **podepisují jen lokálně**
+  (`php tools/vydani.php`, soukromý klíč nikdy neopouští počítač vydavatele); CI po pushnutí tagu založí jen koncept vydání.
+  Instalace berou aktualizace z `https://phprs.eu/aktualizace.json` a podpis ověřují proti `system/aktualizace.pub`.
+  Celý postup včetně výměny klíče: `docs/VYDAVANI.md`.
+- **Bezpečnostní oprava:** `php tools/vydani.php … --bezpecnostni`. Instalace se po novinkách dívají dvakrát denně,
   bezpečnostní verzi si nainstalují samy (lze vypnout), správce dostane e-mail. Postup hlášení chyb: `SECURITY.md`.
 
 ## Licence

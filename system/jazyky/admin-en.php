@@ -1377,4 +1377,5 @@ return [
     'Zařízení nepotvrdilo přítomnost uživatele.' => 'The device did not confirm that a user was present.',
     'Přihlašovací klíč je odebrán.' => 'The passkey has been removed.',
     'Přihlašovací klíč je přidán. Při příštím přihlášení ho můžete použít místo kódu z aplikace.' => 'The passkey has been added. Next time you sign in you can use it instead of the code from the app.',
+    'datum_format' => 'j M Y',
 ];

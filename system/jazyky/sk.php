@@ -237,4 +237,12 @@ return [
     'Oznámení se nepodařilo zapnout.' => 'Oznámenia sa nepodarilo zapnúť.',
     'Oznámení se nepodařilo zapnout. Zkuste to později.' => 'Oznámenia sa nepodarilo zapnúť. Skúste to neskôr.',
     'Oznámení máte pro tento web v prohlížeči zakázaná. Povolíte je v nastavení webu u adresního řádku.' => 'Oznámenia máte pre tento web v prehliadači zakázané. Povolíte ich v nastaveniach webu pri adresnom riadku.',
+    'Otvírák' => 'Otvárak',
+    'Nejčtenější' => 'Najčítanejšie',
+    'Autoři' => 'Autori',
+    'Podpořte nás' => 'Podporte nás',
+    'Oznámení' => 'Oznámenia',
+    'Účet čtenáře' => 'Účet čitateľa',
+    'Sociální sítě' => 'Sociálne siete',
+    'Sem napište svůj text.' => 'Sem napíšte svoj text.',
 ];

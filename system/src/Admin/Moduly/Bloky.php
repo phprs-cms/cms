@@ -251,9 +251,11 @@ final class Bloky extends Modul
         if (!$this->request->isPost() || $polozka === null || !in_array($zona, self::ROZVRZENI[$this->rozvrzeni()][2], true)) {
             return Response::json(['ok' => false], 400);
         }
+        // nadpis bloku čtou čtenáři: dostane ho ve výchozím jazyce webu, ne v jazyce administrace toho, kdo blok přidává
+        $vJazyceWebu = fn (string $text): string => \PhpRS\Core\Jazyk::docasne(\PhpRS\Core\Jazyk::vychozi($this->app->settings()), static fn (): string => t($text));
         $nejniz = (int) $this->db->value('SELECT COALESCE(MIN(hodnost), 1010) FROM {bloky} WHERE zona = ?', [$zona]);
         $idb = $this->db->insert('bloky', [
-            'nazev' => $polozka[0], 'obsah' => $typ === '' ? '<p>Sem napište svůj text.</p>' : '', 'sys_funkce' => $typ, 'zona' => $zona,
+            'nazev' => $vJazyceWebu($polozka[0]), 'obsah' => $typ === '' ? '<p>' . $vJazyceWebu('Sem napište svůj text.') . '</p>' : '', 'sys_funkce' => $typ, 'zona' => $zona,
             'hodnost' => max(0, $nejniz - 10), 'data_sys' => ['cla' => '0:5', 'rek' => 'sloupec', 'nej' => '5', 'sti' => '15', 'arc' => '12', 'aut' => '10'][$typ] ?? '',
         ]);
         \PhpRS\Admin\Protokol::zapis($this->app, 'bloky', 'uloz', $polozka[0]);

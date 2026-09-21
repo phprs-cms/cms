@@ -55,7 +55,11 @@ function datum(string|\DateTimeInterface|null $value, bool $withTime = false): s
     }
     $dt = $value instanceof \DateTimeInterface ? $value : new \DateTimeImmutable($value);
 
-    return $dt->format($withTime ? 'j. n. Y H:i' : 'j. n. Y');
+    // tvar data podle jazyka: slovník smí dát klíč "datum_format" (formát pro date()), např. "j M Y" pro angličtinu
+    $format = t('datum_format');
+    $format = $format === 'datum_format' ? 'j. n. Y' : $format;
+
+    return $dt->format($withTime ? $format . ' H:i' : $format);
 }
 
 /** Datum slovy: "pátek 18. září 2026". */

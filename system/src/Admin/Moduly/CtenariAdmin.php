@@ -60,7 +60,7 @@ final class CtenariAdmin extends Modul
         };
         $this->db->update('ctenari', ['predplatne_do' => $do], ['idct' => $ctenar['idct']]);
 
-        return $this->zpet($do === null ? 'Předplatné bylo zrušeno.' : 'Předplatné platí do ' . datum($do) . '.');
+        return $this->zpet($do === null ? 'Předplatné bylo zrušeno.' : t('Předplatné platí do %s.', datum($do)));
     }
 
     protected function akceSmaz(): Response

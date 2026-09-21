@@ -132,7 +132,7 @@ final class Bloky extends Modul
         }
         $this->app->settings()->set('rozvrzeni', $nove);
 
-        return $this->zpet('Rozvržení stránky: ' . self::ROZVRZENI[$nove][0] . '.');
+        return $this->zpet(t('Rozvržení stránky: %s.', t(self::ROZVRZENI[$nove][0])));
     }
 
     /** Uložení pořadí po přetažení: JSON {"zona": [idb, idb...], ...}. */
@@ -280,7 +280,7 @@ final class Bloky extends Modul
         }
         $data = $this->dataZPozadavku();
         if ($data['nazev'] === '') {
-            return Response::json(['ok' => false, 'chyba' => 'Vyplňte nadpis bloku.'], 422);
+            return Response::json(['ok' => false, 'chyba' => t('Vyplňte nadpis bloku.')], 422);
         }
         unset($data['zona']); // umístění se ve vizuálním editoru mění přetažením
         $this->db->update('bloky', $data, ['idb' => $id]);

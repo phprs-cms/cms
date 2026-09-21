@@ -45,7 +45,7 @@ final class Stitky extends Modul
             $this->db->delete('stitky', ['ids' => $stitek['ids']]);
             Presmerovani::pridej($this->db, 'stitek/' . $stitek['seo_link'], 'stitek/' . $cil['seo_link']);
 
-            return $this->zpet('Štítek „' . $stitek['nazev'] . '“ byl sloučen do „' . $cil['nazev'] . '“.');
+            return $this->zpet(t('Štítek „%s“ byl sloučen do „%s“.', $stitek['nazev'], $cil['nazev']));
         }
 
         return $this->zpet('Štítek byl uložen.');

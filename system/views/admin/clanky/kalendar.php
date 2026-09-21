@@ -24,10 +24,10 @@ $dni = (int) $od->format('t');
 <?php for ($den = 1; $den <= $dni; $den++): $dnes = $od->format('Y-m-') . sprintf('%02d', $den) === date('Y-m-d'); ?>
 	<div class="kalendar-den<?= $dnes ? ' kalendar-dnes' : '' ?>">
 		<span class="kalendar-cislo"><?= $den ?></span>
-<?php foreach ($dny[$den] ?? [] as $c): $stav = !$c['visible'] ? 'koncept' : (strtotime($c['datum']) > time() ? 'plan' : 'vydano'); ?>
-		<a class="kalendar-clanek stitek-<?= $stav ?>" href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>" title="<?= e(date('H:i', strtotime($c['datum'])) . ' · ' . t(['koncept' => 'koncept', 'plan' => 'naplánováno', 'vydano' => 'vydáno'][$stav])) ?>"><?= e(date('H:i', strtotime($c['datum']))) ?> <?= e($c['titulek']) ?></a>
+<?php foreach ($dny[$den] ?? [] as $c): $stav = !$c['visible'] ? (['korektura' => 'korektura', 'schvaleno' => 'schvaleno'][$c['stav_redakce'] ?? ''] ?? 'koncept') : (strtotime($c['datum']) > time() ? 'plan' : 'vydano'); ?>
+		<a class="kalendar-clanek stitek-<?= $stav ?>" href="<?= e($modul->url('edit', ['id' => $c['idc']])) ?>" title="<?= e(date('H:i', strtotime($c['datum'])) . ' · ' . t(['koncept' => 'koncept', 'korektura' => 'ke korektuře', 'schvaleno' => 'schváleno – čeká na vydání', 'plan' => 'naplánováno', 'vydano' => 'vydáno'][$stav])) ?>"><?= e(date('H:i', strtotime($c['datum']))) ?> <?= e($c['titulek']) ?></a>
 <?php endforeach ?>
 	</div>
 <?php endfor ?>
 </div>
-<p class="smltxt"><?= e(t('Zeleně vydané, modře naplánované, oranžově koncepty. Datum článku změníte v jeho úpravě.')) ?></p>
+<p class="smltxt"><?= e(t('Zeleně vydané, modře naplánované, oranžově koncepty, fialově články ke korektuře a schválené (schválené plnou čarou). Datum článku změníte v jeho úpravě.')) ?></p>

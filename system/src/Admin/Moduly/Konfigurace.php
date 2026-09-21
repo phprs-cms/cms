@@ -147,7 +147,7 @@ class Konfigurace extends Modul
         if ($zalozka === 'rozsireni') {
             Rozsireni::uloz($nastaveni, $this->request->postList('rozsireni'));
             if ($this->request->post('ai_klic') !== '' && ($chybaKlice = (new \PhpRS\Core\Asistent($nastaveni))->overKlic()) !== null) {
-                return $this->zpet('Nastavení je uložené, ale klíč asistenta nefunguje: ' . $chybaKlice, '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
+                return $this->zpet(t('Nastavení je uložené, ale klíč asistenta nefunguje: %s', t($chybaKlice)), '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
             }
         }
         if ($this->request->postBool('novy_token_ulohy')) {
@@ -159,7 +159,7 @@ class Konfigurace extends Modul
 
         return $chyby === []
             ? $this->zpet('Nastavení bylo uloženo.', '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [])
-            : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
+            : $this->zpet(t('Některé hodnoty nemají platný tvar a nebyly uloženy: %s.', implode(', ', $chyby)), '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
     }
 
     /** Ukázkový obsah (smyšlený magazín ze system/demo) v jazyce webu; články bez hostujícího autora připadnou přihlášenému. */
@@ -172,7 +172,7 @@ class Konfigurace extends Modul
         try {
             $this->db->transaction(fn () => \PhpRS\Core\Demo::nahraj($this->db, $nastaveni, $nastaveni->get('jazyk_webu'), $this->app->auth()->id()));
         } catch (\Throwable $e) {
-            return $this->zpet('Ukázkový obsah se nepodařilo nahrát: ' . $e->getMessage(), '', ['zalozka' => 'zakladni'], 'chyba');
+            return $this->zpet(t('Ukázkový obsah se nepodařilo nahrát: %s', t($e->getMessage())), '', ['zalozka' => 'zakladni'], 'chyba');
         }
 
         return $this->zpet('Ukázkový obsah je nahraný. Najdete ho v Článcích, Rubrikách a Médiích.', '', ['zalozka' => 'zakladni']);
@@ -195,14 +195,14 @@ class Konfigurace extends Modul
         try {
             $soubor = Zaloha::vytvor($this->db);
         } catch (\Throwable $e) {
-            return $this->zpet('Zálohu se nepodařilo vytvořit: ' . $e->getMessage(), '', ['zalozka' => 'zalohy'], 'chyba');
+            return $this->zpet(t('Zálohu se nepodařilo vytvořit: %s', t($e->getMessage())), '', ['zalozka' => 'zalohy'], 'chyba');
         }
         $vzdalena = \PhpRS\Core\VzdalenaZaloha::nahraj($this->app->settings(), (string) Zaloha::cesta($soubor));
         if ($vzdalena !== null) {
-            return $this->zpet('Záloha ' . $soubor . ' je hotová, ale kopii mimo server se nepodařilo nahrát: ' . $vzdalena, '', ['zalozka' => 'zalohy'], 'chyba');
+            return $this->zpet(t('Záloha %s je hotová, ale kopii mimo server se nepodařilo nahrát: %s', $soubor, t($vzdalena)), '', ['zalozka' => 'zalohy'], 'chyba');
         }
 
-        return $this->zpet('Záloha ' . $soubor . ' je hotová.', '', ['zalozka' => 'zalohy']);
+        return $this->zpet(t('Záloha %s je hotová.', $soubor), '', ['zalozka' => 'zalohy']);
     }
 
     protected function akceStahniZalohu(): Response
@@ -267,11 +267,11 @@ class Konfigurace extends Modul
             $pojistna = Zaloha::vytvor($this->db, 'predobnovou');
             $prikazu = Zaloha::obnov($this->db, $this->request->post('soubor'));
         } catch (\Throwable $e) {
-            return $this->zpet('Obnova se nezdařila: ' . $e->getMessage() . (isset($pojistna) ? ' Stav před obnovou je v záloze ' . $pojistna . '.' : ''), '', ['zalozka' => 'zalohy'], 'chyba');
+            return $this->zpet(t('Obnova se nezdařila: %s', t($e->getMessage())) . (isset($pojistna) ? ' ' . t('Stav před obnovou je v záloze %s.', $pojistna) : ''), '', ['zalozka' => 'zalohy'], 'chyba');
         }
         \PhpRS\Front\Cache::vymaz();
 
-        return $this->zpet('Databáze byla obnovena ze zálohy (' . $prikazu . ' příkazů). Stav před obnovou je uložený v záloze ' . $pojistna . '.', '', ['zalozka' => 'zalohy']);
+        return $this->zpet(t('Databáze byla obnovena ze zálohy (příkazů: %d). Stav před obnovou je uložený v záloze %s.', $prikazu, $pojistna), '', ['zalozka' => 'zalohy']);
     }
 
     /** Znovu zjistí, zda je k dispozici novější verze. */
@@ -294,10 +294,10 @@ class Konfigurace extends Modul
             Zaloha::vytvor($this->db, 'predaktualizaci');
             $verze = (new Aktualizace($this->app->settings()))->nainstaluj();
         } catch (\Throwable $e) {
-            return $this->zpet('Aktualizace se nezdařila: ' . $e->getMessage() . ' Na webu se nic nezměnilo.', '', ['zalozka' => 'zalohy'], 'chyba');
+            return $this->zpet(t('Aktualizace se nezdařila: %s Na webu se nic nezměnilo.', t($e->getMessage())), '', ['zalozka' => 'zalohy'], 'chyba');
         }
 
-        return $this->zpet('Systém byl aktualizován na verzi ' . $verze . '. Databáze se upraví sama při příštím načtení administrace.', '', ['zalozka' => 'zalohy']);
+        return $this->zpet(t('Systém byl aktualizován na verzi %s. Databáze se upraví sama při příštím načtení administrace.', $verze), '', ['zalozka' => 'zalohy']);
     }
 
     /** Žádost o osobní údaje čtenáře (GDPR): export nebo výmaz všeho, co je k e-mailu uloženo. */
@@ -319,7 +319,7 @@ class Konfigurace extends Modul
                 \PhpRS\Front\Interakce::prepocitej($this->db, (int) $idc);
             }
 
-            return $this->zpet('Smazáno: komentářů ' . count($komentare) . ', odběr newsletteru ' . ($odber !== null ? 'ano' : 'ne') . ', účet čtenáře ' . ($ucet !== null ? 'ano' : 'ne') . '.', '', ['zalozka' => 'cookies']);
+            return $this->zpet(t('Smazáno: komentářů %d, odběr newsletteru %s, účet čtenáře %s.', count($komentare), t($odber !== null ? 'ano' : 'ne'), t($ucet !== null ? 'ano' : 'ne')), '', ['zalozka' => 'cookies']);
         }
 
         return new Response((string) json_encode(['email' => $email, 'vytvoreno' => date('c'), 'komentare' => $komentare, 'newsletter' => $odber, 'ucet_ctenare' => $ucet], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 200, [
@@ -371,7 +371,11 @@ class Konfigurace extends Modul
         $zpet = $this->request->post('zalozka') === 'posta' ? 'posta' : 'stav';
 
         return $this->zpet(
-            $ok ? "Zpráva byla předána k odeslání na {$komu}. Pokud nedorazí, zkontrolujte spam" . ($this->app->settings()->get('posta_rezim') === 'smtp' ? '.' : ' – nebo nastavte odesílání přes SMTP (Nastavení → Pošta).') : 'Odeslání selhalo: ' . \PhpRS\Core\Posta::$chyba,
+            match (true) {
+                !$ok => t('Odeslání selhalo: %s', t(\PhpRS\Core\Posta::$chyba)),
+                $this->app->settings()->get('posta_rezim') === 'smtp' => t('Zpráva byla předána k odeslání na %s. Pokud nedorazí, zkontrolujte spam.', $komu),
+                default => t('Zpráva byla předána k odeslání na %s. Pokud nedorazí, zkontrolujte spam – nebo nastavte odesílání přes SMTP (Nastavení → Pošta).', $komu),
+            },
             '',
             ['zalozka' => $zpet],
             $ok ? 'ok' : 'chyba',

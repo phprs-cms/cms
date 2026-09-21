@@ -65,7 +65,7 @@ final class NewsletterAdmin extends Modul
         if ($r->post('co') === 'naplanovat' && $kdy !== false && $kdy > time()) {
             $this->db->update('newsletter', ['odeslat_v' => date('Y-m-d H:i:s', $kdy)], ['idn' => $idn]);
 
-            return $this->zpet('Newsletter je naplánovaný na ' . datum(date('Y-m-d H:i:s', $kdy), true) . '. Rozešle se sám.');
+            return $this->zpet(t('Newsletter je naplánovaný na %s. Rozešle se sám.', datum(date('Y-m-d H:i:s', $kdy), true)));
         }
 
         return Response::redirect($this->url('rozeslat', ['id' => $idn]));

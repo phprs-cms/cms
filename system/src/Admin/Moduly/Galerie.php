@@ -117,11 +117,11 @@ final class Galerie extends Modul
                 $data['ido'] = $this->db->insert('imggal_obr', $data + ['vlastnik' => $this->app->auth()->id(), 'sekce' => $sekce, 'datum' => date('Y-m-d H:i:s')]);
                 $nahrane[] = $this->proJson($data + ['popis' => '']);
             } catch (\RuntimeException $e) {
-                $chyby[] = ($file['name'] ?? 'soubor') . ': ' . $e->getMessage();
+                $chyby[] = ($file['name'] ?? t('soubor')) . ': ' . t($e->getMessage());
             }
         }
         if ($nahrane === [] && $chyby === []) {
-            $chyby[] = 'Nebyl vybrán žádný soubor.';
+            $chyby[] = t('Nebyl vybrán žádný soubor.');
         }
         if ($json) {
             return Response::json(['obrazky' => $nahrane, 'chyby' => $chyby], $nahrane === [] ? 400 : 200);
@@ -130,7 +130,7 @@ final class Galerie extends Modul
             $this->app->session->flash('chyba', $chyba);
         }
 
-        return $this->zpet($nahrane !== [] ? 'Nahráno souborů: ' . count($nahrane) . '.' : '', '', $sekce !== null ? ['sekce' => $sekce] : []);
+        return $this->zpet($nahrane !== [] ? t('Nahráno souborů: %d.', count($nahrane)) : '', '', $sekce !== null ? ['sekce' => $sekce] : []);
     }
 
     protected function akceUloz(): Response
@@ -168,7 +168,7 @@ final class Galerie extends Modul
             }
         }
 
-        return $this->zpet(($presun ? 'Přesunuto obrázků: ' : 'Smazáno obrázků: ') . $pocet . '.', '', $presun && $cil ? ['sekce' => $cil] : []);
+        return $this->zpet($presun ? t('Přesunuto obrázků: %d.', $pocet) : t('Smazáno obrázků: %d.', $pocet), '', $presun && $cil ? ['sekce' => $cil] : []);
     }
 
     private function smiMenit(int $ido): bool

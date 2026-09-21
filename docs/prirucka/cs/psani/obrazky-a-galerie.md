@@ -6,13 +6,13 @@ Všechny nahrané soubory jsou na jednom místě: **Obsah → Média**. Přístu
 
 Soubory nahrajete třemi způsoby:
 
-- v **Médiích** formulářem **Nahrát obrázky** – vyberte soubory, nebo je do formuláře přetáhněte myší,
+- v **Médiích** formulářem **Nahrát obrázky a přílohy** – vyberte soubory, nebo je do formuláře přetáhněte myší,
 - v editoru v okně **Média** tlačítkem **Nahrát nový** nebo přetažením souborů do okna; na telefonu a tabletu je tam i tlačítko **Vyfotit**,
 - obrázek přetáhnete nebo vložíte ze schránky přímo do textu článku – nahraje se a vloží na místo kurzoru.
 
 Najednou lze nahrát nejvýše 30 souborů.
 
-Výběr souborů ve formuláři Médií nabízí jen obrázky. Přílohy (PDF, dokumenty, zvuk…) do něj proto přetáhněte myší, nebo je nahrajte v editoru tlačítkem **Nahrát nový**.
+Stejným formulářem nahrajete i přílohy (PDF, dokumenty, zvuk…); v editoru k tomu slouží tlačítko **Nahrát nový**.
 
 ### Formáty a limity
 

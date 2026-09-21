@@ -32,7 +32,7 @@ Kolik článků se na hlavní stránku vejde, určuje administrátor v **Nastave
 **Obsah → Články → Redakční kalendář** ukazuje měsíční mřížku článků podle data vydání.
 
 - Každý článek je v kalendáři uveden časem a titulkem. Klepnutím otevřete jeho editor.
-- Barvy: zeleně vydané, modře naplánované, oranžově koncepty (včetně článků ke korektuře a schválených).
+- Barvy: zeleně vydané, modře naplánované, oranžově koncepty, fialově články ke korektuře (čárkovaně) a schválené, které čekají na vydání (plnou čarou).
 - Dnešní den je zvýrazněný. Mezi měsíci listujete odkazy **← předchozí** a **další →**.
 - Datum článku v kalendáři přesunout nejde – změníte ho v úpravě článku v poli **Datum vydání**.
 

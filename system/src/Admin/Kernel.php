@@ -52,6 +52,9 @@ final class Kernel
         $app = $this->app;
         $request = $app->request;
 
+        // jazyk administrace: volba uživatele (Můj účet); přihlašovací stránka se řídí jazykem webu. Nastavuje se jako první, aby i hláška o vypršelém formuláři byla přeložená
+        $jazyk = (string) ($app->auth()->user()['jazyk'] ?? '') ?: \PhpRS\Core\Jazyk::vychozi($app->settings());
+        \PhpRS\Core\Jazyk::nastav(isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$jazyk]) ? $jazyk : 'cs', 'admin-');
         if ($request->isPost() && !$app->session->csrfValid($request)) {
             return $this->page('Neplatný požadavek', $app->view->render('admin/chyba', [
                 'text' => 'Platnost formuláře vypršela. Vraťte se zpět, obnovte stránku a odešlete jej znovu.',
@@ -70,9 +73,6 @@ final class Kernel
         }
         $request->setOrigin($app->settings()->get('adresa_webu'));
         $app->casovePasmo();
-        // jazyk administrace: volba uživatele (Můj účet); přihlašovací stránka se řídí jazykem webu
-        $jazyk = (string) ($app->auth()->user()['jazyk'] ?? '') ?: \PhpRS\Core\Jazyk::vychozi($app->settings());
-        \PhpRS\Core\Jazyk::nastav(isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$jazyk]) ? $jazyk : 'cs', 'admin-');
         if ($app->auth()->user() === null) {
             return $akce === 'heslo' ? (new ObnovaHesla($app))->handle() : $this->login();
         }
@@ -85,7 +85,7 @@ final class Kernel
         // aktualizace struktury databáze po nahrání nové verze systému
         if ($app->auth()->isAdmin() && $app->settings()->int('verze_db') < Migrace::posledni()) {
             foreach (Migrace::proved($app->db(), $app->settings()) as $migrace) {
-                $app->session->flash('info', 'Databáze byla aktualizována: ' . $migrace);
+                $app->session->flash('info', t('Databáze byla aktualizována: %s', $migrace));
             }
         }
 

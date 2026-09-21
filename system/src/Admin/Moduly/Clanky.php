@@ -118,7 +118,7 @@ final class Clanky extends Modul
         $ja = $this->app->auth()->id();
         if ($clanek['zamek_kdo'] !== null && (int) $clanek['zamek_kdo'] !== $ja && strtotime((string) $clanek['zamek_cas']) > time() - 180) {
             $kdo = $this->db->value("SELECT IF(jmeno = '', user, jmeno) FROM {user} WHERE idu = ?", [$clanek['zamek_kdo']]);
-            $this->app->session->flash('chyba', "Článek má právě otevřený {$kdo}. Když ho uložíte oba, přepíšete si navzájem změny – domluvte se, kdo bude pokračovat.");
+            $this->app->session->flash('chyba', t('Článek má právě otevřený %s. Když ho uložíte oba, přepíšete si navzájem změny – domluvte se, kdo bude pokračovat.', (string) $kdo));
         } else {
             $this->db->update('clanky', ['zamek_kdo' => $ja, 'zamek_cas' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
         }
@@ -247,10 +247,7 @@ final class Clanky extends Modul
 
         $this->upozorniRedakci($puvodni, $data, $id);
 
-        $hlaska = 'Článek byl uložen.';
-        if (!$auth->smiVydavat()) {
-            $hlaska .= ' Na webu se objeví, až ho vydá redaktor.';
-        }
+        $hlaska = $auth->smiVydavat() ? 'Článek byl uložen.' : 'Článek byl uložen. Na webu se objeví, až ho vydá redaktor.';
 
         return $r->post('po_ulozeni') === 'zustat'
             ? $this->zpet($hlaska, 'edit', ['id' => $id])
@@ -479,12 +476,12 @@ final class Clanky extends Modul
     {
         $asistent = new \PhpRS\Core\Asistent($this->app->settings());
         if (!$this->request->isPost() || !$asistent->pripraven()) {
-            return Response::json(['chyba' => 'AI asistent není zapnutý nebo chybí klíč (nabídka Rozšíření).'], 400);
+            return Response::json(['chyba' => t('AI asistent není zapnutý nebo chybí klíč (nabídka Rozšíření).')], 400);
         }
         // pojistka proti nechtěné útratě: nejvýš 60 dotazů za hodinu na uživatele
         $ja = $this->app->auth()->id();
         if ((int) $this->db->value("SELECT COUNT(*) FROM {protokol} WHERE kdo = ? AND modul = 'asistent' AND cas > NOW() - INTERVAL 1 HOUR", [$ja]) >= 60) {
-            return Response::json(['chyba' => 'Za poslední hodinu jste asistenta použili 60×. Zkuste to prosím později.'], 429);
+            return Response::json(['chyba' => t('Za poslední hodinu jste asistenta použili 60×. Zkuste to prosím později.')], 429);
         }
         $ukol = $this->request->post('ukol');
         $obrazek = null;
@@ -502,7 +499,7 @@ final class Clanky extends Modul
                 'stitky_webu' => $ukol === 'stitky' ? array_column($this->db->all('SELECT nazev FROM {stitky} ORDER BY nazev LIMIT 300'), 'nazev') : [],
             ], $obrazek);
         } catch (\RuntimeException $e) {
-            return Response::json(['chyba' => $e->getMessage()], 502);
+            return Response::json(['chyba' => t($e->getMessage())], 502);
         }
         \PhpRS\Admin\Protokol::zapis($this->app, 'asistent', $ukol, mb_substr($this->request->post('titulek'), 0, 80));
 
@@ -553,7 +550,7 @@ final class Clanky extends Modul
         try {
             $preklad = $asistent->preloz(array_map(strval(...), array_intersect_key($clanek, array_flip([...$prosta, 'uvod', 'text']))), $jazyk, $prosta);
         } catch (\RuntimeException $e) {
-            return $zpetNaClanek($e->getMessage());
+            return $zpetNaClanek(t($e->getMessage()));
         }
         \PhpRS\Admin\Protokol::zapis($this->app, 'asistent', 'preklad-' . $jazyk, mb_substr($clanek['titulek'], 0, 80));
 
@@ -581,7 +578,7 @@ final class Clanky extends Modul
         $mesic = preg_match('/^\d{4}-\d{2}$/', $this->request->get('mesic')) ? $this->request->get('mesic') : date('Y-m');
         $od = new \DateTimeImmutable($mesic . '-01');
         $clanky = $this->db->all(
-            'SELECT idc, titulek, datum, visible FROM {clanky} WHERE datum >= ? AND datum < ?' . $this->app->auth()->articleScope() . ' ORDER BY datum',
+            'SELECT idc, titulek, datum, visible, stav_redakce FROM {clanky} WHERE datum >= ? AND datum < ?' . $this->app->auth()->articleScope() . ' ORDER BY datum',
             [$od->format('Y-m-d'), $od->modify('+1 month')->format('Y-m-d')],
         );
         $dny = [];
@@ -604,7 +601,7 @@ final class Clanky extends Modul
         $this->upozorniRedakci($clanek, ['visible' => 1, 'stav_redakce' => ''] + $clanek, (int) $clanek['idc']);
         \PhpRS\Core\Oznameni::zpracuj($this->app);
 
-        return $this->zpet(strtotime($clanek['datum']) > time() ? 'Článek je naplánován na ' . datum($clanek['datum'], true) . '.' : 'Článek byl vydán.', '', ['stav' => 'koncepty']);
+        return $this->zpet(strtotime($clanek['datum']) > time() ? t('Článek je naplánován na %s.', datum($clanek['datum'], true)) : 'Článek byl vydán.', '', ['stav' => 'koncepty']);
     }
 
     /** Načte do editoru starší verzi článku; uloží se až odesláním formuláře. */
@@ -615,7 +612,7 @@ final class Clanky extends Modul
         if ($revize === null) {
             return $this->chyba('Verze článku neexistuje.', 404);
         }
-        $this->app->session->flash('info', 'V editoru je verze z ' . datum($revize['datum'], true) . '. Platit začne, až článek uložíte.');
+        $this->app->session->flash('info', t('V editoru je verze z %s. Platit začne, až článek uložíte.', datum($revize['datum'], true)));
 
         return $this->formular(['titulek' => $revize['titulek'], 'uvod' => $revize['uvod'], 'text' => $revize['text']] + $clanek);
     }
@@ -693,7 +690,7 @@ final class Clanky extends Modul
             $pocet++;
         }
 
-        return $this->zpet($pocet === 0 ? 'Neoznačili jste žádný článek.' : "Upraveno článků: {$pocet}.", typ: $pocet === 0 ? 'chyba' : 'ok');
+        return $this->zpet($pocet === 0 ? 'Neoznačili jste žádný článek.' : t('Upraveno článků: %d.', $pocet), typ: $pocet === 0 ? 'chyba' : 'ok');
     }
 
     private function pridejStitek(int $idc, string $nazev): void
@@ -717,7 +714,7 @@ final class Clanky extends Modul
             $smazano += $this->db->delete('clanky', ['idc' => $clanek['idc']]);
         }
 
-        return $this->zpet("Smazáno článků: {$smazano}.");
+        return $this->zpet(t('Smazáno článků: %d.', $smazano));
     }
 
     /**

@@ -326,6 +326,19 @@ if (is_file(PHPRS_ROOT . '/docs/prirucka/osnova.json')) {
     over('Napoveda: slovenština vede na českou příručku', PhpRS\Core\Napoveda::url('', 'sk'), 'https://phprs.eu/cs/dokumentace/');
 }
 
+/* ---------- aktualizace: úklid souborů, které nové vydání už neobsahuje ---------- */
+$uklid = sys_get_temp_dir() . '/phprs-uklid-' . bin2hex(random_bytes(4));
+mkdir($uklid . '/system/stare', 0775, true);
+mkdir($uklid . '/media', 0775, true);
+foreach (['index.php', 'system/stare/zrusene.php', 'system/zustava.php', 'media/foto.jpg', 'config.php', 'vlastni.php'] as $f) {
+    file_put_contents($uklid . '/' . $f, 'x');
+}
+$smazano = PhpRS\Core\Aktualizace::uklidZastarale($uklid, ['index.php', 'system/stare/zrusene.php', 'system/zustava.php', 'media/foto.jpg', 'config.php', '../mimo.php'], ['index.php', 'system/zustava.php']);
+over('Aktualizace: smaže jen soubor zrušený novým vydáním', $smazano, 1);
+over('Aktualizace: zrušený soubor i jeho prázdná složka jsou pryč', is_dir($uklid . '/system/stare'), false);
+over('Aktualizace: chráněné cesty a vlastní soubory zůstávají', [is_file($uklid . '/media/foto.jpg'), is_file($uklid . '/config.php'), is_file($uklid . '/vlastni.php'), is_file($uklid . '/system/zustava.php')], [true, true, true, true]);
+exec('rm -rf ' . escapeshellarg($uklid));
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

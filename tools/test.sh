@@ -56,6 +56,8 @@ for l in default minimal classic-newspaper modern-magazine; do
 done
 
 echo "== administrace"
+over "zapomenuté heslo – formulář" 200 "/admin.php?akce=heslo" "Poslat odkaz"
+over "zapomenuté heslo – neplatný odkaz" 400 "/admin.php?akce=heslo&token=$(printf 'a%.0s' $(seq 1 64))" "Odkaz už neplatí"
 over "bez přihlášení je jen login" 200 /admin.php "Heslo"
 TOKEN=$(grep -o 'name="_csrf" value="[a-f0-9]*"' "$PRACE/odpoved" | head -1 | sed 's/.*value="//;s/"//')
 kod=$(curl -s -b "$JAR" -c "$JAR" -o /dev/null -w '%{http_code}' -X POST "$B/admin.php" -d "_csrf=$TOKEN" -d user=admin -d password=spatne-heslo-123); [ "$kod" = 401 ] && echo "  ok     špatné heslo odmítnuto" || { echo "  CHYBA  špatné heslo: $kod"; CHYB=$((CHYB+1)); }

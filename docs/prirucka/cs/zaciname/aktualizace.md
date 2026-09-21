@@ -15,7 +15,7 @@ phpRS se umí aktualizovat sám. Každý balíček je podepsaný vydavatelem a s
 1. vytvoří se záloha databáze,
 2. balíček se stáhne a ověří se jeho otisk a podpis,
 3. web na několik vteřin odpovídá hláškou o údržbě,
-4. soubory systému se přepíšou a databáze se při prvním požadavku upraví na novou strukturu.
+4. soubory systému se přepíšou, soubory, které nové vydání už neobsahuje, se smažou, a databáze se při prvním požadavku upraví na novou strukturu.
 
 **Nepřepisuje se** `config.php`, složky `media/` a `storage/`, ani vaše vlastní šablony ve složce `layout/`. Vestavěné šablony (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) se přepisují – proto je neupravujte; vlastní vzhled dělejte jako kopii pod jiným názvem.
 

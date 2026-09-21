@@ -25,6 +25,8 @@ CREATE TABLE rs_user (
     blokovat       BOOL NOT NULL DEFAULT 0,
     pocet_chyb     SMALLINT UNSIGNED NOT NULL DEFAULT 0,  -- neúspěšná přihlášení v řadě
     zamceno_do     DATETIME NULL,                         -- dočasný zámek po 10 chybných přihlášeních
+    obnova_otisk   CHAR(64)     NOT NULL DEFAULT '',      -- sha256 jednorázového tokenu pro obnovu hesla e-mailem; prázdné = nic nečeká
+    obnova_cas     DATETIME NULL,                         -- kdy byl odkaz pro obnovu hesla odeslán (platí hodinu)
     totp_tajemstvi VARCHAR(64)  NOT NULL DEFAULT '',      -- dvoufázové přihlášení (TOTP); prázdné = vypnuté
     totp_zalozni   TEXT NULL,                             -- JSON: otisky jednorázových záložních kódů
     posledni_login DATETIME NULL,

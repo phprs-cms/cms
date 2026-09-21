@@ -27,6 +27,8 @@
 <h3><?= e(t('Přihlášení do administrace')) ?></h3>
 <?php if ($chyba !== null): ?>
 <p class="hlaska hlaska-chyba" role="alert"><?= e($chyba) ?></p>
+<?php elseif ($app->request->get('heslo') === 'zmeneno'): ?>
+<p class="hlaska hlaska-ok" role="status"><?= e(t('Heslo je změněno. Přihlaste se novým heslem.')) ?></p>
 <?php endif ?>
 <form method="post" action="<?= e($app->url('admin.php')) ?>">
 <?= $app->session->csrfField() ?>
@@ -40,6 +42,9 @@
 <?php endif ?>
 <p><input class="tl" type="submit" value="<?= e(t($kod ? 'Ověřit kód' : 'Přihlásit se')) ?>"></p>
 </form>
+<?php if (!$kod): ?>
+<p class="login-odkaz"><a href="<?= e($app->url('admin.php?akce=heslo')) ?>"><?= e(t('Zapomenuté heslo?')) ?></a></p>
+<?php endif ?>
 </div>
 </body>
 </html>

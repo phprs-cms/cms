@@ -700,6 +700,7 @@ body.login {
 	box-shadow: 0 8px 30px rgb(16 24 40 / 0.06);
 }
 .login-karta .phprs-logo { margin-bottom: 6px; }
+.login-odkaz { margin: 14px 0 0; font-size: 13px; text-align: center; }
 .login-karta h3 {
 	margin: 2px 0 24px;
 	font-size: 13px;

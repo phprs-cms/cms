@@ -21,8 +21,8 @@ The message („Web se právě aktualizuje“) is shown while the files are bein
 
 - **“Too many attempts”** – wait 15 minutes; the lock is temporary.
 - **Lost phone with the authenticator app** – enter one of the backup codes instead of the code. If you do not have them, another administrator can turn off two-factor sign-in for you in Users.
-- **Forgotten password** – another administrator sets a new password in Users.
-- **The only administrator has no access** – only a change in the database helps: in the `rs_user` table (the prefix depends on your installation) put a new password hash into the `password` column and empty `totp_tajemstvi`. You create the hash on the command line:
+- **Forgotten password** – on the sign-in page click **Forgotten your password?** and enter your user name or e-mail. A link for setting a new password arrives at the account's e-mail address; it is valid for one hour and can be used once. Two-factor sign-in stays on. The account must have an e-mail address and [mail](posta.md) must work; otherwise another administrator sets a new password in Users.
+- **The only administrator has no access and no working e-mail** – only a change in the database helps: in the `rs_user` table (the prefix depends on your installation) put a new password hash into the `password` column and empty `totp_tajemstvi`. You create the hash on the command line:
 
   ```
   php -r 'echo password_hash("nove-dlouhe-heslo", PASSWORD_DEFAULT), "\n";'

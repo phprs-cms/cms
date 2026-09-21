@@ -179,3 +179,8 @@ Uživatelská dokumentace je v `docs/prirucka/<jazyk>/` (cs je zdroj, en a de p�
 - `Core\Demo` + `system/demo/` (texty `obsah.php` v cs/en/de, ilustrace v `img/` jsou vlastní dílo projektu): ukázkový magazín, který jde
   nahrát při instalaci (zaškrtávátko) nebo v Nastavení → Základní a jedním kliknutím smazat. Co vzniklo, eviduje nastavení `demo_obsah`.
 - Instalátor se po dokončení smaže sám (`Installer::smazSe()`); ve vývojové kopii se složkou `.git` ne.
+- Zapomenuté heslo do administrace: `Admin\ObnovaHesla` (admin.php?akce=heslo) - odpověď vždy stejná, v DB jen otisk tokenu
+  (`rs_user.obnova_otisk`, `obnova_cas`), odkaz platí hodinu a jednou, 2FA se nevypíná, limit 5 žádostí z IP za 15 minut.
+- Aktualizace po přepsání souborů smaže ty, které staré vydání mělo v `system/soubory.json` a nové balíček už neobsahuje
+  (`Aktualizace::uklidZastarale`, chráněné cesty a vlastní soubory se nemažou). Přejmenování souboru jádra je tedy bezpečné až od 3.0.0-beta.3.
+- `Settings::PODLE_JAZYKA` (název a popis webu): jazyková verze webu může mít vlastní hodnotu v klíči `nazev_webu_en` apod.; prázdné = výchozí.

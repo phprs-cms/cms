@@ -15,7 +15,7 @@ phpRS can update itself. Every package is signed by the publisher and the system
 1. a database backup is created,
 2. the package is downloaded and its checksum and signature are verified,
 3. for a few seconds the site responds with a maintenance message,
-4. the system files are overwritten and the database is adjusted to the new structure on the first request.
+4. the system files are overwritten, files the new release no longer contains are removed, and the database is adjusted to the new structure on the first request.
 
 The update **does not overwrite** `config.php`, the folders `media/` and `storage/`, or your own templates in the `layout/` folder. The built-in templates (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) are overwritten – so do not edit them; make your own design as a copy under a different name.
 

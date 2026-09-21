@@ -21,8 +21,8 @@ Hláška se zobrazuje během přepisu souborů a sama zmizí nejpozději za 10 m
 
 - **„Příliš mnoho pokusů“** – počkejte 15 minut; zámek je dočasný.
 - **Ztracený telefon s ověřovací aplikací** – místo kódu zadejte jeden ze záložních kódů. Když je nemáte, dvoufázové přihlášení vám v Uživatelích vypne jiný administrátor.
-- **Zapomenuté heslo** – nové heslo nastaví jiný administrátor v Uživatelích.
-- **Jediný administrátor bez přístupu** – pomůže jen zásah do databáze: v tabulce `rs_user` (předpona podle vaší instalace) vložte do sloupce `password` nový otisk hesla a vyprázdněte `totp_tajemstvi`. Otisk vytvoříte na příkazové řádce:
+- **Zapomenuté heslo** – na přihlašovací stránce klepněte na **Zapomenuté heslo?** a zadejte přihlašovací jméno nebo e-mail. Na e-mail účtu přijde odkaz pro nastavení nového hesla; platí hodinu a jde použít jednou. Dvoufázové přihlášení zůstává zapnuté. Podmínkou je vyplněný e-mail u účtu a funkční [pošta](posta.md); jinak nové heslo nastaví jiný administrátor v Uživatelích.
+- **Jediný administrátor bez přístupu a bez funkčního e-mailu** – pomůže jen zásah do databáze: v tabulce `rs_user` (předpona podle vaší instalace) vložte do sloupce `password` nový otisk hesla a vyprázdněte `totp_tajemstvi`. Otisk vytvoříte na příkazové řádce:
 
   ```
   php -r 'echo password_hash("nove-dlouhe-heslo", PASSWORD_DEFAULT), "\n";'

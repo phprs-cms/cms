@@ -127,6 +127,9 @@ final class Settings
         'verze_db' => '1',            // číslo poslední provedené migrace (system/sql/migrace)
     ];
 
+    /** Nastavení, která jdou vyplnit zvlášť pro každou další jazykovou verzi webu (klíč_en, klíč_de…). */
+    public const array PODLE_JAZYKA = ['nazev_webu', 'popis_webu'];
+
     /** @var array<string, string>|null */
     private ?array $values = null;
 
@@ -143,6 +146,10 @@ final class Settings
     public function get(string $key): string
     {
         $this->values ??= $this->db->pairs('SELECT promenna, hodnota FROM {config}');
+        // název a popis webu může mít jazyková verze (/en/, /de/…) vlastní; prázdné = jako ve výchozím jazyce
+        if (in_array($key, self::PODLE_JAZYKA, true) && ($jazyk = Jazyk::sloupecWebu()) !== '' && ($this->values[$key . '_' . $jazyk] ?? '') !== '') {
+            return $this->values[$key . '_' . $jazyk];
+        }
 
         return $this->values[$key] ?? self::DEFAULTS[$key] ?? '';
     }

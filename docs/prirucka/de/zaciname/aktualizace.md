@@ -15,7 +15,7 @@ phpRS kann sich selbst aktualisieren. Jedes Paket ist vom Herausgeber signiert, 
 1. wird eine Sicherung der Datenbank erstellt,
 2. wird das Paket heruntergeladen und seine Prüfsumme und Signatur werden geprüft,
 3. antwortet die Website einige Sekunden lang mit einem Wartungshinweis,
-4. werden die Dateien des Systems überschrieben, und die Datenbank wird bei der ersten Anfrage an die neue Struktur angepasst.
+4. werden die Dateien des Systems überschrieben, Dateien, die die neue Version nicht mehr enthält, gelöscht, und die Datenbank wird bei der ersten Anfrage an die neue Struktur angepasst.
 
 **Nicht überschrieben** werden `config.php`, die Ordner `media/` und `storage/` und Ihre eigenen Vorlagen im Ordner `layout/`. Die eingebauten Vorlagen (`default`, `classic-newspaper`, `modern-magazine`, `minimal`) werden überschrieben – ändern Sie sie deshalb nicht; ein eigenes Design legen Sie als Kopie unter einem anderen Namen an.
 

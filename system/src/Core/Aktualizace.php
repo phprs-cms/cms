@@ -110,20 +110,20 @@ final class Aktualizace
     public function nainstaluj(): string
     {
         if (!class_exists(\ZipArchive::class) || !function_exists('sodium_crypto_sign_verify_detached')) {
-            throw new \RuntimeException('Server nemá rozšíření zip nebo sodium - aktualizujte ručně nahráním souborů přes FTP.');
+            throw new \RuntimeException(t('Server nemá rozšíření zip nebo sodium - aktualizujte ručně nahráním souborů přes FTP.'));
         }
         $m = $this->manifest();
         if (!version_compare((string) $m['verze'], PHPRS_VERSION, '>')) {
-            throw new \RuntimeException('Žádná novější verze není k dispozici.');
+            throw new \RuntimeException(t('Žádná novější verze není k dispozici.'));
         }
         if (version_compare(PHP_VERSION, (string) ($m['min_php'] ?? '8.4'), '<')) {
-            throw new \RuntimeException('Nová verze vyžaduje PHP ' . $m['min_php'] . ', na serveru běží ' . PHP_VERSION . '.');
+            throw new \RuntimeException(t('Nová verze vyžaduje PHP %s, na serveru běží %s.', (string) $m['min_php'], PHP_VERSION));
         }
         if (!is_writable($this->koren) || !is_writable($this->koren . '/system')) {
-            throw new \RuntimeException('Soubory systému nejsou zapisovatelné - aktualizujte ručně přes FTP.');
+            throw new \RuntimeException(t('Soubory systému nejsou zapisovatelné - aktualizujte ručně přes FTP.'));
         }
         if (Podpis::klice($this->klicSoubor) === []) {
-            throw new \RuntimeException('Chybí veřejný klíč vydavatele (system/aktualizace.pub), balíček nelze ověřit.');
+            throw new \RuntimeException(t('Chybí veřejný klíč vydavatele (system/aktualizace.pub), balíček nelze ověřit.'));
         }
 
         $pracovni = PHPRS_ROOT . '/storage/cache/aktualizace-' . bin2hex(random_bytes(4));
@@ -132,23 +132,25 @@ final class Aktualizace
             $this->stahni((string) $m['url'], $zip);
             $sha = hash_file('sha256', $zip);
             if (!hash_equals(strtolower((string) $m['sha256']), $sha)) {
-                throw new \RuntimeException('Kontrolní součet balíčku nesouhlasí.');
+                throw new \RuntimeException(t('Kontrolní součet balíčku nesouhlasí.'));
             }
             // podpis kryje i příznak bezpečnostního vydání: kdo by ovládl jen web s manifestem, nesmí běžné vydání prohlásit za bezpečnostní
             if (!Podpis::plati(Podpis::zpravaBalicku((string) $m['verze'], $sha, !empty($m['bezpecnostni'])), (string) $m['podpis'], $this->klicSoubor)) {
-                throw new \RuntimeException('Podpis balíčku není platný - balíček nepochází od vydavatele phpRS.');
+                throw new \RuntimeException(t('Podpis balíčku není platný - balíček nepochází od vydavatele phpRS.'));
             }
             $soubory = $this->rozbal($zip, $pracovni);
+            $puvodni = $this->souboryVydani();
             touch(PHPRS_ROOT . '/storage/udrzba.lock');
             foreach ($soubory as $relativni) {
                 $cil = $this->koren . '/' . $relativni;
                 if (!is_dir(dirname($cil)) && !mkdir(dirname($cil), 0775, true)) {
-                    throw new \RuntimeException('Nelze vytvořit složku ' . dirname($relativni) . '.');
+                    throw new \RuntimeException(t('Nelze vytvořit složku %s.', dirname($relativni)));
                 }
                 if (!copy($pracovni . '/' . $relativni, $cil)) {
-                    throw new \RuntimeException('Nelze zapsat soubor ' . $relativni . '.');
+                    throw new \RuntimeException(t('Nelze zapsat soubor %s.', $relativni));
                 }
             }
+            self::uklidZastarale($this->koren, $puvodni, $soubory);
         } finally {
             @unlink(PHPRS_ROOT . '/storage/udrzba.lock');
             @unlink($zip);
@@ -168,7 +170,7 @@ final class Aktualizace
         $json = $this->http($this->url(), 200 * 1024, 6); // krátký limit: kontrola běží po odeslání stránky, ale ne každý server ji umí oddělit
         $m = json_decode($json, true);
         if (!is_array($m) || !isset($m['verze'], $m['url'], $m['sha256'], $m['podpis']) || !preg_match('/^\d+\.\d+\.\d+([.-][0-9A-Za-z.-]+)?$/', (string) $m['verze'])) {
-            throw new \RuntimeException('Soubor s informací o aktualizaci nemá platný tvar.');
+            throw new \RuntimeException(t('Soubor s informací o aktualizaci nemá platný tvar.'));
         }
         $m['zmeny'] = array_values(array_filter(array_map(fn ($z): string => mb_substr((string) $z, 0, 300), (array) ($m['zmeny'] ?? []))));
 
@@ -185,14 +187,14 @@ final class Aktualizace
         $host = (string) parse_url($url, PHP_URL_HOST);
         $mistni = in_array($host, ['localhost', '127.0.0.1'], true);
         if (!preg_match('#^https://#i', $url) && !($mistni && preg_match('#^http://#i', $url))) {
-            throw new \RuntimeException('Zdroj aktualizací musí být na adrese https://.');
+            throw new \RuntimeException(t('Zdroj aktualizací musí být na adrese https://.'));
         }
         $data = @file_get_contents($url, false, stream_context_create(['http' => ['timeout' => $limitSekund, 'follow_location' => 1, 'max_redirects' => 5, 'header' => "User-Agent: phpRS/" . PHPRS_VERSION . "\r\n"]]), 0, $maxBajtu + 1);
         if ($data === false || $data === '') {
-            throw new \RuntimeException('Zdroj aktualizací není dostupný (' . $host . ').');
+            throw new \RuntimeException(t('Zdroj aktualizací není dostupný (%s).', $host));
         }
         if (strlen($data) > $maxBajtu) {
-            throw new \RuntimeException('Stahovaný soubor je nečekaně velký.');
+            throw new \RuntimeException(t('Stahovaný soubor je nečekaně velký.'));
         }
 
         return $data;
@@ -207,7 +209,7 @@ final class Aktualizace
     {
         $zip = new \ZipArchive();
         if ($zip->open($zipSoubor) !== true) {
-            throw new \RuntimeException('Balíček nelze otevřít.');
+            throw new \RuntimeException(t('Balíček nelze otevřít.'));
         }
         $jmena = [];
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -224,7 +226,7 @@ final class Aktualizace
                 continue;
             }
             if (str_contains($relativni, '..') || str_starts_with($relativni, '/') || str_contains($relativni, "\0") || str_contains($relativni, '\\')) {
-                throw new \RuntimeException('Balíček obsahuje nebezpečnou cestu.');
+                throw new \RuntimeException(t('Balíček obsahuje nebezpečnou cestu.'));
             }
             foreach (self::CHRANENE as $chranena) {
                 if ($relativni === $chranena || (str_ends_with($chranena, '/') && str_starts_with($relativni, $chranena))) {
@@ -240,10 +242,48 @@ final class Aktualizace
         }
         $zip->close();
         if (!in_array('system/bootstrap.php', $soubory, true) || !in_array('index.php', $soubory, true)) {
-            throw new \RuntimeException('Balíček neobsahuje phpRS.');
+            throw new \RuntimeException(t('Balíček neobsahuje phpRS.'));
         }
 
         return $soubory;
+    }
+
+    /** @return list<string> soubory jádra podle seznamu právě nainstalovaného vydání (system/soubory.json); bez seznamu prázdné */
+    private function souboryVydani(): array
+    {
+        $data = json_decode((string) @file_get_contents($this->koren . '/system/soubory.json'), true);
+
+        return is_array($data['soubory'] ?? null) ? array_map('strval', array_keys($data['soubory'])) : [];
+    }
+
+    /**
+     * Smaže soubory, které patřily ke starému vydání a v novém už nejsou (přejmenované a zrušené části systému).
+     * Maže jen to, co staré vydání samo přineslo - vlastní soubory, šablony, média ani chráněné cesty se nedotkne.
+     *
+     * @param list<string> $puvodni
+     * @param list<string> $nove
+     * @return int počet smazaných souborů
+     */
+    public static function uklidZastarale(string $koren, array $puvodni, array $nove): int
+    {
+        $smazano = 0;
+        foreach (array_diff($puvodni, $nove) as $relativni) {
+            if (str_contains($relativni, '..') || str_starts_with($relativni, '/') || str_contains($relativni, '\\') || str_contains($relativni, "\0")) {
+                continue;
+            }
+            foreach (self::CHRANENE as $chranena) {
+                if ($relativni === $chranena || (str_ends_with($chranena, '/') && str_starts_with($relativni, $chranena))) {
+                    continue 2;
+                }
+            }
+            $soubor = $koren . '/' . $relativni;
+            if (is_file($soubor) && @unlink($soubor)) {
+                $smazano++;
+                @rmdir(dirname($soubor)); // složka zmizí, jen když zůstala prázdná
+            }
+        }
+
+        return $smazano;
     }
 
     private static function smazSlozku(string $slozka): void

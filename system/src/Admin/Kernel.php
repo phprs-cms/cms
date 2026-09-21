@@ -72,7 +72,7 @@ final class Kernel
         $jazyk = (string) ($app->auth()->user()['jazyk'] ?? '') ?: \PhpRS\Core\Jazyk::vychozi($app->settings());
         \PhpRS\Core\Jazyk::nastav(isset(\PhpRS\Core\Jazyk::ADMINISTRACE[$jazyk]) ? $jazyk : 'cs', 'admin-');
         if ($app->auth()->user() === null) {
-            return $this->login();
+            return $akce === 'heslo' ? (new ObnovaHesla($app))->handle() : $this->login();
         }
         if ($akce === 'logout' && $request->isPost()) {
             $app->auth()->logout();

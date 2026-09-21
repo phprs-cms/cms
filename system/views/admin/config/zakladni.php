@@ -7,6 +7,16 @@ $pole('adresa_webu', 'Adresa webu', 'url', 'Například https://www.mujmagazin.c
 $pole('popis_webu', 'Popis webu', 'radky', 'Jedna až dvě věty – motto, popis pro vyhledávače a RSS.');
 $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění systému.');
 ?>
+<?php if (($jazykyDalsi = PhpRS\Core\Jazyk::dalsi($app->settings())) !== []): ?>
+<details class="pokrocile"<?= array_filter($jazykyDalsi, fn (string $j): bool => ($hodnoty['nazev_webu_' . $j] ?? '') . ($hodnoty['popis_webu_' . $j] ?? '') !== '') !== [] ? ' open' : '' ?>>
+<summary><?= e(t('Název a popis v dalších jazykových verzích')) ?></summary>
+<p class="napoveda"><?= e(t('Prázdné pole znamená stejný text jako ve výchozím jazyce.')) ?></p>
+<?php foreach ($jazykyDalsi as $j): ?>
+<div class="radek"><label for="nazev_webu_<?= e($j) ?>"><?= e(t('Název webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><input class="textpole" type="text" id="nazev_webu_<?= e($j) ?>" name="nazev_webu_<?= e($j) ?>" value="<?= e($hodnoty['nazev_webu_' . $j] ?? '') ?>" maxlength="150" lang="<?= e($j) ?>"></div></div>
+<div class="radek"><label for="popis_webu_<?= e($j) ?>"><?= e(t('Popis webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><textarea class="textpole" id="popis_webu_<?= e($j) ?>" name="popis_webu_<?= e($j) ?>" rows="2" cols="60" lang="<?= e($j) ?>"><?= e($hodnoty['popis_webu_' . $j] ?? '') ?></textarea></div></div>
+<?php endforeach ?>
+</details>
+<?php endif ?>
 <div class="radek">
 	<label for="casove_pasmo"><?= e(t('Časové pásmo')) ?></label>
 	<div><select id="casove_pasmo" name="casove_pasmo">

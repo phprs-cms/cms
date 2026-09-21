@@ -61,12 +61,30 @@ final class Konfigurace extends Modul
         'stav' => ['stav_token' => 'vzor:/^[A-Za-z0-9]{0,64}$/'],
     ];
 
+    /**
+     * Pole záložky. Základní záložka má navíc název a popis webu pro každou další jazykovou verzi
+     * (nazev_webu_en, popis_webu_de…) - prázdná hodnota znamená „stejné jako ve výchozím jazyce“.
+     *
+     * @return array<string, string>
+     */
+    private function pole(string $zalozka): array
+    {
+        $pole = self::POLE[$zalozka];
+        if ($zalozka === 'zakladni') {
+            foreach (\PhpRS\Core\Jazyk::dalsi($this->app->settings()) as $jazyk) {
+                $pole += ['nazev_webu_' . $jazyk => 'text', 'popis_webu_' . $jazyk => 'radky'];
+            }
+        }
+
+        return $pole;
+    }
+
     protected function akceVypis(): Response
     {
         $zalozka = $this->zalozka($this->request->get('zalozka'));
         $nastaveni = $this->app->settings();
         $hodnoty = [];
-        foreach (self::POLE[$zalozka] as $klic => $typ) {
+        foreach ($this->pole($zalozka) as $klic => $typ) {
             $hodnoty[$klic] = $nastaveni->get($klic);
             if ($typ === 'tajne' && $hodnoty[$klic] !== '') {
                 $hodnoty[$klic] = '…' . substr($hodnoty[$klic], -4); // do stránky jde jen konec klíče pro kontrolu
@@ -99,7 +117,7 @@ final class Konfigurace extends Modul
         }
         $nastaveni = $this->app->settings();
         $chyby = [];
-        foreach (self::POLE[$zalozka] as $klic => $typ) {
+        foreach ($this->pole($zalozka) as $klic => $typ) {
             // "kod" se neořezává ani jinak neupravuje - je to HTML/JS vložené administrátorem
             $hodnota = $typ === 'kod' ? (string) ($_POST[$klic] ?? '') : $this->request->post($klic);
             if (str_starts_with($typ, 'seznam:')) {

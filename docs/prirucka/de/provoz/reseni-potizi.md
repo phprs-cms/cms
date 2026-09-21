@@ -21,8 +21,8 @@ Der Hinweis erscheint während des Überschreibens der Dateien und verschwindet 
 
 - **„Zu viele Versuche“** – warten Sie 15 Minuten; die Sperre ist vorübergehend.
 - **Telefon mit der Authentifizierungs-App verloren** – geben Sie statt des Codes einen der Ersatzcodes ein. Wenn Sie keine haben, schaltet ein anderer Administrator Ihre Zwei-Faktor-Anmeldung unter Benutzer aus.
-- **Passwort vergessen** – ein neues Passwort legt ein anderer Administrator unter Benutzer fest.
-- **Einziger Administrator ohne Zugang** – hier hilft nur ein Eingriff in die Datenbank: Tragen Sie in der Tabelle `rs_user` (Präfix je nach Ihrer Installation) in die Spalte `password` einen neuen Passwort-Hash ein und leeren Sie `totp_tajemstvi`. Den Hash erzeugen Sie auf der Kommandozeile:
+- **Passwort vergessen** – klicken Sie auf der Anmeldeseite auf **Passwort vergessen?** und geben Sie Ihren Benutzernamen oder Ihre E-Mail-Adresse ein. An die E-Mail-Adresse des Kontos kommt ein Link zum Festlegen eines neuen Passworts; er ist eine Stunde gültig und einmal verwendbar. Die Zwei-Faktor-Anmeldung bleibt aktiv. Voraussetzung sind eine E-Mail-Adresse beim Konto und funktionierende [E-Mail](posta.md); andernfalls legt ein anderer Administrator unter Benutzer ein neues Passwort fest.
+- **Einziger Administrator ohne Zugang und ohne funktionierende E-Mail** – hier hilft nur ein Eingriff in die Datenbank: Tragen Sie in der Tabelle `rs_user` (Präfix je nach Ihrer Installation) in die Spalte `password` einen neuen Passwort-Hash ein und leeren Sie `totp_tajemstvi`. Den Hash erzeugen Sie auf der Kommandozeile:
 
   ```
   php -r 'echo password_hash("nove-dlouhe-heslo", PASSWORD_DEFAULT), "\n";'

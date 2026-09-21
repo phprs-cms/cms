@@ -11,6 +11,7 @@
  * @var list<array{typ:string, text:string}> $hlasky
  */
 $ikona = require __DIR__ . '/ikony.php';
+$naPrehledu = $aktivni === '' && (string) $app->request->get('akce') === ''; // Můj účet (akce=ucet) není Přehled
 
 // paleta příkazů (Ctrl/⌘+K): jen to, kam přihlášený smí – seznam modulů už je podle práv
 $prikazy = [];
@@ -63,8 +64,8 @@ if ($user !== null) {
 <header class="hlavicka">
 	<a class="znacka" href="<?= e($app->url('admin.php')) ?>" aria-label="phpRS – <?= e(t('Přehled')) ?>"><?= $app->view->render('admin/logo', ['vyska' => 28]) ?></a>
 	<button class="menu-prepinac" type="button" aria-expanded="false" aria-controls="menu"><?= e(t('Menu')) ?></button>
-	<ul class="menu rammodry-vypln" id="menu">
-		<li class="menu-prehled<?= $aktivni === '' ? ' aktivni' : '' ?>"><a href="<?= e($app->url('admin.php')) ?>"><?= $ikona('prehled') ?><?= e(t('Přehled')) ?></a></li>
+	<ul class="menu" id="menu">
+		<li class="menu-prehled<?= $naPrehledu ? ' aktivni' : '' ?>"><a href="<?= e($app->url('admin.php')) ?>"<?= $naPrehledu ? ' aria-current="page"' : '' ?>><?= $ikona('prehled') ?><?= e(t('Přehled')) ?></a></li>
 <?php $skupina = ''; foreach ($moduly as $ident => $class): ?>
 <?php if ($class::SKUPINA !== $skupina): $skupina = $class::SKUPINA; ?>
 		<li class="menu-skupina" aria-hidden="true"><?= e(t($skupina)) ?></li>
@@ -78,12 +79,12 @@ if ($user !== null) {
 <div class="loginprouzek">
 	<button class="paleta-spustit" type="button" data-paleta title="<?= e(t('Rychlé hledání a příkazy')) ?>"><span><?= e(t('Hledat…')) ?></span> <kbd>Ctrl K</kbd></button>
 	<button class="tema-prepinac" type="button" data-tema-prepinac title="<?= e(t('Světlý / tmavý režim')) ?>" aria-label="<?= e(t('Přepnout světlý a tmavý režim')) ?>"><?= $ikona('tema') ?></button>
-	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>"><span class="prihlasen-text">login: <?= e($user['user']) ?> (<?= e(t(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>) - <?= date('d.m.Y') ?></span><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . (PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
+	<a class="prihlasen" href="<?= e($app->url('admin.php?akce=ucet')) ?>" title="<?= e(t('Můj účet')) ?>" aria-label="<?= e(t('Můj účet') . ' – ' . ($user['jmeno'] ?: $user['user'])) ?>"><span class="avatar" title="<?= e(($user['jmeno'] ?: $user['user']) . ' – ' . t(PhpRS\Core\Auth::TYPY[(int) $user['admin']] ?? '')) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($user['jmeno'] ?: $user['user'], 0, 1))) ?></span></a>
 </div>
 <?php endif ?>
 <?php if ($prikazy !== []): ?>
 <dialog class="paleta" id="paleta" aria-label="<?= e(t('Rychlé hledání a příkazy')) ?>"<?= isset($moduly['clanky']) ? ' data-clanky="' . e($app->url('admin.php?modul=clanky&akce=hledej_json&uprava=1')) . '"' : '' ?>>
-	<input class="paleta-pole" type="search" autocomplete="off" spellcheck="false" placeholder="<?= e(t('Kam chcete jít? Napište název sekce, akce nebo článku…')) ?>" aria-controls="paleta-seznam">
+	<input class="paleta-pole" type="search" autocomplete="off" spellcheck="false" placeholder="<?= e(t('Kam chcete jít? Napište název sekce, akce nebo článku…')) ?>" aria-label="<?= e(t('Rychlé hledání a příkazy')) ?>" aria-controls="paleta-seznam">
 	<ul class="paleta-seznam" id="paleta-seznam" role="listbox"></ul>
 	<p class="paleta-napoveda"><kbd>↑</kbd> <kbd>↓</kbd> <?= e(t('výběr')) ?> · <kbd>Enter</kbd> <?= e(t('otevřít')) ?> · <kbd>Esc</kbd> <?= e(t('zavřít')) ?></p>
 	<script type="application/json" id="paleta-data"><?= json_encode($prikazy, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>

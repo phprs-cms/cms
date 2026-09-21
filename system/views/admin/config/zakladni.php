@@ -12,8 +12,8 @@ $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění syst
 <summary><?= e(t('Název a popis v dalších jazykových verzích')) ?></summary>
 <p class="napoveda"><?= e(t('Prázdné pole znamená stejný text jako ve výchozím jazyce.')) ?></p>
 <?php foreach ($jazykyDalsi as $j): ?>
-<div class="radek"><label for="nazev_webu_<?= e($j) ?>"><?= e(t('Název webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><input class="textpole" type="text" id="nazev_webu_<?= e($j) ?>" name="nazev_webu_<?= e($j) ?>" value="<?= e($hodnoty['nazev_webu_' . $j] ?? '') ?>" maxlength="150" lang="<?= e($j) ?>"></div></div>
-<div class="radek"><label for="popis_webu_<?= e($j) ?>"><?= e(t('Popis webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><textarea class="textpole" id="popis_webu_<?= e($j) ?>" name="popis_webu_<?= e($j) ?>" rows="2" cols="60" lang="<?= e($j) ?>"><?= e($hodnoty['popis_webu_' . $j] ?? '') ?></textarea></div></div>
+<div class="radek"><label for="nazev_webu_<?= e($j) ?>"><?= e(t('Název webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><input class="textpole siroke" type="text" id="nazev_webu_<?= e($j) ?>" name="nazev_webu_<?= e($j) ?>" value="<?= e($hodnoty['nazev_webu_' . $j] ?? '') ?>" maxlength="150" lang="<?= e($j) ?>"></div></div>
+<div class="radek"><label for="popis_webu_<?= e($j) ?>"><?= e(t('Popis webu')) ?> (<?= e(strtoupper($j)) ?>)</label><div><textarea class="textbox radkovy" id="popis_webu_<?= e($j) ?>" name="popis_webu_<?= e($j) ?>" rows="2" cols="60" lang="<?= e($j) ?>"><?= e($hodnoty['popis_webu_' . $j] ?? '') ?></textarea></div></div>
 <?php endforeach ?>
 </details>
 <?php endif ?>
@@ -52,7 +52,7 @@ $pole('email_webu', 'E-mail redakce', 'email', 'Chodí na něj upozornění syst
 <fieldset>
 <legend><?= e(t('Články a čtenáři')) ?></legend>
 <?php
-$pole('pocet_clanku', 'Článků na stránku', 'cislo', '', 'min="1" max="100" style="width:90px"');
+$pole('pocet_clanku', 'Článků na stránku', 'cislo', '', 'min="1" max="100"');
 $pole('povolit_komentare', 'Komentáře pod články', 'ano');
 ?>
 <div class="radek">
@@ -76,8 +76,8 @@ $pole('udrzba_text', 'Text oznámení', 'text', '', 'maxlength="300"');
 <?php
 $pole('komentare_jen_prihlaseni', 'Komentovat smí jen přihlášení čtenáři', 'ano', 'Méně spamu a slušnější diskuse; čtenář komentuje pod svým účtem.');
 $pole('ctenari_registrace', 'Povolit nové registrace', 'ano');
-$pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10" style="width:90px"');
-$pole('paywall_zdarma', 'Článků zdarma měsíčně', 'cislo', 'Měkký paywall: tolik zamčených článků si každý měsíc přečte kdokoli bez přihlášení, potom uvidí výzvu. 0 = vypnuto. Počítá se v prohlížeči čtenáře, vyhledávače vidí články celé.', 'min="0" max="50" style="width:90px"');
+$pole('zamek_odstavcu', 'Ukázka zamčeného článku', 'cislo', 'Kolik odstavců textu uvidí čtenář bez přístupu (perex vidí vždy). 0 = jen perex.', 'min="0" max="10"');
+$pole('paywall_zdarma', 'Článků zdarma měsíčně', 'cislo', 'Měkký paywall: tolik zamčených článků si každý měsíc přečte kdokoli bez přihlášení, potom uvidí výzvu. 0 = vypnuto. Počítá se v prohlížeči čtenáře, vyhledávače vidí články celé.', 'min="0" max="50"');
 $pole('predplatne_url', 'Kde získat předplatné', 'text', 'Stránka webu (např. /predplatne) nebo platební odkaz (https://…). U článků pro předplatitele a v účtu čtenáře se ukáže tlačítko „Získat předplatné“. Bez vyplnění čtenář neví, jak se předplatitelem stát.', 'maxlength="255" placeholder="/predplatne"');
 $pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – například proč se registrovat nebo jak získat předplatné.', 'maxlength="300"');
 ?>
@@ -95,7 +95,7 @@ $pole('zamek_text', 'Text výzvy pod ukázkou', 'text', 'Nepovinné – napřík
 <?php
 $pole('text_paticky', 'Text v patičce', 'text', 'Například vydavatel, ISSN nebo kontakt.', 'maxlength="300"');
 $pole('klicova_slova', 'Klíčová slova webu', 'text');
-$pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50" style="width:90px"');
+$pole('pocet_novinek', 'Novinek v bloku', 'cislo', '', 'min="0" max="50"');
 $pole('povolit_hodnoceni', 'Hodnocení článků hvězdičkami', 'ano');
 $pole('sdileni', 'Odkazy pro sdílení pod článkem', 'ano', 'Facebook, X, LinkedIn, WhatsApp, e-mail a kopírování odkazu – bez cizích skriptů.');
 $pole('doba_cteni', 'Doba čtení a ukazatel průběhu', 'ano', 'U článků delších než dvě minuty čtení.');

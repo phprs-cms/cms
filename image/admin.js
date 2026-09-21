@@ -33,7 +33,7 @@
 		dialogPotvrzeni.querySelector('[data-ne]').focus();
 	});
 
-	// Prostředí 2026: světlý / tmavý režim (výchozí podle systému, volba se pamatuje v prohlížeči)
+	// Světlý / tmavý režim (výchozí podle systému, volba se pamatuje v prohlížeči; před vykreslením ji nastaví tema.js)
 	var temaTl = document.querySelector('[data-tema-prepinac]');
 	if (temaTl) {
 		temaTl.addEventListener('click', function () {
@@ -44,7 +44,7 @@
 		});
 	}
 
-	// Prostředí 2026: rozbalení menu na mobilu
+	// Rozbalení menu na mobilu
 	var prepinac = document.querySelector('.menu-prepinac');
 	if (prepinac) {
 		prepinac.addEventListener('click', function () {

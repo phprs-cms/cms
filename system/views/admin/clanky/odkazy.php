@@ -19,7 +19,7 @@
 <p><?= e(t('Žádný nefunkční odkaz nebyl nalezen.')) ?></p>
 <?php else: ?>
 <div class="tab-obal"><table class="vypis">
-<thead><tr><th><?= e(t('Článek')) ?></th><th><?= e(t('Odkaz')) ?></th><th><?= e(t('Problém')) ?></th><th><?= e(t('Zjištěno')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Článek')) ?></th><th scope="col"><?= e(t('Odkaz')) ?></th><th scope="col"><?= e(t('Problém')) ?></th><th scope="col"><?= e(t('Zjištěno')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($odkazy as $o): ?>
 <tr>
@@ -27,7 +27,7 @@
 	<td style="word-break:break-all"><a href="<?= e($o['url']) ?>" target="_blank" rel="noopener noreferrer"><?= e(mb_strimwidth($o['url'], 0, 90, '…')) ?></a></td>
 	<td><?= e((int) $o['stav'] === 0 ? t('server neodpovídá') : ((int) $o['stav'] === 404 ? t('stránka neexistuje (404)') : t('chyba %s', (int) $o['stav']))) ?></td>
 	<td class="cislo"><?= e(datum($o['cas'])) ?></td>
-	<td class="akce"><form method="post" action="<?= e($modul->url('odkazy')) ?>" style="display:inline"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $o['idc'] ?>"><button class="navigace" type="submit"><?= e(t('Zkontrolovat znovu')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('odkazy')) ?>"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $o['idc'] ?>"><button class="navigace" type="submit"><?= e(t('Zkontrolovat znovu')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

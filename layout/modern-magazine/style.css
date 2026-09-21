@@ -31,20 +31,23 @@ img { display: block; max-width: 100%; height: auto; }
 .rubriky-lista { display: flex; gap: 22px; flex: 1; overflow-x: auto; scrollbar-width: none; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
 .rubriky-lista::-webkit-scrollbar { display: none; }
 .rubriky-lista a, .hledat { text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
-.rubriky-lista a:hover, .hledat:hover { border-bottom-color: var(--akcent); }
+.rubriky-lista a:hover, .rubriky-lista a[aria-current], .hledat:hover { border-bottom-color: var(--akcent); }
 .hledat { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* výpisy - mřížka karet */
 
 .stranka { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 40px; padding-top: 24px; padding-bottom: 56px; align-items: start; }
-.rozvrzeni-tri.ma-levou.ma-pravou { grid-template-columns: 220px minmax(0, 1fr) 300px; }
-.rozvrzeni-tri.ma-levou:not(.ma-pravou) { grid-template-columns: 220px minmax(0, 1fr); }
-.rozvrzeni-tri.ma-pravou:not(.ma-levou), .rozvrzeni-dva.ma-pravou { grid-template-columns: minmax(0, 1fr) 300px; }
+/* sloupce jen na širokém displeji – na užším zůstává jediný sloupec z .stranka (dřív je tu přebíjela vyšší váha selektorů a postranní sloupec na telefonu překryl obsah) */
+@media (min-width: 981px) {
+	.rozvrzeni-tri.ma-levou.ma-pravou { grid-template-columns: 220px minmax(0, 1fr) 300px; }
+	.rozvrzeni-tri.ma-levou:not(.ma-pravou) { grid-template-columns: 220px minmax(0, 1fr); }
+	.rozvrzeni-tri.ma-pravou:not(.ma-levou), .rozvrzeni-dva.ma-pravou { grid-template-columns: minmax(0, 1fr) 300px; }
+}
 .rozvrzeni-jeden .hlavni { max-width: 820px; margin: 0 auto; width: 100%; }
-.rozvrzeni-jeden .vypis-seznam, .ma-levou.ma-pravou .vypis-seznam { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ma-levou.ma-pravou .vypis-seznam { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .rozvrzeni-jeden .vypis-seznam { grid-template-columns: minmax(0, 1fr); }
 .zona-leva, .zona-prava { position: sticky; top: 84px; }
-.zona-pod { margin-top: 56px; padding-top: 32px; border-top: 4px solid var(--cerna); }
+.zona-pod { padding-top: 32px; border-top: 4px solid var(--cerna); }
 .zona-paticka-obal { background: var(--podklad); padding: 48px 0 20px; }
 
 /* zóny bloků mimo sloupce: v řadě vedle sebe */
@@ -81,7 +84,6 @@ img { display: block; max-width: 100%; height: auto; }
 .vypis-titulni .karta-hero h2 { font-size: clamp(34px, 5.4vw, 72px); font-weight: 900; line-height: 0.98; letter-spacing: -0.045em; }
 .vypis-titulni .karta-hero .perex { font-size: 19px; color: #E4E4E4; -webkit-line-clamp: 2; }
 .vypis-titulni .karta-hero .podpis, .vypis-titulni .karta-hero .podpis span { color: #CFCFCF; }
-.vypis-titulni .karta-hero .stitek:hover { color: #fff; }
 
 .strankovani { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 18px; border-top: 4px solid var(--cerna); font-size: 14px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
 .strankovani a { text-decoration: none; }
@@ -90,7 +92,8 @@ img { display: block; max-width: 100%; height: auto; }
 /* celý článek */
 
 .clanek-hlavicka { padding-top: 24px; }
-.ma-levou .obal-uzky, .ma-pravou .obal-uzky { padding-left: 0; padding-right: 0; }
+/* :where = nulová váha, aby odsazení nepřebilo vlastní padding prvku (.ve-zkratce) */
+:where(.ma-levou, .ma-pravou) .obal-uzky { padding-left: 0; padding-right: 0; }
 .clanek-cely h1 { margin: 6px 0 18px; font-size: clamp(36px, 6vw, 68px); font-weight: 900; line-height: 1; letter-spacing: -0.045em; }
 .clanek-cely .perex { font-size: 22px; line-height: 1.45; color: #2A2A2A; }
 .clanek-cely .perex p { margin: 0 0 14px; }
@@ -101,6 +104,9 @@ img { display: block; max-width: 100%; height: auto; }
 .clanek-text h2 { margin: 1.7em 0 0.4em; font-size: 30px; font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; }
 .clanek-text a { box-shadow: inset 0 -2px 0 var(--akcent); text-decoration: none; }
 .clanek-text a:hover { background: var(--akcent); color: #fff; }
+/* společné prvky vložené do textu (sdílení, uložení, medailonek autora, tlačítka) mají vlastní vzhled z image/web.css */
+.clanek-text .rs-sdileni a, .clanek-text .rs-ulozit a, .clanek-text a.rs-autor-jmeno, .clanek-text a.rs-tl { box-shadow: none; }
+.clanek-text .rs-sdileni a:hover, .clanek-text .rs-ulozit a:hover, .clanek-text a.rs-autor-jmeno:hover, .clanek-text a.rs-tl-vedlejsi:hover { background: transparent; color: var(--akcent); }
 .clanek-text blockquote { margin: 1.6em 0; padding: 0; border: 0; font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; line-height: 1.1; letter-spacing: -0.035em; }
 .clanek-text blockquote::before { content: ""; display: block; width: 64px; height: 6px; margin-bottom: 18px; background: var(--akcent); }
 .clanek-paticka { display: flex; gap: 18px; margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--linka); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-slaby); }
@@ -140,7 +146,6 @@ img { display: block; max-width: 100%; height: auto; }
 .paticka .drobne { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
 
 @media (max-width: 980px) {
-	.stranka.stranka { grid-template-columns: minmax(0, 1fr); }
 	.hlavni { order: -1; }
 	.zona-leva, .zona-prava { position: static; margin-top: 40px; }
 	.vypis-seznam { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -150,10 +155,11 @@ img { display: block; max-width: 100%; height: auto; }
 	.logo { font-size: 19px; }
 	.obal { padding: 0 16px; }
 	.stranka { padding-top: 16px; padding-bottom: 40px; }
-	.vypis-seznam { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+	.vypis-seznam, .ma-levou.ma-pravou .vypis-seznam { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 	.vypis-titulni .karta-hero { margin: 0 -16px; min-height: 64vh; }
 	.vypis-titulni .karta-hero .karta-telo { padding: 22px 16px; }
 	.clanek-text { font-size: 18px; }
+	:where(.obal) .obal-uzky { padding-left: 0; padding-right: 0; }
 }
 
 /* obrázky v textu článku */
@@ -167,8 +173,8 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* logo z Nastavení a odkazy v patičce */
 .logo-obrazek { display: inline-block; max-height: 34px; width: auto; vertical-align: middle; }
-.zapati a, .paticka a { margin-right: 12px; }
-.zapati span, .paticka .obal > span { margin-right: 12px; }
+.paticka a { margin-right: 12px; }
+.paticka .obal > span { margin-right: 12px; }
 
 /* štítky pod článkem */
 .clanek-stitky { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
@@ -258,10 +264,14 @@ h1, h2, h3, .logo, .blok-nadpis, .clanek-text blockquote { font-family: var(--ti
 	:root[data-tmavy] .zona-pod, :root[data-tmavy] .strankovani { border-top-color: #F2F2F2; }
 	:root[data-tmavy] .blok-typ2 { background: #1A1A1A; }
 	:root[data-tmavy] .blok-typ4 { background: #F2F2F2; color: #0E0E0E; }
-	:root[data-tmavy] .hledani input, :root[data-tmavy] input, :root[data-tmavy] textarea, :root[data-tmavy] select { background: #1A1A1A; color: var(--text); border-color: #F2F2F2; }
+	:root[data-tmavy] input, :root[data-tmavy] textarea, :root[data-tmavy] select { background: #1A1A1A; color: var(--text); border-color: #F2F2F2; }
 	:root[data-tmavy] .hledani button { border-color: #F2F2F2; background: #F2F2F2; color: #0E0E0E; }
 	:root[data-tmavy] .komentar-formular button[type="submit"], :root[data-tmavy] .anketa button { color: #0E0E0E; }
 	:root[data-tmavy] .paticka { border-top: 1px solid #2E2E2E; }
 	:root[data-tmavy] .karta .perex, :root[data-tmavy] .clanek-cely .perex { color: #CFCFCF; }
 	:root[data-tmavy] .vypis-titulni .karta-hero .perex { color: #E4E4E4; }
+	:root[data-tmavy] .rubriky li, :root[data-tmavy] .nejctenejsi li, :root[data-tmavy] .novinka { border-bottom-color: var(--linka); }
+	:root[data-tmavy] .karta-foto span { color: #2E2E2E; }
+	:root[data-tmavy] .komentare-zprava { border-color: #4CC38A; color: #4CC38A; }
+	:root[data-tmavy] .komentare-chyba { border-color: #FF8A80; color: #FF8A80; }
 }

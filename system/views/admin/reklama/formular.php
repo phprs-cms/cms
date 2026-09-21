@@ -41,7 +41,7 @@ $planovani = ($reklama['jen_rubrika'] ?? null) !== null || ($reklama['zarizeni']
 <legend><?= e(t('Kde')) ?></legend>
 <div class="karty-volby karty-volby-text">
 <?php foreach ($pozice as $klic => [$nazev, $popis]): ?>
-	<label class="karta-volba"><input type="radio" name="pozice" value="<?= e($klic) ?>"<?= $reklama['pozice'] === $klic ? ' checked' : '' ?>><strong><?= e($nazev) ?></strong><span><?= e($popis) ?></span></label>
+	<label class="karta-volba"><input type="radio" name="pozice" value="<?= e($klic) ?>"<?= $reklama['pozice'] === $klic ? ' checked' : '' ?>><strong><?= e(t($nazev)) ?></strong><span><?= e(t($popis)) ?></span></label>
 <?php endforeach ?>
 </div>
 <p class="napoveda"><?= e(t('Pozice ve sloupci, hlavičce a patičce umístíte na web blokem „Reklama“ (Bloky a rozvržení → Přidat blok).')) ?></p>
@@ -62,8 +62,8 @@ $planovani = ($reklama['jen_rubrika'] ?? null) !== null || ($reklama['zarizeni']
 </select></div>
 <div class="radek"><label for="platna_od"><?= e(t('Zobrazovat od')) ?></label><input class="textpole" type="datetime-local" id="platna_od" name="platna_od" value="<?= e($dt($reklama['platna_od'])) ?>"></div>
 <div class="radek"><label for="platna_do"><?= e(t('Zobrazovat do')) ?></label><input class="textpole" type="datetime-local" id="platna_do" name="platna_do" value="<?= e($dt($reklama['platna_do'])) ?>"></div>
-<div class="radek"><label for="max_zobrazeni"><?= e(t('Nejvýše zobrazení')) ?></label><div><input class="textpole" type="number" id="max_zobrazeni" name="max_zobrazeni" value="<?= e((string) $reklama['max_zobrazeni']) ?>" min="0" style="width:140px"><span class="napoveda"><?= e(t('Po dosažení se reklama vypne sama.')) ?></span></div></div>
-<div class="radek"><label for="vaha"><?= e(t('Váha')) ?></label><div><input class="textpole" type="number" id="vaha" name="vaha" value="<?= (int) $reklama['vaha'] ?>" min="1" max="10" style="width:90px"><span class="napoveda"><?= e(t('Když je na pozici víc reklam: váha 2 = zobrazí se dvakrát častěji než váha 1.')) ?></span></div></div>
+<div class="radek"><label for="max_zobrazeni"><?= e(t('Nejvýše zobrazení')) ?></label><div><input class="textpole" type="number" id="max_zobrazeni" name="max_zobrazeni" value="<?= e((string) $reklama['max_zobrazeni']) ?>" min="0"><span class="napoveda"><?= e(t('Po dosažení se reklama vypne sama.')) ?></span></div></div>
+<div class="radek"><label for="vaha"><?= e(t('Váha')) ?></label><div><input class="textpole" type="number" id="vaha" name="vaha" value="<?= (int) $reklama['vaha'] ?>" min="1" max="10"><span class="napoveda"><?= e(t('Když je na pozici víc reklam: váha 2 = zobrazí se dvakrát častěji než váha 1.')) ?></span></div></div>
 <div class="radek"><span class="popisek"><?= e(t('Stav')) ?></span><div class="volby"><label><input type="checkbox" name="aktivni" value="1"<?= $reklama['aktivni'] ? ' checked' : '' ?>> <?= e(t('reklama je zapnutá')) ?></label></div></div>
 </details>
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Uložit')) ?>"></p>

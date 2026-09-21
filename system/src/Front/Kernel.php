@@ -236,7 +236,7 @@ final class Kernel
             // úlohy na pozadí pro cron: weby s malou návštěvností tak vydají naplánovaný článek a rozešlou oznámení včas
             $token = $this->app->settings()->get('ulohy_token');
             if ($token === '' || !hash_equals($token, $request->get('token'))) {
-                return new Response("Neplatný token.\n", 403, ['Content-Type' => 'text/plain; charset=utf-8']);
+                return new Response(t('Neplatný token.') . "\n", 403, ['Content-Type' => 'text/plain; charset=utf-8']);
             }
             $hotovo = [];
             try {

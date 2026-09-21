@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpRS\Admin\Moduly;
 
 use PhpRS\Admin\Modul;
-use PhpRS\Core\Posta;
 use PhpRS\Core\Response;
 
 /**

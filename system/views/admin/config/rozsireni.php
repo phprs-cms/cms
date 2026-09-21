@@ -16,7 +16,7 @@ use PhpRS\Core\Rozsireni;
 <summary><?= e(t('AI asistent – klíč a model')) ?></summary>
 <div class="radek">
 	<label for="ai_klic"><?= e(t('Klíč Claude API')) ?></label>
-	<div><input class="textpole siroke" type="password" id="ai_klic" name="ai_klic" value="" autocomplete="off" placeholder="<?= $hodnoty['ai_klic'] !== '' ? 'uložen klíč končící ' . e($hodnoty['ai_klic']) . ' – nový vložte jen při změně' : 'sk-ant-…' ?>">
+	<div><input class="textpole siroke" type="password" id="ai_klic" name="ai_klic" value="" autocomplete="off" placeholder="<?= $hodnoty['ai_klic'] !== '' ? e(t('uložen klíč končící %s – nový vložte jen při změně', $hodnoty['ai_klic'])) : 'sk-ant-…' ?>">
 	<span class="napoveda"><?= e(t('Klíč si vytvoříte na')) ?> <a href="https://console.anthropic.com/" target="_blank" rel="noopener"><?= e(t('console.anthropic.com')) ?></a> <?= e(t('→ API Keys. Platíte jen za skutečné použití, jeden návrh stojí řádově haléře. Klíč se ukládá jen na vašem webu.')) ?></span>
 <?php if ($hodnoty['ai_klic'] !== ''): ?>
 	<label><input type="checkbox" name="ai_klic_smazat" value="1"> <?= e(t('Odebrat uložený klíč')) ?></label>

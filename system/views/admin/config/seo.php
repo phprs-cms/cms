@@ -19,7 +19,7 @@
 $pole('overeni_google', 'Google', 'text', 'Hodnota content z meta tagu google-site-verification.', 'maxlength="100"');
 $pole('overeni_bing', 'Bing', 'text', 'Hodnota content z meta tagu msvalidate.01.', 'maxlength="64"');
 ?>
-<p class="napoveda">Do Search Console pak vložte adresu sitemapy: <?= e($adresaWebu) ?>sitemap.xml</p>
+<p class="napoveda"><?= e(t('Do Search Console pak vložte adresu sitemapy:')) ?> <?= e($adresaWebu) ?>sitemap.xml</p>
 </details>
 <details class="pokrocile">
 <summary><?= e(t('Pro pokročilé')) ?></summary>

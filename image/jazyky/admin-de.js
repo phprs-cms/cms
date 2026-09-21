@@ -165,5 +165,6 @@ window.PHPRS_PREKLAD = {
 	"Pod obsahem": "Unter dem Inhalt",
 	"Pravý sloupec": "Rechte Spalte",
 	"Patička": "Fußzeile",
-	"+ Přidat blok": "+ Block hinzufügen"
+	"+ Přidat blok": "+ Block hinzufügen",
+	"Složka": "Ordner"
 };

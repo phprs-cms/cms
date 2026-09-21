@@ -48,7 +48,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 		<input type="color" name="brand_akcent" value="<?= e($akcent) ?>" aria-label="<?= e(t('Vlastní hlavní barva')) ?>">
 		<div class="identita-barvy">
 <?php foreach ($barvy as $hex => $nazev): ?>
-			<button type="button" data-barva="<?= e($hex) ?>" style="background:<?= e($hex) ?>" title="<?= e($nazev) ?>" aria-label="<?= e($nazev) ?>"></button>
+			<button type="button" data-barva="<?= e($hex) ?>" style="background:<?= e($hex) ?>" title="<?= e(t($nazev)) ?>" aria-label="<?= e(t($nazev)) ?>"></button>
 <?php endforeach ?>
 		</div>
 		<span class="napoveda"><?= e(t('Použije se na odkazy, štítky rubrik, tlačítka a zvýraznění.')) ?> <strong data-kontrast hidden><?= e(t('Pozor: tahle barva je na bílém pozadí špatně čitelná – zvolte tmavší.')) ?></strong></span>
@@ -74,7 +74,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 	<label for="brand_pismo_titulky"><?= e(t('Titulky')) ?></label>
 	<select id="brand_pismo_titulky" name="brand_pismo_titulky">
 <?php foreach (Identita::PISMA_TITULKU as $klic => [$nazev, $popis, $css]): ?>
-		<option value="<?= e($klic) ?>" data-css="<?= e($css) ?>"<?= $hodnoty['brand_pismo_titulky'] === $klic ? ' selected' : '' ?>><?= e($nazev . ($popis !== '' ? ' – ' . $popis : '')) ?></option>
+		<option value="<?= e($klic) ?>" data-css="<?= e($css) ?>"<?= $hodnoty['brand_pismo_titulky'] === $klic ? ' selected' : '' ?>><?= e(t($nazev) . ($popis !== '' ? ' – ' . t($popis) : '')) ?></option>
 <?php endforeach ?>
 	</select>
 </div>
@@ -82,7 +82,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 	<label for="brand_pismo_text"><?= e(t('Text článků')) ?></label>
 	<div><select id="brand_pismo_text" name="brand_pismo_text">
 <?php foreach (Identita::PISMA_TEXTU as $klic => [$nazev, $popis, $css]): ?>
-		<option value="<?= e($klic) ?>" data-css="<?= e($css) ?>"<?= $hodnoty['brand_pismo_text'] === $klic ? ' selected' : '' ?>><?= e($nazev . ($popis !== '' ? ' – ' . $popis : '')) ?></option>
+		<option value="<?= e($klic) ?>" data-css="<?= e($css) ?>"<?= $hodnoty['brand_pismo_text'] === $klic ? ' selected' : '' ?>><?= e(t($nazev) . ($popis !== '' ? ' – ' . t($popis) : '')) ?></option>
 <?php endforeach ?>
 	</select>
 	<span class="napoveda"><?= e(t('Písma jsou systémová: nic se nestahuje z cizích serverů, web je rychlý a nepotřebuje kvůli nim souhlas návštěvníka.')) ?></span></div>
@@ -93,7 +93,7 @@ $akcent = $hodnoty['brand_akcent'] !== '' ? $hodnoty['brand_akcent'] : '#1f4fe0'
 <legend><?= e(t('Ukázka')) ?></legend>
 <div class="identita-ukazka" data-ukazka>
 	<span class="identita-ukazka-rubrika"><?= e(t('Kultura')) ?></span>
-	<h3><?= e($hodnoty['nazev_webu']) ?>: titulek článku vypadá takto</h3>
+	<h3><?= e(t('%s: titulek článku vypadá takto', $hodnoty['nazev_webu'])) ?></h3>
 	<p><?= e(t('Takhle bude vypadat běžný text článku. Obsahuje i')) ?> <a href="#" data-neklikat><?= e(t('odkaz v hlavní barvě')) ?></a> <?= e(t('a dost slov na to, abyste posoudili čitelnost zvoleného písma.')) ?></p>
 	<span class="identita-ukazka-tlacitko"><?= e(t('Tlačítko')) ?></span>
 </div>

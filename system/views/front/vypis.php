@@ -31,6 +31,8 @@
 	<p><?= mb_strlen($hledano) < 3 ? e(t('Zadejte alespoň 3 znaky.')) : e(t('Nalezeno článků')) . ': ' . $celkem ?></p>
 <?php endif ?>
 </header>
+<?php elseif ($hlavni): ?>
+<h1 class="rs-jen-ctecka"><?= e(t('Nejnovější články')) ?></h1>
 <?php endif ?>
 
 <?php if ($nahledy === [] && $hledano === null): ?>
@@ -45,7 +47,7 @@
 <?php if ($strana > 1): ?>
 	<a href="<?= e($strankaUrl($strana - 1)) ?>" rel="prev">&laquo; <?= e(t('novější')) ?></a>
 <?php endif ?>
-	<span>strana <?= $strana ?> z <?= $stran ?></span>
+	<span aria-current="page"><?= e(t('strana %s z %s', $strana, $stran)) ?></span>
 <?php if ($strana < $stran): ?>
 	<a href="<?= e($strankaUrl($strana + 1)) ?>" rel="next"><?= e(t('starší')) ?> &raquo;</a>
 <?php endif ?>

@@ -110,6 +110,26 @@
 		});
 	});
 
+	/* ---------- komentáře: reakce na komentář (views/front/komentare.php) ---------- */
+
+	document.addEventListener('click', function (e) {
+		var tl = e.target.closest && e.target.closest('[data-reagovat], [data-zrusit-reakci]');
+		if (!tl) { return; }
+		var f = tl.hasAttribute('data-reagovat') ? document.querySelector('.komentar-formular') : tl.closest('form');
+		var info = f && f.querySelector('.komentar-reakce-info');
+		if (!f || !info) { return; }
+		if (tl.hasAttribute('data-reagovat')) {
+			f.reakce_na.value = tl.getAttribute('data-reagovat');
+			info.hidden = false;
+			info.querySelector('strong').textContent = tl.getAttribute('data-jmeno');
+			f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			f.obsah.focus();
+		} else {
+			f.reakce_na.value = '0';
+			info.hidden = true;
+		}
+	});
+
 	/* ---------- přehrávač cizí služby se vloží až po kliknutí ---------- */
 
 	document.addEventListener('click', function (e) {

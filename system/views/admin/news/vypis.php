@@ -37,7 +37,7 @@
 <?= $csrf ?>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Datum')) ?></th><th><?= e(t('Titulek')) ?></th><th><?= e(t('Text')) ?></th><th><?= e(t('Akce')) ?></th><th><?= e(t('Smaž')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Datum')) ?></th><th scope="col"><?= e(t('Titulek')) ?></th><th scope="col"><?= e(t('Text')) ?></th><th scope="col"><?= e(t('Akce')) ?></th><th scope="col"><?= e(t('Smaž')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($novinky as $n): ?>
 <tr>

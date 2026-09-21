@@ -40,7 +40,7 @@ $role = [
 	<label for="password"><?= $autor['idu'] ? 'Nové heslo' : 'Heslo' ?></label>
 	<div><input class="textpole" type="password" id="password" name="password" size="30" minlength="10" autocomplete="new-password"<?= $autor['idu'] ? '' : ' required' ?>>
 	<label style="font-weight:normal"><input type="checkbox" data-ukaz-heslo="password"> <?= e(t('zobrazit')) ?></label><?= $chyba('password') ?>
-	<span class="napoveda">Alespoň 10 znaků.<?= $autor['idu'] ? ' Nechte prázdné, pokud heslo neměníte.' : ' Uživatel si ho pak změní v nabídce Můj účet.' ?></span></div>
+	<span class="napoveda"><?= e(t('Alespoň 10 znaků.')) ?> <?= e(t($autor['idu'] ? 'Nechte prázdné, pokud heslo neměníte.' : 'Uživatel si ho pak změní v nabídce Můj účet.')) ?></span></div>
 </div>
 
 <fieldset>
@@ -49,8 +49,8 @@ $role = [
 <?php foreach ($role as $hodnota => [$nazev, $popis]): ?>
 	<label class="karta-volba">
 		<input type="radio" name="admin" value="<?= $hodnota ?>"<?= (int) $autor['admin'] === $hodnota ? ' checked' : '' ?><?= $sam ? ' disabled' : '' ?>>
-		<strong><?= e($nazev) ?></strong>
-		<span><?= e($popis) ?></span>
+		<strong><?= e(t($nazev)) ?></strong>
+		<span><?= e(t($popis)) ?></span>
 	</label>
 <?php endforeach ?>
 </div>
@@ -114,5 +114,5 @@ foreach (PhpRS\Admin\Moduly\Rubriky::strom($modul->app()->db()) as $rub): ?>
 </div>
 <?php endif ?>
 </details>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= $autor['idu'] ? 'Uložit' : 'Přidat uživatele' ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($autor['idu'] ? 'Uložit' : 'Přidat uživatele')) ?>"></p>
 </form>

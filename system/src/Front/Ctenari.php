@@ -189,7 +189,7 @@ final class Ctenari
             return $this->noveHeslo($m[1], $view);
         }
         if ($path !== '/ctenar') {
-            return $this->zprava($view, 'Stránka nenalezena', 'Tahle adresa neexistuje.');
+            return $this->zprava($view, t('Stránka nenalezena'), t('Tahle adresa neexistuje.'));
         }
         if ($r->isPost()) {
             Cache::vymaz();
@@ -245,9 +245,9 @@ final class Ctenari
         $existujici = $db->one('SELECT * FROM {ctenari} WHERE email = ?', [$email]);
         if ($existujici !== null && $existujici['potvrzen']) {
             // odpověď webu nesmí prozradit, že e-mail už účet má - majitel se to dozví e-mailem
-            Posta::odesli($web, $email, 'Účet už máte – ' . $web->get('nazev_webu'),
-                "Dobrý den,\n\nna webu {$web->get('nazev_webu')} se někdo pokusil znovu zaregistrovat váš e-mail. Účet už máte – stačí se přihlásit:\n"
-                . $r->origin() . $this->app->url('ctenar') . "\n\nPokud jste zapomněli heslo, na stejné stránce si necháte poslat odkaz pro nové.\n");
+            Posta::odesli($web, $email, t('Účet už máte') . ' – ' . $web->get('nazev_webu'),
+                t('Dobrý den,') . "\n\n" . t('na webu %s se někdo pokusil znovu zaregistrovat váš e-mail. Účet už máte – stačí se přihlásit:', $web->get('nazev_webu')) . "\n"
+                . $r->origin() . $this->app->url('ctenar') . "\n\n" . t('Pokud jste zapomněli heslo, na stejné stránce si necháte poslat odkaz pro nové.') . "\n");
 
             return $this->na('poslano');
         }
@@ -263,9 +263,10 @@ final class Ctenari
             // odběr se potvrdí spolu s účtem - e-mail ověřuje stejný odkaz
             $db->insert('odberatele', ['email' => $email, 'token' => bin2hex(random_bytes(16)), 'prihlasen' => date('Y-m-d H:i:s'), 'jazyk' => \PhpRS\Core\Jazyk::sloupecWebu()]);
         }
-        Posta::odesli($web, $email, 'Potvrďte registraci – ' . $web->get('nazev_webu'),
-            "Dobrý den,\n\nregistraci na webu {$web->get('nazev_webu')} dokončíte nastavením hesla na této adrese (odkaz platí 3 dny):\n"
-            . $r->origin() . $this->app->url('ctenar/heslo/' . $token) . "\n\nPokud jste se neregistrovali, e-mail ignorujte.\n");
+        // e-maily čtenáři odcházejí na jeho vlastní žádost, takže jazyk zobrazené verze webu je i jazyk příjemce
+        Posta::odesli($web, $email, t('Potvrďte registraci') . ' – ' . $web->get('nazev_webu'),
+            t('Dobrý den,') . "\n\n" . t('registraci na webu %s dokončíte nastavením hesla na této adrese (odkaz platí 3 dny):', $web->get('nazev_webu')) . "\n"
+            . $r->origin() . $this->app->url('ctenar/heslo/' . $token) . "\n\n" . t('Pokud jste se neregistrovali, e-mail ignorujte.') . "\n");
 
         return $this->na('poslano');
     }
@@ -310,15 +311,15 @@ final class Ctenari
             $this->app->db()->update('ctenari', ['token' => $token, 'token_cas' => date('Y-m-d H:i:s')], ['idct' => $ctenar['idct']]);
             $web = $this->app->settings();
             if ($prihlaseni) {
-                Posta::odesli($web, $ctenar['email'], 'Přihlášení – ' . $web->get('nazev_webu'),
-                    "Dobrý den,\n\nna web {$web->get('nazev_webu')} se přihlásíte tímto odkazem (platí 20 minut a jde použít jednou):\n"
-                    . $r->origin() . $this->app->url('ctenar/vstup/' . $token) . "\n\nPokud jste o přihlášení nežádali, e-mail ignorujte.\n");
+                Posta::odesli($web, $ctenar['email'], t('Přihlášení') . ' – ' . $web->get('nazev_webu'),
+                    t('Dobrý den,') . "\n\n" . t('na web %s se přihlásíte tímto odkazem (platí 20 minut a jde použít jednou):', $web->get('nazev_webu')) . "\n"
+                    . $r->origin() . $this->app->url('ctenar/vstup/' . $token) . "\n\n" . t('Pokud jste o přihlášení nežádali, e-mail ignorujte.') . "\n");
 
                 return $this->na('odkaz-poslan');
             }
-            Posta::odesli($web, $ctenar['email'], 'Nové heslo – ' . $web->get('nazev_webu'),
-                "Dobrý den,\n\nnové heslo k účtu na webu {$web->get('nazev_webu')} si nastavíte tady (odkaz platí 2 hodiny):\n"
-                . $r->origin() . $this->app->url('ctenar/heslo/' . $token) . "\n\nPokud jste o nové heslo nežádali, e-mail ignorujte.\n");
+            Posta::odesli($web, $ctenar['email'], t('Nové heslo') . ' – ' . $web->get('nazev_webu'),
+                t('Dobrý den,') . "\n\n" . t('nové heslo k účtu na webu %s si nastavíte tady (odkaz platí 2 hodiny):', $web->get('nazev_webu')) . "\n"
+                . $r->origin() . $this->app->url('ctenar/heslo/' . $token) . "\n\n" . t('Pokud jste o nové heslo nežádali, e-mail ignorujte.') . "\n");
         }
 
         return $this->na($prihlaseni ? 'odkaz-poslan' : 'heslo-poslano');
@@ -353,7 +354,7 @@ final class Ctenari
         $db = $this->app->db();
         $ctenar = $db->one('SELECT * FROM {ctenari} WHERE token = ? AND ((potvrzen = 1 AND token_cas > NOW() - INTERVAL 2 HOUR) OR (potvrzen = 0 AND token_cas > NOW() - INTERVAL 3 DAY))', [$token]);
         if ($ctenar === null) {
-            return $this->zprava($view, 'Odkaz už neplatí', 'Nechte si prosím poslat nový odkaz ze stránky přihlášení.');
+            return $this->zprava($view, t('Odkaz už neplatí'), t('Nechte si prosím poslat nový odkaz ze stránky přihlášení.'));
         }
         $r = $this->app->request;
         if ($r->isPost() && mb_strlen($r->post('heslo')) >= 8) {

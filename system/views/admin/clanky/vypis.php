@@ -55,7 +55,7 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <div class="tab-obal">
 <table class="vypis">
 <thead>
-<tr><th><?= e(t('Titulek')) ?></th><th><?= e(t('Rubrika')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Datum vydání')) ?></th><th><?= e(t('Stav')) ?></th><th><?= e(t('Čteno')) ?></th><th><?= e(t('Akce')) ?></th><th><?= e(t('Označit')) ?></th></tr>
+<tr><th scope="col"><?= e(t('Titulek')) ?></th><th scope="col"><?= e(t('Rubrika')) ?></th><th scope="col"><?= e(t('Autor')) ?></th><th scope="col"><?= e(t('Datum vydání')) ?></th><th scope="col"><?= e(t('Stav')) ?></th><th scope="col"><?= e(t('Čteno')) ?></th><th scope="col"><?= e(t('Akce')) ?></th><th scope="col"><?= e(t('Označit')) ?></th></tr>
 </thead>
 <tbody>
 <?php foreach ($clanky as $c): ?>

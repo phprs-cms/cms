@@ -21,14 +21,14 @@ $akce = ['uloz' => 'uložení', 'smaz' => 'smazání', 'vydat' => 'vydání', 'h
 </form>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Kdy')) ?></th><th><?= e(t('Kdo')) ?></th><th><?= e(t('Kde')) ?></th><th><?= e(t('Co')) ?></th><th><?= e(t('Podrobnost')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Kdy')) ?></th><th scope="col"><?= e(t('Kdo')) ?></th><th scope="col"><?= e(t('Kde')) ?></th><th scope="col"><?= e(t('Co')) ?></th><th scope="col"><?= e(t('Podrobnost')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($zaznamy as $z): ?>
 <tr<?= $z['akce'] === 'neuspech' ? ' class="nevydany"' : '' ?>>
 	<td class="cislo"><?= e(datum($z['cas'], true)) ?></td>
 	<td><?= e($z['jmeno'] !== '' ? $z['jmeno'] : '–') ?></td>
-	<td><?= e($nazvy[$z['modul']] ?? $z['modul']) ?></td>
-	<td><?= e($akce[$z['akce']] ?? $z['akce']) ?></td>
+	<td><?= e(isset($nazvy[$z['modul']]) ? t($nazvy[$z['modul']]) : $z['modul']) ?></td>
+	<td><?= e(isset($akce[$z['akce']]) ? t($akce[$z['akce']]) : $z['akce']) ?></td>
 	<td><?= e($z['popis']) ?></td>
 </tr>
 <?php endforeach ?>

@@ -41,7 +41,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 
 <div class="media-obsah">
 <?php if ($clanek !== null): ?>
-<p class="hlaska">Obrázky použité v článku „<?= e($clanek) ?>“. <a href="<?= e($modul->url()) ?>"><?= e(t('Zobrazit všechna média')) ?></a></p>
+<p class="hlaska"><?= e(t('Obrázky použité v článku „%s“.', $clanek)) ?> <a href="<?= e($modul->url()) ?>"><?= e(t('Zobrazit všechna média')) ?></a></p>
 <?php endif ?>
 <?php if ($aktivniSlozka !== null): ?>
 <div class="media-slozka-uprava">
@@ -75,8 +75,8 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 		<a href="<?= e($app->url($o['obr_poloha'])) ?>" target="_blank" rel="noopener"><img src="<?= e($app->url($o['nahl_poloha'])) ?>" alt="<?= e($o['nazev']) ?>" loading="lazy" width="<?= (int) $o['nahl_width'] ?>" height="<?= (int) $o['nahl_height'] ?>"></a>
 <?php endif ?>
 		<figcaption>
-			<strong title="<?= e($o['nazev']) ?>"><?= e($o['nazev'] !== '' ? $o['nazev'] : 'bez názvu') ?></strong>
-			<span><?= $o['nahl_poloha'] === '' ? '' : (int) $o['obr_width'] . '&times;' . (int) $o['obr_height'] . ' &middot; ' ?><?= e(PhpRS\Core\Soubory::velikost((int) $o['obr_vel'])) ?> &middot; <?= (int) $o['pouzito'] > 0 ? 'použito ' . (int) $o['pouzito'] . '&times;' : 'nepoužito' ?></span>
+			<strong title="<?= e($o['nazev']) ?>"><?= e($o['nazev'] !== '' ? $o['nazev'] : t('bez názvu')) ?></strong>
+			<span><?= $o['nahl_poloha'] === '' ? '' : (int) $o['obr_width'] . '&times;' . (int) $o['obr_height'] . ' &middot; ' ?><?= e(PhpRS\Core\Soubory::velikost((int) $o['obr_vel'])) ?> &middot; <?= e((int) $o['pouzito'] > 0 ? t('použito %s×', (int) $o['pouzito']) : t('nepoužito')) ?></span>
 			<span><label><input type="checkbox" name="oznacene[]" value="<?= (int) $o['ido'] ?>"> <?= e(t('označit')) ?></label> &middot; <a href="<?= e($modul->url('vypis', $parametry + ['uprav' => $o['ido'], 'strana' => $strana])) ?>#uprav"><?= e(t('popis')) ?></a></span>
 		</figcaption>
 	</figure>

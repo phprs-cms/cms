@@ -22,12 +22,12 @@ $pole('smtp_host', 'Adresa serveru', 'text', 'Například smtp.gmail.com, smtp.s
 	</select></div>
 </div>
 <?php
-$pole('smtp_port', 'Port', 'cislo', '', 'min="1" max="65535" style="width:100px"');
+$pole('smtp_port', 'Port', 'cislo', '', 'min="1" max="65535"');
 $pole('smtp_uzivatel', 'Přihlašovací jméno', 'text', 'Obvykle celá e-mailová adresa schránky.', 'maxlength="190" autocomplete="off"');
 ?>
 <div class="radek">
 	<label for="smtp_heslo"><?= e(t('Heslo')) ?></label>
-	<div><input class="textpole siroke" type="password" id="smtp_heslo" name="smtp_heslo" value="" autocomplete="new-password" placeholder="<?= $hodnoty['smtp_heslo'] !== '' ? 'heslo je uložené – nové vložte jen při změně' : '' ?>">
+	<div><input class="textpole siroke" type="password" id="smtp_heslo" name="smtp_heslo" value="" autocomplete="new-password" placeholder="<?= $hodnoty['smtp_heslo'] !== '' ? e(t('heslo je uložené – nové vložte jen při změně')) : '' ?>">
 	<span class="napoveda"><?= e(t('U Gmailu a Seznamu použijte „heslo pro aplikace“, ne heslo k účtu. Heslo se ukládá jen na vašem webu a nikdy se nevypisuje zpět.')) ?></span>
 <?php if ($hodnoty['smtp_heslo'] !== ''): ?>
 	<label><input type="checkbox" name="smtp_heslo_smazat" value="1"> <?= e(t('Odebrat uložené heslo')) ?></label>
@@ -46,7 +46,7 @@ $pole('posta_odpoved', 'Odpovědi posílat na', 'email', 'Nepovinné – když m
 <?php if (!empty($posta)): ?>
 <h3><?= e(t('Poslední zprávy')) ?></h3>
 <div class="tab-obal"><table class="vypis">
-<thead><tr><th><?= e(t('Čas')) ?></th><th><?= e(t('Komu')) ?></th><th><?= e(t('Předmět')) ?></th><th><?= e(t('Stav')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Čas')) ?></th><th scope="col"><?= e(t('Komu')) ?></th><th scope="col"><?= e(t('Předmět')) ?></th><th scope="col"><?= e(t('Stav')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($posta as $z): ?>
 <tr>

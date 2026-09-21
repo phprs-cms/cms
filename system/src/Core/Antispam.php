@@ -40,7 +40,7 @@ final class Antispam
             . '<div style="position:absolute;left:-9999px" aria-hidden="true"><label>Toto pole nevyplňujte <input type="text" name="web_adresa" tabindex="-1" autocomplete="off"></label></div>';
     }
 
-    /** @return string|null důvod odmítnutí, null = v pořádku */
+    /** @return string|null důvod odmítnutí (už přeložený do jazyka webu; 'robot' je značka, ne text), null = v pořádku */
     public function over(Request $request, string $ucel): ?string
     {
         if ($request->post('web_adresa') !== '') {
@@ -48,14 +48,14 @@ final class Antispam
         }
         $cas = $request->postInt('as_cas');
         if (!hash_equals(hash_hmac('sha256', $ucel . '|' . $cas, $this->klic()), $request->post('as_podpis'))) {
-            return 'Formulář se nepodařilo ověřit. Obnovte stránku a zkuste to znovu.';
+            return t('Formulář se nepodařilo ověřit. Obnovte stránku a zkuste to znovu.');
         }
         $stari = time() - $cas;
         if ($stari < self::MIN_SEKUND) {
-            return 'To bylo příliš rychlé. Zkuste to prosím znovu za pár vteřin.';
+            return t('To bylo příliš rychlé. Zkuste to prosím znovu za pár vteřin.');
         }
 
-        return $stari > self::MAX_SEKUND ? 'Platnost formuláře vypršela. Obnovte stránku a zkuste to znovu.' : null;
+        return $stari > self::MAX_SEKUND ? t('Platnost formuláře vypršela. Obnovte stránku a zkuste to znovu.') : null;
     }
 
     /** Kolikrát už IP adresa danou akci za posledních $minut provedla. */

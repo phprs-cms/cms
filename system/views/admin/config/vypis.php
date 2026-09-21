@@ -30,7 +30,7 @@ $pole = function (string $klic, string $popisek, string $druh = 'text', string $
     if ($druh === 'ano') {
         echo '<span class="popisek">' . e($popisek) . '</span><div class="volby"><label><input type="checkbox" name="' . e($klic) . '" value="1"' . ($h === '1' ? ' checked' : '') . '> ' . e(t('Ano')) . '</label>' . $nap . '</div>';
     } elseif ($druh === 'radky' || $druh === 'kod') {
-        echo '<label for="' . e($klic) . '">' . e($popisek) . '</label><div><textarea class="textbox' . ($druh === 'kod' ? ' kod' : '') . '" id="' . e($klic) . '" name="' . e($klic) . '" rows="4" style="min-height:80px" ' . $atributy . '>' . e($h) . '</textarea>' . $nap . '</div>';
+        echo '<label for="' . e($klic) . '">' . e($popisek) . '</label><div><textarea class="textbox nizky' . ($druh === 'kod' ? ' kod' : '') . '" id="' . e($klic) . '" name="' . e($klic) . '" rows="4" ' . $atributy . '>' . e($h) . '</textarea>' . $nap . '</div>';
     } else {
         $typ = ['cislo' => 'number', 'url' => 'url', 'email' => 'email'][$druh] ?? 'text';
         echo '<label for="' . e($klic) . '">' . e($popisek) . '</label><div><input class="textpole' . ($typ === 'number' ? '' : ' siroke') . '" type="' . $typ . '" id="' . e($klic) . '" name="' . e($klic) . '" value="' . e($h) . '" ' . $atributy . '>' . $nap . '</div>';

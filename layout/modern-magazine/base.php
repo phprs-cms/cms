@@ -56,7 +56,7 @@ $nazevWebu = $web->get('nazev_webu');
 		<a class="logo" href="<?= e($url('')) ?>"><?php if ($web->get('logo_webu') !== ''): ?><img class="logo-obrazek" src="<?= e((preg_match('#^(https?:)?/#', $web->get('logo_webu')) ? '' : $url('')) . $web->get('logo_webu')) ?>" alt="<?= e($nazevWebu) ?>"><?php else: ?><?= e($nazevWebu) ?><?php endif ?></a>
 		<nav class="rubriky-lista" aria-label="<?= e(t('Rubriky')) ?>">
 <?php foreach ($rubriky as $r): if ($r['uroven'] > 0) { continue; } ?>
-			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"><?= e($r['nazev']) ?></a>
+			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"<?= str_ends_with($kanonicka, '/rubrika/' . $r['seo_link']) ? ' aria-current="page"' : '' ?>><?= e($r['nazev']) ?></a>
 <?php endforeach ?>
 		</nav>
 		<a class="hledat" href="<?= e($url('hledani')) ?>"><?= e(t('Hledat')) ?></a>

@@ -160,12 +160,12 @@ final class Seo
         if ($s->get('popis_webu') !== '') {
             array_push($radky, '> ' . str_replace("\n", ' ', $s->get('popis_webu')), '');
         }
-        $radky[] = '## Rubriky';
+        $radky[] = '## ' . t('Rubriky');
         foreach ($db->all('SELECT nazev, seo_link, popis FROM {topic} WHERE zobrazit = 1 AND jazyk = ? ORDER BY hodnost DESC, nazev', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $r) {
             $popis = trim(strip_tags($r['popis']));
             $radky[] = '- [' . $r['nazev'] . '](' . $this->web . 'rubrika/' . $r['seo_link'] . ')' . ($popis !== '' ? ': ' . $popis : '');
         }
-        array_push($radky, '', '## Nejnovější články');
+        array_push($radky, '', '## ' . t('Nejnovější články'));
         foreach ($db->all('SELECT titulek, seo_link, uvod FROM {clanky} WHERE visible = 1 AND datum <= NOW() AND typ_clanku = 1 AND jazyk = ? ORDER BY datum DESC LIMIT 30', [\PhpRS\Core\Jazyk::sloupecWebu()]) as $c) {
             $radky[] = '- [' . $c['titulek'] . '](' . $this->web . 'clanek/' . $c['seo_link'] . $md . '): ' . mb_strimwidth(trim(strip_tags($c['uvod'])), 0, 200, '…');
         }
@@ -177,14 +177,14 @@ final class Seo
     public function clanekMarkdown(array $clanek): string
     {
         $hlava = ['# ' . $clanek['titulek'], ''];
-        $hlava[] = '- Autor: ' . ($clanek['autor_jm'] ?? $this->app->settings()->get('nazev_webu'));
-        $hlava[] = '- Vydáno: ' . date('Y-m-d', strtotime($clanek['datum'])) . ($clanek['zmeneno'] ? ', aktualizováno: ' . date('Y-m-d', strtotime($clanek['zmeneno'])) : '');
-        $hlava[] = '- Rubrika: ' . $clanek['tema_jm'];
-        $hlava[] = '- Zdroj: ' . $this->web . 'clanek/' . $clanek['seo_link'];
+        $hlava[] = '- ' . t('Autor') . ': ' . ($clanek['autor_jm'] ?? $this->app->settings()->get('nazev_webu'));
+        $hlava[] = '- ' . t('Vydáno') . ': ' . date('Y-m-d', strtotime($clanek['datum'])) . ($clanek['zmeneno'] ? ', ' . t('aktualizováno') . ': ' . date('Y-m-d', strtotime($clanek['zmeneno'])) : '');
+        $hlava[] = '- ' . t('Rubrika') . ': ' . $clanek['tema_jm'];
+        $hlava[] = '- ' . t('Zdroj') . ': ' . $this->web . 'clanek/' . $clanek['seo_link'];
 
         $shrnuti = array_filter(array_map(trim(...), preg_split('/\R/', (string) $clanek['shrnuti']) ?: []));
         if ($shrnuti !== []) {
-            array_push($hlava, '', '## Ve zkratce', '', ...array_map(fn (string $b): string => '- ' . $b, $shrnuti));
+            array_push($hlava, '', '## ' . t('Ve zkratce'), '', ...array_map(fn (string $b): string => '- ' . $b, $shrnuti));
         }
 
         return implode("\n", $hlava) . "\n\n" . self::htmlNaMarkdown($clanek['uvod']) . "\n\n" . self::htmlNaMarkdown($clanek['text']) . "\n";

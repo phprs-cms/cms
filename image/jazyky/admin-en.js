@@ -168,5 +168,6 @@ window.PHPRS_PREKLAD = {
 	"Pod obsahem": "Below content",
 	"Pravý sloupec": "Right column",
 	"Patička": "Footer",
-	"+ Přidat blok": "+ Add block"
+	"+ Přidat blok": "+ Add block",
+	"Složka": "Folder"
 };

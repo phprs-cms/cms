@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpRS\Admin\Moduly;
 
-use PhpRS\Admin\Kernel;
 use PhpRS\Admin\Modul;
 use PhpRS\Core\Aktualizace;
 use PhpRS\Core\Response;

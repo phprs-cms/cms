@@ -45,16 +45,16 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 </div>
 <div class="radek" data-pro="men">
 	<label for="obsah-menu"><?= e(t('Odkazy menu')) ?></label>
-	<div><textarea class="textbox" id="obsah-menu" name="obsah_menu" rows="6" style="min-height:110px" placeholder="O nás | /o-nas&#10;Inzerce | /inzerce&#10;Facebook | https://facebook.com/…"><?= $blok['sys_funkce'] === 'men' ? e($blok['obsah']) : '' ?></textarea>
+	<div><textarea class="textbox nizky" id="obsah-menu" name="obsah_menu" rows="6" placeholder="O nás | /o-nas&#10;Inzerce | /inzerce&#10;Facebook | https://facebook.com/…"><?= $blok['sys_funkce'] === 'men' ? e($blok['obsah']) : '' ?></textarea>
 	<span class="napoveda"><?= e(t('Každý odkaz na vlastní řádek ve tvaru: text | adresa.')) ?></span></div>
 </div>
 <div class="radek" data-pro="cla">
 	<label for="blok_rubrika"><?= e(t('Rubrika')) ?></label>
-	<div><?php $rubrikySelect('blok_rubrika', $dataRubrika, '– nejnovější ze všech rubrik –') ?></div>
+	<div><?php $rubrikySelect('blok_rubrika', $dataRubrika, t('– nejnovější ze všech rubrik –')) ?></div>
 </div>
 <div class="radek" data-pro="cla nej sti aut arc">
 	<label for="blok_pocet"><?= e(t('Počet položek')) ?></label>
-	<input class="textpole" type="number" id="blok_pocet" name="blok_pocet" value="<?= $dataPocet ?>" min="1" max="50" style="width:90px">
+	<input class="textpole" type="number" id="blok_pocet" name="blok_pocet" value="<?= $dataPocet ?>" min="1" max="50">
 </div>
 <div class="radek" data-pro="rek">
 	<label for="data_sys"><?= e(t('Reklamní pozice')) ?></label>
@@ -94,7 +94,7 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 </div>
 <div class="radek">
 	<label for="jen_rubrika"><?= e(t('Jen v rubrice')) ?></label>
-	<div><?php $rubrikySelect('jen_rubrika', (int) ($blok['jen_rubrika'] ?? 0), '– ve všech –') ?>
+	<div><?php $rubrikySelect('jen_rubrika', (int) ($blok['jen_rubrika'] ?? 0), t('– ve všech –')) ?>
 	<span class="napoveda"><?= e(t('Blok se ukáže jen na stránce rubriky a u jejích článků – např. partner sportovní rubriky.')) ?></span></div>
 </div>
 <div class="radek">
@@ -110,5 +110,5 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<div class="volby"><label><input type="checkbox" name="zobrazit" value="1"<?= $blok['zobrazit'] ? ' checked' : '' ?>> <?= e(t('Ano')) ?></label></div>
 </div>
 </fieldset>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= $blok['idb'] ? 'Ulož' : 'Přidej' ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($blok['idb'] ? 'Ulož' : 'Přidej')) ?>"></p>
 </form>

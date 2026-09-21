@@ -20,7 +20,7 @@
 <?php if ($zaznamy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Stará adresa')) ?></th><th><?= e(t('Cíl')) ?></th><th><?= e(t('Použito')) ?></th><th><?= e(t('Vytvořeno')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Stará adresa')) ?></th><th scope="col"><?= e(t('Cíl')) ?></th><th scope="col"><?= e(t('Použito')) ?></th><th scope="col"><?= e(t('Vytvořeno')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($zaznamy as $z): ?>
 <tr>
@@ -28,7 +28,7 @@
 	<td><?= e(preg_match('#^https?://#i', $z['na_adresu']) ? $z['na_adresu'] : '/' . $z['na_adresu']) ?></td>
 	<td class="cislo"><?= (int) $z['pocet'] ?>×</td>
 	<td class="cislo"><?= e(datum($z['vytvoreno'])) ?></td>
-	<td class="akce"><form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline"><?= $csrf ?><input type="hidden" name="idp" value="<?= (int) $z['idp'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>"><?= $csrf ?><input type="hidden" name="idp" value="<?= (int) $z['idp'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody>
@@ -38,7 +38,7 @@
 <?php if ($nenalezeno !== []): ?>
 <h3><?= e(t('Adresy, které čtenáři nenašli (404)')) ?></h3>
 <div class="tab-obal"><table class="vypis">
-<thead><tr><th><?= e(t('Adresa')) ?></th><th><?= e(t('Kolikrát')) ?></th><th><?= e(t('Naposledy')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Adresa')) ?></th><th scope="col"><?= e(t('Kolikrát')) ?></th><th scope="col"><?= e(t('Naposledy')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($nenalezeno as $n): ?>
 <tr><td>/<?= e($n['cesta']) ?></td><td class="cislo"><?= (int) $n['pocet'] ?>×</td><td class="cislo"><?= e(datum($n['naposledy'])) ?></td>

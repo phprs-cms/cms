@@ -16,8 +16,8 @@ $zobrazeni = array_sum(array_column($graf, 'zobrazeni'));
 <p class="hlaska hlaska-chyba"><?= e(t('Měření je vypnuté. Zapnete ho v Nastavení → Měření.')) ?></p>
 <?php endif ?>
 <nav class="zalozky" aria-label="<?= e(t('Období')) ?>">
-<?php foreach ([7 => '7 dní', 30 => '30 dní', 90 => '90 dní'] as $d => $nazev): ?>
-	<a href="<?= e($modul->url('', ['dni' => $d])) ?>"<?= $dni === $d ? ' class="aktivni"' : '' ?>><?= $nazev ?></a>
+<?php foreach ([7, 30, 90] as $d): ?>
+	<a href="<?= e($modul->url('', ['dni' => $d])) ?>"<?= $dni === $d ? ' class="aktivni" aria-current="page"' : '' ?>><?= e(t('%s dní', $d)) ?></a>
 <?php endforeach ?>
 </nav>
 <div class="dlazdice">
@@ -28,10 +28,10 @@ $zobrazeni = array_sum(array_column($graf, 'zobrazeni'));
 <h3><?= e(t('Zobrazení a návštěvy po dnech')) ?></h3>
 <div class="graf" role="img" aria-label="<?= e(t('Sloupcový graf zobrazení stránek po dnech')) ?>">
 <?php foreach ($graf as $den => $h): ?>
-	<div class="graf-sloupec" title="<?= e(datum($den)) ?>: <?= $h['zobrazeni'] ?> zobrazení, <?= $h['navstevy'] ?> návštěv"><i style="height:<?= round($h['zobrazeni'] / $max * 100, 1) ?>%"><b style="height:<?= $h['zobrazeni'] > 0 ? round($h['navstevy'] / $h['zobrazeni'] * 100, 1) : 0 ?>%"></b></i></div>
+	<div class="graf-sloupec" title="<?= e(t('%s: %s zobrazení, %s návštěv', datum($den), $h['zobrazeni'], $h['navstevy'])) ?>"><i style="height:<?= round($h['zobrazeni'] / $max * 100, 1) ?>%"><b style="height:<?= $h['zobrazeni'] > 0 ? round($h['navstevy'] / $h['zobrazeni'] * 100, 1) : 0 ?>%"></b></i></div>
 <?php endforeach ?>
 </div>
-<p class="smltxt"><?= e(datum(array_key_first($graf))) ?> – <?= e(datum(array_key_last($graf))) ?> · světlá část sloupce jsou zobrazení stránek, tmavá návštěvy. Měření nepoužívá cookies a neukládá IP adresy; roboty nepočítá.</p>
+<p class="smltxt"><?= e(datum(array_key_first($graf))) ?> – <?= e(datum(array_key_last($graf))) ?> · <?= e(t('světlá část sloupce jsou zobrazení stránek, tmavá návštěvy. Měření nepoužívá cookies a neukládá IP adresy; roboty nepočítá.')) ?></p>
 
 <div class="stat-tabulky">
 <div>

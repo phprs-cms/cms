@@ -74,7 +74,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php if ($viceLidi || (string) $clanek['poznamka'] !== ''): ?>
 <div class="radek">
 	<label for="poznamka"><?= e(t('Poznámka pro redakci')) ?></label>
-	<div><textarea class="textbox" id="poznamka" name="poznamka" rows="2" style="min-height:54px" placeholder="<?= e(t('Na webu se neukazuje.')) ?>"><?= e((string) $clanek['poznamka']) ?></textarea></div>
+	<div><textarea class="textbox radkovy" id="poznamka" name="poznamka" rows="2" placeholder="<?= e(t('Na webu se neukazuje.')) ?>"><?= e((string) $clanek['poznamka']) ?></textarea></div>
 </div>
 <?php endif ?>
 <div class="radek">
@@ -157,7 +157,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <legend><?= e(t('Hlavní obrázek')) ?></legend>
 <div class="radek pres-celou">
 	<input class="textpole siroke" type="text" id="obrazek" name="obrazek" value="<?= e($clanek['obrazek']) ?>" maxlength="255" placeholder="<?= e(t('vyberte z médií, nebo vložte adresu')) ?>" aria-label="<?= e(t('Hlavní obrázek')) ?>" data-obrazek>
-	<span class="napoveda">Použije se ve výpisech a při sdílení na sociálních sítích.<?php if ($clanek['idc']): ?> <a href="<?= e($modul->app()->url('admin.php?modul=intergal&clanek=' . (int) $clanek['idc'])) ?>" target="_blank" rel="noopener"><?= e(t('Média použitá v článku')) ?></a><?php endif ?></span>
+	<span class="napoveda"><?= e(t('Použije se ve výpisech a při sdílení na sociálních sítích.')) ?><?php if ($clanek['idc']): ?> <a href="<?= e($modul->app()->url('admin.php?modul=intergal&clanek=' . (int) $clanek['idc'])) ?>" target="_blank" rel="noopener"><?= e(t('Média použitá v článku')) ?></a><?php endif ?></span>
 </div>
 </fieldset>
 
@@ -183,7 +183,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </div>
 <div class="radek pres-celou">
 	<label for="recenze_hodnoceni"><?= e(t('Recenze – hodnocení v %')) ?></label>
-	<input class="textpole" type="number" id="recenze_hodnoceni" name="recenze_hodnoceni" value="<?= e($clanek['recenze_hodnoceni'] === null ? '' : (string) $clanek['recenze_hodnoceni']) ?>" min="0" max="100" style="width:90px" placeholder="–">
+	<input class="textpole" type="number" id="recenze_hodnoceni" name="recenze_hodnoceni" value="<?= e($clanek['recenze_hodnoceni'] === null ? '' : (string) $clanek['recenze_hodnoceni']) ?>" min="0" max="100" placeholder="–">
 	<input class="textpole siroke" type="text" name="recenze_predmet" value="<?= e($clanek['recenze_predmet']) ?>" maxlength="160" placeholder="<?= e(t('co hodnotíte – název filmu, knihy, výrobku…')) ?>" aria-label="<?= e(t('Co hodnotíte')) ?>">
 	<span class="napoveda"><?= e(t('Vyplněné hodnocení se zobrazí pod textem a předá vyhledávačům.')) ?></span>
 </div>
@@ -202,7 +202,7 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <?php elseif ($asistent): ?>
 		<button class="navigace" type="submit" name="prelozit_do" value="<?= e($kodJazyka) ?>" formaction="<?= e($modul->url('preloz')) ?>" formnovalidate data-potvrdit="<?= e(t('Přeložit uloženou verzi článku asistentem? Vznikne koncept, který před vydáním přečtete. Překlad může trvat i minutu.')) ?>"><?= e(t('Přeložit asistentem')) ?>: <?= e($nazevJazyka) ?></button>
 <?php else: ?>
-		<span class="napoveda" style="display:inline"><?= e($nazevJazyka) ?>: <?= e(t('zatím bez překladu')) ?></span>
+		<span class="napoveda vradku"><?= e($nazevJazyka) ?>: <?= e(t('zatím bez překladu')) ?></span>
 <?php endif ?>
 <?php endforeach ?>
 		<span class="napoveda"><?= e(t('Překládá se naposledy uložená verze. Překlad se založí jako koncept v rubrice daného jazyka a propojí se s tímto článkem.')) ?></span>
@@ -241,12 +241,12 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </div>
 <div class="radek">
 	<label for="shrnuti"><?= e(t('Ve zkratce')) ?></label>
-	<div><textarea class="textbox" id="shrnuti" name="shrnuti" rows="4" style="min-height:80px"><?= e((string) $clanek['shrnuti']) ?></textarea>
+	<div><textarea class="textbox nizky" id="shrnuti" name="shrnuti" rows="4"><?= e((string) $clanek['shrnuti']) ?></textarea>
 	<span class="napoveda"><?= e(t('Tři až pět hlavních sdělení, každé na vlastní řádek. Zobrazí se nad článkem; pomáhá čtenářům i AI vyhledávačům.')) ?></span></div>
 </div>
 <div class="radek">
 	<label for="faq"><?= e(t('Otázky a odpovědi')) ?></label>
-	<div><textarea class="textbox" id="faq" name="faq" rows="5" style="min-height:90px"><?= e((string) $clanek['faq']) ?></textarea>
+	<div><textarea class="textbox nizky" id="faq" name="faq" rows="5"><?= e((string) $clanek['faq']) ?></textarea>
 	<span class="napoveda"><?= e(t('Otázka na jednom řádku, odpověď pod ní, mezi dvojicemi prázdný řádek. Zobrazí se pod článkem a ve strukturovaných datech (FAQ).')) ?></span></div>
 </div>
 <div class="radek">
@@ -297,10 +297,10 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 </details>
 <?php if ($revize !== []): ?>
 <details class="pokrocile">
-<summary>Historie verzí (<?= count($revize) ?>)</summary>
+<summary><?= e(t('Historie verzí (%s)', count($revize))) ?></summary>
 <ul class="revize">
 <?php foreach ($revize as $rv): ?>
-	<li><a href="<?= e($modul->url('revize', ['id' => $clanek['idc'], 'idr' => $rv['idr']])) ?>" title="<?= e($rv['titulek']) ?>"><?= e(datum($rv['datum'], true)) ?></a> <span class="napoveda" style="display:inline"><?= e($rv['kdo_jm'] ?? '') ?></span> · <a href="<?= e($modul->url('porovnej', ['id' => $clanek['idc'], 'idr' => $rv['idr']])) ?>"><?= e(t('co se změnilo')) ?></a></li>
+	<li><a href="<?= e($modul->url('revize', ['id' => $clanek['idc'], 'idr' => $rv['idr']])) ?>" title="<?= e($rv['titulek']) ?>"><?= e(datum($rv['datum'], true)) ?></a> <span class="napoveda vradku"><?= e($rv['kdo_jm'] ?? '') ?></span> · <a href="<?= e($modul->url('porovnej', ['id' => $clanek['idc'], 'idr' => $rv['idr']])) ?>"><?= e(t('co se změnilo')) ?></a></li>
 <?php endforeach ?>
 </ul>
 <p class="napoveda"><?= e(t('Kliknutím načtete starší verzi do editoru. Uchovává se posledních 20 verzí.')) ?></p>

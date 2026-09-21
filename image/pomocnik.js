@@ -53,11 +53,11 @@
 				vstup.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); uloz(); } });
 				radek.appendChild(nahled); radek.appendChild(vstup);
 				if (asistentUrl) {
-					var ai = prvek('button', 'navigace ai-tl', '✦'); ai.type = 'button'; ai.title = 'Navrhnout popis asistentem';
+					var ai = prvek('button', 'navigace ai-tl', '✦'); ai.type = 'button'; ai.title = T('Navrhnout popis asistentem'); ai.setAttribute('aria-label', ai.title);
 					ai.addEventListener('click', function () {
 						ai.disabled = true; ai.textContent = '…';
 						zeptejSe('alt', { obrazek: img.getAttribute('src') }).then(function (j) {
-							if (j.navrhy && j.navrhy[0]) { vstup.value = j.navrhy[0]; vstup.focus(); } else { oznam(j.chyba || 'Asistent nic nenavrhl.'); }
+							if (j.navrhy && j.navrhy[0]) { vstup.value = j.navrhy[0]; vstup.focus(); } else { oznam(j.chyba || T('Asistent nic nenavrhl.')); }
 						}).finally(function () { ai.disabled = false; ai.textContent = '✦'; });
 					});
 					radek.appendChild(ai);
@@ -68,14 +68,14 @@
 			var uroven = 1;
 			Array.prototype.forEach.call(koren.querySelectorAll('h2, h3, h4'), function (h) {
 				var u = parseInt(h.tagName.charAt(1), 10);
-				if (u > uroven + 1) { nalezy.push(['Mezititulek „' + h.textContent.trim().slice(0, 50) + T('“ přeskakuje úroveň (H') + u + ' bez H' + (u - 1) + T(' nad sebou). Čtečky podle úrovní skládají osnovu článku.')]); }
+				if (u > uroven + 1) { nalezy.push([T('Mezititulek „') + h.textContent.trim().slice(0, 50) + T('“ přeskakuje úroveň (H') + u + ' bez H' + (u - 1) + T(' nad sebou). Čtečky podle úrovní skládají osnovu článku.')]); }
 				if (h.textContent.trim() === '') { nalezy.push([T('Prázdný mezititulek – smažte ho.')]); }
 				uroven = u;
 			});
 			Array.prototype.forEach.call(koren.querySelectorAll('a'), function (a) {
 				var t = a.textContent.trim().toLowerCase();
 				if (/^(zde|tady|tu|sem|klikn[ěe]te( zde)?|více|vice|odkaz|link|here|click here)$/.test(t) || /^https?:\/\//.test(t)) {
-					nalezy.push(['Odkaz „' + a.textContent.trim().slice(0, 40) + T('“ neříká, kam vede. Odkazujte slovy, která dávají smysl i sama o sobě.')]);
+					nalezy.push([T('Odkaz „') + a.textContent.trim().slice(0, 40) + T('“ neříká, kam vede. Odkazujte slovy, která dávají smysl i sama o sobě.')]);
 				}
 			});
 			Array.prototype.forEach.call(koren.querySelectorAll('table'), function (t) { if (!t.querySelector('th')) { nalezy.push([T('Tabulka nemá záhlaví (buňky TH) – čtečka neumí říct, co který sloupec znamená.')]); } });
@@ -105,7 +105,7 @@
 	function dialog(nadpis) {
 		if (!okno) {
 			okno = prvek('dialog', 'galerie-okno ai-okno');
-			okno.innerHTML = '<div class="galerie-okno-hlava"><strong></strong><button type="button" class="navigace" data-zavri>Zavřít</button></div><div class="ai-obsah"></div>';
+			okno.innerHTML = '<div class="galerie-okno-hlava"><strong></strong><button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div><div class="ai-obsah"></div>';
 			document.body.appendChild(okno);
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
 		}
@@ -145,7 +145,7 @@
 	function ukazNavrhy(ukol, j) {
 		var u = UKOLY[ukol];
 		var obsah = dialog(u[2]);
-		if (j.chyba || !j.navrhy || !j.navrhy.length) { obsah.appendChild(prvek('p', 'hlaska hlaska-chyba', j.chyba || 'Asistent nic nenavrhl. Zkuste to znovu.')); return; }
+		if (j.chyba || !j.navrhy || !j.navrhy.length) { obsah.appendChild(prvek('p', 'hlaska hlaska-chyba', j.chyba || T('Asistent nic nenavrhl. Zkuste to znovu.'))); return; }
 		j.navrhy.forEach(function (n) {
 			var radek = prvek('div', 'ai-navrh');
 			radek.appendChild(prvek('p', '', n));

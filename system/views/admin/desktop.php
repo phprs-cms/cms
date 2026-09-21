@@ -71,7 +71,7 @@
 <h3><?= e(t('Naposledy upravené články')) ?></h3>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Titulek')) ?></th><th><?= e(t('Rubrika')) ?></th><th><?= e(t('Datum vydání')) ?></th><th><?= e(t('Vydán')) ?></th><th><?= e(t('Čteno')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Titulek')) ?></th><th scope="col"><?= e(t('Rubrika')) ?></th><th scope="col"><?= e(t('Datum vydání')) ?></th><th scope="col"><?= e(t('Vydán')) ?></th><th scope="col"><?= e(t('Čteno')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($posledni as $c): ?>
 <tr<?= $c['visible'] ? '' : ' class="nevydany"' ?>>

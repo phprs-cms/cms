@@ -10,7 +10,7 @@ $pole('ga4_id', 'Google Analytics', 'text', 'Stačí ID měření ve tvaru G-XXX
 <summary><?= e(t('Další nástroje (Matomo, Plausible, vlastní kód)')) ?></summary>
 <?php
 $pole('matomo_url', 'Matomo – adresa', 'url', 'Adresa vaší instalace, např. https://statistiky.example.cz/', 'placeholder="https://"');
-$pole('matomo_id', 'Matomo – ID webu', 'cislo', '', 'min="0" style="width:110px"');
+$pole('matomo_id', 'Matomo – ID webu', 'cislo', '', 'min="0"');
 $pole('plausible_domena', 'Plausible – doména', 'text', 'Nepoužívá cookies, načítá se bez souhlasu.', 'placeholder="example.cz" maxlength="100"');
 $pole('kod_hlava', 'Vlastní kód do hlavičky', 'kod', 'Vloží se na každou stránku bez ohledu na souhlas – jen pro kódy, které neukládají cookies.', 'spellcheck="false"');
 ?>

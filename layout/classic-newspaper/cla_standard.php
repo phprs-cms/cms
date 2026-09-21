@@ -31,7 +31,7 @@ $cas = '<time datetime="' . e(date('c', strtotime($clanek['datum']))) . '">' . e
 	<div class="clanek-text"><?= $clanek['text'] ?></div>
 	<?= $clanek['faq_html'] ?? '' ?>
 <?php if (!empty($clanek['stitky'])): ?>
-	<p class="clanek-stitky<?= '' ?>"><?php foreach ($clanek['stitky'] as $st): ?><a href="<?= e($url('stitek/' . $st['seo_link'])) ?>" rel="tag">#<?= e($st['nazev']) ?></a> <?php endforeach ?></p>
+	<p class="clanek-stitky"><?php foreach ($clanek['stitky'] as $st): ?><a href="<?= e($url('stitek/' . $st['seo_link'])) ?>" rel="tag">#<?= e($st['nazev']) ?></a> <?php endforeach ?></p>
 <?php endif ?>
 	<footer class="clanek-paticka">
 <?php if ($clanek['zdroj'] !== ''): ?>

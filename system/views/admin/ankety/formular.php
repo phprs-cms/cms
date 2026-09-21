@@ -17,7 +17,7 @@
 	<span class="popisek"><?= e(t('Odpovědi')) ?></span>
 	<div>
 <?php foreach ($odpovedi as $o): ?>
-		<p style="margin:0 0 6px"><input class="textpole" type="text" name="odpoved[<?= (int) $o['ido'] ?>]" value="<?= e($o['odpoved']) ?>" maxlength="255" style="width:70%" aria-label="<?= e(t('Odpověď')) ?>"> <small><?= (int) $o['pocitadlo'] ?> hlasů</small></p>
+		<p style="margin:0 0 6px"><input class="textpole" type="text" name="odpoved[<?= (int) $o['ido'] ?>]" value="<?= e($o['odpoved']) ?>" maxlength="255" style="width:70%" aria-label="<?= e(t('Odpověď')) ?>"> <small><?= e(t('%s hlasů', (int) $o['pocitadlo'])) ?></small></p>
 <?php endforeach ?>
 <?php for ($i = 0; $i < ($odpovedi === [] ? 4 : 2); $i++): ?>
 		<p style="margin:0 0 6px"><input class="textpole" type="text" name="nova[]" maxlength="255" style="width:70%" placeholder="<?= e(t('nová odpověď')) ?>" aria-label="<?= e(t('Nová odpověď')) ?>"></p>

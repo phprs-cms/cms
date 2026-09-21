@@ -32,14 +32,17 @@ img { display: block; max-width: 100%; height: auto; }
 .motto { margin: 2px 0 0; font: italic 14px/1.4 var(--sazba); color: var(--text-slaby); }
 .rubriky-lista { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 26px; margin-top: 16px; padding: 9px 0; border-top: 1px solid var(--linka-silna); border-bottom: 3px double var(--linka-silna); font: 700 12px/1.4 var(--popisky); letter-spacing: 0.07em; text-transform: uppercase; }
 .rubriky-lista a { text-decoration: none; }
-.rubriky-lista a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.rubriky-lista a:hover, .rubriky-lista a[aria-current] { text-decoration: underline; text-underline-offset: 3px; }
 
 /* rozvržení stránky */
 
 .stranka { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 32px; padding-top: 26px; padding-bottom: 50px; }
-.rozvrzeni-tri.ma-levou.ma-pravou { grid-template-columns: 220px minmax(0, 1fr) 300px; }
-.rozvrzeni-tri.ma-levou:not(.ma-pravou) { grid-template-columns: 220px minmax(0, 1fr); }
-.rozvrzeni-tri.ma-pravou:not(.ma-levou), .rozvrzeni-dva.ma-pravou { grid-template-columns: minmax(0, 1fr) 300px; }
+/* sloupce jen na širokém displeji – na užším zůstává jediný sloupec z .stranka (dřív je tu přebíjela vyšší váha selektorů a postranní sloupec na telefonu překryl obsah) */
+@media (min-width: 961px) {
+	.rozvrzeni-tri.ma-levou.ma-pravou { grid-template-columns: 220px minmax(0, 1fr) 300px; }
+	.rozvrzeni-tri.ma-levou:not(.ma-pravou) { grid-template-columns: 220px minmax(0, 1fr); }
+	.rozvrzeni-tri.ma-pravou:not(.ma-levou), .rozvrzeni-dva.ma-pravou { grid-template-columns: minmax(0, 1fr) 300px; }
+}
 .ma-pravou .hlavni { padding-right: 32px; border-right: 1px solid var(--linka); }
 .ma-levou .hlavni { padding-left: 32px; border-left: 1px solid var(--linka); }
 .rozvrzeni-jeden .hlavni { max-width: 760px; margin: 0 auto; width: 100%; }
@@ -62,7 +65,6 @@ img { display: block; max-width: 100%; height: auto; }
 .clanek-rubrika:hover { text-decoration: underline; }
 .clanek-nahled { position: relative; padding: 0 0 22px; margin-bottom: 22px; border-bottom: 1px solid var(--linka); }
 .clanek-nahled:nth-child(even)::before { content: ""; position: absolute; top: 0; bottom: 22px; right: -16px; width: 1px; background: var(--linka); }
-.vypis-titulni .clanek-nahled:nth-child(even)::before { right: auto; left: auto; }
 .clanek-nahled h2 { margin: 0 0 8px; font: 700 24px/1.18 var(--titulky); }
 .clanek-nahled h2 a { text-decoration: none; }
 .clanek-nahled h2 a:hover { color: var(--text-slaby); }
@@ -140,7 +142,6 @@ img { display: block; max-width: 100%; height: auto; }
 .paticka-titul { font: 700 22px var(--titulky); color: var(--text); }
 
 @media (max-width: 960px) {
-	.stranka.stranka { grid-template-columns: minmax(0, 1fr); }
 	.stranka .hlavni { order: -1; padding: 0; border: 0; }
 	.zona-leva, .zona-prava { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 32px; margin-top: 30px; padding-top: 24px; border-top: 3px double var(--linka-silna); }
 }
@@ -167,8 +168,8 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* logo z Nastavení a odkazy v patičce */
 .logo-obrazek { display: inline-block; max-height: 72px; width: auto; vertical-align: middle; }
-.zapati a, .paticka a { margin-right: 12px; }
-.zapati span, .paticka .obal > span { margin-right: 12px; }
+.paticka a { margin-right: 12px; }
+.paticka .obal > span { margin-right: 12px; }
 
 /* štítky pod článkem */
 .clanek-stitky { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-weight: 600; }
@@ -255,4 +256,7 @@ img { display: block; max-width: 100%; height: auto; }
 	:root[data-tmavy] input, :root[data-tmavy] textarea, :root[data-tmavy] select { background: #1D1D1D; color: var(--text); border-color: #444444; }
 	:root[data-tmavy] .clanek-nahled .perex, :root[data-tmavy] .clanek-cely .perex { color: #CFCFCF; }
 	:root[data-tmavy] .nejctenejsi li::before { color: #6A6A6A; }
+	:root[data-tmavy] .blok-typ2 { background: #1D1D1D; }
+	:root[data-tmavy] .komentare-zprava { border-color: #4CC38A; color: #4CC38A; }
+	:root[data-tmavy] .komentare-chyba { border-color: #FF8A80; color: #FF8A80; }
 }

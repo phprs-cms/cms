@@ -63,7 +63,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?php endif ?>
 		<nav class="rubriky-lista" aria-label="<?= e(t('Rubriky')) ?>">
 <?php foreach ($rubriky as $r): if ($r['uroven'] > 0) { continue; } ?>
-			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"><?= e($r['nazev']) ?></a>
+			<a href="<?= e($url('rubrika/' . $r['seo_link'])) ?>"<?= str_ends_with($kanonicka, '/rubrika/' . $r['seo_link']) ? ' aria-current="page"' : '' ?>><?= e($r['nazev']) ?></a>
 <?php endforeach ?>
 		</nav>
 	</div>

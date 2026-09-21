@@ -19,7 +19,7 @@ $zona = function (string $klic) use ($bloky, $modul, $csrf): void {
 <?php foreach ($bloky[$klic] as $b): ?>
 			<article class="blok-karta<?= $b['sys_funkce'] !== '' ? ' blok-karta-sys' : '' ?><?= $b['zobrazit'] ? '' : ' blok-skryty' ?>" draggable="true" data-idb="<?= (int) $b['idb'] ?>">
 				<strong><?= e($b['nazev']) ?></strong>
-				<span><?= $b['sys_funkce'] !== '' ? 'systémový · ' . e(explode(' – ', Bloky::SYSTEMOVE[$b['sys_funkce']] ?? $b['sys_funkce'])[0]) : 'vlastní HTML' ?><?= $b['zobrazit'] ? ((int) $b['zobrazit_kde'] !== 0 ? ' · ' . e(Bloky::KDE[(int) $b['zobrazit_kde']]) : '') : ' · <b>skrytý</b>' ?></span>
+				<span><?= $b['sys_funkce'] !== '' ? e(t('systémový')) . ' · ' . e(explode(' – ', Bloky::SYSTEMOVE[$b['sys_funkce']] ?? $b['sys_funkce'])[0]) : e(t('vlastní HTML')) ?><?= $b['zobrazit'] ? ((int) $b['zobrazit_kde'] !== 0 ? ' · ' . e(Bloky::KDE[(int) $b['zobrazit_kde']]) : '') : ' · <b>' . e(t('skrytý')) . '</b>' ?></span>
 				<span class="blok-karta-akce">
 					<button type="button" class="navigace" data-posun="-1" title="<?= e(t('Posunout výš')) ?>" aria-label="Posunout blok <?= e($b['nazev']) ?> výš">↑</button>
 					<button type="button" class="navigace" data-posun="1" title="<?= e(t('Posunout níž')) ?>" aria-label="Posunout blok <?= e($b['nazev']) ?> níž">↓</button>

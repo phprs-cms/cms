@@ -16,6 +16,24 @@
 	var CSRF = (document.querySelector('input[name="_csrf"]') || {}).value || '';
 	var GALERIE = ADMIN + '?modul=intergal';
 	var ID_CLANKU = parseInt((document.querySelector('form[data-koncept] input[name="idc"]') || {}).value || '0', 10);
+	var JAZYK = document.documentElement.lang || 'cs'; // formát data a času podle jazyka stránky
+
+	function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+	// Oznámení chyby vlastním dialogem - systémový alert() vestavěné prohlížeče potlačují stejně jako confirm().
+	var oknoOznameni = null;
+	function oznam(text) {
+		if (!oknoOznameni) {
+			oknoOznameni = document.createElement('dialog');
+			oknoOznameni.className = 'potvrzeni';
+			oknoOznameni.setAttribute('role', 'alertdialog');
+			oknoOznameni.innerHTML = '<p></p><div><button type="button" class="tl" data-zavri>' + T('Zavřít') + '</button></div>';
+			document.body.appendChild(oknoOznameni);
+			oknoOznameni.querySelector('[data-zavri]').addEventListener('click', function () { oknoOznameni.close(); });
+		}
+		oknoOznameni.querySelector('p').textContent = text;
+		if (!oknoOznameni.open) { oknoOznameni.showModal(); }
+	}
 
 	/* ---------- čištění HTML (vkládání z Wordu a webu) ---------- */
 
@@ -67,10 +85,10 @@
 		return fetch(GALERIE + '&akce=nahraj&format=json', { method: 'POST', body: data, credentials: 'same-origin' })
 			.then(function (r) { return r.json(); })
 			.then(function (j) {
-				if (j.chyby && j.chyby.length) { window.alert(j.chyby.join('\n')); }
+				if (j.chyby && j.chyby.length) { oznam(j.chyby.join('\n')); }
 				return j.obrazky || [];
 			})
-			.catch(function () { window.alert(T('Nahrání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.')); return []; });
+			.catch(function () { oznam(T('Nahrání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.')); return []; });
 	}
 
 	function jsouObrazky(prenos) {
@@ -93,8 +111,8 @@
 				+ '<label class="navigace galerie-vyfotit">' + T('Vyfotit') + '<input type="file" accept="image/*" capture="environment" hidden></label>'
 				+ '<button type="button" class="tl" data-vlozit hidden></button>' // „Vložit galerii (n)“ – jen při výběru více fotek
 				+ '<button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div>'
-				+ '<div class="galerie-okno-filtr"><select aria-label="Složka"></select></div>'
-				+ '<p class="napoveda">Klepnutím obrázek vložíte. Soubory sem můžete i přetáhnout - nahrají se do zvolené složky.</p><div class="galerie-mrizka"></div>';
+				+ '<div class="galerie-okno-filtr"><select aria-label="' + T('Složka') + '"></select></div>'
+				+ '<p class="napoveda"></p><div class="galerie-mrizka"></div>' // text nápovědy se nastavuje při každém otevření;
 			document.body.appendChild(okno);
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
 			okno.querySelector('[data-vlozit]').addEventListener('click', function () { okno.close(); okno.zpetne(okno.vybrane.slice()); });
@@ -163,20 +181,17 @@
 	}
 
 	function htmlObrazku(o) {
-		var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
-		return '<figure><img src="' + e(o.url) + '" alt="' + e(o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">'
-			+ (o.popis ? '<figcaption>' + e(o.popis) + '</figcaption>' : '') + '</figure><p><br></p>';
+		return '<figure><img src="' + esc(o.url) + '" alt="' + esc(o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">'
+			+ (o.popis ? '<figcaption>' + esc(o.popis) + '</figcaption>' : '') + '</figure><p><br></p>';
 	}
 
 	function htmlPrilohy(o) {
-		var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
-		return '<p><a href="' + e(o.url) + '" title="' + e(o.pripona + ', ' + o.velikost) + '">' + e(o.nazev || o.pripona) + '</a> (' + e(o.pripona + ', ' + o.velikost) + ')</p>';
+		return '<p><a href="' + esc(o.url) + '" title="' + esc(o.pripona + ', ' + o.velikost) + '">' + esc(o.nazev || o.pripona) + '</a> (' + esc(o.pripona + ', ' + o.velikost) + ')</p>';
 	}
 
 	function htmlGalerie(obrazky) {
-		var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
 		return '<figure class="galerie">' + obrazky.map(function (o) {
-			return '<img src="' + e(o.url) + '" alt="' + e(o.popis || o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">';
+			return '<img src="' + esc(o.url) + '" alt="' + esc(o.popis || o.nazev) + '" width="' + o.sirka + '" height="' + o.vyska + '" loading="lazy" data-id="' + o.id + '">';
 		}).join('') + '</figure><p><br></p>';
 	}
 
@@ -184,7 +199,7 @@
 
 	var TLACITKA = [
 		['¶', T('Odstavec'), function () { prikaz('formatBlock', 'P'); }],
-		['H2', 'Mezititulek', function () { prikaz('formatBlock', 'H2'); }, 'velky'],
+		['H2', T('Mezititulek'), function () { prikaz('formatBlock', 'H2'); }, 'velky'],
 		['H3', T('Menší mezititulek'), function () { prikaz('formatBlock', 'H3'); }, 'velky'],
 		['B', T('Tučně (Ctrl+B)'), function () { prikaz('bold'); }],
 		['I', T('Kurzíva (Ctrl+I)'), function () { prikaz('italic'); }],
@@ -417,7 +432,7 @@
 			var data = { cas: Date.now(), pole: {} };
 			pole.forEach(function (p) { if (p.type === 'checkbox' || p.type === 'radio') { if (p.checked) { data.pole[p.name] = p.value; } else if (p.type === 'checkbox') { data.pole[p.name] = null; } } else { data.pole[p.name] = p.value; } });
 			try { localStorage.setItem(klic, JSON.stringify(data)); } catch (e) { /* prohlížeč úložiště nedovolil - zbývá server */ }
-			editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen v prohlížeči ') + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); });
+			editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen v prohlížeči ') + new Date().toLocaleTimeString(JAZYK, { hour: '2-digit', minute: '2-digit' }); });
 			posledniData = data;
 			if (!casovacServer) { casovacServer = setTimeout(ulozNaServer, 15000); }
 		}
@@ -431,7 +446,7 @@
 			fd.append('idc', String(ID_CLANKU || 0));
 			fd.append('pole', JSON.stringify(posledniData.pole));
 			fetch(urlKonceptu, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
-				if (j.ok) { editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen i na serveru ') + new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }); }); }
+				if (j.ok) { editory.forEach(function (ed) { ed.stav.textContent = T('rozepsaný text uložen i na serveru ') + new Date().toLocaleTimeString(JAZYK, { hour: '2-digit', minute: '2-digit' }); }); }
 			}).catch(function () { /* bez spojení zůstává kopie v prohlížeči */ });
 		}
 		function zahodNaServeru() {
@@ -456,7 +471,7 @@
 		if (!lisiSe) { return; }
 		var lista = document.createElement('p');
 		lista.className = 'hlaska';
-		lista.innerHTML = T(jeZeServeru ? 'Na serveru je neuložená rozepsaná verze z ' : 'V prohlížeči je neuložená rozepsaná verze z ') + new Date(ulozene.cas).toLocaleString('cs-CZ') + '. <button type="button" class="navigace">Obnovit ji</button> <button type="button" class="navigace">Zahodit</button>';
+		lista.innerHTML = T(jeZeServeru ? 'Na serveru je neuložená rozepsaná verze z ' : 'V prohlížeči je neuložená rozepsaná verze z ') + new Date(ulozene.cas).toLocaleString(JAZYK) + '. <button type="button" class="navigace">' + T('Obnovit ji') + '</button> <button type="button" class="navigace">' + T('Zahodit') + '</button>';
 		form.parentNode.insertBefore(lista, form);
 		lista.children[0].addEventListener('click', function () {
 			pole.forEach(function (p) {

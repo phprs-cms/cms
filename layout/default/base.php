@@ -50,6 +50,7 @@ $nazevWebu = $web->get('nazev_webu');
 <?= $hlava ?>
 </head>
 <body>
+<a class="preskocit" href="#obsah"><?= e(t('Přeskočit na obsah')) ?></a>
 <header class="zahlavi">
 	<div class="obal">
 		<a class="nazev-webu" href="<?= e($url('')) ?>"><?php if ($web->get('logo_webu') !== ''): ?><img class="logo-obrazek" src="<?= e((preg_match('#^(https?:)?/#', $web->get('logo_webu')) ? '' : $url('')) . $web->get('logo_webu')) ?>" alt="<?= e($nazevWebu) ?>"><?php else: ?><?= e($nazevWebu) ?><?php endif ?></a>

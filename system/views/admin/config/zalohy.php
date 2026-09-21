@@ -15,11 +15,11 @@
 <?php if ($aktualizace['nova']['zmeny'] !== []): ?>
 	<ul><?php foreach ($aktualizace['nova']['zmeny'] as $zmena): ?><li><?= e($zmena) ?></li><?php endforeach ?></ul>
 <?php endif ?>
-	<p><button class="tl" type="submit" formaction="<?= e($modul->url('aktualizuj')) ?>" data-potvrdit="<?= e(t('Aktualizovat systém? Nejprve se vytvoří záloha databáze. Web bude několik vteřin nedostupný.')) ?>">Aktualizovat na <?= e($aktualizace['nova']['verze']) ?></button></p>
+	<p><button class="tl" type="submit" formaction="<?= e($modul->url('aktualizuj')) ?>" data-potvrdit="<?= e(t('Aktualizovat systém? Nejprve se vytvoří záloha databáze. Web bude několik vteřin nedostupný.')) ?>"><?= e(t('Aktualizovat na %s', $aktualizace['nova']['verze'])) ?></button></p>
 </div>
 <p class="napoveda"><?= e(t('Před aktualizací se zazálohuje databáze. Balíček se přijme jen s platným podpisem vydavatele. Nepřepisuje se config.php, nahraná média ani vlastní šablony webu.')) ?></p>
 <?php else: ?>
-<p>Máte aktuální verzi.<?= $aktualizace['overeno'] ? ' <small>Ověřeno ' . e(date('j. n. Y H:i', $aktualizace['overeno'])) . '.</small>' : '' ?></p>
+<p><?= e(t('Máte aktuální verzi.')) ?><?= $aktualizace['overeno'] ? ' <small>' . e(t('Ověřeno %s.', date('j. n. Y H:i', $aktualizace['overeno']))) . '</small>' : '' ?></p>
 <?php endif ?>
 <?php if ($aktualizace['nastaveno']): ?>
 <p><button class="navigace" type="submit" formaction="<?= e($modul->url('zkontroluj')) ?>"><?= e(t('Zkontrolovat teď')) ?></button></p>
@@ -62,7 +62,7 @@ $pole('zaloha_region', 'Region (jen S3)', 'text', 'Například eu-central-1. U C
 <?php if ($zalohy !== []): ?>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Soubor')) ?></th><th><?= e(t('Vytvořena')) ?></th><th><?= e(t('Velikost')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Soubor')) ?></th><th scope="col"><?= e(t('Vytvořena')) ?></th><th scope="col"><?= e(t('Velikost')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($zalohy as $z): ?>
 <tr>

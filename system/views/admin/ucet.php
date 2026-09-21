@@ -32,7 +32,7 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <div class="radek"><label for="url"><?= e(t('Můj web')) ?></label><input class="textpole siroke" type="url" id="url" name="url" value="<?= e($user['url']) ?>" maxlength="255" placeholder="https://"></div>
 <div class="radek"><label for="pozice"><?= e(t('Pozice v redakci')) ?></label><input class="textpole siroke" type="text" id="pozice" name="pozice" value="<?= e($user['pozice']) ?>" maxlength="100" placeholder="<?= e(t('např. redaktorka kultury')) ?>"></div>
 <div class="radek"><label for="foto"><?= e(t('Moje fotka')) ?></label><div><input class="textpole siroke" type="text" id="foto" name="foto" value="<?= e($user['foto']) ?>" maxlength="255" data-obrazek><span class="napoveda"><?= e(t('Čtvercová fotka, stačí 300 × 300 px.')) ?></span></div></div>
-<div class="radek"><label for="bio"><?= e(t('Pár vět o mně')) ?></label><div><textarea class="textbox" id="bio" name="bio" rows="4" maxlength="1200" style="min-height:90px"><?= e((string) $user['bio']) ?></textarea><span class="napoveda"><?= e(t('Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.')) ?></span></div></div>
+<div class="radek"><label for="bio"><?= e(t('Pár vět o mně')) ?></label><div><textarea class="textbox nizky" id="bio" name="bio" rows="4" maxlength="1200"><?= e((string) $user['bio']) ?></textarea><span class="napoveda"><?= e(t('Zobrazí se jako medailonek pod vašimi články a na stránce autora. Čím se zabýváte, odkud píšete, co máte za sebou.')) ?></span></div></div>
 <div class="radek"><label for="jazyk"><?= e(t('Jazyk administrace')) ?></label><div><select id="jazyk" name="jazyk">
 <?php foreach (PhpRS\Core\Jazyk::ADMINISTRACE as $kodJazyka => $nazevJazyka): ?>
 	<option value="<?= e($kodJazyka) ?>"<?= ($user['jazyk'] ?: 'cs') === $kodJazyka ? ' selected' : '' ?>><?= e($nazevJazyka) ?></option>
@@ -44,12 +44,12 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Uložit údaje')) ?>"></p>
 </form>
 
-<form class="formular" method="post" action="<?= $akce ?>" autocomplete="off" style="margin-top:20px">
+<form class="formular" method="post" action="<?= $akce ?>" autocomplete="off">
 <?= $csrf ?><input type="hidden" name="co" value="heslo">
 <fieldset><legend><?= e(t('Změna hesla')) ?></legend>
-<div class="radek"><label for="soucasne"><?= e(t('Současné heslo')) ?></label><input class="textpole" type="password" id="soucasne" name="soucasne" size="30" autocomplete="current-password" required></div>
+<div class="radek"><label for="soucasne"><?= e(t('Současné heslo')) ?></label><div><input class="textpole" type="password" id="soucasne" name="soucasne" size="30" autocomplete="current-password" required></div></div>
 <div class="radek"><label for="nove"><?= e(t('Nové heslo')) ?></label><div><input class="textpole" type="password" id="nove" name="nove" size="30" minlength="10" autocomplete="new-password" required><span class="napoveda"><?= e(t('Alespoň 10 znaků.')) ?></span></div></div>
-<div class="radek"><label for="nove2"><?= e(t('Nové heslo znovu')) ?></label><input class="textpole" type="password" id="nove2" name="nove2" size="30" autocomplete="new-password" required></div>
+<div class="radek"><label for="nove2"><?= e(t('Nové heslo znovu')) ?></label><div><input class="textpole" type="password" id="nove2" name="nove2" size="30" autocomplete="new-password" required></div></div>
 <?php if ($tokeny !== []): ?>
 <div class="radek"><span class="popisek"><?= e(t('Napojení')) ?></span><div class="volby"><label><input type="checkbox" name="zrusit_tokeny" value="1" checked> <?= e(t('zrušit i tokeny napojení (Claude, API)')) ?></label>
 	<span class="napoveda"><?= e(t('Token funguje bez hesla i bez dvoufázového přihlášení. Měníte-li heslo kvůli podezření na zneužití, nechte zaškrtnuté a napojení pak vytvořte znovu.')) ?></span></div></div>
@@ -58,21 +58,21 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Změnit heslo')) ?>"></p>
 </form>
 
-<form class="formular" method="post" action="<?= $akce ?>" autocomplete="off" style="margin-top:20px">
+<form class="formular" method="post" action="<?= $akce ?>" autocomplete="off">
 <?= $csrf ?>
 <fieldset><legend><?= e(t('Dvoufázové přihlášení')) ?></legend>
 <?php if ($user['totp_tajemstvi'] !== ''): ?>
 <p><span class="stitek stitek-vydano"><?= e(t('zapnuté')) ?></span> <?= e(t('Při přihlášení zadáváte kromě hesla i kód z aplikace. Zbývá záložních kódů: %d.', $zbyvaKodu)) ?> <?= PhpRS\Core\Napoveda::odkaz('provoz/bezpecnost', 'Bezpečnost') ?></p>
 <input type="hidden" name="co" value="totp_vypni">
-<div class="radek"><label for="vyp-heslo"><?= e(t('Heslo pro potvrzení')) ?></label><input class="textpole" type="password" id="vyp-heslo" name="soucasne" size="30" autocomplete="current-password" required></div>
+<div class="radek"><label for="vyp-heslo"><?= e(t('Heslo pro potvrzení')) ?></label><div><input class="textpole" type="password" id="vyp-heslo" name="soucasne" size="30" autocomplete="current-password" required></div></div>
 <p class="tlacitka"><button class="navigace" type="submit"><?= e(t('Vypnout dvoufázové přihlášení')) ?></button></p>
 <?php elseif ($noveTajemstvi !== ''): ?>
 <input type="hidden" name="co" value="totp_potvrd">
 <ol>
-	<li><?= e(t('V ověřovací aplikaci (Google Authenticator, Microsoft Authenticator, 1Password, Aegis…) přidejte nový účet ručním zadáním klíče:')) ?><br><code class="totp-klic"><?= e(trim(chunk_split($noveTajemstvi, 4, ' '))) ?></code><br><small>Na mobilu můžete použít <a href="<?= e($uri) ?>">tento odkaz</a>, který aplikaci otevře.</small></li>
+	<li><?= e(t('V ověřovací aplikaci (Google Authenticator, Microsoft Authenticator, 1Password, Aegis…) přidejte nový účet ručním zadáním klíče:')) ?><br><code class="totp-klic"><?= e(trim(chunk_split($noveTajemstvi, 4, ' '))) ?></code><br><small><a href="<?= e($uri) ?>"><?= e(t('Na mobilu můžete klepnout sem – odkaz otevře ověřovací aplikaci.')) ?></a></small></li>
 	<li><?= e(t('Opište šestimístný kód, který aplikace ukazuje:')) ?></li>
 </ol>
-<div class="radek"><label for="kod"><?= e(t('Kód z aplikace')) ?></label><input class="textpole" type="text" id="kod" name="kod" size="12" maxlength="7" inputmode="numeric" autocomplete="one-time-code" required autofocus></div>
+<div class="radek"><label for="kod"><?= e(t('Kód z aplikace')) ?></label><div><input class="textpole" type="text" id="kod" name="kod" size="12" maxlength="7" inputmode="numeric" autocomplete="one-time-code" required autofocus></div></div>
 <p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Potvrdit a zapnout')) ?>"></p>
 <?php else: ?>
 <p><?= e(t('Účet je chráněný jen heslem. S dvoufázovým přihlášením se bez vašeho telefonu nepřihlásí ani ten, kdo heslo uhodne nebo ukradne.')) ?></p>
@@ -83,7 +83,7 @@ $akce = e($app->url('admin.php?akce=ucet'));
 </form>
 
 <?php if ($claude): ?>
-<form class="formular" method="post" action="<?= $akce ?>" style="margin-top:20px">
+<form class="formular" method="post" action="<?= $akce ?>">
 <?= $csrf ?>
 <fieldset><legend><?= e(t('Napojení na Claude')) ?></legend>
 <?php if ($novyToken !== ''): ?>
@@ -92,15 +92,15 @@ $akce = e($app->url('admin.php?akce=ucet'));
 	<p><code class="totp-klic"><?= e($novyToken) ?></code></p>
 	<p><?= e(t('V Claude Code spusťte:')) ?></p>
 	<p><code class="totp-klic" style="font-size:12px">claude mcp add --transport http phprs <?= e($adresaMcp) ?> --header "Authorization: Bearer <?= e($novyToken) ?>"</code></p>
-	<p class="napoveda">V aplikaci Claude přidejte vlastní konektor s adresou <?= e($adresaMcp) ?> a stejnou hlavičkou Authorization.</p>
+	<p class="napoveda"><?= e(t('V aplikaci Claude přidejte vlastní konektor s adresou %s a stejnou hlavičkou Authorization.', $adresaMcp)) ?></p>
 </div>
 <?php endif ?>
-<p><?= e(t('Claude bude s webem pracovat')) ?> <strong><?= e(t('vaším jménem a s vašimi právy')) ?></strong>: psát a upravovat články<?= (int) $user['admin'] === 2 ? ', spravovat bloky a tvořit šablony webu' : '' ?>. Nové články zakládá jako koncepty. Všechny jeho zásahy najdete v Protokolu změn. Token chraňte jako heslo.</p>
+<p><?= e(t('Claude bude s webem pracovat')) ?> <strong><?= e(t('vaším jménem a s vašimi právy')) ?></strong>: <?= e(t((int) $user['admin'] === 2 ? 'psát a upravovat články, spravovat bloky a tvořit šablony webu.' : 'psát a upravovat články.')) ?> <?= e(t('Nové články zakládá jako koncepty. Všechny jeho zásahy najdete v Protokolu změn. Token chraňte jako heslo.')) ?></p>
 <?php foreach ($tokeny as $t): ?>
-<p><span class="stitek"><?= e($t['nazev']) ?></span> vytvořen <?= e(datum($t['vytvoren'])) ?>, <?= $t['pouzit'] ? 'naposledy použit ' . e(datum($t['pouzit'], true)) : 'zatím nepoužit' ?>
+<p><span class="stitek"><?= e($t['nazev']) ?></span> <?= e(t('vytvořen %s', datum($t['vytvoren']))) ?>, <?= e($t['pouzit'] ? t('naposledy použit %s', datum($t['pouzit'], true)) : t('zatím nepoužit')) ?>
 	<button class="navigace" type="submit" name="smaz_token" value="<?= (int) $t['idt'] ?>" data-potvrdit="<?= e(t('Zrušit token? Claude se jím už nepřihlásí.')) ?>"><?= e(t('Zrušit')) ?></button></p>
 <?php endforeach ?>
-<div class="radek"><label for="token-nazev"><?= e(t('Název nového tokenu')) ?></label><input class="textpole" type="text" id="token-nazev" name="nazev" maxlength="100" size="30" placeholder="<?= e(t('např. Claude na notebooku')) ?>"></div>
+<div class="radek"><label for="token-nazev"><?= e(t('Název nového tokenu')) ?></label><div><input class="textpole" type="text" id="token-nazev" name="nazev" maxlength="100" size="30" placeholder="<?= e(t('např. Claude na notebooku')) ?>"></div></div>
 <p class="tlacitka"><button class="tl" type="submit" name="co" value="token_novy"><?= e(t('Vytvořit token')) ?></button></p>
 </fieldset>
 </form>

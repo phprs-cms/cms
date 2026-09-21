@@ -28,7 +28,7 @@ final class Newsletter
             'akce' => $this->app->url('newsletter'),
             'pole' => (new Antispam($this->app->db(), $this->app->settings()))->pole('newsletter'),
             'zpet' => $this->app->request->path(),
-            'zprava' => ['ok' => 'Poslali jsme vám e-mail – odběr potvrďte kliknutím na odkaz v něm.', 'chyba' => 'Zadejte prosím platný e-mail a zkuste to znovu.'][$stav] ?? '',
+            'zprava' => ['ok' => t('Poslali jsme vám e-mail – odběr potvrďte kliknutím na odkaz v něm.'), 'chyba' => t('Zadejte prosím platný e-mail a zkuste to znovu.')][$stav] ?? '',
         ]);
     }
 
@@ -60,8 +60,9 @@ final class Newsletter
         if ($odberatel === null || !$odberatel['potvrzen']) {
             $web = $this->app->settings();
             $adresa = $this->app->request->origin() . $this->app->url('newsletter/potvrdit/' . $token);
-            Posta::odesli($web, $email, 'Potvrďte odběr – ' . $web->get('nazev_webu'),
-                "Dobrý den,\n\nodběr novinek z webu {$web->get('nazev_webu')} potvrdíte kliknutím na tento odkaz:\n{$adresa}\n\nPokud jste se k odběru nepřihlásili, e-mail ignorujte – nic vám chodit nebude.\n");
+            // čtenář se přihlašuje sám, takže jazyk zobrazené verze webu je i jazyk příjemce
+            Posta::odesli($web, $email, t('Potvrďte odběr') . ' – ' . $web->get('nazev_webu'),
+                t('Dobrý den,') . "\n\n" . t('odběr novinek z webu %s potvrdíte kliknutím na tento odkaz:', $web->get('nazev_webu')) . "\n{$adresa}\n\n" . t('Pokud jste se k odběru nepřihlásili, e-mail ignorujte – nic vám chodit nebude.') . "\n");
         }
 
         return $cil('ok');
@@ -73,7 +74,7 @@ final class Newsletter
         $n = $this->app->db()->run('UPDATE {odberatele} SET potvrzen = 1 WHERE token = ?', [$token])->rowCount();
         $existuje = $n > 0 || $this->app->db()->value('SELECT ido FROM {odberatele} WHERE token = ?', [$token]) !== null;
 
-        return $existuje ? ['Odběr je potvrzený', 'Děkujeme. Novinky vám budou chodit e-mailem; odhlásit se můžete odkazem v každé zprávě.'] : ['Odkaz neplatí', 'Přihlaste se prosím k odběru znovu.'];
+        return $existuje ? [t('Odběr je potvrzený'), t('Děkujeme. Novinky vám budou chodit e-mailem; odhlásit se můžete odkazem v každé zprávě.')] : [t('Odkaz neplatí'), t('Přihlaste se prosím k odběru znovu.')];
     }
 
     /** @return array{0:string, 1:string} */
@@ -81,6 +82,6 @@ final class Newsletter
     {
         $this->app->db()->delete('odberatele', ['token' => $token]);
 
-        return ['Odběr je zrušený', 'Váš e-mail jsme ze seznamu odstranili. Další zprávy už nepřijdou.'];
+        return [t('Odběr je zrušený'), t('Váš e-mail jsme ze seznamu odstranili. Další zprávy už nepřijdou.')];
     }
 }

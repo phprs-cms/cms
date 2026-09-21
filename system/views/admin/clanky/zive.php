@@ -29,20 +29,20 @@ $bezi = (int) $clanek['zive'] === 1;
 	<label><input type="checkbox" name="dulezite" value="1"> <?= e(t('Důležitý – zvýraznit')) ?></label>
 </p>
 </form>
-<form method="post" action="<?= e($modul->url('zive')) ?>"<?= $bezi ? ' data-potvrdit="Ukončit živou reportáž? Zápisy na webu zůstanou, jen se přestanou načítat nové."' : '' ?>>
+<form method="post" action="<?= e($modul->url('zive')) ?>"<?= $bezi ? ' data-potvrdit="' . e(t('Ukončit živou reportáž? Zápisy na webu zůstanou, jen se přestanou načítat nové.')) . '"' : '' ?>>
 <?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>"><input type="hidden" name="stav" value="<?= $bezi ? 'ukoncit' : 'spustit' ?>">
-<p><button class="navigace" type="submit"><?= $bezi ? 'Ukončit reportáž' : 'Spustit reportáž' ?></button> <span class="smltxt"><?= e(t('Čtenářům se nové zápisy načítají samy každých 30 vteřin.')) ?></span></p>
+<p><button class="navigace" type="submit"><?= e(t($bezi ? 'Ukončit reportáž' : 'Spustit reportáž')) ?></button> <span class="smltxt"><?= e(t('Čtenářům se nové zápisy načítají samy každých 30 vteřin.')) ?></span></p>
 </form>
 <?php if ($zapisy !== []): ?>
 <div class="tab-obal"><table class="vypis">
-<thead><tr><th><?= e(t('Čas')) ?></th><th><?= e(t('Zápis')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Čas')) ?></th><th scope="col"><?= e(t('Zápis')) ?></th><th scope="col"><?= e(t('Autor')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($zapisy as $z): ?>
 <tr>
 	<td class="cislo"><?= e(datum($z['cas'], true)) ?></td>
 	<td><?= $z['dulezite'] ? '<strong>' : '' ?><?= e(mb_strimwidth(trim(strip_tags($z['text'])), 0, 160, '…')) ?><?= $z['dulezite'] ? '</strong>' : '' ?></td>
 	<td><?= e((string) $z['autor_jm']) ?></td>
-	<td class="akce"><form method="post" action="<?= e($modul->url('zive')) ?>" style="display:inline" data-potvrdit="<?= e(t('Smazat zápis?')) ?>"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>"><input type="hidden" name="smazat" value="<?= (int) $z['idz'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+	<td class="akce"><form class="vradku" method="post" action="<?= e($modul->url('zive')) ?>" data-potvrdit="<?= e(t('Smazat zápis?')) ?>"><?= $csrf ?><input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>"><input type="hidden" name="smazat" value="<?= (int) $z['idz'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

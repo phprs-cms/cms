@@ -11,7 +11,7 @@
 <?php else: ?>
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th><?= e(t('Název rubriky')) ?></th><th><?= e(t('Adresa')) ?></th><th><?= e(t('Článků')) ?></th><th><?= e(t('Pořadí')) ?></th><th><?= e(t('Zobrazit')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Název rubriky')) ?></th><th scope="col"><?= e(t('Adresa')) ?></th><th scope="col"><?= e(t('Článků')) ?></th><th scope="col"><?= e(t('Pořadí')) ?></th><th scope="col"><?= e(t('Zobrazit')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($rubriky as $r): ?>
 <tr<?= $r['zobrazit'] ? '' : ' class="nevydany"' ?>>
@@ -22,7 +22,7 @@
 	<td class="stred"><?= $r['zobrazit'] ? 'Ano' : '<strong>Ne</strong>' ?></td>
 	<td class="akce">
 		<a href="<?= e($modul->url('edit', ['id' => $r['idt']])) ?>"><?= e(t('Upravit')) ?></a> ·
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="<?= e(t('Opravdu smazat rubriku?')) ?>"><?= $csrf ?><input type="hidden" name="idt" value="<?= (int) $r['idt'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form>
+		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat rubriku?')) ?>"><?= $csrf ?><input type="hidden" name="idt" value="<?= (int) $r['idt'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form>
 	</td>
 </tr>
 <?php endforeach ?>

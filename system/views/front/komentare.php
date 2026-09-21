@@ -63,15 +63,3 @@ $komentar = function (array $k) use (&$komentar, $reakce, $nahlasit): void { ?>
 	</form>
 <?php endif ?>
 </section>
-<script>
-document.querySelectorAll('[data-reagovat]').forEach(function (b) {
-	b.addEventListener('click', function () {
-		var f = document.querySelector('.komentar-formular'), info = f.querySelector('.komentar-reakce-info');
-		f.reakce_na.value = b.getAttribute('data-reagovat'); info.hidden = false; info.querySelector('strong').textContent = b.getAttribute('data-jmeno');
-		f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.obsah.focus();
-	});
-});
-document.querySelectorAll('[data-zrusit-reakci]').forEach(function (b) {
-	b.addEventListener('click', function () { var f = b.closest('form'); f.reakce_na.value = '0'; b.parentNode.hidden = true; });
-});
-</script>

@@ -4,14 +4,14 @@ $ikony = ['ok' => '✓', 'varovani' => '!', 'chyba' => '✕'];
 $souhrn = PhpRS\Core\Stav::souhrn($kontroly);
 $skupina = '';
 ?>
-<p class="hlaska hlaska-<?= $souhrn === 'ok' ? 'ok' : 'chyba' ?>"><?= e(t(['ok' => 'Vše v pořádku.', 'varovani' => 'Systém běží, některé položky si zaslouží pozornost.', 'chyba' => 'Nalezeny chyby, které brání správnému provozu.'][$souhrn])) ?></p>
+<p class="hlaska hlaska-<?= ['ok' => 'ok', 'varovani' => 'varovani', 'chyba' => 'chyba'][$souhrn] ?>"><?= e(t(['ok' => 'Vše v pořádku.', 'varovani' => 'Systém běží, některé položky si zaslouží pozornost.', 'chyba' => 'Nalezeny chyby, které brání správnému provozu.'][$souhrn])) ?></p>
 <p class="napoveda-radek"><?= PhpRS\Core\Napoveda::odkaz('provoz/stav-systemu', 'Stav systému') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/ulohy-na-pozadi', 'Úlohy na pozadí (cron)') ?> · <?= PhpRS\Core\Napoveda::odkaz('provoz/reseni-potizi', 'Řešení potíží') ?></p>
 <div class="tab-obal">
 <table class="vypis">
 <tbody>
 <?php foreach ($kontroly as $k): ?>
 <?php if ($k['skupina'] !== $skupina): $skupina = $k['skupina']; ?>
-<tr><th colspan="3"><?= e($skupina) ?></th></tr>
+<tr><th colspan="3" scope="colgroup"><?= e($skupina) ?></th></tr>
 <?php endif ?>
 <tr>
 	<td class="stred"><span class="stitek stitek-<?= ['ok' => 'vydano', 'varovani' => 'koncept', 'chyba' => 'chyba'][$k['stav']] ?>" title="<?= e(t(['ok' => 'v pořádku', 'varovani' => 'varování', 'chyba' => 'chyba'][$k['stav']])) ?>"><?= $ikony[$k['stav']] ?></span></td>

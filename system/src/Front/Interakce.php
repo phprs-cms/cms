@@ -51,8 +51,8 @@ final class Interakce
             'nahlasit' => $this->app->url('komentar/nahlasit'),
             'clanek' => $clanek, 'koreny' => $koreny, 'reakce' => $reakce, 'pocet' => count($vse),
             'akce' => $this->app->url('komentar'), 'pole' => $this->antispam->pole('komentar-' . $clanek['idc']),
-            'zprava' => ['ok' => 'Děkujeme, komentář byl přidán.', 'ceka' => 'Děkujeme. Komentář se zobrazí po schválení redakcí.', 'nahlaseno' => 'Děkujeme, komentář jsme předali redakci k posouzení.'][$this->app->request->get('komentar')] ?? '',
-            'chyba' => $this->app->request->get('komentar') === 'chyba' ? (string) $this->app->session->get('komentar_chyba', 'Komentář se nepodařilo uložit.') : '',
+            'zprava' => ['ok' => t('Děkujeme, komentář byl přidán.'), 'ceka' => t('Děkujeme. Komentář se zobrazí po schválení redakcí.'), 'nahlaseno' => t('Děkujeme, komentář jsme předali redakci k posouzení.')][$this->app->request->get('komentar')] ?? '',
+            'chyba' => $this->app->request->get('komentar') === 'chyba' ? (string) $this->app->session->get('komentar_chyba', t('Komentář se nepodařilo uložit.')) : '',
         ]);
     }
 
@@ -60,11 +60,12 @@ final class Interakce
     {
         $r = $this->app->request;
         $db = $this->app->db();
-        $clanek = $db->one('SELECT idc, seo_link, povolit_kom FROM {clanky} WHERE idc = ? AND visible = 1 AND datum <= NOW()', [$r->postInt('idc')]);
+        $clanek = $db->one('SELECT idc, titulek, seo_link, povolit_kom FROM {clanky} WHERE idc = ? AND visible = 1 AND datum <= NOW()', [$r->postInt('idc')]);
         if ($clanek === null || !$clanek['povolit_kom'] || !$this->app->settings()->bool('povolit_komentare')) {
             return Response::redirect($this->app->url(''));
         }
         $zpet = fn (string $stav): Response => Response::redirect($this->app->url('clanek/' . $clanek['seo_link'] . '?komentar=' . $stav . '#komentare'), 303);
+        // text chyby se překládá tady (jazyk verze webu, ze které formulář přišel); šablona ho už jen vypíše
         $chyba = function (string $text) use ($zpet): Response {
             $this->app->session->set('komentar_chyba', $text);
 
@@ -80,20 +81,20 @@ final class Interakce
         }
         $ctenar = $this->ctenar();
         if ($ctenar === null && $this->jenPrihlaseni()) {
-            return $chyba('Komentovat mohou jen přihlášení čtenáři.');
+            return $chyba(t('Komentovat mohou jen přihlášení čtenáři.'));
         }
         // přihlášený čtenář komentuje pod svým účtem: jméno a e-mail se berou z účtu, ne z formuláře
         $od = $ctenar !== null ? ($ctenar['jmeno'] !== '' ? $ctenar['jmeno'] : ucfirst((string) strstr($ctenar['email'], '@', true))) : mb_substr($r->post('od'), 0, 60);
         $obsah = mb_substr($r->post('obsah'), 0, 5000);
         $mail = $ctenar !== null ? $ctenar['email'] : mb_substr($r->post('od_mail'), 0, 190);
         if ($od === '' || mb_strlen($obsah) < 3) {
-            return $chyba('Vyplňte jméno a text komentáře.');
+            return $chyba(t('Vyplňte jméno a text komentáře.'));
         }
         if ($mail !== '' && filter_var($mail, FILTER_VALIDATE_EMAIL) === false) {
-            return $chyba('E-mail nemá platný tvar.');
+            return $chyba(t('E-mail nemá platný tvar.'));
         }
         if ($this->antispam->pocet($r->ip(), 'komentar', 0, 10) >= 5) {
-            return $chyba('Příliš mnoho komentářů za krátkou dobu. Zkuste to prosím později.');
+            return $chyba(t('Příliš mnoho komentářů za krátkou dobu. Zkuste to prosím později.'));
         }
         $reakceNa = $db->value('SELECT idk FROM {komentare} WHERE idk = ? AND clanek = ? AND reakce_na IS NULL', [$r->postInt('reakce_na'), $clanek['idc']]);
 
@@ -132,11 +133,16 @@ final class Interakce
         }
         $web->set('upozorneni_cas', (string) time());
         $ceka = (int) $this->app->db()->value('SELECT COUNT(*) FROM {komentare} WHERE zobrazit = 0');
-        \PhpRS\Core\Posta::odesli($web, $web->get('email_webu'), ($zverejnen ? 'Nový komentář' : 'Komentář čeká na schválení') . ' – ' . $web->get('nazev_webu'),
-            "Článek: {$clanek['titulek']}\nOd: {$od}\n\n" . mb_strimwidth($obsah, 0, 600, '…') . "\n\n"
-            . ($ceka > 0 ? "Ke schválení čeká komentářů: {$ceka}\n" : '')
-            . 'Správa komentářů: ' . $this->app->request->origin() . $this->app->request->basePath() . "/admin.php?modul=comment\n\n"
-            . "Další upozornění přijde nejdřív za 10 minut. Vypnete je v Nastavení → Základní.\n");
+        $sprava = $this->app->request->origin() . $this->app->request->basePath() . '/admin.php?modul=comment';
+        // píše se redakci, ne čtenáři: texty administrace ve výchozím jazyce webu (adresa redakce nemá vlastní účet s jazykem)
+        [$predmet, $text] = \PhpRS\Core\Jazyk::docasne(\PhpRS\Core\Jazyk::vychozi($web), fn (): array => [
+            t($zverejnen ? 'Nový komentář' : 'Komentář čeká na schválení'),
+            t('Článek: %s', (string) $clanek['titulek']) . "\n" . t('Od: %s', $od) . "\n\n" . mb_strimwidth($obsah, 0, 600, '…') . "\n\n"
+                . ($ceka > 0 ? t('Ke schválení čeká komentářů: %s', $ceka) . "\n" : '')
+                . t('Správa komentářů: %s', $sprava) . "\n\n"
+                . t('Další upozornění přijde nejdřív za 10 minut. Vypnete je v Nastavení → Základní.') . "\n",
+        ], 'admin-');
+        \PhpRS\Core\Posta::odesli($web, $web->get('email_webu'), $predmet . ' – ' . $web->get('nazev_webu'), $text);
     }
 
     private function ctenar(): ?array
@@ -159,11 +165,15 @@ final class Interakce
             return;
         }
         $web = $app->settings();
-        $koren = $app->request->origin() . $app->request->basePath() . '/';
-        \PhpRS\Core\Posta::odesli($web, $puvodni['od_mail'], 'Odpověď na váš komentář – ' . $web->get('nazev_webu'),
-            "Dobrý den,\n\nna váš komentář u článku „{$o['titulek']}“ odpověděl(a) {$o['od']}:\n\n" . mb_strimwidth($o['obsah'], 0, 600, '…') . "\n\n"
-            . 'Celá diskuse: ' . $koren . ($o['jazyk'] !== '' ? $o['jazyk'] . '/' : '') . 'clanek/' . $o['seo_link'] . '#komentar-' . $idk . "\n\n"
-            . 'Další upozornění k tomuto komentáři vypnete zde: ' . $koren . 'komentar/neupozornovat?k=' . $puvodni['idk'] . '&p=' . self::podpis($app, (int) $puvodni['idk']) . "\n");
+        $koren = $app->request->origin() . $app->request->basePath() . '/' . ($o['jazyk'] !== '' ? $o['jazyk'] . '/' : ''); // adresy v jazykové verzi článku
+        // jazyk příjemce = jazyková verze článku, pod kterým komentoval; odpověď může schválit redaktor z administrace v jiném jazyce
+        [$predmet, $text] = \PhpRS\Core\Jazyk::docasne($o['jazyk'] !== '' ? $o['jazyk'] : \PhpRS\Core\Jazyk::vychozi($web), fn (): array => [
+            t('Odpověď na váš komentář'),
+            t('Dobrý den,') . "\n\n" . t('na váš komentář u článku „%s“ odpověděl(a) %s:', (string) $o['titulek'], (string) $o['od']) . "\n\n" . mb_strimwidth($o['obsah'], 0, 600, '…') . "\n\n"
+                . t('Celá diskuse: %s', $koren . 'clanek/' . $o['seo_link'] . '#komentar-' . $idk) . "\n\n"
+                . t('Další upozornění k tomuto komentáři vypnete zde: %s', $koren . 'komentar/neupozornovat?k=' . $puvodni['idk'] . '&p=' . self::podpis($app, (int) $puvodni['idk'])) . "\n",
+        ]);
+        \PhpRS\Core\Posta::odesli($web, $puvodni['od_mail'], $predmet . ' – ' . $web->get('nazev_webu'), $text);
     }
 
     /** Čtenář nahlásil komentář. Po třech nahlášeních komentář počká na posouzení redakcí. */

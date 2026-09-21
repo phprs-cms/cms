@@ -9,8 +9,8 @@
 ] as $klic => [$nazev, $popis]): ?>
 	<label class="karta-volba">
 		<input type="radio" name="cookies_rezim" value="<?= e($klic) ?>"<?= $hodnoty['cookies_rezim'] === $klic ? ' checked' : '' ?>>
-		<strong><?= e($nazev) ?></strong>
-		<span><?= e($popis) ?></span>
+		<strong><?= e(t($nazev)) ?></strong>
+		<span><?= e(t($popis)) ?></span>
 	</label>
 <?php endforeach ?>
 </div>
@@ -28,7 +28,7 @@ $pole('cookies_evidence', 'Evidovat souhlasy', 'ano', 'Čas, náhodný identifik
 ?>
 </details>
 <?php if ($souhlasy !== []): ?>
-<p class="napoveda">Souhlasy za posledních 30 dní: <?= implode(' · ', array_map(fn (array $r): string => e($r['kategorie'] === 'nic' ? 'jen nezbytné' : $r['kategorie']) . ' ' . (int) $r['pocet'] . '×', $souhlasy)) ?></p>
+<p class="napoveda"><?= e(t('Souhlasy za posledních 30 dní:')) ?> <?= implode(' · ', array_map(fn (array $r): string => e($r['kategorie'] === 'nic' ? t('jen nezbytné') : $r['kategorie']) . ' ' . (int) $r['pocet'] . '×', $souhlasy)) ?></p>
 <?php endif ?>
 <fieldset>
 <legend><?= e(t('Žádost čtenáře o osobní údaje')) ?></legend>

@@ -33,7 +33,7 @@
 <?= $app->view->render('admin/prazdno', ['ikona' => 'stitky', 'nadpis' => t('Zatím žádné štítky.'), 'text' => t('Přidáte je v editoru článku v poli Štítky. Tady je pak půjde slučovat a měnit na stránky témat.')]) ?>
 <?php else: ?>
 <div class="tab-obal"><table class="vypis">
-<thead><tr><th><?= e(t('Štítek')) ?></th><th><?= e(t('Článků')) ?></th><th><?= e(t('Téma')) ?></th><th><?= e(t('Akce')) ?></th></tr></thead>
+<thead><tr><th scope="col"><?= e(t('Štítek')) ?></th><th scope="col"><?= e(t('Článků')) ?></th><th scope="col"><?= e(t('Téma')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($stitky as $s): ?>
 <tr>
@@ -41,7 +41,7 @@
 	<td class="cislo"><?= (int) $s['pocet'] ?></td>
 	<td><?= trim((string) $s['popis']) !== '' ? '<span class="stitek stitek-vydano">' . e(t('má úvod')) . '</span>' : '' ?></td>
 	<td class="akce"><a href="<?= e($modul->url('', ['uprav' => $s['ids']])) ?>#uprav"><?= e(t('Upravit')) ?></a>
-		<form method="post" action="<?= e($modul->url('smaz')) ?>" style="display:inline" data-potvrdit="<?= e(t('Smazat štítek? Články zůstanou, jen ho už nebudou mít.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
+		<form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Smazat štítek? Články zůstanou, jen ho už nebudou mít.')) ?>"><?= $csrf ?><input type="hidden" name="ids" value="<?= (int) $s['ids'] ?>"><button class="navigace" type="submit"><?= e(t('Smaž')) ?></button></form></td>
 </tr>
 <?php endforeach ?>
 </tbody></table></div>

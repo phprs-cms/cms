@@ -12,7 +12,7 @@
 ?>
 <nav class="zalozky" aria-label="<?= e(t('Stav komentářů')) ?>">
 	<a href="<?= e($modul->url()) ?>"<?= $cekajici ? '' : ' class="aktivni"' ?>><?= e(t('Všechny')) ?></a>
-	<a href="<?= e($modul->url('', ['stav' => 'cekajici'])) ?>"<?= $cekajici ? ' class="aktivni"' : '' ?>>Čekají na schválení (<?= $pocetCekajicich ?>)</a>
+	<a href="<?= e($modul->url('', ['stav' => 'cekajici'])) ?>"<?= $cekajici ? ' class="aktivni"' : '' ?>><?= e(t('Čekají na schválení (%s)', $pocetCekajicich)) ?></a>
 </nav>
 <?php if ($komentare === []): ?>
 <?= $app->view->render('admin/prazdno', ['ikona' => 'komentare', 'nadpis' => t('Žádné komentáře.'), 'text' => t('Komentáře čtenářů se tu objeví hned, jak je někdo pod článkem napíše. Ty, které čekají na schválení, uvidíte nahoře.')]) ?>
@@ -22,7 +22,7 @@
 <input type="hidden" name="stav" value="<?= $cekajici ? 'cekajici' : '' ?>">
 <div class="tab-obal">
 <table class="vypis">
-<thead><tr><th></th><th><?= e(t('Komentář')) ?></th><th><?= e(t('Autor')) ?></th><th><?= e(t('Článek')) ?></th><th><?= e(t('Datum')) ?></th><th><?= e(t('Stav')) ?></th></tr></thead>
+<thead><tr><th scope="col"></th><th scope="col"><?= e(t('Komentář')) ?></th><th scope="col"><?= e(t('Autor')) ?></th><th scope="col"><?= e(t('Článek')) ?></th><th scope="col"><?= e(t('Datum')) ?></th><th scope="col"><?= e(t('Stav')) ?></th></tr></thead>
 <tbody>
 <?php foreach ($komentare as $k): ?>
 <tr<?= $k['zobrazit'] ? '' : ' class="nevydany"' ?>>
@@ -31,7 +31,7 @@
 	<td><?= e($k['od']) ?><?= $k['od_mail'] !== '' ? '<br><small>' . e($k['od_mail']) . '</small>' : '' ?><br><small><?= e($k['od_ip']) ?></small><?= (int) $k['nahlaseno'] > 0 ? '<br><span class="stitek stitek-koncept">' . e(t('nahlášeno %s×', (int) $k['nahlaseno'])) . '</span>' : '' ?><?= $k['idct'] !== null ? '<br><small>' . e(t('registrovaný čtenář')) . '</small>' : '' ?></td>
 	<td><a href="<?= e($app->url('clanek/' . $k['seo_link'] . '#komentare')) ?>" target="_blank" rel="noopener"><?= e(mb_strimwidth($k['titulek'], 0, 60, '…')) ?></a></td>
 	<td class="cislo"><?= e(datum($k['datum'], true)) ?></td>
-	<td><span class="stitek stitek-<?= $k['zobrazit'] ? 'vydano' : 'koncept' ?>"><?= $k['zobrazit'] ? 'zveřejněný' : 'čeká / skrytý' ?></span></td>
+	<td><span class="stitek stitek-<?= $k['zobrazit'] ? 'vydano' : 'koncept' ?>"><?= e(t($k['zobrazit'] ? 'zveřejněný' : 'čeká / skrytý')) ?></span></td>
 </tr>
 <?php endforeach ?>
 </tbody>

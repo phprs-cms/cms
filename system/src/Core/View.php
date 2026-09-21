@@ -11,13 +11,8 @@ namespace PhpRS\Core;
 final class View
 {
     /** @param list<string> $dirs adresáře prohledávané v daném pořadí (např. layout webu, pak systémové šablony) */
-    public function __construct(private array $dirs)
+    public function __construct(private readonly array $dirs)
     {
-    }
-
-    public function prependDir(string $dir): void
-    {
-        array_unshift($this->dirs, $dir);
     }
 
     /** @param array<string, mixed> $data */

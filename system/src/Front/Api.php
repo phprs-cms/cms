@@ -35,7 +35,7 @@ final class Api
             $rubrika = $this->app->request->get('rubrika');
             $idt = $rubrika === '' ? null : $this->app->db()->value('SELECT idt FROM {topic} WHERE seo_link = ?', [$rubrika]);
             if ($rubrika !== '' && $idt === null) {
-                return $this->json(['chyba' => 'Rubrika neexistuje.'], 404);
+                return $this->json(['chyba' => t('Rubrika neexistuje.')], 404);
             }
             [$clanky, $celkem] = $idt === null ? $this->clanky->naHlavniStranku($strana) : $this->clanky->zRubriky((int) $idt, $strana);
 
@@ -44,7 +44,7 @@ final class Api
         if (preg_match('#^/api/clanky/([a-z0-9-]+)$#', $path, $m)) {
             $c = $this->clanky->podleSeo($m[1]);
 
-            return $c === null ? $this->json(['chyba' => 'Článek neexistuje.'], 404) : $this->json($strucne($c) + [
+            return $c === null ? $this->json(['chyba' => t('Článek neexistuje.')], 404) : $this->json($strucne($c) + [
                 'uvod_html' => $c['uvod'], 'text_html' => $c['text'], 'zamceno' => !empty($c['zamceno']), 'aktualizovano' => $c['aktualizovano'] ? date('c', strtotime($c['aktualizovano'])) : null,
                 'stitky' => array_column($this->app->db()->all('SELECT s.nazev FROM {stitky} s JOIN {clanky_stitky} cs ON cs.ids = s.ids WHERE cs.idc = ?', [$c['idc']]), 'nazev'),
             ]);
@@ -53,7 +53,7 @@ final class Api
             return $this->json(array_map(fn (array $r): array => ['nazev' => $r['nazev'], 'adresa' => $r['seo_link'], 'uroven' => $r['uroven'], 'clanku' => (int) $r['pocet_clanku']], Rubriky::strom($this->app->db(), true)));
         }
 
-        return $this->json(['chyba' => 'Neznámá adresa API.'], 404);
+        return $this->json(['chyba' => t('Neznámá adresa API.')], 404);
     }
 
     private function json(mixed $data, int $status = 200): Response

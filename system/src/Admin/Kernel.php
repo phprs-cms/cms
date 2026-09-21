@@ -105,7 +105,10 @@ final class Kernel
         if ($ident === '') {
             $nova = $app->auth()->isAdmin() ? (new \PhpRS\Core\Aktualizace($app->settings()))->stav()['nova'] : null;
             if ($nova !== null) {
-                $app->session->flash(!empty($nova['bezpecnostni']) ? 'chyba' : 'info', (!empty($nova['bezpecnostni']) ? 'Je k dispozici BEZPEČNOSTNÍ aktualizace ' : 'Je k dispozici nová verze ') . $nova['verze'] . ' – Nastavení → Zálohy a aktualizace.');
+                // text se překládá tady (s číslem verze); cestu v nabídce promění v odkaz až vykreslení hlášky (Admin\Cesty)
+                $app->session->flash(!empty($nova['bezpecnostni']) ? 'chyba' : 'info', !empty($nova['bezpecnostni'])
+                    ? t('Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.', (string) $nova['verze'])
+                    : t('Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.', (string) $nova['verze']));
             }
 
             return $this->page('', $app->view->render('admin/desktop', $this->desktop()));

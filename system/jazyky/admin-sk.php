@@ -1237,4 +1237,6 @@ return [
     'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Väčšie písmo, užší stĺpec a výrazný úvodný obrázok.',
     'Fotky přes celou šířku textu, text je doprovod.' => 'Fotky cez celú šírku textu, text je sprievod.',
     'Tučný odstavec je otázka, běžný odpověď.' => 'Tučný odsek je otázka, bežný odpoveď.',
+    'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Je k dispozícii BEZPEČNOSTNÁ aktualizácia %s – nainštalujete ju v Nastavenia → Zálohy a aktualizácie.',
+    'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Je k dispozícii nová verzia %s – nainštalujete ju v Nastavenia → Zálohy a aktualizácie.',
 ];

@@ -1413,4 +1413,6 @@ return [
     'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Größere Schrift, schmalere Spalte und ein markantes Aufmacherbild.',
     'Fotky přes celou šířku textu, text je doprovod.' => 'Fotos über die ganze Textbreite, der Text begleitet sie.',
     'Tučný odstavec je otázka, běžný odpověď.' => 'Ein fetter Absatz ist die Frage, ein normaler die Antwort.',
+    'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Eine SICHERHEITSAKTUALISIERUNG %s ist verfügbar – installieren Sie sie unter Einstellungen → Sicherungen und Aktualisierungen.',
+    'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Eine neue Version %s ist verfügbar – installieren Sie sie unter Einstellungen → Sicherungen und Aktualisierungen.',
 ];

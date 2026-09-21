@@ -1408,4 +1408,6 @@ return [
     'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Larger type, a narrower column and a prominent lead image.',
     'Fotky přes celou šířku textu, text je doprovod.' => 'Photos across the full width of the text; the text accompanies them.',
     'Tučný odstavec je otázka, běžný odpověď.' => 'A bold paragraph is the question, a regular one the answer.',
+    'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'A SECURITY update %s is available – install it in Settings → Backups and updates.',
+    'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'A new version %s is available – install it in Settings → Backups and updates.',
 ];

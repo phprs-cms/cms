@@ -16,7 +16,7 @@ $skupina = '';
 <tr>
 	<td class="stred"><span class="stitek stitek-<?= ['ok' => 'vydano', 'varovani' => 'koncept', 'chyba' => 'chyba'][$k['stav']] ?>" title="<?= e(t(['ok' => 'v pořádku', 'varovani' => 'varování', 'chyba' => 'chyba'][$k['stav']])) ?>"><?= $ikony[$k['stav']] ?></span></td>
 	<td><strong><?= e($k['nazev']) ?></strong></td>
-	<td><?= e($k['info']) ?></td>
+	<td><?= PhpRS\Admin\Cesty::odkazy($app->url('admin.php'), (string) $k['info'], ['config', 'vzhled', 'bloky']) ?></td>
 </tr>
 <?php endforeach ?>
 </tbody>

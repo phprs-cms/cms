@@ -390,6 +390,17 @@ preg_match_all('/^\s*RewriteRule\s+\S+\s+(\S+)/m', $htaccess, $cile);
 over('.htaccess: žádný přepis nemá relativní cíl', array_values(array_filter($cile[1], static fn (string $c): bool => $c !== '-' && !str_starts_with($c, '%{ENV:BASE}/'))), []);
 over('.htaccess: složka webu se počítá z adresy požadavku', str_contains($htaccess, 'E=BASE:%1'), true);
 
+/* ---------- cesty v nabídce jako odkazy (hlášky, Stav systému, nápovědy) ---------- */
+PhpRS\Core\Jazyk::nastav('cs', 'admin-');
+$cestyHtml = PhpRS\Admin\Cesty::odkazy('/admin.php', 'Je k dispozici nová verze 3.0.1 – nainstalujete ji v Nastavení → Zálohy a aktualizace. <b>', ['config']);
+over('Cesty: známá cesta je odkaz', str_contains($cestyHtml, '<a href="/admin.php?modul=config&amp;zalozka=zalohy">Nastavení → Zálohy a aktualizace</a>'), true);
+over('Cesty: zbytek textu zůstává escapovaný', str_contains($cestyHtml, '&lt;b&gt;'), true);
+over('Cesty: delší cesta má přednost a odkaz se nevnořuje', substr_count($cestyHtml, '<a '), 1);
+over('Cesty: bez práva k modulu žádný odkaz', str_contains(PhpRS\Admin\Cesty::odkazy('/admin.php', 'Nastavení → Pošta', []), '<a '), false);
+PhpRS\Core\Jazyk::nastav('en', 'admin-');
+over('Cesty: v angličtině se odkazuje přeložená cesta', str_contains(PhpRS\Admin\Cesty::odkazy('/admin.php', t('Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.', '3.0.1'), ['config']), '>Settings → Backups and updates</a>'), true);
+PhpRS\Core\Jazyk::nastav('cs', 'admin-');
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

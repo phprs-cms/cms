@@ -21,11 +21,12 @@
 use PhpRS\Admin\Moduly\Konfigurace;
 
 /** Řádek formuláře: $pole('klic', 'Popisek', 'text|radky|kod|ano|cislo|url|email', 'nápověda', [atributy]) */
-$pole = function (string $klic, string $popisek, string $druh = 'text', string $napoveda = '', string $atributy = '') use ($hodnoty): void {
+$pole = function (string $klic, string $popisek, string $druh = 'text', string $napoveda = '', string $atributy = '') use ($hodnoty, $app): void {
     $h = $hodnoty[$klic] ?? '';
     $popisek = t($popisek);
     $napoveda = $napoveda === '' ? '' : t($napoveda);
-    $nap = $napoveda !== '' ? '<span class="napoveda">' . $napoveda . '</span>' : '';
+    // nápověda bez vlastního HTML: cesty v nabídce („Nastavení → Pošta“) se promění v odkazy
+    $nap = $napoveda !== '' ? '<span class="napoveda">' . (str_contains($napoveda, '<') ? $napoveda : PhpRS\Admin\Cesty::odkazy($app->url('admin.php'), $napoveda, ['config', 'vzhled', 'bloky'])) . '</span>' : '';
     echo '<div class="radek">';
     if ($druh === 'ano') {
         echo '<span class="popisek">' . e($popisek) . '</span><div class="volby"><label><input type="checkbox" name="' . e($klic) . '" value="1"' . ($h === '1' ? ' checked' : '') . '> ' . e(t('Ano')) . '</label>' . $nap . '</div>';

@@ -95,7 +95,7 @@ if ($user !== null) {
 <h2><?= e($nadpis) ?></h2>
 <?php endif ?>
 <?php foreach ($hlasky as $hlaska): ?>
-<p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= e(t($hlaska['text'])) ?></p>
+<p class="hlaska hlaska-<?= e($hlaska['typ']) ?>" role="status"><?= PhpRS\Admin\Cesty::odkazy($app->url('admin.php'), t($hlaska['text']), array_keys($moduly)) ?></p>
 <?php endforeach ?>
 <?= $obsah ?>
 <footer class="verze">phpRS <?= e(PHPRS_VERSION) ?> · <a href="<?= e(PhpRS\Core\Napoveda::url()) ?>" target="_blank" rel="noopener"><?= e(t('Nápověda')) ?></a> · <a href="<?= e(PhpRS\Core\Napoveda::WEB) ?>" target="_blank" rel="noopener">phprs.eu</a><?php if ($app->settings()->bool('odkaz_podpora')): ?> · <a href="https://github.com/sponsors/phprscms" target="_blank" rel="noopener"><?= e(t('Podpořit phpRS')) ?></a><?php endif ?></footer>

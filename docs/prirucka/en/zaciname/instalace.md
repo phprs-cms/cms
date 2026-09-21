@@ -41,7 +41,7 @@ The **Install phpRS 3** button creates the database tables and the `config.php` 
 
 ## 3. After installation
 
-1. **Delete the `install.php` file from the server.** As long as it is there, System status keeps reminding you.
+1. The installer **deletes itself** when it finishes. If the server permissions do not allow it, it says so – then delete the `install.php` file by hand; as long as it is there, System status keeps reminding you.
 2. Sign in at `https://www.example.com/admin.php`.
 3. Turn on **Two-factor sign-in**: click your avatar in the top right corner → **My account**.
 4. Continue with the chapter [First steps](prvni-kroky.md).

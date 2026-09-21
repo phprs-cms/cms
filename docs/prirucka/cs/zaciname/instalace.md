@@ -41,7 +41,7 @@ Tlačítko **Nainstalovat phpRS 3** vytvoří tabulky v databázi a soubor `conf
 
 ## 3. Po instalaci
 
-1. **Smažte ze serveru soubor `install.php`.** Dokud tam je, připomíná to Stav systému.
+1. Instalátor se po dokončení **smaže sám**. Když to práva na serveru nedovolí, řekne to a soubor `install.php` smažte ručně – dokud tam je, připomíná to Stav systému.
 2. Přihlaste se na adrese `https://vas-web.cz/admin.php`.
 3. Zapněte si **dvoufázové přihlášení**: klepněte na svůj avatar vpravo nahoře → **Můj účet**.
 4. Pokračujte kapitolou [První kroky](prvni-kroky.md).

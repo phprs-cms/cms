@@ -1532,4 +1532,5 @@ return [
     'schváleno – čeká na vydání' => 'approved – waiting to be published',
     'Zeleně vydané, modře naplánované, oranžově koncepty, fialově články ke korektuře a schválené (schválené plnou čarou). Datum článku změníte v jeho úpravě.' => 'Green: published, blue: scheduled, orange: drafts, purple: articles for review and approved ones (approved with a solid line). You change an article\'s date in its editing form.',
     'Zrušit token' => 'Revoke token',
+    'Aktualizace už právě běží. Zkuste to za chvíli.' => 'An update is already running. Try again in a moment.',
 ];

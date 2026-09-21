@@ -21,6 +21,24 @@ final class Bloky
     {
     }
 
+    /** @var list<array<string, mixed>>|null */
+    private ?array $rubrikyMenu = null;
+
+    /** @var list<array<string, mixed>>|null */
+    private ?array $strankyMenu = null;
+
+    /** Strom zobrazených rubrik jazykové verze - potřebuje ho navigace šablony i blok Rubriky, dotaz stačí jednou za požadavek. */
+    public function rubrikyMenu(): array
+    {
+        return $this->rubrikyMenu ??= Rubriky::strom($this->app->db(), true, Jazyk::sloupecWebu());
+    }
+
+    /** Stránky do menu - navigace šablony i blok Stránky, dotaz jednou za požadavek. */
+    public function strankyMenu(): array
+    {
+        return $this->strankyMenu ??= $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]);
+    }
+
     /** Rubrika právě skládané stránky - bloky s reklamou podle ní vybírají cílené bannery. */
     private ?int $rubrika = null;
 
@@ -102,7 +120,7 @@ final class Bloky
         $pocet = max(1, min(50, (int) $data ?: 5));
 
         return match ($zkratka) {
-            'rub' => $this->view->render('blok_rub', ['rubriky' => Rubriky::strom($db, true, Jazyk::sloupecWebu()), 'url' => $url]),
+            'rub' => $this->view->render('blok_rub', ['rubriky' => $this->rubrikyMenu(), 'url' => $url]),
             'nov' => $this->view->render('blok_nov', [
                 'novinky' => $db->all('SELECT * FROM {news} WHERE datum <= NOW() AND jazyk = ? ORDER BY datum DESC, idn DESC LIMIT ?', [Jazyk::sloupecWebu(), $web->int('pocet_novinek')]),
             ]),
@@ -134,7 +152,7 @@ final class Bloky
             'men' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => self::odkazy($obsah)]),
             'str' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_map(
                 fn (array $st): array => [$st['titulek'], $st['seo_link']],
-                $db->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]),
+                $this->strankyMenu(),
             )]),
             'soc' => $this->view->render('blok_men', ['url' => $url, 'odkazy' => array_values(array_filter(array_map(
                 fn (string $klic, string $nazev): ?array => $web->get($klic) !== '' ? [$nazev, $web->get($klic)] : null,

@@ -135,6 +135,11 @@ final class Aktualizace
             throw new \RuntimeException(t('Chybí veřejný klíč vydavatele (system/aktualizace.pub), balíček nelze ověřit.'));
         }
 
+        // zámek: automatická aktualizace z úloh na pozadí a klik správce (nebo dvě návštěvy naráz) nesmějí přepisovat soubory současně
+        $zamek = fopen(PHPRS_ROOT . '/storage/cache/aktualizace.zamek', 'c');
+        if ($zamek === false || !flock($zamek, LOCK_EX | LOCK_NB)) {
+            throw new \RuntimeException(t('Aktualizace už právě běží. Zkuste to za chvíli.'));
+        }
         $pracovni = PHPRS_ROOT . '/storage/cache/aktualizace-' . bin2hex(random_bytes(4));
         $zip = $pracovni . '.zip';
         try {
@@ -164,6 +169,8 @@ final class Aktualizace
             @unlink(PHPRS_ROOT . '/storage/udrzba.lock');
             @unlink($zip);
             self::smazSlozku($pracovni);
+            flock($zamek, LOCK_UN);
+            fclose($zamek);
         }
         if (function_exists('opcache_reset')) {
             @opcache_reset();

@@ -178,6 +178,11 @@ final class Obrazky
 
     public static function srcset(string $cesta, string $zaklad): string
     {
+        // tentýž obrázek bývá na stránce víckrát (otvírák, výpis, blok): dotazy na disk stačí jednou za požadavek
+        static $pamet = [];
+        if (isset($pamet[$cesta . '|' . $zaklad])) {
+            return $pamet[$cesta . '|' . $zaklad];
+        }
         if (!preg_match('#^(media/\d{4}/\d{2}/[a-z0-9-]+?)(-1200|-nahled)?\.(jpg|png|webp)$#', $cesta, $m)) {
             return '';
         }
@@ -190,7 +195,7 @@ final class Obrazky
             }
         }
 
-        return count($varianty) > 1 ? implode(', ', $varianty) : '';
+        return $pamet[$cesta . '|' . $zaklad] = count($varianty) > 1 ? implode(', ', $varianty) : '';
     }
 
     /** Fotky z mobilu bývají uložené naležato s příznakem otočení v EXIF. */

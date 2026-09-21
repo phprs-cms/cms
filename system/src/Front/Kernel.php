@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpRS\Front;
 
-use PhpRS\Admin\Moduly\Rubriky;
 use PhpRS\Core\App;
 use PhpRS\Core\Jazyk;
 use PhpRS\Core\Response;
@@ -656,8 +655,8 @@ final class Kernel
             'hlava' => $seo->hlava($titulek, $meta + ['jazyky' => $jazyky], $clanek),
             'pata' => ($upravit ? $this->view->render('vizual', ['app' => $this->app, 'rozvrzeni' => $bloky->rozvrzeni()]) : $seo->pata())
                 . ($this->upravitZde !== '' && !$upravit ? '<a class="rs-upravit-zde" href="' . e($this->upravitZde) . '">' . e(t('Upravit zde')) . '</a>' : ''),
-            'rubriky' => Rubriky::strom($this->app->db(), true, Jazyk::sloupecWebu()),
-            'stranky' => $this->app->db()->all('SELECT titulek, seo_link FROM {stranky} WHERE zobrazit = 1 AND v_menu = 1 AND jazyk = ? ORDER BY poradi, titulek', [Jazyk::sloupecWebu()]),
+            'rubriky' => $bloky->rubrikyMenu(),
+            'stranky' => $bloky->strankyMenu(),
             'jazyk' => Jazyk::kod(),
             'jazyky_html' => $jazyky === [] ? '' : $this->view->render('jazyky', ['jazyky' => $jazyky]),
             'url' => $this->app->url(...),

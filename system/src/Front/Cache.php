@@ -18,11 +18,28 @@ final class Cache
     private const string SLOZKA = PHPRS_ROOT . '/storage/cache/stranky';
     private const int PLATNOST = 300;
 
+    /** @var resource|null zámek stránky, kterou tenhle požadavek právě přegenerovává */
+    private static $zamek = null;
+
     public static function nacti(App $app): ?Response
     {
         $soubor = self::soubor($app);
-        if ($soubor === null || !is_file($soubor) || filemtime($soubor) < time() - self::PLATNOST) {
+        if ($soubor === null || !is_file($soubor)) {
             return null;
+        }
+        if (filemtime($soubor) < time() - self::PLATNOST) {
+            // Prošlou stránku přegeneruje první, kdo přijde; ostatní, kteří dorazí ve stejné vteřině, dostanou ještě tu starou
+            // (nejdéle o minutu déle). Bez toho by po vypršení skládalo tutéž stránku z databáze najednou všech sto čtenářů.
+            $zamek = @fopen($soubor . '.zamek', 'c');
+            if ($zamek === false || flock($zamek, LOCK_EX | LOCK_NB)) {
+                self::$zamek = $zamek ?: null; // drží se do uloz() nebo do konce požadavku
+
+                return null;
+            }
+            fclose($zamek);
+            if (filemtime($soubor) < time() - self::PLATNOST - 60) {
+                return null;
+            }
         }
         [$hlavicka, $html] = explode("\n", (string) file_get_contents($soubor), 2) + [1 => ''];
         $meta = json_decode($hlavicka, true);
@@ -47,6 +64,12 @@ final class Cache
             @mkdir(self::SLOZKA, 0775, true);
         }
         @file_put_contents($soubor, json_encode(['idc' => $idc]) . "\n" . $html, LOCK_EX);
+        if (self::$zamek !== null) {
+            flock(self::$zamek, LOCK_UN);
+            fclose(self::$zamek);
+            self::$zamek = null;
+            @unlink($soubor . '.zamek');
+        }
         if (random_int(1, 100) === 1) {
             // občasný úklid: prošlé soubory by jinak mizely jen při změně v administraci
             foreach (glob(self::SLOZKA . '/*.html') ?: [] as $stary) {
@@ -84,7 +107,7 @@ final class Cache
 
     public static function vymaz(): void
     {
-        foreach (glob(self::SLOZKA . '/*.html') ?: [] as $soubor) {
+        foreach (array_merge(glob(self::SLOZKA . '/*.html') ?: [], glob(self::SLOZKA . '/*.zamek') ?: []) as $soubor) {
             @unlink($soubor);
         }
     }

@@ -1,0 +1,304 @@
+<?php
+/**
+ * Jednotkové testy jádra phpRS 3 - bez frameworku a bez databáze: php tools/testy.php
+ *
+ * Hlídají to, co kouřový test (tools/test.sh) nepozná: kryptografii, parsování a převody textu.
+ * Nový test = další volání over('popis', $skutecne, $ocekavane).
+ */
+
+declare(strict_types=1);
+
+require dirname(__DIR__) . '/system/bootstrap.php';
+
+use PhpRS\Core\Hledani;
+use PhpRS\Core\Migrace;
+use PhpRS\Core\Soubory;
+use PhpRS\Core\Totp;
+use PhpRS\Front\Seo;
+use PhpRS\Front\TypyObsahu;
+
+$chyb = 0;
+$celkem = 0;
+function over(string $popis, mixed $skutecne, mixed $ocekavane): void
+{
+    global $chyb, $celkem;
+    $celkem++;
+    if ($skutecne === $ocekavane) {
+        return;
+    }
+    $chyb++;
+    echo "  CHYBA  {$popis}\n         čekal jsem: " . var_export($ocekavane, true) . "\n         dostal jsem: " . var_export($skutecne, true) . "\n";
+}
+
+/* ---------- převody textu ---------- */
+over('slugify: diakritika a mezery', slugify('Příliš žluťoučký kůň!'), 'prilis-zlutoucky-kun');
+over('slugify: prázdný vstup', slugify('***'), 'n-a');
+over('slugify: délka', strlen(slugify(str_repeat('abc ', 100), 20)) <= 20, true);
+over('bez_diakritiky', bez_diakritiky('Ďábelské ÓDY – Straße'), 'Dabelske ODY – Strasse');
+over('e(): uvozovky a značky', e('<a href="x">\'</a>'), '&lt;a href=&quot;x&quot;&gt;&#039;&lt;/a&gt;');
+over('datum', datum('2026-09-05 07:03:00', true), '5. 9. 2026 07:03');
+
+/* ---------- hledání ---------- */
+over('Hledani::normalizuj', Hledani::normalizuj('<p>Nábřeží&nbsp;<b>Vltavy</b></p><h2>Proměna!</h2>'), 'nabrezi vltavy promena');
+over('Hledani::dotaz: krátká slova vypadnou', Hledani::dotaz('co je na Nábřeží'), '+nabrezi*');
+over('Hledani::dotaz: operátory fulltextu se neprosadí', Hledani::dotaz('+tajne -verejne "fraze" (x) ~y*'), '+tajne* +verejne* +fraze*');
+over('Hledani::dotaz: nejvýš 8 slov', substr_count(Hledani::dotaz('aaa bbb ccc ddd eee fff ggg hhh iii jjj'), '+'), 8);
+
+/* ---------- TOTP (RFC 6238, tajemství "12345678901234567890") ---------- */
+$tajemstvi = 'GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ';
+over('TOTP: vektor T=59', Totp::kod($tajemstvi, intdiv(59, 30)), '287082');
+over('TOTP: vektor T=1111111109', Totp::kod($tajemstvi, intdiv(1111111109, 30)), '081804');
+over('TOTP: vektor T=2000000000', Totp::kod($tajemstvi, intdiv(2000000000, 30)), '279037');
+over('TOTP: platný kód projde', Totp::over($tajemstvi, '287082', 59), true);
+over('TOTP: sousední okno projde', Totp::over($tajemstvi, '287082', 59 + 30), true);
+over('TOTP: starý kód neprojde', Totp::over($tajemstvi, '287082', 59 + 300), false);
+over('TOTP: nesmysl neprojde', Totp::over($tajemstvi, 'abcdef', 59), false);
+over('TOTP: nové tajemství má 160 bitů', strlen(Totp::noveTajemstvi()), 32);
+
+/* ---------- migrace: dělení SQL na příkazy ---------- */
+$sql = "-- komentář\nALTER TABLE rs_clanky ADD COLUMN x INT;   -- poznámka za příkazem\nCREATE TABLE rs_nova (\n  a VARCHAR(10) DEFAULT ';'\n);\nALTER TABLE rs_a ADD CONSTRAINT fk_a FOREIGN KEY (b) REFERENCES rs_b (id);\n";
+$prikazy = Migrace::prikazy($sql, 'web_');
+over('Migrace::prikazy: počet', count($prikazy), 3);
+over('Migrace::prikazy: předpona tabulek', str_contains($prikazy[1], 'CREATE TABLE web_nova'), true);
+over('Migrace::prikazy: středník v hodnotě příkaz nerozdělí', str_contains($prikazy[1], "DEFAULT ';'"), true);
+over('Migrace::prikazy: předpona omezení', str_contains($prikazy[2], 'CONSTRAINT web_fk_a') && str_contains($prikazy[2], 'REFERENCES web_b'), true);
+over('Migrace: PHPRS_VERZE_DB odpovídá souborům', PHPRS_VERZE_DB, Migrace::posledni());
+
+/* ---------- přílohy ---------- */
+over('Soubory: PDF je příloha', Soubory::jePriloha('Zpráva.PDF'), true);
+over('Soubory: PHP není příloha', Soubory::jePriloha('shell.php'), false);
+over('Soubory: dvojitá přípona', Soubory::jePriloha('shell.pdf.php'), false);
+over('Soubory: SVG a HTML ne', Soubory::jePriloha('x.svg') || Soubory::jePriloha('x.html'), false);
+over('Soubory: velikost', Soubory::velikost(1536), '2 kB');
+over('Soubory: velikost v MB', Soubory::velikost(5 * 1048576), '5,0 MB');
+
+/* ---------- přehrávač a vložené adresy ---------- */
+over('prehravac: YouTube bez cookies', str_contains(TypyObsahu::prehravac('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '', 'T'), 'youtube-nocookie.com/embed/dQw4w9WgXcQ'), true);
+over('prehravac: youtu.be', str_contains(TypyObsahu::prehravac('https://youtu.be/dQw4w9WgXcQ', '', 'T'), 'embed/dQw4w9WgXcQ'), true);
+over('prehravac: MP3 je <audio>', str_contains(TypyObsahu::prehravac('media/2026/09/epizoda.mp3', '/magazin', 'T'), '<audio controls preload="none" src="/magazin/media/2026/09/epizoda.mp3">'), true);
+over('prehravac: neznámá adresa v režimu jenZname', TypyObsahu::prehravac('https://example.com/video', '', 'T', true), '');
+over('prehravac: titulek se escapuje', str_contains(TypyObsahu::prehravac('https://vimeo.com/123', '', '"><script>'), '<script>'), false);
+$typy = (new ReflectionClass(TypyObsahu::class))->newInstanceWithoutConstructor();
+$html = $typy->vlozeneAdresy('<p>Úvod</p><p>https://youtu.be/dQw4w9WgXcQ</p><p>Viz https://youtu.be/dQw4w9WgXcQ v textu.</p>');
+over('vlozeneAdresy: jen samostatný řádek', [substr_count($html, 'data-vlozit'), substr_count($html, 'Viz https://youtu.be')], [1, 1]);
+
+/* ---------- bezpečný dialekt šablon (ukládání přes napojení na Claude) ---------- */
+use PhpRS\Core\SablonaKontrola;
+
+$vadne = [];
+foreach (glob(dirname(__DIR__) . '/layout/*/*.php') as $soubor) {
+    if (SablonaKontrola::over((string) file_get_contents($soubor)) !== []) {
+        $vadne[] = basename(dirname($soubor)) . '/' . basename($soubor);
+    }
+}
+over('SablonaKontrola: vestavěné šablony dialektem projdou', $vadne, []);
+$utoky = [
+    '<?php file_put_contents(PHPRS_ROOT . "/system/x.php", "x");', '<?= file_get_contents("../config.php") ?>', '<?php eval($_GET["c"]);', '<?php include "../config.php";',
+    '<?php system("id");', '<?php echo `id`;', '<?php $f = "sys" . "tem"; $f("id");', '<?php array_map("system", ["id"]);', '<?php array_map("sys" . "tem", ["id"]);',
+    '<?php $x = "system"; usort($a, $x);', '<?php call_user_func("system", "id");', '<?php $d = new PDO("mysql:host=x");', '<?php \\PhpRS\\Core\\App::boot();',
+    '<?php $web->db()->run("DROP TABLE rs_clanky");', '<?php $web->set("ai_klic", "x");', '<?= $_COOKIE["phprs3"] ?>', '<?php $a = "_GET"; echo $$a["x"];',
+    '<?php echo "{$web->db()->run(1)}";', '<?php (fn () => 1)()("x");', '<?php [$web, "set"]("a", "b");', '<?php function system2() {}', '<?php ($web->x)("id");', '<?php exit;',
+    '<?php use PhpRS\\Core\\Db as e;', '<?php echo constant("PHPRS_ROOT");', '<?php preg_replace_callback("/x/", "system", "x");', '<?php highlight_file("../config.php");',
+    '<?php $m = "db"; $web->$m();', '<?php array_map(system(...), ["id"]);', '<?php $web?->db();', '<?php echo $app->settings()->get("ai_klic");', '<?php mail("a@b.cz", "x", "y");',
+    '<?php curl_init("https://example.com");', '<?php fopen("php://input", "r");', '<?php unlink("index.php");', '<?php putenv("A=B");', '<?php extract($_POST);',
+];
+$prosle = array_values(array_filter($utoky, fn (string $php): bool => SablonaKontrola::over($php) === []));
+over('SablonaKontrola: žádný z ' . count($utoky) . ' útoků neprojde', $prosle, []);
+over('SablonaKontrola: běžná šablona projde', SablonaKontrola::over('<?php $x = fn (array $c): string => e($c["titulek"]); ?><h1><?= $x($clanek) ?></h1><?php foreach (array_map(trim(...), explode(",", "a,b")) as $s): ?><?= e(t("Štítek")) ?> <?= e($url("stitek/" . $s)) ?><?php endforeach; usort($a, fn ($p, $q) => $p <=> $q); if ($web->get("logo_webu") !== "") { echo e(datum($clanek["datum"], true)); }'), []);
+
+/* ---------- šablona Rozhovor: otázka = odstavec celý tučně ---------- */
+$otazky = preg_replace('#<p>(\s*<(strong|b)>(?:(?!</?(?:strong|b|p)\b).)*</\2>\s*)</p>#is', '<p class="rs-otazka">$1</p>', '<p><strong>Proč?</strong></p><p><strong>Tučně</strong> a dál text.</p><p>Odpověď.</p>');
+over('Rozhovor: jen celý tučný odstavec je otázka', substr_count((string) $otazky, 'rs-otazka'), 1);
+
+/* ---------- porovnání verzí ---------- */
+$r = PhpRS\Core\Rozdil::html('<p>Radnice schválila plán.</p><p>Druhý odstavec.</p>', '<p>Radnice včera schválila nový plán.</p><p>Druhý odstavec.</p><p>Třetí.</p>');
+over('Rozdil: slova ve změněném odstavci', str_contains($r['html'], '<ins>včera </ins>') && str_contains($r['html'], '<ins>nový </ins>'), true);
+over('Rozdil: nezměněný odstavec bez značek', str_contains($r['html'], '<p>Druhý odstavec.</p>'), true);
+over('Rozdil: nový odstavec', str_contains($r['html'], '<p><ins>Třetí.</ins></p>'), true);
+over('Rozdil: HTML ve vstupu se escapuje', str_contains(PhpRS\Core\Rozdil::html('', '<p>a &lt;script&gt; b</p>')['html'], '<script>'), false);
+over('Rozdil: shodné texty', PhpRS\Core\Rozdil::html('<p>Stejné</p>', '<p>Stejné</p>')['pridano'], 0);
+
+/* ---------- FAQ ---------- */
+over('Seo::faq', Seo::faq("Kdy to začne?\nV pondělí.\n\nKolik to stojí?\nNic."), [['Kdy to začne?', 'V pondělí.'], ['Kolik to stojí?', 'Nic.']]);
+over('Seo::faq: prázdný vstup', Seo::faq(null), []);
+
+/* ---------- Web Push: podpis ES256 (DER -> r||s) ---------- */
+if (function_exists('openssl_pkey_new')) {
+    $par = openssl_pkey_new(['curve_name' => 'prime256v1', 'private_key_type' => OPENSSL_KEYTYPE_EC]);
+    $ok = true;
+    $derNaRaw = new ReflectionMethod(PhpRS\Core\Push::class, 'derNaRaw');
+    for ($i = 0; $i < 40 && $ok; $i++) { // r a s mají proměnnou délku - zkouší se víc podpisů
+        openssl_sign('zprava' . $i, $der, $par, OPENSSL_ALGO_SHA256);
+        $raw = $derNaRaw->invoke(null, $der);
+        $cislo = fn (string $v): string => "\x02" . chr(strlen($v = (ord(($v = ltrim($v, "\0") ?: "\0")[0]) > 0x7f ? "\0" : '') . $v)) . $v;
+        $zpet = $cislo(substr($raw, 0, 32)) . $cislo(substr($raw, 32));
+        $ok = strlen($raw) === 64 && openssl_verify('zprava' . $i, "\x30" . chr(strlen($zpet)) . $zpet, openssl_pkey_get_details($par)['key'], OPENSSL_ALGO_SHA256) === 1;
+    }
+    over('Push::derNaRaw: 40 podpisů jde ověřit zpět', $ok, true);
+}
+
+/* ---------- zálohy do S3: podpis AWS Signature V4 (hodnota ověřená nezávislým výpočtem) ---------- */
+$h = PhpRS\Core\VzdalenaZaloha::podpisS3('PUT', 's3.eu-central-1.amazonaws.com', '/muj-bucket/phprs-zaloha.sql.gz', hash('sha256', 'obsah'), 'eu-central-1', 'AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY', 1789900000);
+over('S3: rozsah a podepsané hlavičky', str_contains($h['Authorization'], 'Credential=AKIDEXAMPLE/20260920/eu-central-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature='), true);
+over('S3: podpis má 64 šestnáctkových znaků', (bool) preg_match('/Signature=[0-9a-f]{64}$/', $h['Authorization']), true);
+
+/* ---------- kontrola odkazů: jen veřejné adresy (ochrana před ohledáváním vnitřní sítě) ---------- */
+over('Odkazy: výběr odkazů z HTML', PhpRS\Core\Odkazy::odkazy('<p><a href="https://example.com/a?x=1&amp;y=2">a</a> <a href="mailto:a@b.cz">m</a> <a href="#kotva">k</a> <a class="x" href="/clanek/muj">c</a> <a href="https://example.com/a?x=1&amp;y=2">znovu</a></p>'), ['https://example.com/a?x=1&y=2', '/clanek/muj']);
+foreach (['http://127.0.0.1/', 'http://localhost/', 'http://10.0.0.5/admin', 'http://192.168.1.1/', 'http://169.254.169.254/latest/meta-data/', 'http://[::1]/', 'ftp://example.com/', 'https://example.com:8443/', 'file:///etc/passwd', 'gopher://x/'] as $vnitrni) {
+    over('Odkazy: nekontroluje se ' . $vnitrni, PhpRS\Core\Odkazy::jeVerejna($vnitrni), false);
+}
+over('Odkazy: veřejná adresa se kontroluje', PhpRS\Core\Odkazy::jeVerejna('https://93.184.216.34/stranka'), true);
+
+/* ---------- asistent: překlad článku (kostra HTML z originálu, texty od modelu) ---------- */
+$clanekHtml = '<h2>Nadpis oddílu</h2><p>První <strong>tučný</strong> a <a href="/x?a=1&amp;b=2">odkaz</a>.</p><figure><img src="a.jpg" alt="x"><figcaption>Popisek fotky</figcaption></figure><script>alert("nepřekládat")</script><p>2024</p>';
+$r = PhpRS\Core\Asistent::rozloz($clanekHtml);
+over('Asistent::rozloz: úseky k překladu', $r['useky'], ['Nadpis oddílu', 'První [[0]]tučný[[1]] a [[2]]odkaz[[3]].', 'Popisek fotky']);
+over('Asistent::sloz: beze změny textu vrátí původní HTML', PhpRS\Core\Asistent::sloz($r['kostra'], $r['useky']), $clanekHtml);
+over('Asistent::sloz: HTML od modelu se vypíše jako text', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['<script>alert(1)</script>', 'x', '<img src=x onerror=alert(1)>']), '<script>alert(1)') || str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['a', 'b', '<img src=x onerror=alert(1)>']), '<img src=x'), false);
+over('Asistent::sloz: chybějící symbol = úsek bez formátování', PhpRS\Core\Asistent::sloz($r['kostra'], ['N', 'First [[0]]bold[[1]] and link.', 'P']), '<h2>N</h2><p>First bold and link.</p><figure><img src="a.jpg" alt="x"><figcaption>P</figcaption></figure><script>alert("nepřekládat")</script><p>2024</p>');
+over('Asistent::sloz: špatně vnořené symboly = úsek bez formátování', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['N', '[[1]]bold[[0]] [[2]]link[[3]]', 'P']), '<strong>'), false);
+over('Asistent::sloz: přeházené pořadí slov formátování zachová', str_contains(PhpRS\Core\Asistent::sloz($r['kostra'], ['N', 'A [[2]]link[[3]] and [[0]]bold[[1]] first.', 'P']), '<p>A <a href="/x?a=1&amp;b=2">link</a> and <strong>bold</strong> first.</p>'), true);
+
+$nastaveni = (new ReflectionClass(PhpRS\Core\Settings::class))->newInstanceWithoutConstructor();
+(new ReflectionProperty(PhpRS\Core\Settings::class, 'values'))->setValue($nastaveni, ['nazev_webu' => 'Test', 'ai_klic' => 'x']);
+$falesny = new class($nastaveni) extends PhpRS\Core\Asistent {
+    public int $volani = 0;
+
+    protected function zavolej(array $telo): array
+    {
+        $this->volani++;
+        preg_match('#<useky>\n(.*)\n</useky>#s', $telo['messages'][0]['content'], $m);
+
+        return ['content' => [['type' => 'text', 'text' => json_encode(['preklady' => array_map(mb_strtoupper(...), json_decode($m[1], true))], JSON_UNESCAPED_UNICODE)]]];
+    }
+};
+$prelozeno = $falesny->preloz(['titulek' => 'Tom & Jerry „znovu“ ve městě, tentokrát úplně jinak než kdy dřív', 'text' => '<p>Krátký <em>text</em> článku, který má aspoň pár desítek znaků.</p>', 'seo_popis' => ''], 'en', ['titulek', 'seo_popis']);
+over('Asistent::preloz: prostý text se neescapuje dvakrát', $prelozeno['titulek'], 'TOM & JERRY „ZNOVU“ VE MĚSTĚ, TENTOKRÁT ÚPLNĚ JINAK NEŽ KDY DŘÍV');
+over('Asistent::preloz: HTML pole drží kostru', $prelozeno['text'], '<p>KRÁTKÝ <em>TEXT</em> ČLÁNKU, KTERÝ MÁ ASPOŇ PÁR DESÍTEK ZNAKŮ.</p>');
+over('Asistent::preloz: prázdné pole zůstane prázdné', $prelozeno['seo_popis'], '');
+$falesny->volani = 0;
+$dlouhy = $falesny->preloz(['text' => str_repeat('<p>' . str_repeat('Věta o něčem. ', 100) . '</p>', 9)], 'de');
+over('Asistent::preloz: dlouhý článek jde po dávkách', [$falesny->volani > 1, substr_count($dlouhy['text'], '<p>')], [true, 9]);
+try {
+    $falesny->preloz(['text' => '<p>nic</p>'], 'xx');
+    over('Asistent::preloz: neznámý jazyk odmítne', 'prošlo', 'výjimka');
+} catch (RuntimeException) {
+    over('Asistent::preloz: neznámý jazyk odmítne', 'výjimka', 'výjimka');
+}
+
+/* ---------- vložení příspěvku ze sítí adresou ---------- */
+foreach ([
+    'https://x.com/nasa/status/1790000000000000000' => 'platform.twitter.com/embed/Tweet.html?dnt=true&amp;id=1790000000000000000',
+    'https://twitter.com/nasa/status/1790000000000000000?s=20' => 'id=1790000000000000000"',
+    'https://www.instagram.com/p/C1aBcDeFgH_/' => 'https://www.instagram.com/p/C1aBcDeFgH_/embed/',
+    'https://www.tiktok.com/@redakce/video/7300000000000000000' => 'https://www.tiktok.com/embed/v2/7300000000000000000',
+    'https://mastodon.social/@Gargron/111111111111111111' => 'https://mastodon.social/@Gargron/111111111111111111/embed',
+] as $adresa => $ocekavane) {
+    over('TypyObsahu::prispevek: ' . parse_url($adresa, PHP_URL_HOST), str_contains(PhpRS\Front\TypyObsahu::prispevek($adresa), $ocekavane), true);
+}
+foreach (['https://x.com/nasa', 'http://x.com/nasa/status/1790000000000000000', 'https://x.com.utocnik.cz/a/status/1790000000000000000', 'https://example.com/clanek/123', 'https://mastodon.social/@a/1"onload="x', 'javascript:alert(1)'] as $adresa) {
+    over('TypyObsahu::prispevek: nevkládá ' . $adresa, PhpRS\Front\TypyObsahu::prispevek($adresa), '');
+}
+
+/* ---------- dočasné přepnutí jazyka (e-maily v jazyce příjemce) ---------- */
+PhpRS\Core\Jazyk::nastav('cs');
+over('Jazyk::docasne: uvnitř platí cizí jazyk', PhpRS\Core\Jazyk::docasne('en', fn (): string => PhpRS\Core\Jazyk::kod() . '|' . t('Číst článek →')), 'en|Read article →');
+over('Jazyk::docasne: potom se jazyk vrátí', PhpRS\Core\Jazyk::kod() . '|' . t('Číst článek →'), 'cs|Číst článek →');
+try {
+    PhpRS\Core\Jazyk::docasne('de', function (): never { throw new RuntimeException('x'); });
+} catch (RuntimeException) {
+}
+over('Jazyk::docasne: jazyk se vrátí i po výjimce', PhpRS\Core\Jazyk::kod(), 'cs');
+
+/* ---------- převládající barva obrázku ---------- */
+if (function_exists('imagecreatetruecolor')) {
+    $docasny = tempnam(sys_get_temp_dir(), 'rs') . '.png';
+    $platno = imagecreatetruecolor(40, 20);
+    imagefill($platno, 0, 0, imagecolorallocate($platno, 200, 30, 60));
+    imagepng($platno, $docasny);
+    over('Obrazky::barva: jednobarevný obrázek', PhpRS\Core\Obrazky::barva($docasny), '#c81e3c');
+    unlink($docasny);
+    over('Obrazky::barva: chybějící soubor', PhpRS\Core\Obrazky::barva($docasny), null);
+}
+
+/* ---------- skripty: nesmí hledat prvek (data-atribut), který nikde nevzniká – tak se rozbil dialog Médií ---------- */
+$kdeVznika = [
+    'image/editor.js' => ['system/views/admin'], 'image/admin.js' => ['system/views/admin', 'system/src/Admin'], 'image/pomocnik.js' => ['system/views/admin'],
+    'image/vizual.js' => ['system/views/front', 'system/src/Front'], 'image/web.js' => ['system/views/front', 'system/src/Front', 'layout'],
+];
+foreach ($kdeVznika as $skript => $slozky) {
+    $zdroj = (string) file_get_contents(PHPRS_ROOT . '/' . $skript);
+    preg_match_all('/querySelector(?:All)?\(\'\[(data-[a-z0-9-]+)\]\'\)/', $zdroj, $odkazy);
+    $bezHledani = (string) preg_replace('/(querySelector(All)?|closest|matches)\([^)]*\)/', '', $zdroj);
+    $chybi = [];
+    foreach (array_unique($odkazy[1]) as $atribut) {
+        $vSablonach = false;
+        foreach ($slozky as $slozka) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PHPRS_ROOT . '/' . $slozka, FilesystemIterator::SKIP_DOTS)) as $soubor) {
+                $vSablonach = $vSablonach || str_contains((string) file_get_contents($soubor->getPathname()), $atribut);
+            }
+        }
+        if (!$vSablonach && !preg_match('/[\s"\']' . preg_quote($atribut, '/') . '[\s>="\']/', $bezHledani) && !str_contains($bezHledani, "setAttribute('" . $atribut . "'")) {
+            $chybi[] = $atribut;
+        }
+    }
+    over($skript . ': každý hledaný data-atribut někde vzniká', $chybi, []);
+}
+
+/* ---------- administrace má Content-Security-Policy bez 'unsafe-inline': žádné inline skripty ani obsluhy událostí ---------- */
+$inline = [];
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PHPRS_ROOT . '/system/views/admin', FilesystemIterator::SKIP_DOTS)) as $soubor) {
+    $zdroj = (string) file_get_contents($soubor->getPathname());
+    if (preg_match('#<script(?![^>]*\bsrc=)(?![^>]*type="application/json")[^>]*>|\son(?:click|change|input|submit|load|error|key\w+|mouse\w+)="#i', $zdroj)) {
+        $inline[] = substr($soubor->getPathname(), strlen(PHPRS_ROOT) + 1);
+    }
+}
+over('šablony administrace neobsahují inline skripty (CSP)', $inline, []);
+
+/* ---------- podpisy vydavatele: víc klíčů, výměna a odvolání klíče ---------- */
+if (function_exists('sodium_crypto_sign_keypair')) {
+    $par = fn (): array => (fn (string $p): array => [sodium_crypto_sign_secretkey($p), sodium_crypto_sign_publickey($p)])(sodium_crypto_sign_keypair());
+    [[$skProvozni, $pkProvozni], [$skZalozni, $pkZalozni], [$skNovy, $pkNovy], [$skCizi]] = [$par(), $par(), $par(), $par()];
+    $podepis = fn (string $zprava, string $sk): string => base64_encode(sodium_crypto_sign_detached($zprava, $sk));
+    $pub = tempnam(sys_get_temp_dir(), 'rs');
+    file_put_contents($pub, "# poznámka\n" . base64_encode($pkProvozni) . " provozni\n\nnesmysl-ktery-neni-klic\n" . base64_encode($pkZalozni) . " zalozni 2026-09-20\n");
+    $zprava = PhpRS\Core\Podpis::zpravaBalicku('3.0.1', str_repeat('A', 64), false);
+    over('Podpis::klice: dva platné klíče, poznámky a nesmysly se přeskočí', count(PhpRS\Core\Podpis::klice($pub)), 2);
+    over('Podpis: provozní klíč platí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skProvozni), $pub), true);
+    over('Podpis: záložní klíč platí také', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skZalozni), $pub), true);
+    over('Podpis: cizí klíč neplatí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skCizi), $pub), false);
+    over('Podpis: poškozený podpis neplatí', PhpRS\Core\Podpis::plati($zprava, 'AAAA', $pub), false);
+    over('Podpis: běžné vydání nejde prohlásit za bezpečnostní', PhpRS\Core\Podpis::plati(PhpRS\Core\Podpis::zpravaBalicku('3.0.1', str_repeat('A', 64), true), $podepis($zprava, $skProvozni), $pub), false);
+    over('Podpis: otisk balíčku se porovnává bez ohledu na velikost písmen', PhpRS\Core\Podpis::zpravaBalicku('3.0.1', 'ABC', false), '3.0.1|abc|bezne');
+    // únik provozního klíče: vydání podepsané záložním přinese soubor bez něj a s novým provozním
+    file_put_contents($pub, base64_encode($pkNovy) . " provozni\n" . base64_encode($pkZalozni) . " zalozni\n");
+    over('výměna klíče: odvolaný klíč už neplatí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skProvozni), $pub), false);
+    over('výměna klíče: nový provozní klíč platí', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skNovy), $pub), true);
+    file_put_contents($pub, '');
+    over('Podpis: bez klíčů neplatí nic', PhpRS\Core\Podpis::plati($zprava, $podepis($zprava, $skNovy), $pub), false);
+    unlink($pub);
+}
+over('system/aktualizace.pub obsahuje aspoň jeden platný klíč', count(PhpRS\Core\Podpis::klice(PHPRS_ROOT . '/system/aktualizace.pub')) >= 1, true);
+
+/* ---------- instalátor: každý text má překlad ve všech jazycích ---------- */
+$klice = [];
+foreach (['system/views/install/formular.php', 'system/views/install/hotovo.php', 'system/src/Install/Installer.php'] as $soubor) {
+    preg_match_all("/\\bt\\('((?:[^'\\\\]|\\\\.)*)'/", (string) file_get_contents(PHPRS_ROOT . '/' . $soubor), $nalezene);
+    foreach ($nalezene[1] as $text) {
+        $klice[stripslashes($text)] = true;
+    }
+}
+foreach (['sk', 'en', 'de'] as $kod) {
+    $slovnik = require PHPRS_ROOT . '/system/jazyky/install-' . $kod . '.php';
+    // slovenština smí text nechat stejný jako čeština (slovník pak položku neobsahuje)
+    // mezinárodní slova se nepřekládají (nástroj na slovníky shodné položky nezapisuje)
+    $chybi = $kod === 'sk' ? [] : array_values(array_diff(array_keys($klice), array_keys($slovnik), ['Server', 'Port', 'E-mail']));
+    over('instalátor: úplný slovník ' . $kod, $chybi, []);
+}
+
+/* ---------- antispam: otisk IP ---------- */
+over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
+over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));
+
+echo $chyb === 0 ? "  ok     jednotkové testy ({$celkem})\n" : "  NALEZENO CHYB: {$chyb} z {$celkem}\n";
+exit($chyb === 0 ? 0 : 1);

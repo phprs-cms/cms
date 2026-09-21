@@ -1410,4 +1410,6 @@ return [
     'Tučný odstavec je otázka, běžný odpověď.' => 'A bold paragraph is the question, a regular one the answer.',
     'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'A SECURITY update %s is available – install it in Settings → Backups and updates.',
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'A new version %s is available – install it in Settings → Backups and updates.',
+    'Nahrát obrázky a přílohy' => 'Upload images and attachments',
+    'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Fingerprint of the sender\'s address – the same fingerprint means the same sender. The IP address itself is not stored.',
 ];

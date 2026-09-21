@@ -1239,4 +1239,6 @@ return [
     'Tučný odstavec je otázka, běžný odpověď.' => 'Tučný odsek je otázka, bežný odpoveď.',
     'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Je k dispozícii BEZPEČNOSTNÁ aktualizácia %s – nainštalujete ju v Nastavenia → Zálohy a aktualizácie.',
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Je k dispozícii nová verzia %s – nainštalujete ju v Nastavenia → Zálohy a aktualizácie.',
+    'Nahrát obrázky a přílohy' => 'Nahrať obrázky a prílohy',
+    'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Odtlačok adresy pisateľa – rovnaký odtlačok znamená rovnakého pisateľa. Samotná IP adresa sa neukladá.',
 ];

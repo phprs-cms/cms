@@ -205,7 +205,7 @@ CREATE TABLE rs_komentare (
     obsah      TEXT NOT NULL,
     od         VARCHAR(60) NOT NULL,
     od_mail    VARCHAR(190) NOT NULL DEFAULT '',
-    od_ip      VARCHAR(45) NOT NULL DEFAULT '',
+    od_ip      VARCHAR(45) NOT NULL DEFAULT '',            -- otisk adresy pisatele (Antispam::otisk), ne IP adresa
     zobrazit   BOOL NOT NULL DEFAULT 1,
     idct       INT UNSIGNED NULL,                         -- účet čtenáře, pokud komentoval přihlášený
     upozornit  BOOL NOT NULL DEFAULT 0,                   -- e-mail autorovi, když mu někdo odpoví

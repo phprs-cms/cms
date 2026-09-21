@@ -40,7 +40,7 @@ Formulář chrání vestavěný antispam. K ověření nepoužívá CAPTCHA ani 
 
 ## Moderace
 
-**Čtenáři → Komentáře** má dvě záložky: **Všechny** a **Čekají na schválení** s počtem. U každého komentáře vidíte text, jméno, e-mail a IP adresu odesílatele, článek, datum a stav (*zveřejněný* nebo *čeká / skrytý*).
+**Čtenáři → Komentáře** má dvě záložky: **Všechny** a **Čekají na schválení** s počtem. U každého komentáře vidíte text, jméno a e-mail odesílatele, krátký otisk jeho adresy (stejný otisk = stejný pisatel; samotná IP adresa se neukládá), článek, datum a stav (*zveřejněný* nebo *čeká / skrytý*).
 
 1. Zaškrtněte komentáře.
 2. Pod tabulkou zvolte **Schválit**, **Skrýt**, nebo **Smazat**.

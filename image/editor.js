@@ -394,7 +394,8 @@
 		plocha.addEventListener('input', doPole);
 		plocha.addEventListener('blur', doPole);
 		plocha.addEventListener('keydown', function (e) {
-			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); odkaz(); doPole(); }
+			// stopPropagation: stejnou zkratku má paleta příkazů (admin.js) - v editoru znamená „vložit odkaz“
+			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); e.stopPropagation(); odkaz(); doPole(); }
 		});
 		plocha.addEventListener('paste', function (e) {
 			var prenos = e.clipboardData;
@@ -410,7 +411,8 @@
 		plocha.addEventListener('dragleave', function () { obal.classList.remove('editor-pretazeni'); });
 		plocha.addEventListener('drop', function (e) {
 			obal.classList.remove('editor-pretazeni');
-			if (!jsouObrazky(e.dataTransfer)) { return; }
+			// jiný soubor než obrázek (PDF…): nenahrává se, ale prohlížeč ho nesmí otevřít místo formuláře - rozepsaný článek by byl pryč
+			if (!jsouObrazky(e.dataTransfer)) { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) { e.preventDefault(); } return; }
 			e.preventDefault();
 			nahraj(e.dataTransfer.files).then(function (nove) { plocha.focus(); nove.forEach(function (o) { prikaz('insertHTML', htmlObrazku(o)); }); doPole(); });
 		});

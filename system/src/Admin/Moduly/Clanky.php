@@ -275,8 +275,8 @@ final class Clanky extends Modul
             // kdo smí vydávat a není omezen na jiné rubriky
             $prijemci = $this->db->all(
                 'SELECT u.* FROM {user} u WHERE u.blokovat = 0 AND u.upozorneni = 1 AND u.email <> \'\' AND u.idu <> ? AND (u.admin >= ? OR u.pravo_vydavat = 1)
-                 AND (NOT EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu) OR EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu AND r.idt = ?))',
-                [$ja, \PhpRS\Core\Auth::REDAKTOR, $data['tema']],
+                 AND (NOT EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu) OR EXISTS (SELECT 1 FROM {user_rubriky} r WHERE r.idu = u.idu AND r.idt IN (' . implode(',', $this->rubrikaSPredky((int) $data['tema'])) . ')))',
+                [$ja, \PhpRS\Core\Auth::REDAKTOR],
             );
         } elseif ((int) $data['autor'] !== $ja && $puvodni !== null && ($data['visible'] && empty($puvodni['visible']) || (!$data['visible'] && $byloKorektura && $data['stav_redakce'] === ''))) {
             $udalost = $data['visible'] ? 'vydano' : 'vraceno';
@@ -344,6 +344,22 @@ final class Clanky extends Modul
      * Titulní strana: ruční pořadí článků nahoře na hlavní stránce. Připnuté články mají prioritu 250, 245, 240…
      * (hlavní stránka řadí podle priority a pak podle data), ostatní nulu.
      */
+    /**
+     * Rubrika a všechny její nadřazené: kdo je omezen na rubriku, smí i do jejích podrubrik (viz Auth::povoleneRubriky()).
+     *
+     * @return list<int>
+     */
+    private function rubrikaSPredky(int $idt): array
+    {
+        $ids = [];
+        for ($i = 0; $idt > 0 && $i < 10 && !in_array($idt, $ids, true); $i++) {
+            $ids[] = $idt;
+            $idt = (int) $this->db->value('SELECT id_predka FROM {topic} WHERE idt = ?', [$idt]);
+        }
+
+        return $ids === [] ? [0] : $ids;
+    }
+
     protected function akceTitulni(): Response
     {
         if (!$this->app->auth()->smiVydavat()) {
@@ -352,7 +368,7 @@ final class Clanky extends Modul
         if ($this->request->isPost()) {
             $ids = array_slice(array_values(array_unique(array_filter(array_map(intval(...), explode(',', $this->request->post('poradi')))))), 0, 30);
             $this->db->transaction(function () use ($ids): void {
-                $this->db->run('UPDATE {clanky} SET priority = 0 WHERE priority > 0');
+                $this->db->run("UPDATE {clanky} SET priority = 0 WHERE priority > 0 AND jazyk = ''"); // obrazovka skládá jen výchozí jazyk; jiným jazykům připnutí nebere
                 foreach ($ids as $i => $idc) {
                     $this->db->update('clanky', ['priority' => 250 - $i * 5], ['idc' => $idc]); // sloupec je TINYINT: 250, 245… (30 míst)
                 }

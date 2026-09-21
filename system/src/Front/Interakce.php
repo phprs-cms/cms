@@ -103,7 +103,7 @@ final class Interakce
         $zobrazit = $this->app->settings()->get('komentare_rezim') === 'hned' && !$podezrely;
         $db->insert('komentare', [
             'clanek' => $clanek['idc'], 'reakce_na' => $reakceNa === null ? null : (int) $reakceNa, 'datum' => date('Y-m-d H:i:s'),
-            'obsah' => $obsah, 'od' => $od, 'od_mail' => $mail, 'od_ip' => $r->ip(), 'zobrazit' => (int) $zobrazit,
+            'obsah' => $obsah, 'od' => $od, 'od_mail' => $mail, 'od_ip' => \PhpRS\Core\Antispam::otisk($r->ip()), // otisk, ne adresa: moderátor pozná téhož pisatele, ale IP se neukládá 'zobrazit' => (int) $zobrazit,
             'idct' => $ctenar['idct'] ?? null, 'upozornit' => (int) ($mail !== '' && $r->postBool('upozornit')),
         ]);
         $idk = (int) $db->value('SELECT LAST_INSERT_ID()');

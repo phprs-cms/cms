@@ -1415,4 +1415,6 @@ return [
     'Tučný odstavec je otázka, běžný odpověď.' => 'Ein fetter Absatz ist die Frage, ein normaler die Antwort.',
     'Je k dispozici BEZPEČNOSTNÍ aktualizace %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Eine SICHERHEITSAKTUALISIERUNG %s ist verfügbar – installieren Sie sie unter Einstellungen → Sicherungen und Aktualisierungen.',
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Eine neue Version %s ist verfügbar – installieren Sie sie unter Einstellungen → Sicherungen und Aktualisierungen.',
+    'Nahrát obrázky a přílohy' => 'Bilder und Anhänge hochladen',
+    'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Fingerabdruck der Adresse des Absenders – derselbe Fingerabdruck bedeutet denselben Absender. Die IP-Adresse selbst wird nicht gespeichert.',
 ];

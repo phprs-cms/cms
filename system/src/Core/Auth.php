@@ -19,7 +19,7 @@ final class Auth
 
     public const array TYPY = [self::AUTOR => 'autor', self::REDAKTOR => 'redaktor', self::ADMIN => 'administrátor'];
 
-    /** Po tolika chybných heslech v řadě se účet zablokuje (odblokuje ho admin). */
+    /** Po tolika chybných heslech nebo kódech v řadě se účet na 15 minut zamkne (sám se zase odemkne). */
     private const int MAX_CHYB = 10;
 
     /** @var array<string, mixed>|null|false false = ještě nenačteno */

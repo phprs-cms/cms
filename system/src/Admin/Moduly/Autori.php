@@ -51,7 +51,7 @@ final class Autori extends Modul
     {
         $autor = $this->db->one('SELECT * FROM {user} WHERE idu = ?', [$this->request->getInt('id')]);
 
-        return $autor === null ? $this->chyba('Autor neexistuje.', 404) : $this->formular($autor);
+        return $autor === null ? $this->chyba('Uživatel neexistuje.', 404) : $this->formular($autor);
     }
 
     protected function akceUloz(): Response
@@ -136,7 +136,7 @@ final class Autori extends Modul
             }
         });
 
-        return $this->zpet('Autor byl uložen.');
+        return $this->zpet('Uživatel byl uložen.');
     }
 
     /**
@@ -211,7 +211,7 @@ final class Autori extends Modul
         }
         $this->db->delete('user', ['idu' => $id]);
 
-        return $this->zpet('Autor byl smazán. Jeho články zůstaly zachovány bez autora.');
+        return $this->zpet('Uživatel byl smazán. Jeho články zůstaly zachovány bez autora.');
     }
 
     /**

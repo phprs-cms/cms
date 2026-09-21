@@ -26,7 +26,7 @@
 <tbody>
 <?php foreach ($komentare as $k): ?>
 <tr<?= $k['zobrazit'] ? '' : ' class="nevydany"' ?>>
-	<td class="stred"><input type="checkbox" name="oznacene[]" value="<?= (int) $k['idk'] ?>" aria-label="Označit komentář od <?= e($k['od']) ?>"></td>
+	<td class="stred"><input type="checkbox" name="oznacene[]" value="<?= (int) $k['idk'] ?>" aria-label="<?= e(t('Označit komentář od %s', (string) $k['od'])) ?>"></td>
 	<td style="max-width:420px; overflow-wrap:anywhere"><?= nl2br(e(mb_strimwidth($k['obsah'], 0, 400, '…'))) ?></td>
 	<td><?= e($k['od']) ?><?= $k['od_mail'] !== '' ? '<br><small>' . e($k['od_mail']) . '</small>' : '' ?><?= $k['od_ip'] !== '' ? '<br><small title="' . e(t('Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.')) . '">#' . e(substr((string) $k['od_ip'], 0, 8)) . '</small>' : '' ?><?= (int) $k['nahlaseno'] > 0 ? '<br><span class="stitek stitek-koncept">' . e(t('nahlášeno %s×', (int) $k['nahlaseno'])) . '</span>' : '' ?><?= $k['idct'] !== null ? '<br><small>' . e(t('registrovaný čtenář')) . '</small>' : '' ?></td>
 	<td><a href="<?= e($app->url('clanek/' . $k['seo_link'] . '#komentare')) ?>" target="_blank" rel="noopener"><?= e(mb_strimwidth($k['titulek'], 0, 60, '…')) ?></a></td>

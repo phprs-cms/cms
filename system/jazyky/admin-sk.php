@@ -1241,4 +1241,7 @@ return [
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Je k dispozícii nová verzia %s – nainštalujete ju v Nastavenia → Zálohy a aktualizácie.',
     'Nahrát obrázky a přílohy' => 'Nahrať obrázky a prílohy',
     'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Odtlačok adresy pisateľa – rovnaký odtlačok znamená rovnakého pisateľa. Samotná IP adresa sa neukladá.',
+    'Nahrát' => 'Nahrať',
+    'Označit komentář od %s' => 'Označiť komentár od %s',
+    'Opravdu smazat uživatele? Jeho články zůstanou zachované bez autora.' => 'Naozaj zmazať používateľa? Jeho články zostanú zachované bez autora.',
 ];

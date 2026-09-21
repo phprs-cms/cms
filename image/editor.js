@@ -160,7 +160,25 @@
 				});
 				mrizka.textContent = j.obrazky.length ? '' : T('Tady zatím žádné obrázky nejsou.');
 				j.obrazky.forEach(function (o) { pridej(o, false); });
+				dalsi(dotaz, 2, j.obrazky.length);
 			});
+		}
+		// server vrací 60 položek na stránku: plná stránka = nabídnout další, ať jsou dosažitelné i starší soubory
+		function dalsi(dotaz, strana, nacteno) {
+			if (nacteno < 60) { return; }
+			var tl = document.createElement('button');
+			tl.type = 'button';
+			tl.className = 'navigace media-dalsi';
+			tl.textContent = T('Načíst další');
+			tl.addEventListener('click', function () {
+				tl.disabled = true;
+				fetch(GALERIE + '&akce=seznam' + dotaz + '&strana=' + strana, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
+					tl.remove();
+					j.obrazky.forEach(function (o) { pridej(o, false); });
+					dalsi(dotaz, strana + 1, j.obrazky.length);
+				});
+			});
+			mrizka.appendChild(tl);
 		}
 		okno.zpetne = zpetne;
 		okno.vice = !!vice;
@@ -204,11 +222,11 @@
 		['B', T('Tučně (Ctrl+B)'), function () { prikaz('bold'); }],
 		['I', T('Kurzíva (Ctrl+I)'), function () { prikaz('italic'); }],
 		[T('odkaz'), T('Vložit odkaz (Ctrl+K)'), odkaz],
-		['• seznam', T('Odrážkový seznam'), function () { prikaz('insertUnorderedList'); }],
-		['1. seznam', T('Číslovaný seznam'), function () { prikaz('insertOrderedList'); }, 'velky'],
-		['„citace“', T('Citace'), function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
+		[T('• seznam'), T('Odrážkový seznam'), function () { prikaz('insertUnorderedList'); }],
+		[T('1. seznam'), T('Číslovaný seznam'), function () { prikaz('insertOrderedList'); }, 'velky'],
+		[T('„citace“'), T('Citace'), function () { prikaz('formatBlock', 'BLOCKQUOTE'); }, 'velky'],
 		[T('obrázek'), T('Vložit obrázek z médií'), null, 'velky'],
-		['galerie', T('Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku'), 'galerie', 'velky'],
+		[T('galerie'), T('Vložit fotogalerii - čtenář si fotky prolistuje přes celou obrazovku'), 'galerie', 'velky'],
 		[T('tabulka'), T('Vložit tabulku 3 × 3 se záhlavím; řádky a sloupce pak přidáte tlačítky nad tabulkou'), function () {
 			var radek = function (tag) { return '<tr><' + tag + '><br></' + tag + '><' + tag + '><br></' + tag + '><' + tag + '><br></' + tag + '></tr>'; };
 			prikaz('insertHTML', '<table><thead>' + radek('th') + '</thead><tbody>' + radek('td') + radek('td') + '</tbody></table><p><br></p>');
@@ -524,4 +542,15 @@
 	var editory = Array.prototype.map.call(document.querySelectorAll('textarea[data-editor]'), vytvorEditor);
 	var formKoncept = document.querySelector('form[data-koncept]');
 	if (formKoncept) { autoUkladani(formKoncept, editory); }
+
+	// Úprava článku přímo na webu: každou minutu prodlouží zámek proti souběžné úpravě (v administraci to dělá admin.js)
+	var formNaWebu = document.querySelector('form[data-zamek-url]');
+	if (formNaWebu) {
+		setInterval(function () {
+			var data = new FormData();
+			data.append('_csrf', formNaWebu.querySelector('input[name="_csrf"]').value);
+			data.append('idc', formNaWebu.querySelector('input[name="id"]').value);
+			fetch(formNaWebu.getAttribute('data-zamek-url'), { method: 'POST', body: data, credentials: 'same-origin' });
+		}, 60000);
+	}
 })();

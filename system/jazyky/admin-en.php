@@ -1412,4 +1412,7 @@ return [
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'A new version %s is available – install it in Settings → Backups and updates.',
     'Nahrát obrázky a přílohy' => 'Upload images and attachments',
     'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Fingerprint of the sender\'s address – the same fingerprint means the same sender. The IP address itself is not stored.',
+    'Nahrát' => 'Upload',
+    'Označit komentář od %s' => 'Select the comment by %s',
+    'Opravdu smazat uživatele? Jeho články zůstanou zachované bez autora.' => 'Really delete this user? Their articles will be kept without an author.',
 ];

@@ -158,5 +158,6 @@ window.PHPRS_PREKLAD = {
 	"Pravý sloupec": "Pravý stĺpec",
 	"Patička": "Pätička",
 	"+ Přidat blok": "+ Pridať blok",
-	"Složka": "Priečinok"
+	"Složka": "Priečinok",
+	"Načíst další": "Načítať ďalšie"
 };

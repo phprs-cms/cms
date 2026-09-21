@@ -49,5 +49,5 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<span class="popisek"><?= e(t('Zobrazit')) ?></span>
 	<div class="volby"><label><input type="checkbox" name="zobrazit" value="1"<?= $rubrika['zobrazit'] ? ' checked' : '' ?>> <?= e(t('Ano, zobrazovat v seznamu rubrik')) ?></label></div>
 </div>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= $rubrika['idt'] ? 'Ulož' : 'Přidej' ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($rubrika['idt'] ? 'Uložit' : 'Přidat')) ?>"></p>
 </form>

@@ -19,7 +19,7 @@
 	<p class="rs-upravit-hlaska"><?= e(t('Text má právě otevřený %s. Zkuste to za chvíli.', $zamceno)) ?></p>
 	<p><a class="rs-tl" href="<?= e($zpet) ?>"><?= e(t('Zpět')) ?></a></p>
 <?php else: ?>
-	<form method="post" action="<?= e($akce) ?>">
+	<form method="post" action="<?= e($akce) ?>"<?= isset($zaznam['idc']) ? ' data-zamek-url="' . e($app->url('admin.php?modul=clanky&akce=zamek')) . '"' : '' ?>>
 		<input type="hidden" name="_csrf" value="<?= e($app->session->csrfToken()) ?>">
 		<input type="hidden" name="id" value="<?= (int) ($zaznam['idc'] ?? $zaznam['ids']) ?>">
 		<input type="hidden" name="zpet" value="<?= e($zpet) ?>">

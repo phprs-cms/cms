@@ -166,5 +166,6 @@ window.PHPRS_PREKLAD = {
 	"Pravý sloupec": "Rechte Spalte",
 	"Patička": "Fußzeile",
 	"+ Přidat blok": "+ Block hinzufügen",
-	"Složka": "Ordner"
+	"Složka": "Ordner",
+	"Načíst další": "Weitere laden"
 };

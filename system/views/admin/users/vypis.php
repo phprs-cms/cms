@@ -23,7 +23,7 @@
 	<td class="akce">
 		<a href="<?= e($modul->url('edit', ['id' => $a['idu']])) ?>"><?= e(t('Upravit')) ?></a>
 <?php if ((int) $a['idu'] !== $app->auth()->id()): ?>
-		/ <form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat autora?')) ?>"><?= $csrf ?><input type="hidden" name="idu" value="<?= (int) $a['idu'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form>
+		/ <form class="vradku" method="post" action="<?= e($modul->url('smaz')) ?>" data-potvrdit="<?= e(t('Opravdu smazat uživatele? Jeho články zůstanou zachované bez autora.')) ?>"><?= $csrf ?><input type="hidden" name="idu" value="<?= (int) $a['idu'] ?>"><button class="navigace nebezpecne" type="submit"><?= e(t('Smazat')) ?></button></form>
 <?php endif ?>
 	</td>
 </tr>

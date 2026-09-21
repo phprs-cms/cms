@@ -1417,4 +1417,7 @@ return [
     'Je k dispozici nová verze %s – nainstalujete ji v Nastavení → Zálohy a aktualizace.' => 'Eine neue Version %s ist verfügbar – installieren Sie sie unter Einstellungen → Sicherungen und Aktualisierungen.',
     'Nahrát obrázky a přílohy' => 'Bilder und Anhänge hochladen',
     'Otisk adresy pisatele – stejný otisk znamená stejného pisatele. Samotná IP adresa se neukládá.' => 'Fingerabdruck der Adresse des Absenders – derselbe Fingerabdruck bedeutet denselben Absender. Die IP-Adresse selbst wird nicht gespeichert.',
+    'Nahrát' => 'Hochladen',
+    'Označit komentář od %s' => 'Kommentar von %s auswählen',
+    'Opravdu smazat uživatele? Jeho články zůstanou zachované bez autora.' => 'Benutzer wirklich löschen? Seine Artikel bleiben ohne Autor erhalten.',
 ];

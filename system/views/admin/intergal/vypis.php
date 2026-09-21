@@ -57,7 +57,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 	<input type="hidden" name="sekce" value="<?= (int) ($aktivniSlozka['ids'] ?? 0) ?>">
 	<label for="soubory"><strong><?= e(t('Nahrát obrázky a přílohy')) ?><?= $aktivniSlozka !== null ? ' – ' . e($aktivniSlozka['nazev']) : '' ?></strong> <?= e(t('– vyberte soubory, nebo je sem přetáhněte myší')) ?></label>
 	<input type="file" id="soubory" name="soubory[]" accept="image/jpeg,image/png,image/webp,image/gif,<?= e('.' . implode(',.', PhpRS\Core\Soubory::PRIPONY)) ?>" multiple required>
-	<input class="tl" type="submit" value="<?= e(t('Nahraj')) ?>">
+	<input class="tl" type="submit" value="<?= e(t('Nahrát')) ?>">
 	<span class="napoveda"><?= e(t('Obrázky JPG, PNG, WebP a GIF i přílohy ke stažení (PDF, dokumenty, tabulky, ZIP, zvuk, video), nejvýše %s na soubor. Velké fotografie se samy zmenší na %s px a odstraní se z nich údaje o poloze.', $limit, PhpRS\Core\Obrazky::MAX_STRANA)) ?></span>
 </form>
 
@@ -101,7 +101,7 @@ $jeVse = $filtr['sekce'] === null && $filtr['clanek'] === 0 && !$filtr['nepouzit
 	<input type="hidden" name="ido" value="<?= (int) $o['ido'] ?>">
 	<div class="radek"><label for="nazev"><?= e(t('Název (alternativní text)')) ?></label><div><input class="textpole siroke" type="text" id="nazev" name="nazev" value="<?= e($o['nazev']) ?>" maxlength="150"><span class="napoveda"><?= e(t('Popište, co na obrázku je - čtou ho čtečky obrazovky i vyhledávače.')) ?></span></div></div>
 	<div class="radek"><label for="popis"><?= e(t('Popisek pod obrázkem')) ?></label><input class="textpole siroke" type="text" id="popis" name="popis" value="<?= e($o['popis']) ?>" maxlength="500"></div>
-	<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Ulož')) ?>"></p>
+	<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t('Uložit')) ?>"></p>
 </form>
 <?php endforeach ?>
 

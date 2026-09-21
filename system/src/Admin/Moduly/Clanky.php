@@ -599,7 +599,9 @@ final class Clanky extends Modul
         if (!$this->request->isPost() || $clanek === null || !$this->app->auth()->smiVydavat()) {
             return $this->zpet('Článek nelze vydat.', typ: 'chyba');
         }
-        $this->db->update('clanky', ['visible' => 1, 'stav_redakce' => ''], ['idc' => $clanek['idc']]);
+        $this->db->update('clanky', ['visible' => 1, 'stav_redakce' => '', 'zmeneno' => date('Y-m-d H:i:s')], ['idc' => $clanek['idc']]);
+        // stejné upozornění jako při vydání z formuláře: autor se dozví, že jeho článek vyšel
+        $this->upozorniRedakci($clanek, ['visible' => 1, 'stav_redakce' => ''] + $clanek, (int) $clanek['idc']);
         \PhpRS\Core\Oznameni::zpracuj($this->app);
 
         return $this->zpet(strtotime($clanek['datum']) > time() ? 'Článek je naplánován na ' . datum($clanek['datum'], true) . '.' : 'Článek byl vydán.', '', ['stav' => 'koncepty']);

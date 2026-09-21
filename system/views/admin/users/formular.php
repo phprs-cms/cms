@@ -40,7 +40,7 @@ $role = [
 	<div><input class="textpole siroke" type="email" id="email" name="email" value="<?= e($autor['email']) ?>" maxlength="190"><?= $chyba('email') ?></div>
 </div>
 <div class="radek">
-	<label for="password"><?= $autor['idu'] ? 'Nové heslo' : 'Heslo' ?></label>
+	<label for="password"><?= e(t($autor['idu'] ? 'Nové heslo' : 'Heslo')) ?></label>
 	<div><input class="textpole" type="password" id="password" name="password" size="30" minlength="10" autocomplete="new-password"<?= $autor['idu'] ? '' : ' required' ?>>
 	<label style="font-weight:normal"><input type="checkbox" data-ukaz-heslo="password"> <?= e(t('zobrazit')) ?></label><?= $chyba('password') ?>
 	<span class="napoveda"><?= e(t('Alespoň 10 znaků.')) ?> <?= e(t($autor['idu'] ? 'Nechte prázdné, pokud heslo neměníte.' : 'Uživatel si ho pak změní v nabídce Můj účet.')) ?></span></div>

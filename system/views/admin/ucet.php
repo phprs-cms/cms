@@ -5,6 +5,7 @@
  * @var PhpRS\Core\App $app
  * @var array<string, mixed> $user
  * @var string $csrf
+ * @var list<array<string, mixed>> $klice přihlašovací klíče účtu (passkeys)
  * @var list<string> $zalozniKody  právě vytvořené záložní kódy (zobrazí se jen jednou)
  * @var string $noveTajemstvi      rozpracované zapínání dvoufázového přihlášení
  * @var string $uri
@@ -81,6 +82,38 @@ $akce = e($app->url('admin.php?akce=ucet'));
 <?php endif ?>
 </fieldset>
 </form>
+
+<?php if ($user['totp_tajemstvi'] !== ''): ?>
+<form class="formular" method="post" action="<?= $akce ?>" data-klice="<?= $akce ?>">
+<?= $csrf ?>
+<fieldset><legend><?= e(t('Přihlašovací klíče')) ?></legend>
+<p><?= e(t('Otisk prstu, Face ID, Windows Hello nebo bezpečnostní klíč místo opisování kódu z aplikace. Kód a záložní kódy fungují dál – pro případ, že zařízení nebudete mít u sebe.')) ?></p>
+<?php if ($klice !== []): ?>
+<div class="tab-obal">
+<table class="vypis">
+<thead><tr><th scope="col"><?= e(t('Zařízení')) ?></th><th scope="col"><?= e(t('Přidáno')) ?></th><th scope="col"><?= e(t('Naposledy použito')) ?></th><th scope="col"><?= e(t('Akce')) ?></th></tr></thead>
+<tbody>
+<?php foreach ($klice as $k): ?>
+<tr>
+	<td><?= e($k['nazev']) ?></td>
+	<td class="cislo"><?= e(datum((string) $k['vytvoreno'])) ?></td>
+	<td class="cislo"><?= $k['pouzito'] !== null ? e(datum((string) $k['pouzito'])) : '–' ?></td>
+	<td class="akce"><button class="navigace nebezpecne" type="submit" name="idk" value="<?= (int) $k['idk'] ?>" data-potvrdit="<?= e(t('Odebrat přihlašovací klíč? Přihlásit se půjde dál kódem z aplikace.')) ?>"><?= e(t('Smazat')) ?></button></td>
+</tr>
+<?php endforeach ?>
+</tbody>
+</table>
+</div>
+<input type="hidden" name="co" value="klic_smaz">
+<?php endif ?>
+<div class="radek"><label for="klic-nazev"><?= e(t('Název zařízení')) ?></label><div><input class="textpole" type="text" id="klic-nazev" name="nazev" size="30" maxlength="80" placeholder="<?= e(t('např. MacBook, telefon')) ?>"></div></div>
+<p class="tlacitka"><button class="navigace" type="button" data-klic-pridat><?= e(t('Přidat klíč z tohoto zařízení')) ?></button></p>
+<p class="hlaska hlaska-chyba" data-klic-chyba hidden role="alert"></p>
+<p class="napoveda" data-klic-nepodporuje hidden><?= e(t('Tento prohlížeč přihlašovací klíče nepodporuje, nebo web neběží na HTTPS.')) ?></p>
+</fieldset>
+</form>
+<script src="<?= e($app->url('image/klice.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>
+<?php endif ?>
 
 <?php if ($claude): ?>
 <form class="formular" method="post" action="<?= $akce ?>">

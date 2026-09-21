@@ -191,3 +191,9 @@ Uživatelská dokumentace je v `docs/prirucka/<jazyk>/` (cs je zdroj, en a de p�
 - Aktualizace po přepsání souborů smaže ty, které staré vydání mělo v `system/soubory.json` a nové balíček už neobsahuje
   (`Aktualizace::uklidZastarale`, chráněné cesty a vlastní soubory se nemažou). Přejmenování souboru jádra je tedy bezpečné až od 3.0.0-beta.3.
 - `Settings::PODLE_JAZYKA` (název a popis webu): jazyková verze webu může mít vlastní hodnotu v klíči `nazev_webu_en` apod.; prázdné = výchozí.
+- Přihlašovací klíče (passkeys / WebAuthn): `Core\Passkey` jen počítá (výzva, ověření registrace a přihlášení; bez knihoven, podpis přes openssl),
+  `Auth::vyzvaKlice()/overKlic()` je druhý krok přihlášení, `Admin\Ucet::klic()` registrace, `image/klice.js` prohlížeč, tabulka `rs_user_klice`.
+  Klíč jde přidat jen k účtu se zapnutým TOTP (je to pohodlnější náhrada kódu; kód a záložní kódy zůstávají jako záloha); vypnutí TOTP klíče smaže.
+  Ověřovací jádro hlídá softwarový autentikátor v `tools/testy.php` - každou změnu v `Passkey.php` doplňte o test včetně záporného případu.
+- Rozšíření jsou samostatná položka hlavní nabídky: `Moduly\RozsireniAdmin` dědí z `Konfigurace` a drží pevnou „záložku“ `rozsireni`
+  (šablony dál v `views/admin/config/`); stará adresa `?modul=config&zalozka=rozsireni` přesměrovává.

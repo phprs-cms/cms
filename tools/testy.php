@@ -341,6 +341,48 @@ over('Aktualizace: zrušený soubor i jeho prázdná složka jsou pryč', is_dir
 over('Aktualizace: chráněné cesty a vlastní soubory zůstávají', [is_file($uklid . '/media/foto.jpg'), is_file($uklid . '/config.php'), is_file($uklid . '/vlastni.php'), is_file($uklid . '/system/zustava.php')], [true, true, true, true]);
 exec('rm -rf ' . escapeshellarg($uklid));
 
+/* ---------- přihlašovací klíče (WebAuthn): softwarový autentikátor proti ověřovacímu jádru ---------- */
+$pkRp = 'redakce.example'; $pkPuvod = 'https://redakce.example';
+$pkKlic = openssl_pkey_new(['private_key_type' => OPENSSL_KEYTYPE_EC, 'curve_name' => 'prime256v1']);
+$pkPopis = openssl_pkey_get_details($pkKlic);
+$pkDer = base64_decode(preg_replace('/-----[^-]+-----|\s/', '', $pkPopis['key']));
+$pkX = str_pad($pkPopis['ec']['x'], 32, "\0", STR_PAD_LEFT); $pkY = str_pad($pkPopis['ec']['y'], 32, "\0", STR_PAD_LEFT);
+$pkCose = "\xA5\x01\x02\x03\x26\x20\x01\x21\x58\x20" . $pkX . "\x22\x58\x20" . $pkY;
+$pkId = random_bytes(20);
+$pkKlient = static fn (string $typ, string $vyzva, string $puvod): string => PhpRS\Core\Passkey::b64((string) json_encode(['type' => $typ, 'challenge' => $vyzva, 'origin' => $puvod, 'crossOrigin' => false], JSON_UNESCAPED_SLASHES));
+$pkRegData = static fn (string $rp, int $priznaky = 0x45): string => hash('sha256', $rp, true) . chr($priznaky) . pack('N', 0) . str_repeat("\0", 16) . pack('n', strlen($pkId)) . $pkId . $pkCose;
+$pkVyzva = PhpRS\Core\Passkey::vyzva();
+$pkReg = ['clientDataJSON' => $pkKlient('webauthn.create', $pkVyzva, $pkPuvod), 'authenticatorData' => PhpRS\Core\Passkey::b64($pkRegData($pkRp)), 'publicKey' => PhpRS\Core\Passkey::b64($pkDer), 'publicKeyAlgorithm' => -7];
+$pkUlozeno = PhpRS\Core\Passkey::overRegistraci($pkReg, $pkVyzva, $pkPuvod, $pkRp);
+over('Passkey: registrace vrátí id klíče', $pkUlozeno['id'], PhpRS\Core\Passkey::b64($pkId));
+over('Passkey: registrace vrátí veřejný klíč v PEM', str_contains($pkUlozeno['klic'], 'BEGIN PUBLIC KEY'), true);
+$pkOdmitne = static function (callable $f): bool { try { $f(); return false; } catch (RuntimeException) { return true; } };
+over('Passkey: registrace s cizí výzvou neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overRegistraci($pkReg, PhpRS\Core\Passkey::vyzva(), $pkPuvod, $pkRp)), true);
+over('Passkey: registrace z jiného původu neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overRegistraci($pkReg, $pkVyzva, 'https://podvrh.example', $pkRp)), true);
+over('Passkey: registrace pro jinou doménu neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overRegistraci($pkReg, $pkVyzva, $pkPuvod, 'jina.example')), true);
+$pkCizi = openssl_pkey_get_details(openssl_pkey_new(['private_key_type' => OPENSSL_KEYTYPE_EC, 'curve_name' => 'prime256v1']));
+over('Passkey: podstrčený veřejný klíč neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overRegistraci(['publicKey' => PhpRS\Core\Passkey::b64(base64_decode(preg_replace('/-----[^-]+-----|\s/', '', $pkCizi['key'])))] + $pkReg, $pkVyzva, $pkPuvod, $pkRp)), true);
+over('Passkey: odpověď z přihlášení nejde použít k registraci', $pkOdmitne(fn () => PhpRS\Core\Passkey::overRegistraci(['clientDataJSON' => $pkKlient('webauthn.get', $pkVyzva, $pkPuvod)] + $pkReg, $pkVyzva, $pkPuvod, $pkRp)), true);
+$pkPrihlas = static function (string $vyzva, int $pocitadlo, string $rp = 'redakce.example', string $puvod = 'https://redakce.example', int $priznaky = 0x05) use ($pkKlic, $pkKlient): array {
+    $data = hash('sha256', $rp, true) . chr($priznaky) . pack('N', $pocitadlo);
+    $klient = $pkKlient('webauthn.get', $vyzva, $puvod);
+    openssl_sign($data . hash('sha256', PhpRS\Core\Passkey::zB64($klient), true), $podpis, $pkKlic, OPENSSL_ALGO_SHA256);
+
+    return ['clientDataJSON' => $klient, 'authenticatorData' => PhpRS\Core\Passkey::b64($data), 'signature' => PhpRS\Core\Passkey::b64($podpis)];
+};
+$pkV2 = PhpRS\Core\Passkey::vyzva();
+over('Passkey: platné přihlášení vrátí nové počitadlo', PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 5), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 4), 5);
+over('Passkey: synchronizovaný klíč s nulovým počitadlem projde', PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 0), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 0), 0);
+over('Passkey: přehraná odpověď (jiná výzva) neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 6), PhpRS\Core\Passkey::vyzva(), $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+over('Passkey: počitadlo, které neroste, neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 5), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+over('Passkey: podpis jiným klíčem neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 6), $pkV2, $pkPuvod, $pkRp, $pkCizi['key'], 5)), true);
+over('Passkey: odpověď z podvržené domény neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 6, 'redakce.example', 'https://redakce.example.podvrh.cz'), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+over('Passkey: klíč jiné domény neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 6, 'jina.example'), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+over('Passkey: bez potvrzení přítomnosti uživatele neprojde', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkPrihlas($pkV2, 6, 'redakce.example', 'https://redakce.example', 0x00), $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+$pkZmeneno = $pkPrihlas($pkV2, 6); $pkZmeneno['authenticatorData'] = PhpRS\Core\Passkey::b64(PhpRS\Core\Passkey::zB64($pkZmeneno['authenticatorData']) . 'x');
+over('Passkey: pozměněná data zařízení neprojdou', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkZmeneno, $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
+over('Passkey: původ a doména z adresy webu', [PhpRS\Core\Passkey::puvod('https://WWW.Web.cz/'), PhpRS\Core\Passkey::puvod('http://localhost:8080'), PhpRS\Core\Passkey::rpId('https://www.web.cz:8443/x')], ['https://www.web.cz', 'http://localhost:8080', 'www.web.cz']);
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

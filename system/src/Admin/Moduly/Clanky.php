@@ -463,7 +463,7 @@ final class Clanky extends Modul
     {
         $asistent = new \PhpRS\Core\Asistent($this->app->settings());
         if (!$this->request->isPost() || !$asistent->pripraven()) {
-            return Response::json(['chyba' => 'AI asistent není zapnutý nebo chybí klíč (Nastavení → Rozšíření).'], 400);
+            return Response::json(['chyba' => 'AI asistent není zapnutý nebo chybí klíč (nabídka Rozšíření).'], 400);
         }
         // pojistka proti nechtěné útratě: nejvýš 60 dotazů za hodinu na uživatele
         $ja = $this->app->auth()->id();
@@ -507,7 +507,7 @@ final class Clanky extends Modul
         $jazyk = $this->request->post('prelozit_do');
         $asistent = new \PhpRS\Core\Asistent($this->app->settings());
         if (!$asistent->pripraven()) {
-            return $zpetNaClanek('AI asistent není zapnutý nebo chybí klíč (Nastavení → Rozšíření).');
+            return $zpetNaClanek('AI asistent není zapnutý nebo chybí klíč (nabídka Rozšíření).');
         }
         if ($clanek['jazyk'] !== '' || !in_array($jazyk, \PhpRS\Core\Jazyk::dalsi($this->app->settings()), true)) {
             return $zpetNaClanek('Přeložit jde jen článek ve výchozím jazyce, a to do některé z dalších jazykových verzí webu.');

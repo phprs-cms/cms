@@ -277,7 +277,7 @@ class Asistent
     {
         $klic = $this->settings->get('ai_klic');
         if ($klic === '') {
-            throw new \RuntimeException('Chybí klíč Claude API – administrátor ho zadá v Nastavení → Rozšíření.');
+            throw new \RuntimeException('Chybí klíč Claude API – administrátor ho zadá v nabídce Rozšíření.');
         }
         // adresu jde změnit jen konstantou v config.php (firemní proxy, brána) – z administrace nikdy, šel by tudy odeslat klíč jinam
         $adresa = defined('PHPRS_AI_URL') ? (string) constant('PHPRS_AI_URL') : 'https://api.anthropic.com/v1/messages';
@@ -301,7 +301,7 @@ class Asistent
 
         throw new \RuntimeException(match (true) {
             $kod === 0 => 'Službu Claude se nepodařilo kontaktovat. Zkontrolujte, že server smí navazovat odchozí spojení.',
-            $kod === 401, $kod === 403 => 'Klíč Claude API není platný. Zkontrolujte ho v Nastavení → Rozšíření.',
+            $kod === 401, $kod === 403 => 'Klíč Claude API není platný. Zkontrolujte ho v nabídce Rozšíření.',
             $kod === 429 => 'Služba Claude je teď vytížená nebo je vyčerpaný limit klíče. Zkuste to za chvíli.',
             $kod === 400 && str_contains((string) ($data['error']['message'] ?? ''), 'credit') => 'Na účtu Claude API došel kredit.',
             $kod >= 500 => 'Služba Claude má výpadek. Zkuste to za chvíli.',

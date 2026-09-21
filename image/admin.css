@@ -675,6 +675,8 @@ body.login {
 }
 .login-karta .phprs-logo { margin-bottom: 6px; }
 .login-odkaz { margin: 14px 0 0; font-size: 13px; text-align: center; }
+.login-nebo { margin: 14px 0 10px; font-size: 12px; text-align: center; color: var(--text-slaby); }
+.login-karta button.tl { width: 100%; }
 .login-karta h3 {
 	margin: 2px 0 24px;
 	font-size: 13px;

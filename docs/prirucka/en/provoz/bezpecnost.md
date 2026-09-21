@@ -7,6 +7,7 @@ phpRS is configured securely by default. This page sums up what to do after inst
 1. **Delete `install.php`.** As long as it is on the server, System status warns about it.
 2. **Turn on HTTPS** and the redirect from `http://`. Every hosting service now offers a certificate (Let's Encrypt) free of charge. Over HTTPS the system also sends the HSTS header.
 3. **Turn on two-factor sign-in** for all administrators: avatar in the top right corner → **My account**. Any authenticator app will do (Google Authenticator, 1Password, Aegis…). The eight **backup codes** are shown only once – store them somewhere other than your phone.
+   If you do not want to type a code every time you sign in, add a **passkey** in the same place: fingerprint, Face ID, Windows Hello or a security key. A passkey is bound to the site's domain, so a fake page cannot obtain it; the code from the app and the backup codes remain as a fallback for when you do not have the device with you. After moving the site to another domain, passkeys have to be added again.
 4. **Set up off-site backups** – see [Backups and restore](zalohy.md).
 5. **Leave automatic security updates on** – see [Updates](../zaciname/aktualizace.md).
 

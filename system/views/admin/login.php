@@ -42,6 +42,16 @@
 <?php endif ?>
 <p><input class="tl" type="submit" value="<?= e(t($kod ? 'Ověřit kód' : 'Přihlásit se')) ?>"></p>
 </form>
+<?php if ($kod && !empty($klice)): ?>
+<form method="post" action="<?= e($app->url('admin.php')) ?>" data-klice="<?= e($app->url('admin.php')) ?>">
+<?= $app->session->csrfField() ?>
+<p class="login-nebo"><?= e(t('nebo')) ?></p>
+<p><button class="tl" type="button" data-klic-prihlasit><?= e(t('Přihlásit se otiskem prstu nebo klíčem')) ?></button></p>
+<p class="hlaska hlaska-chyba" data-klic-chyba hidden role="alert"></p>
+<p class="smltxt" data-klic-nepodporuje hidden><?= e(t('Tento prohlížeč přihlašovací klíče nepodporuje, nebo web neběží na HTTPS.')) ?></p>
+</form>
+<script src="<?= e($app->url('image/klice.js')) ?>?v=<?= e(PHPRS_VERSION) ?>" defer></script>
+<?php endif ?>
 <?php if (!$kod): ?>
 <p class="login-odkaz"><a href="<?= e($app->url('admin.php?akce=heslo')) ?>"><?= e(t('Zapomenuté heslo?')) ?></a></p>
 <?php endif ?>

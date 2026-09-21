@@ -7,6 +7,7 @@ phpRS ist in der Standardeinstellung sicher konfiguriert. Diese Seite fasst zusa
 1. **Löschen Sie `install.php`.** Solange die Datei auf dem Server liegt, weist der Systemstatus darauf hin.
 2. **Schalten Sie HTTPS ein** und die Weiterleitung von `http://`. Ein Zertifikat (Let's Encrypt) bietet heute jeder Hoster kostenlos an. Über HTTPS sendet das System auch den Header HSTS.
 3. **Schalten Sie die Zwei-Faktor-Anmeldung** für alle Administratoren ein: Avatar oben rechts → **Mein Konto**. Es genügt eine beliebige Authentifizierungs-App (Google Authenticator, 1Password, Aegis…). Die acht **Ersatzcodes** werden nur einmal angezeigt – bewahren Sie sie außerhalb des Telefons auf.
+   Wer nicht bei jeder Anmeldung einen Code abtippen möchte, fügt an derselben Stelle einen **Passkey** hinzu: Fingerabdruck, Face ID, Windows Hello oder einen Sicherheitsschlüssel. Ein Passkey ist an die Domain der Website gebunden, eine gefälschte Seite kann ihn daher nicht erlangen; der Code aus der App und die Ersatzcodes bleiben als Rückfallebene für den Fall, dass Sie das Gerät nicht dabeihaben. Nach einem Umzug der Website auf eine andere Domain müssen Passkeys neu hinzugefügt werden.
 4. **Richten Sie Sicherungen außerhalb des Servers ein** – siehe [Sicherungen und Wiederherstellung](zalohy.md).
 5. **Lassen Sie die automatischen Sicherheitsaktualisierungen eingeschaltet** – siehe [Aktualisierungen](../zaciname/aktualizace.md).
 

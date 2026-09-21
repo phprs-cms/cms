@@ -7,6 +7,7 @@ phpRS je ve výchozím stavu nastavený bezpečně. Tahle stránka shrnuje, co u
 1. **Smažte `install.php`.** Dokud na serveru leží, Stav systému na něj upozorňuje.
 2. **Zapněte HTTPS** a přesměrování z `http://`. Certifikát (Let's Encrypt) dnes nabízí každý hosting zdarma. Přes HTTPS systém posílá i hlavičku HSTS.
 3. **Zapněte dvoufázové přihlášení** všem administrátorům: avatar vpravo nahoře → **Můj účet**. Stačí libovolná ověřovací aplikace (Google Authenticator, 1Password, Aegis…). Osm **záložních kódů** se zobrazí jen jednou – uložte si je mimo telefon.
+   Kdo nechce při každém přihlášení opisovat kód, přidá si tamtéž **přihlašovací klíč**: otisk prstu, Face ID, Windows Hello nebo bezpečnostní klíč. Klíč je vázaný na doménu webu, takže ho podvržená stránka nezíská; kód z aplikace a záložní kódy zůstávají jako záloha pro případ, že zařízení nemáte u sebe. Po přestěhování webu na jinou doménu je potřeba klíče přidat znovu.
 4. **Nastavte zálohy mimo server** – viz [Zálohy a obnova](zalohy.md).
 5. **Nechte zapnuté automatické bezpečnostní aktualizace** – viz [Aktualizace](../zaciname/aktualizace.md).
 

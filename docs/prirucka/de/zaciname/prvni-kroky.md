@@ -40,7 +40,7 @@ Den Begrüßungsartikel aus der Installation können Sie löschen. Wenn Sie bei 
 ## Erweiterungen
 
 Viele Funktionen sind nach der Installation ausgeschaltet, damit die Administration übersichtlich bleibt: Kurzmeldungen, Umfragen, Newsletter, Leserkonten und gesperrter Inhalt, Web Push, Sprachversionen, Anzeigensystem, öffentliche API, KI-Assistent und die Verbindung mit Claude.
-Eingeschaltet werden sie unter **Einstellungen → Erweiterungen**. Eine ausgeschaltete Erweiterung löscht keine Daten – nach dem Einschalten ist alles dort, wo es war.
+Eingeschaltet werden sie unter **Erweiterungen** im Hauptmenü. Eine ausgeschaltete Erweiterung löscht keine Daten – nach dem Einschalten ist alles dort, wo es war.
 
 ## Schnelle Bedienung
 

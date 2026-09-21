@@ -38,11 +38,13 @@ $pole = function (string $klic, string $popisek, string $druh = 'text', string $
     echo '</div>';
 };
 ?>
+<?php if ($modul::IDENT === 'config'): ?>
 <nav class="zalozky" aria-label="<?= e(t('Sekce nastavení')) ?>">
 <?php foreach (Konfigurace::ZALOZKY as $klic => $nazev): ?>
 	<a href="<?= e($modul->url('', ['zalozka' => $klic])) ?>"<?= $zalozka === $klic ? ' class="aktivni" aria-current="page"' : '' ?>><?= e(t($nazev)) ?></a>
 <?php endforeach ?>
 </nav>
+<?php endif ?>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>">
 <?= $csrf ?>
 <input type="hidden" name="zalozka" value="<?= e($zalozka) ?>">

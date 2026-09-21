@@ -28,7 +28,7 @@ final class Server
     {
         $r = $this->app->request;
         if (!Rozsireni::je($this->app->settings(), 'claude')) {
-            return Response::json(['chyba' => 'Napojení na Claude je vypnuté (Nastavení → Rozšíření).'], 404);
+            return Response::json(['chyba' => 'Napojení na Claude je vypnuté (nabídka Rozšíření).'], 404);
         }
         $mistni = in_array((string) parse_url($r->origin(), PHP_URL_HOST), ['localhost', '127.0.0.1'], true);
         if (!$r->isHttps() && !$mistni) {

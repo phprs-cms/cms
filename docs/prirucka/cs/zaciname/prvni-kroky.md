@@ -40,7 +40,7 @@ Uvítací článek z instalace můžete smazat. Pokud jste při instalaci nahrá
 ## Rozšíření
 
 Řada funkcí je po instalaci vypnutá, aby administrace zůstala přehledná: novinky, ankety, newsletter, účty čtenářů a zamčený obsah, Web Push, jazykové verze, reklamní systém, veřejné API, AI asistent a napojení na Claude.
-Zapínají se v **Nastavení → Rozšíření**. Vypnuté rozšíření nemaže data – po zapnutí je vše tam, kde bylo.
+Zapínají se v položce **Rozšíření** hlavní nabídky. Vypnuté rozšíření nemaže data – po zapnutí je vše tam, kde bylo.
 
 ## Rychlé ovládání
 

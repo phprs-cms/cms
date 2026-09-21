@@ -38,6 +38,7 @@ final class Kernel
         Moduly\Autori::class,
         Moduly\Presmerovani::class,
         Moduly\ProtokolZmen::class,
+        Moduly\RozsireniAdmin::class,
         Moduly\Konfigurace::class,
     ];
 
@@ -229,6 +230,21 @@ final class Kernel
     {
         $app = $this->app;
         $chyba = null;
+        // druhý krok přihlašovacím klíčem (otisk prstu, Face ID): skript image/klice.js si řekne o výzvu a pošle podpis zařízení
+        if ($app->request->isPost() && in_array($app->request->post('krok'), ['klic_moznosti', 'klic'], true)) {
+            $adresa = $app->settings()->get('adresa_webu') ?: $app->request->origin();
+            if ($app->request->post('krok') === 'klic_moznosti') {
+                $moznosti = $app->auth()->vyzvaKlice($adresa);
+
+                return Response::json($moznosti ?? ['chyba' => t('Přihlášení vypršelo, začněte prosím znovu.')], $moznosti === null ? 400 : 200);
+            }
+            $chyba = $app->auth()->overKlic((array) json_decode((string) ($_POST['odpoved'] ?? ''), true), $adresa, $app->request->ip());
+            if ($chyba === null) {
+                Protokol::zapis($app, 'prihlaseni', 'login', 'přihlašovacím klíčem');
+            }
+
+            return Response::json($chyba === null ? ['ok' => true, 'kam' => $app->url('admin.php')] : ['chyba' => $chyba], $chyba === null ? 200 : 401);
+        }
         if ($app->request->isPost()) {
             $druhyKrok = $app->request->post('kod') !== '' || $app->request->post('krok') === 'kod';
             $chyba = $druhyKrok
@@ -249,6 +265,7 @@ final class Kernel
             'chyba' => $chyba,
             'login' => $app->request->post('user'),
             'kod' => $app->auth()->cekaNaKod(),
+            'klice' => $app->auth()->cekaSKlici(),
         ]), $chyba === null ? 200 : 401);
     }
 }

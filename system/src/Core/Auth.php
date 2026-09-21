@@ -157,6 +157,85 @@ final class Auth
         return null;
     }
 
+    /** Má účet, který čeká na druhý krok, zaregistrované přihlašovací klíče? */
+    public function cekaSKlici(): bool
+    {
+        return $this->cekaNaKod() && $this->kliceUctu((int) $this->session->get('idu_ceka')['idu']) !== [];
+    }
+
+    /** @return list<array<string, mixed>> přihlašovací klíče účtu */
+    public function kliceUctu(int $idu): array
+    {
+        return $this->db->all('SELECT * FROM {user_klice} WHERE idu = ? ORDER BY idk', [$idu]);
+    }
+
+    /**
+     * Druhý krok přihlášení klíčem, 1. část: výzva pro zařízení. Platí jen pro účet, který právě zadal správné heslo.
+     *
+     * @return array<string, mixed>|null nastavení pro navigator.credentials.get(), null = není na co čekat
+     */
+    public function vyzvaKlice(string $adresaWebu): ?array
+    {
+        if (!$this->cekaSKlici()) {
+            return null;
+        }
+        $vyzva = Passkey::vyzva();
+        $this->session->set('klic_vyzva', $vyzva);
+
+        return Passkey::moznostiPrihlaseni($vyzva, Passkey::rpId($adresaWebu), array_map(static fn (array $k): string => (string) $k['id_klice'], $this->kliceUctu((int) $this->session->get('idu_ceka')['idu'])));
+    }
+
+    /**
+     * Druhý krok přihlášení klíčem, 2. část: ověření podpisu. Neúspěch se počítá stejně jako chybný kód.
+     *
+     * @param array<string, mixed> $odpoved
+     * @return string|null text chyby, null = přihlášeno
+     */
+    public function overKlic(array $odpoved, string $adresaWebu, string $ip): ?string
+    {
+        if (!$this->cekaNaKod()) {
+            return t('Přihlášení vypršelo, začněte prosím znovu.');
+        }
+        $pokusu = (int) $this->db->value("SELECT COUNT(*) FROM {kontrola_ip} WHERE typ = 'login' AND ip_adresa = ? AND cas > NOW() - INTERVAL 15 MINUTE", [Antispam::otisk($ip)]);
+        if ($pokusu >= 10) {
+            return t('Příliš mnoho pokusů. Zkuste to znovu za 15 minut.');
+        }
+        $vyzva = (string) $this->session->get('klic_vyzva', '');
+        $this->session->remove('klic_vyzva'); // výzva platí na jeden pokus
+        $user = $this->db->one('SELECT * FROM {user} WHERE idu = ? AND blokovat = 0', [(int) $this->session->get('idu_ceka')['idu']]);
+        if ($user !== null && $user['zamceno_do'] !== null && strtotime($user['zamceno_do']) > time()) {
+            $this->session->remove('idu_ceka');
+
+            return t('Účet je po řadě chybných pokusů dočasně zamčený. Zkuste to znovu za 15 minut.');
+        }
+        $klic = $user === null ? null : $this->db->one('SELECT * FROM {user_klice} WHERE idu = ? AND otisk_id = ?', [$user['idu'], hash('sha256', Passkey::zB64((string) ($odpoved['id'] ?? '')))]);
+        try {
+            if ($klic === null) {
+                throw new \RuntimeException('Tenhle klíč k účtu nepatří.');
+            }
+            $pocitadlo = Passkey::overPrihlaseni($odpoved, $vyzva, Passkey::puvod($adresaWebu), Passkey::rpId($adresaWebu), (string) $klic['verejny'], (int) $klic['pocitadlo']);
+        } catch (\RuntimeException $e) {
+            $this->db->insert('kontrola_ip', ['ip_adresa' => Antispam::otisk($ip), 'typ' => 'login', 'cas' => date('Y-m-d H:i:s')]);
+            if ($user !== null) {
+                $chyb = (int) $user['pocet_chyb'] + 1;
+                $this->db->update('user', $chyb >= self::MAX_CHYB
+                    ? ['pocet_chyb' => 0, 'zamceno_do' => date('Y-m-d H:i:s', time() + 900)]
+                    : ['pocet_chyb' => $chyb], ['idu' => $user['idu']]);
+            }
+
+            return t($e->getMessage());
+        }
+        $this->db->update('user_klice', ['pocitadlo' => $pocitadlo, 'pouzito' => date('Y-m-d H:i:s')], ['idk' => $klic['idk']]);
+        $this->db->update('user', ['pocet_chyb' => 0], ['idu' => $user['idu']]);
+        $this->session->remove('idu_ceka');
+        $this->session->regenerate();
+        $this->session->set('idu', (int) $user['idu']);
+        $this->session->set('otisk', self::otiskHesla((string) $user['password']));
+        $this->user = false;
+
+        return null;
+    }
+
     public function logout(): void
     {
         $this->session->destroy();

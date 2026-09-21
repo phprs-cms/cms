@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpRS\Admin;
 
+use PhpRS\Core\Passkey;
 use PhpRS\Core\Response;
 use PhpRS\Core\Rozsireni;
 use PhpRS\Core\Totp;
@@ -83,12 +84,21 @@ final class Ucet
                     Protokol::zapis($app, 'ucet', 'zapnuto dvoufázové přihlášení');
                     // záložní kódy se ukazují jen teď - proto bez přesměrování
                     return $this->stranka(['zalozniKody' => $kody] + $data);
+                case 'klic_moznosti':
+                case 'klic_uloz':
+                    return $this->klic($r->post('co') === 'klic_uloz');
+                case 'klic_smaz':
+                    $db->run('DELETE FROM {user_klice} WHERE idk = ? AND idu = ?', [$r->postInt('idk'), $user['idu']]);
+                    Protokol::zapis($app, 'ucet', 'odebrán přihlašovací klíč');
+                    $hlaska = ['ok', 'Přihlašovací klíč je odebrán.'];
+                    break;
                 case 'totp_vypni':
                     if (!password_verify((string) ($_POST['soucasne'] ?? ''), $user['password'])) {
                         $hlaska = ['chyba', 'Pro vypnutí zadejte správné heslo.'];
                         break;
                     }
                     $db->update('user', ['totp_tajemstvi' => '', 'totp_zalozni' => null], ['idu' => $user['idu']]);
+                    $db->run('DELETE FROM {user_klice} WHERE idu = ?', [$user['idu']]); // klíče jsou náhrada kódu z aplikace - bez něj nemají smysl
                     Protokol::zapis($app, 'ucet', 'vypnuto dvoufázové přihlášení');
                     $hlaska = ['ok', 'Dvoufázové přihlášení je vypnuté.'];
                     break;
@@ -103,6 +113,52 @@ final class Ucet
         return $this->stranka(['noveTajemstvi' => (string) $app->session->get('totp_nove', '')] + $data);
     }
 
+    /**
+     * Registrace přihlašovacího klíče (otisk prstu, Face ID, bezpečnostní klíč) - volá ji skript image/klice.js.
+     * Klíč jde přidat jen k účtu se zapnutým dvoufázovým přihlášením: je to pohodlnější náhrada kódu z aplikace,
+     * kód a záložní kódy zůstávají jako záloha pro případ ztráty zařízení.
+     */
+    private function klic(bool $ulozit): Response
+    {
+        $app = $this->kernel->app;
+        $user = $app->auth()->user();
+        if ((string) $user['totp_tajemstvi'] === '') {
+            return Response::json(['chyba' => t('Nejdřív zapněte dvoufázové přihlášení.')], 400);
+        }
+        $adresa = $app->settings()->get('adresa_webu') ?: $app->request->origin();
+        if (!$ulozit) {
+            $vyzva = Passkey::vyzva();
+            $app->session->set('klic_registrace', $vyzva);
+
+            return Response::json(Passkey::moznostiRegistrace(
+                $vyzva, Passkey::rpId($adresa), $app->settings()->get('nazev_webu'),
+                Passkey::b64(substr(hash('sha256', 'phprs-klic|' . $adresa . '|' . $user['idu'], true), 0, 16)),
+                (string) $user['user'], (string) $user['jmeno'],
+                array_map(static fn (array $k): string => (string) $k['id_klice'], $app->auth()->kliceUctu((int) $user['idu'])),
+            ));
+        }
+        $vyzva = (string) $app->session->get('klic_registrace', '');
+        $app->session->remove('klic_registrace');
+        try {
+            $novy = Passkey::overRegistraci((array) json_decode((string) ($_POST['odpoved'] ?? ''), true), $vyzva, Passkey::puvod($adresa), Passkey::rpId($adresa));
+        } catch (\RuntimeException $e) {
+            return Response::json(['chyba' => t($e->getMessage())], 400);
+        }
+        $otisk = hash('sha256', Passkey::zB64($novy['id']));
+        if ($app->db()->value('SELECT idk FROM {user_klice} WHERE otisk_id = ?', [$otisk]) !== null) {
+            return Response::json(['chyba' => t('Tenhle klíč už je zaregistrovaný.')], 400);
+        }
+        $nazev = mb_substr(trim($app->request->post('nazev')), 0, 80);
+        $app->db()->insert('user_klice', [
+            'idu' => $user['idu'], 'nazev' => $nazev !== '' ? $nazev : t('Přihlašovací klíč'), 'otisk_id' => $otisk, 'id_klice' => $novy['id'],
+            'verejny' => $novy['klic'], 'alg' => $novy['alg'], 'pocitadlo' => $novy['pocitadlo'], 'vytvoreno' => date('Y-m-d H:i:s'),
+        ]);
+        Protokol::zapis($app, 'ucet', 'přidán přihlašovací klíč', $nazev);
+        $app->session->flash('ok', 'Přihlašovací klíč je přidán. Při příštím přihlášení ho můžete použít místo kódu z aplikace.');
+
+        return Response::json(['ok' => true]);
+    }
+
     /** @param array<string, mixed> $data */
     private function stranka(array $data): Response
     {
@@ -114,6 +170,7 @@ final class Ucet
             'uri' => $data['noveTajemstvi'] !== '' ? Totp::uri($data['noveTajemstvi'], $user['user'], $app->settings()->get('nazev_webu')) : '',
             'zbyvaKodu' => count((array) json_decode((string) $user['totp_zalozni'], true)),
             'claude' => Rozsireni::je($app->settings(), 'claude'),
+            'klice' => $app->auth()->kliceUctu((int) $user['idu']),
             'tokeny' => $app->db()->all('SELECT * FROM {api_tokeny} WHERE idu = ? ORDER BY idt DESC', [$user['idu']]),
             'adresaMcp' => $app->request->origin() . $app->url('mcp'),
         ]));

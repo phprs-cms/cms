@@ -70,6 +70,7 @@ final class Autori extends Modul
             // uživatel ztratil telefon i záložní kódy: administrátor mu dvoufázové přihlášení vypne
             $data['totp_tajemstvi'] = '';
             $data['totp_zalozni'] = null;
+            $this->app->db()->run('DELETE FROM {user_klice} WHERE idu = ?', [$id]); // přihlašovací klíče stojí na dvoufázovém přihlášení
         }
 
         $chyby = [];

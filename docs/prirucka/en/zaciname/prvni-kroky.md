@@ -40,7 +40,7 @@ You can delete the welcome article created by the installation. If you loaded th
 ## Extensions
 
 Many features are turned off after installation so that the administration stays uncluttered: news briefs, polls, newsletter, reader accounts and locked content, Web Push, language versions, the advertising system, the public API, the AI assistant and the Claude connection.
-You turn them on in **Settings → Extensions**. Turning an extension off does not delete any data – when you turn it on again, everything is where it was.
+You turn them on under **Extensions** in the main menu. Turning an extension off does not delete any data – when you turn it on again, everything is where it was.
 
 ## Quick control
 

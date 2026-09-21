@@ -100,7 +100,7 @@ Plán (pořadí = priorita; stav k 18. 9. 2026):
 - ~~**M4 – import z phpRS 2.x**~~ – zrušeno (18. 9. 2026): phpRS 3 je samostatný systém bez cesty ze starého phpRS.
 - **M5 – rozšíření a provoz:** hotovo (kromě položek „Později").
   - *Rozšíření:* uzavřený systém. Všechna rozšíření jsou součástí balíčku a píše je tým phpRS; administrátor je jen
-    zapíná a vypíná (Nastavení → Rozšíření). Cizí plug-iny ani veřejné API pro ně neexistují – cílem je systém,
+    zapíná a vypíná (nabídka Rozšíření). Cizí plug-iny ani veřejné API pro ně neexistují – cílem je systém,
     kde je vše připravené. Jádro (články, média, rubriky, stránky, bloky, uživatelé, nastavení) vypnout nejde.
   - *Reklamní systém:* bannery (obrázek / kód), pozice (blok Reklama, pod článkem), plánování od–do, váha,
     strop zobrazení, počítání zobrazení a prokliků, označení „Reklama", `ads.txt`.
@@ -158,7 +158,7 @@ Hotovo:
 - **Úprava přímo na webu:** u stránky i článku má redakce tlačítko „Upravit zde“ – stejný editor se otevře rovnou v šabloně webu, se zachováním revizí, zámku a oprávnění.
 - **Instalace a administrace česky, slovensky, anglicky a německy**, nastavitelné časové pásmo webu.
 - **Cesta k předplatnému:** u článku pro předplatitele a v účtu čtenáře tlačítko „Získat předplatné“ na stránku webu nebo platební odkaz.
-  a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Nastavení → Rozšíření; klíč se nikdy nevypisuje zpět.
+  a popisy obrázků (vidí obrázek). Klíč Claude API a model zadá správce v Rozšíření; klíč se nikdy nevypisuje zpět.
   Asistent jen navrhuje, nic neukládá; limit 60 dotazů za hodinu na uživatele.
 - **Kontrola přístupnosti obsahu** v editoru: obrázky bez popisu (doplní se přímo v panelu), přeskočené úrovně mezititulků, nic neříkající
   odkazy, tabulky bez záhlaví, rámce bez názvu, titulek verzálkami.

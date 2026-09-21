@@ -16,7 +16,7 @@ use PhpRS\Front\Layouty;
  * Nastavení webu (tabulka rs_config) rozdělené do záložek.
  * Každá záložka má šablonu views/admin/config/<zalozka>.php a seznam polí s typem - podle něj se hodnoty čistí.
  */
-final class Konfigurace extends Modul
+class Konfigurace extends Modul
 {
     public const string IDENT = 'config';
     public const string NAZEV = 'Nastavení';
@@ -26,7 +26,7 @@ final class Konfigurace extends Modul
 
     public const array ZALOZKY = [
         'zakladni' => 'Základní', 'seo' => 'SEO a GEO',
-        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'posta' => 'Pošta', 'rozsireni' => 'Rozšíření', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
+        'mereni' => 'Měření', 'cookies' => 'Soukromí a cookies', 'posta' => 'Pošta', 'zalohy' => 'Zálohy a aktualizace', 'stav' => 'Stav systému',
     ];
 
     public const array SITE = ['soc_facebook' => 'Facebook', 'soc_instagram' => 'Instagram', 'soc_x' => 'X (Twitter)', 'soc_youtube' => 'YouTube', 'soc_linkedin' => 'LinkedIn'];
@@ -80,6 +80,9 @@ final class Konfigurace extends Modul
 
     protected function akceVypis(): Response
     {
+        if (static::IDENT === 'config' && $this->request->get('zalozka') === 'rozsireni') {
+            return Response::redirect($this->app->url('admin.php?modul=rozsireni')); // Rozšíření mají vlastní položku v nabídce
+        }
         $zalozka = $this->zalozka($this->request->get('zalozka'));
         $nastaveni = $this->app->settings();
         $hodnoty = [];
@@ -144,7 +147,7 @@ final class Konfigurace extends Modul
         if ($zalozka === 'rozsireni') {
             Rozsireni::uloz($nastaveni, $this->request->postList('rozsireni'));
             if ($this->request->post('ai_klic') !== '' && ($chybaKlice = (new \PhpRS\Core\Asistent($nastaveni))->overKlic()) !== null) {
-                return $this->zpet('Nastavení je uložené, ale klíč asistenta nefunguje: ' . $chybaKlice, '', ['zalozka' => $zalozka], 'chyba');
+                return $this->zpet('Nastavení je uložené, ale klíč asistenta nefunguje: ' . $chybaKlice, '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
             }
         }
         if ($this->request->postBool('novy_token_ulohy')) {
@@ -155,8 +158,8 @@ final class Konfigurace extends Modul
         }
 
         return $chyby === []
-            ? $this->zpet('Nastavení bylo uloženo.', '', ['zalozka' => $zalozka])
-            : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', ['zalozka' => $zalozka], 'chyba');
+            ? $this->zpet('Nastavení bylo uloženo.', '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [])
+            : $this->zpet('Některé hodnoty nemají platný tvar a nebyly uloženy: ' . implode(', ', $chyby) . '.', '', static::IDENT === 'config' ? ['zalozka' => $zalozka] : [], 'chyba');
     }
 
     /** Ukázkový obsah (smyšlený magazín ze system/demo) v jazyce webu; články bez hostujícího autora připadnou přihlášenému. */
@@ -375,7 +378,7 @@ final class Konfigurace extends Modul
         );
     }
 
-    private function zalozka(string $zalozka): string
+    protected function zalozka(string $zalozka): string
     {
         return isset(self::ZALOZKY[$zalozka]) ? $zalozka : 'zakladni';
     }

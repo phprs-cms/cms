@@ -169,6 +169,11 @@ a.prihlasen { color: inherit; text-decoration: none; display: inline-flex; align
 /* volby jako karty (Nastavení → Vzhled, cookies; role uživatele; druh reklamy) */
 .karty-volby { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 12px; }
 .karta-volba { position: relative; display: block; padding: 12px; border: 2px solid var(--ed-linka); border-radius: var(--ed-radius); background: var(--ed-plocha); cursor: pointer; font-size: 12.5px; line-height: 1.4; color: var(--ed-text-slaby); font-weight: normal !important; }
+/* šablona článku nad titulkem: nízké karty v jedné řadě, na telefonu po dvou */
+.sablona-clanku { margin: 0 0 4px; padding: 0; border: 0; min-width: 0; }
+.sablona-clanku legend { padding: 0; margin-bottom: 6px; font-weight: 600; }
+.karty-volby-male { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 0; }
+.karty-volby-male .karta-volba { padding: 9px 12px; }
 .karta-volba:hover { border-color: var(--ed-text-slaby); }
 .karta-volba:has(input:checked) { border-color: var(--ed-akcent); box-shadow: 0 0 0 1px var(--ed-akcent); }
 .karta-volba:has(input:focus-visible) { outline: 2px solid var(--ed-akcent); outline-offset: 2px; }

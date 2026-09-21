@@ -728,6 +728,7 @@ final class Clanky extends Modul
             'rubriky' => $this->nabidkaRubrik(),
             'autori' => $autori,
             'sablony' => $this->db->pairs('SELECT ids, nazev_cla_sab FROM {cla_sab} ORDER BY ids'),
+            'sablonySoubory' => $this->db->pairs('SELECT ids, soubor_cla_sab FROM {cla_sab} ORDER BY ids'),
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
             'konceptServer' => $this->request->isPost() ? null : $this->db->one('SELECT cas, data FROM {clanky_koncepty} WHERE kdo = ? AND idc = ?', [$auth->id(), (int) $clanek['idc']]),

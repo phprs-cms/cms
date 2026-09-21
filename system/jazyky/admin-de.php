@@ -1409,4 +1409,8 @@ return [
     'Vlastní reklamní pozice s cílením na rubriky, časovými kampaněmi a výkazem zobrazení a prokliků.' => 'Eigene Anzeigenplätze mit Ausrichtung auf Rubriken, zeitlich begrenzten Kampagnen und einer Auswertung von Einblendungen und Klicks.',
     'potvrzených odběratelů' => 'bestätigte Abonnenten',
     'Sám peníze nepřináší, ale vrací čtenáře na web – a s nimi předplatné, podporu i zobrazení reklam.' => 'Er bringt selbst kein Geld, holt aber Leser auf die Website zurück – und mit ihnen Abonnements, Unterstützung und Anzeigeneinblendungen.',
+    'Běžný článek: titulek, perex, text a obrázek.' => 'Ein normaler Artikel: Titel, Vorspann, Text und Bild.',
+    'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Größere Schrift, schmalere Spalte und ein markantes Aufmacherbild.',
+    'Fotky přes celou šířku textu, text je doprovod.' => 'Fotos über die ganze Textbreite, der Text begleitet sie.',
+    'Tučný odstavec je otázka, běžný odpověď.' => 'Ein fetter Absatz ist die Frage, ein normaler die Antwort.',
 ];

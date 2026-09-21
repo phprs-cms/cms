@@ -1,10 +1,10 @@
 # Typy obsahu
 
-Běžný článek lze několika volbami proměnit v dlouhé čtení, rozhovor, krátkou zprávu, živou reportáž, recenzi nebo epizodu podcastu. Všechny volby jsou ve formuláři článku ve sloupci nastavení a fungují ve všech třech vestavěných šablonách webu (Classic Newspaper, Modern Magazine, Minimal).
+Běžný článek lze několika volbami proměnit v dlouhé čtení, rozhovor, krátkou zprávu, živou reportáž, recenzi nebo epizodu podcastu. Šablona článku se volí nad titulkem, ostatní volby jsou ve sloupci nastavení. Všechny fungují ve všech třech vestavěných šablonách webu (Classic Newspaper, Modern Magazine, Minimal).
 
 ## Šablony článku
 
-**Další nastavení → Šablona článku.**
+Šablonu vyberete hned nahoře ve formuláři článku, nad titulkem – je to řada karet **Šablona článku**. Změnit ji jde kdykoli, i u vydaného článku.
 
 | Šablona | Čím se liší |
 |---|---|

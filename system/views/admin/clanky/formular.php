@@ -9,6 +9,7 @@
  * @var list<array<string, mixed>> $rubriky
  * @var array<int, string> $autori
  * @var array<int, string> $sablony
+ * @var array<int, string> $sablonySoubory soubor šablony (standard, dlouhe-cteni…) kvůli popisu u karty
  * @var bool $smiVydavat
  * @var bool $ctenari  je zapnuté rozšíření Čtenáři a zamčený obsah
  * @var bool $asistent  AI asistent je zapnutý a má klíč
@@ -37,6 +38,27 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <input type="hidden" name="idc" value="<?= (int) $clanek['idc'] ?>">
 
 <div class="clanek-hlavni">
+<?php
+// Šablona článku určuje celou podobu textu na webu, proto je první volbou formuláře - ne poslední položkou dalších nastavení.
+$popisySablon = [
+    'standard' => 'Běžný článek: titulek, perex, text a obrázek.',
+    'dlouhe-cteni' => 'Větší písmo, užší sloupec a výrazný úvodní obrázek.',
+    'fotoreportaz' => 'Fotky přes celou šířku textu, text je doprovod.',
+    'rozhovor' => 'Tučný odstavec je otázka, běžný odpověď.',
+];
+?>
+<?php if (count($sablony) > 1): ?>
+	<fieldset class="radek pres-celou sablona-clanku">
+		<legend><?= e(t('Šablona článku')) ?></legend>
+		<div class="karty-volby karty-volby-male">
+<?php foreach ($sablony as $ids => $nazev): ?>
+			<label class="karta-volba"><input type="radio" name="sablona" value="<?= (int) $ids ?>"<?= (int) $clanek['sablona'] === (int) $ids || ((int) $clanek['sablona'] === 0 && $ids === array_key_first($sablony)) ? ' checked' : '' ?>><strong><?= e(t($nazev)) ?></strong><?= e(t($popisySablon[$sablonySoubory[$ids] ?? ''] ?? '')) ?></label>
+<?php endforeach ?>
+		</div>
+	</fieldset>
+<?php else: ?>
+	<input type="hidden" name="sablona" value="<?= (int) (array_key_first($sablony) ?? 0) ?>">
+<?php endif ?>
 	<div class="radek pres-celou">
 		<label for="titulek"><?= e(t('Titulek')) ?></label>
 		<input class="textpole siroke titulek-pole" type="text" id="titulek" name="titulek" value="<?= e($clanek['titulek']) ?>" maxlength="255" required placeholder="<?= e(t('Titulek článku')) ?>"><?= $chyba('titulek') ?>
@@ -281,19 +303,6 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 		<label><input type="checkbox" name="kratky" value="1"<?= (int) $clanek['typ_clanku'] === 2 ? ' checked' : '' ?>> <?= e(t('Krátká zpráva – jen perex, bez vlastní stránky')) ?></label>
 	</div>
 </div>
-<?php if (count($sablony) > 1): ?>
-<div class="radek">
-	<label for="sablona"><?= e(t('Šablona článku')) ?></label>
-	<select id="sablona" name="sablona">
-<?php foreach ($sablony as $ids => $nazev): ?>
-		<option value="<?= (int) $ids ?>"<?= (int) $clanek['sablona'] === (int) $ids ? ' selected' : '' ?>><?= e($nazev) ?></option>
-<?php endforeach ?>
-	</select>
-	<span class="napoveda"><?= e(t('Dlouhé čtení: větší písmo a výrazný úvodní obrázek. Fotoreportáž: fotky přes celou šířku textu. Rozhovor: tučný odstavec je otázka.')) ?></span>
-</div>
-<?php else: ?>
-<input type="hidden" name="sablona" value="<?= (int) (array_key_first($sablony) ?? 0) ?>">
-<?php endif ?>
 </details>
 <?php if ($revize !== []): ?>
 <details class="pokrocile">

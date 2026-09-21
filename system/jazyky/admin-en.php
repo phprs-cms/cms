@@ -1404,4 +1404,8 @@ return [
     'Vlastní reklamní pozice s cílením na rubriky, časovými kampaněmi a výkazem zobrazení a prokliků.' => 'Your own ad positions with section targeting, timed campaigns and a report of impressions and clicks.',
     'potvrzených odběratelů' => 'confirmed subscribers',
     'Sám peníze nepřináší, ale vrací čtenáře na web – a s nimi předplatné, podporu i zobrazení reklam.' => 'It earns nothing by itself, but it brings readers back to the site – and with them subscriptions, support and ad impressions.',
+    'Běžný článek: titulek, perex, text a obrázek.' => 'A regular article: headline, standfirst, text and image.',
+    'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Larger type, a narrower column and a prominent lead image.',
+    'Fotky přes celou šířku textu, text je doprovod.' => 'Photos across the full width of the text; the text accompanies them.',
+    'Tučný odstavec je otázka, běžný odpověď.' => 'A bold paragraph is the question, a regular one the answer.',
 ];

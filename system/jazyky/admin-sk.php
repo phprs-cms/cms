@@ -1233,4 +1233,8 @@ return [
     'Vlastní reklamní pozice s cílením na rubriky, časovými kampaněmi a výkazem zobrazení a prokliků.' => 'Vlastné reklamné pozície s cielením na rubriky, časovými kampaňami a výkazom zobrazení a preklikov.',
     'potvrzených odběratelů' => 'potvrdených odberateľov',
     'Sám peníze nepřináší, ale vrací čtenáře na web – a s nimi předplatné, podporu i zobrazení reklam.' => 'Sám peniaze neprináša, ale vracia čitateľov na web – a s nimi predplatné, podporu aj zobrazenia reklám.',
+    'Běžný článek: titulek, perex, text a obrázek.' => 'Bežný článok: titulok, perex, text a obrázok.',
+    'Větší písmo, užší sloupec a výrazný úvodní obrázek.' => 'Väčšie písmo, užší stĺpec a výrazný úvodný obrázok.',
+    'Fotky přes celou šířku textu, text je doprovod.' => 'Fotky cez celú šírku textu, text je sprievod.',
+    'Tučný odstavec je otázka, běžný odpověď.' => 'Tučný odsek je otázka, bežný odpoveď.',
 ];

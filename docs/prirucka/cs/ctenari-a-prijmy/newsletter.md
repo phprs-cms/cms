@@ -22,7 +22,7 @@ Bez potvrzení mu nic nechodí. Máte tak doklad, že adresu přihlásil její m
 
 Odběr lze zvolit i při registraci čtenáře zaškrtnutím **Chci dostávat newsletter**. Potvrdí se stejným odkazem jako registrace.
 
-Obrazovka Newsletter ukazuje nahoře počet potvrzených odběratelů a počet těch, kteří **čekají na potvrzení e-mailem**. Odkaz **zobrazit** otevře seznam **Odběratelé** (posledních 500) s tlačítky **Smazat** a **Stáhnout CSV**.
+Obrazovka Newsletter ukazuje nahoře počet potvrzených odběratelů a počet těch, u kterých se **čeká na potvrzení e-mailem**. Odkaz **zobrazit** otevře seznam **Odběratelé** (posledních 500) s tlačítky **Smazat** a **Stáhnout CSV**.
 
 ## Ruční vydání
 

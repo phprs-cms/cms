@@ -89,7 +89,7 @@ Ruční přesměrování:
 2. Do **Přesměrovat na** zadejte cíl: cestu (`/clanek/nova-adresa`) nebo celou adresu `https://…`.
 3. Klepněte na **Přesměrovat**.
 
-Přesměrování se použije jen tehdy, když na staré adrese nic není. Existující stránku nepřebije. Tabulka ukazuje u každého záznamu, kolikrát byl **Použit**.
+Přesměrování se použije jen tehdy, když na staré adrese nic není. Existující stránku nepřebije. Tabulka ukazuje u každého záznamu, kolikrát bylo použito (sloupec **Použito**).
 
 Pod ní je přehled **Adresy, které čtenáři nenašli (404)** – 25 nejčastějších za posledních 60 dnů s počtem a datem. Odkaz u adresy předvyplní formulář, takže chybějící stránku přesměrujete na dvě klepnutí. **Vyprázdnit přehled** seznam smaže.
 

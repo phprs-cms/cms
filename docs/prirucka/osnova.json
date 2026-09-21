@@ -49,6 +49,63 @@
       }
     },
     {
+      "slug": "vzhled",
+      "stranky": [
+        "vzhled/sablony",
+        "vzhled/identita-webu",
+        "vzhled/bloky-a-rozvrzeni",
+        "vzhled/uprava-na-webu",
+        "vzhled/vlastni-sablona"
+      ],
+      "nazev": {
+        "cs": "Vzhled",
+        "en": "Appearance",
+        "de": "Design"
+      }
+    },
+    {
+      "slug": "ctenari-a-prijmy",
+      "stranky": [
+        "ctenari-a-prijmy/ucty-ctenaru",
+        "ctenari-a-prijmy/zamceny-obsah",
+        "ctenari-a-prijmy/newsletter",
+        "ctenari-a-prijmy/web-push",
+        "ctenari-a-prijmy/reklama",
+        "ctenari-a-prijmy/podpora-a-prijmy"
+      ],
+      "nazev": {
+        "cs": "Čtenáři a příjmy",
+        "en": "Readers and revenue",
+        "de": "Leser und Einnahmen"
+      }
+    },
+    {
+      "slug": "jazykove-verze",
+      "stranky": [
+        "jazykove-verze/jazyky-webu",
+        "jazykove-verze/preklad-obsahu"
+      ],
+      "nazev": {
+        "cs": "Jazykové verze",
+        "en": "Language versions",
+        "de": "Sprachversionen"
+      }
+    },
+    {
+      "slug": "seo-a-ai",
+      "stranky": [
+        "seo-a-ai/seo",
+        "seo-a-ai/ai-vyhledavace",
+        "seo-a-ai/napojeni-na-claude",
+        "seo-a-ai/mereni-a-soukromi"
+      ],
+      "nazev": {
+        "cs": "SEO a AI",
+        "en": "SEO and AI",
+        "de": "SEO und KI"
+      }
+    },
+    {
       "slug": "provoz",
       "stranky": [
         "provoz/posta",
@@ -64,15 +121,23 @@
         "en": "Operations",
         "de": "Betrieb"
       }
+    },
+    {
+      "slug": "pro-vyvojare",
+      "stranky": [
+        "pro-vyvojare/struktura-projektu",
+        "pro-vyvojare/zasady",
+        "pro-vyvojare/testy-a-vydavani",
+        "pro-vyvojare/jak-prispet"
+      ],
+      "nazev": {
+        "cs": "Pro vývojáře",
+        "en": "For developers",
+        "de": "Für Entwickler"
+      }
     }
   ],
-  "pripravuje_se": [
-    "vzhled",
-    "ctenari-a-prijmy",
-    "jazykove-verze",
-    "seo-a-ai",
-    "pro-vyvojare"
-  ],
+  "pripravuje_se": [],
   "adresy": {
     "en": {
       "zaciname": "getting-started",
@@ -101,7 +166,33 @@
       "predavka-a-korektura": "handoff-and-proofreading",
       "titulni-strana-a-kalendar": "front-page-and-calendar",
       "komentare": "comments",
-      "ucet-a-prihlaseni": "account-and-sign-in"
+      "ucet-a-prihlaseni": "account-and-sign-in",
+      "vzhled": "appearance",
+      "sablony": "templates",
+      "identita-webu": "site-identity",
+      "bloky-a-rozvrzeni": "blocks-and-layout",
+      "uprava-na-webu": "editing-on-the-site",
+      "vlastni-sablona": "custom-template",
+      "ctenari-a-prijmy": "readers-and-revenue",
+      "ucty-ctenaru": "reader-accounts",
+      "zamceny-obsah": "locked-content",
+      "newsletter": "newsletter",
+      "web-push": "web-push",
+      "reklama": "advertising",
+      "podpora-a-prijmy": "support-and-revenue",
+      "jazykove-verze": "language-versions",
+      "jazyky-webu": "site-languages",
+      "preklad-obsahu": "translating-content",
+      "seo-a-ai": "seo-and-ai",
+      "seo": "seo",
+      "ai-vyhledavace": "ai-search-engines",
+      "napojeni-na-claude": "connecting-claude",
+      "mereni-a-soukromi": "analytics-and-privacy",
+      "pro-vyvojare": "for-developers",
+      "struktura-projektu": "project-structure",
+      "zasady": "principles",
+      "testy-a-vydavani": "tests-and-releases",
+      "jak-prispet": "contributing"
     },
     "de": {
       "zaciname": "erste-schritte",
@@ -130,7 +221,33 @@
       "predavka-a-korektura": "uebergabe-und-korrektur",
       "titulni-strana-a-kalendar": "titelseite-und-kalender",
       "komentare": "kommentare",
-      "ucet-a-prihlaseni": "konto-und-anmeldung"
+      "ucet-a-prihlaseni": "konto-und-anmeldung",
+      "vzhled": "design",
+      "sablony": "vorlagen",
+      "identita-webu": "website-identitaet",
+      "bloky-a-rozvrzeni": "bloecke-und-layout",
+      "uprava-na-webu": "bearbeiten-auf-der-website",
+      "vlastni-sablona": "eigene-vorlage",
+      "ctenari-a-prijmy": "leser-und-einnahmen",
+      "ucty-ctenaru": "leserkonten",
+      "zamceny-obsah": "gesperrte-inhalte",
+      "newsletter": "newsletter",
+      "web-push": "web-push",
+      "reklama": "werbung",
+      "podpora-a-prijmy": "unterstuetzung-und-einnahmen",
+      "jazykove-verze": "sprachversionen",
+      "jazyky-webu": "sprachen-der-website",
+      "preklad-obsahu": "inhalte-uebersetzen",
+      "seo-a-ai": "seo-und-ki",
+      "seo": "seo",
+      "ai-vyhledavace": "ki-suchmaschinen",
+      "napojeni-na-claude": "anbindung-an-claude",
+      "mereni-a-soukromi": "messung-und-datenschutz",
+      "pro-vyvojare": "fuer-entwickler",
+      "struktura-projektu": "projektstruktur",
+      "zasady": "grundsaetze",
+      "testy-a-vydavani": "tests-und-releases",
+      "jak-prispet": "mitwirken"
     }
   }
 }

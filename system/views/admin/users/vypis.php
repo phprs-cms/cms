@@ -14,7 +14,7 @@
 <?php foreach ($autori as $a): ?>
 <tr<?= $a['blokovat'] ? ' class="nevydany"' : '' ?>>
 	<td><a href="<?= e($modul->url('edit', ['id' => $a['idu']])) ?>"><?= e($a['user']) ?></a><?= $a['blokovat'] ? ' <strong>(' . e(t('blokován')) . ')</strong>' : '' ?><?= $a['totp_tajemstvi'] !== '' ? ' <span class="stitek stitek-vydano" title="' . e(t('dvoufázové přihlášení')) . '">2FA</span>' : '' ?></td>
-	<td><?= e($a['jmeno']) ?></td>
+	<td><?= e($a['jmeno']) ?><br><span class="smltxt"><?= e($a['shrnuti']) ?></span></td>
 	<td><?= e($a['email']) ?></td>
 	<td><?= e(t(PhpRS\Core\Auth::TYPY[(int) $a['admin']] ?? '?')) ?></td>
 	<td class="stred"><?= (int) $a['admin'] >= PhpRS\Core\Auth::REDAKTOR || $a['pravo_vydavat'] ? e(t('Ano')) : e(t('Ne')) ?></td>

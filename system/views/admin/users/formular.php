@@ -21,6 +21,9 @@ $role = [
 ];
 ?>
 <p class="navigace-radek"><a class="navigace" href="<?= e($modul->url()) ?>"><?= e(t('Zpět na přehled')) ?></a></p>
+<?php if (($shrnuti ?? '') !== ''): ?>
+<p class="hlaska"><strong><?= e(t('Co teď smí:')) ?></strong> <?= e($shrnuti) ?></p>
+<?php endif ?>
 <form class="formular" method="post" action="<?= e($modul->url('uloz')) ?>" autocomplete="off">
 <?= $csrf ?>
 <input type="hidden" name="idu" value="<?= (int) $autor['idu'] ?>">

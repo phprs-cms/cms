@@ -383,6 +383,13 @@ $pkZmeneno = $pkPrihlas($pkV2, 6); $pkZmeneno['authenticatorData'] = PhpRS\Core\
 over('Passkey: pozměněná data zařízení neprojdou', $pkOdmitne(fn () => PhpRS\Core\Passkey::overPrihlaseni($pkZmeneno, $pkV2, $pkPuvod, $pkRp, $pkUlozeno['klic'], 5)), true);
 over('Passkey: původ a doména z adresy webu', [PhpRS\Core\Passkey::puvod('https://WWW.Web.cz/'), PhpRS\Core\Passkey::puvod('http://localhost:8080'), PhpRS\Core\Passkey::rpId('https://www.web.cz:8443/x')], ['https://www.web.cz', 'http://localhost:8080', 'www.web.cz']);
 
+/* ---------- .htaccess: cíle přepisů jsou adresy, ne relativní cesty ---------- */
+// Relativní cíl (RewriteRule ^ index.php) skončí na hostinzích, které mapují subdomény do složky mimo kořen webu, smyčkou a chybou 500.
+$htaccess = (string) file_get_contents(PHPRS_ROOT . '/.htaccess');
+preg_match_all('/^\s*RewriteRule\s+\S+\s+(\S+)/m', $htaccess, $cile);
+over('.htaccess: žádný přepis nemá relativní cíl', array_values(array_filter($cile[1], static fn (string $c): bool => $c !== '-' && !str_starts_with($c, '%{ENV:BASE}/'))), []);
+over('.htaccess: složka webu se počítá z adresy požadavku', str_contains($htaccess, 'E=BASE:%1'), true);
+
 /* ---------- antispam: otisk IP ---------- */
 over('Antispam::otisk: není to IP adresa', str_contains(PhpRS\Core\Antispam::otisk('203.0.113.7'), '203'), false);
 over('Antispam::otisk: stejná adresa = stejný otisk', PhpRS\Core\Antispam::otisk('203.0.113.7'), PhpRS\Core\Antispam::otisk('203.0.113.7'));

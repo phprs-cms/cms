@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-const PHPRS_VERSION = '3.0.0-beta.5';
+const PHPRS_VERSION = '3.0.0-beta.6';
 
 /** Číslo poslední migrace v system/sql/migrace - web podle něj pozná, že má po aktualizaci upravit databázi (hlídá tools/test.sh). */
 const PHPRS_VERZE_DB = 42;

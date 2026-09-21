@@ -33,6 +33,7 @@ final class Kernel
         Moduly\CtenariAdmin::class,
         Moduly\Statistika::class,
         Moduly\Reklama::class,
+        Moduly\Prijmy::class,
         Moduly\Vzhled::class,
         Moduly\Bloky::class,
         Moduly\Autori::class,

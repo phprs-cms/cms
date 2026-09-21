@@ -632,6 +632,27 @@ input[type="radio"] {
 	margin: 0;
 }
 /* dlaždice s čísly: přehled, statistika, čtenáři, newsletter */
+/* Příjmy: čtyři karty zdrojů vedle sebe, na užší obrazovce pod sebou */
+.prijmy {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+	gap: 16px;
+}
+.prijmy-karta {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 18px 20px;
+	border: 1px solid var(--linka);
+	border-radius: var(--radius);
+	background: var(--plocha);
+}
+.prijmy-karta h3 { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.prijmy-karta p { margin: 0; }
+.prijmy-karta p:last-child { margin-top: auto; padding-top: 4px; }
+.prijmy-cislo strong { font-size: 26px; line-height: 1.1; letter-spacing: -0.02em; }
+.prijmy-cislo span { color: var(--text-slaby); font-size: 13px; }
+
 .dlazdice {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

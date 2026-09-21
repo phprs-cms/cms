@@ -119,7 +119,7 @@ final class Stav
     {
         foreach (['B', 'kB', 'MB', 'GB', 'TB'] as $jednotka) {
             if ($bajtu < 1024 || $jednotka === 'TB') {
-                return number_format($bajtu, $jednotka === 'B' ? 0 : 1, ',', ' ') . ' ' . $jednotka;
+                return cislo($bajtu, $jednotka === 'B' ? 0 : 1) . ' ' . $jednotka;
             }
             $bajtu /= 1024;
         }

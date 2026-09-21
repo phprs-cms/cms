@@ -22,11 +22,24 @@ final class Autori extends Modul
 
     protected function akceVypis(): Response
     {
-        return $this->view('vypis', 'Uživatelé', [
-            'autori' => $this->db->all(
-                'SELECT u.*, (SELECT COUNT(*) FROM {clanky} c WHERE c.autor = u.idu) AS pocet_clanku FROM {user} u ORDER BY u.user',
-            ),
-        ]);
+        $autori = $this->db->all('SELECT u.*, (SELECT COUNT(*) FROM {clanky} c WHERE c.autor = u.idu) AS pocet_clanku FROM {user} u ORDER BY u.user');
+        $moduly = $rubriky = $cizi = [];
+        foreach ($this->db->all('SELECT fk_id_user, ident_modulu FROM {user_prava}') as $r) {
+            $moduly[(int) $r['fk_id_user']][] = (string) $r['ident_modulu'];
+        }
+        foreach ($this->db->all('SELECT ur.idu, t.nazev FROM {user_rubriky} ur JOIN {topic} t ON t.idt = ur.idt ORDER BY t.nazev') as $r) {
+            $rubriky[(int) $r['idu']][] = (string) $r['nazev'];
+        }
+        foreach ($this->db->all('SELECT fk_id_nadrizeny, COUNT(*) AS pocet FROM {vazby_prava} GROUP BY fk_id_nadrizeny') as $r) {
+            $cizi[(int) $r['fk_id_nadrizeny']] = (int) $r['pocet'];
+        }
+        foreach ($autori as &$a) {
+            $id = (int) $a['idu'];
+            $a['shrnuti'] = self::shrnuti((int) $a['admin'], (bool) $a['pravo_vydavat'], $moduly[$id] ?? [], $rubriky[$id] ?? [], $cizi[$id] ?? 0, (bool) $a['blokovat']);
+        }
+        unset($a);
+
+        return $this->view('vypis', 'Uživatelé', ['autori' => $autori]);
     }
 
     protected function akceNovy(): Response
@@ -131,6 +144,47 @@ final class Autori extends Modul
      *
      * @return list<string>
      */
+    /**
+     * Oprávnění uživatele jednou větou - role, vydávání, cizí články, rubriky a moduly jsou ve formuláři na čtyřech místech
+     * a správce po uložení potřebuje vidět, co z nich dohromady vyšlo.
+     *
+     * @param list<string> $moduly identifikátory modulů, ke kterým má přístup
+     * @param list<string> $rubriky názvy rubrik, na které je omezen (prázdné = všechny)
+     */
+    public static function shrnuti(int $role, bool $vydava, array $moduly, array $rubriky, int $cizichAutoru, bool $blokovan = false): string
+    {
+        if ($blokovan) {
+            return t('Účet je zablokovaný – do administrace se nepřihlásí.');
+        }
+        if ($role >= Auth::ADMIN) {
+            return t('Smí všechno včetně nastavení webu a správy uživatelů.');
+        }
+        $casti = [];
+        if (!in_array('clanky', $moduly, true)) {
+            $casti[] = t('Nepíše články');
+        } elseif ($role >= Auth::REDAKTOR) {
+            $casti[] = t('Píše, upravuje a vydává články všech autorů');
+        } else {
+            $casti[] = $cizichAutoru > 0 ? t('Píše vlastní články a upravuje i články dalších autorů (%d)', $cizichAutoru) : t('Píše a upravuje vlastní články');
+            $casti[] = $vydava ? t('vydává je sám') : t('nevydává – vydání schvaluje redakce');
+        }
+        if ($rubriky !== []) {
+            $casti[] = t('jen v rubrikách: %s', implode(', ', array_slice($rubriky, 0, 4)) . (count($rubriky) > 4 ? '…' : ''));
+        }
+        $nazvy = [];
+        foreach (Kernel::MODULY as $class) {
+            if ($class::IDENT !== 'clanky' && !$class::JEN_ADMIN && !$class::PRO_VSECHNY && in_array($class::IDENT, $moduly, true)) {
+                $nazvy[] = t($class::NAZEV);
+            }
+        }
+        $veta = implode(', ', $casti) . '.';
+        if ($nazvy !== []) {
+            $veta .= ' ' . t('Dál má přístup k: %s.', implode(', ', $nazvy));
+        }
+
+        return $veta;
+    }
+
     public static function vychoziModuly(int $role): array
     {
         $moduly = [];
@@ -174,8 +228,18 @@ final class Autori extends Modul
             }
         }
 
+        // shrnutí platí pro uložený stav - nad formulářem říká, co uživatel smí TEĎ (u nového uživatele není co shrnovat)
+        $shrnuti = $id > 0 && !$this->request->isPost() ? self::shrnuti(
+            (int) $autor['admin'], (bool) $autor['pravo_vydavat'],
+            array_column($this->db->all('SELECT ident_modulu FROM {user_prava} WHERE fk_id_user = ?', [$id]), 'ident_modulu'),
+            array_column($this->db->all('SELECT t.nazev FROM {user_rubriky} ur JOIN {topic} t ON t.idt = ur.idt WHERE ur.idu = ? ORDER BY t.nazev', [$id]), 'nazev'),
+            (int) $this->db->value('SELECT COUNT(*) FROM {vazby_prava} WHERE fk_id_nadrizeny = ?', [$id]),
+            (bool) $autor['blokovat'],
+        ) : '';
+
         return $this->view('formular', $id ? 'Úprava uživatele' : 'Nový uživatel', [
             'autor' => $autor,
+            'shrnuti' => $shrnuti,
             'chyby' => $chyby,
             'sam' => $id === $this->app->auth()->id(),
             'moduly' => $nastavitelne,

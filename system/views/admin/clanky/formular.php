@@ -140,17 +140,6 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 	<datalist id="stitky-seznam"><?php foreach ($vsechnyStitky as $s): ?><option value="<?= e($s) ?>"><?php endforeach ?></datalist>
 	<span class="napoveda"><?= e(t('Oddělené čárkou, např. doprava, územní plán. Čtenář si podle štítku zobrazí související články.')) ?></span></div>
 </div>
-<div class="radek">
-	<label for="skupina_cl"><?= e(t('Seriál')) ?></label>
-	<div><select id="skupina_cl" name="skupina_cl">
-		<option value="0"><?= e(t('– článek není součástí seriálu –')) ?></option>
-<?php foreach ($serialy as $ids => $nazev): ?>
-		<option value="<?= (int) $ids ?>"<?= (int) $clanek['skupina_cl'] === (int) $ids ? ' selected' : '' ?>><?= e($nazev) ?></option>
-<?php endforeach ?>
-	</select>
-	<input class="textpole siroke" type="text" name="serial_novy" maxlength="150" placeholder="<?= e(t('…nebo název nového seriálu')) ?>" aria-label="<?= e(t('Název nového seriálu')) ?>" style="margin-top:6px">
-	<span class="napoveda"><?= e(t('U článku se zobrazí odkazy na ostatní díly.')) ?></span></div>
-</div>
 </fieldset>
 
 <fieldset>
@@ -222,8 +211,19 @@ $chyba = fn (string $pole): string => isset($chyby[$pole]) ? '<span class="chyba
 <div data-kontrola-vysledek aria-live="polite"><p class="napoveda"><?= e(t('Kontrola běží při psaní (potřebuje JavaScript).')) ?></p></div>
 </fieldset>
 
-<details class="pokrocile"<?= $clanek['datum_pl'] || $clanek['zdroj'] !== '' || $clanek['t_slova'] !== '' || (int) $clanek['typ_clanku'] === 2 ? ' open' : '' ?>>
+<details class="pokrocile"<?= (int) $clanek['skupina_cl'] > 0 || $clanek['datum_pl'] || $clanek['zdroj'] !== '' || $clanek['t_slova'] !== '' || (int) $clanek['typ_clanku'] === 2 ? ' open' : '' ?>>
 <summary><?= e(t('Další nastavení')) ?></summary>
+<div class="radek">
+	<label for="skupina_cl"><?= e(t('Seriál')) ?></label>
+	<div><select id="skupina_cl" name="skupina_cl">
+		<option value="0"><?= e(t('– článek není součástí seriálu –')) ?></option>
+<?php foreach ($serialy as $ids => $nazev): ?>
+		<option value="<?= (int) $ids ?>"<?= (int) $clanek['skupina_cl'] === (int) $ids ? ' selected' : '' ?>><?= e($nazev) ?></option>
+<?php endforeach ?>
+	</select>
+	<input class="textpole siroke" type="text" name="serial_novy" maxlength="150" placeholder="<?= e(t('…nebo název nového seriálu')) ?>" aria-label="<?= e(t('Název nového seriálu')) ?>" style="margin-top:6px">
+	<span class="napoveda"><?= e(t('U článku se zobrazí odkazy na ostatní díly.')) ?></span></div>
+</div>
 <div class="radek">
 	<label for="seo_link"><?= e(t('Adresa článku')) ?></label>
 	<div><input class="textpole siroke" type="text" id="seo_link" name="seo_link" value="<?= e($clanek['seo_link']) ?>" maxlength="150" placeholder="<?= e(t('vytvoří se z titulku')) ?>">

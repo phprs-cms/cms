@@ -1,85 +1,94 @@
 <p><picture><source media="(prefers-color-scheme: dark)" srcset="image/phprs-logo-tmavy.svg"><img src="image/phprs-logo.svg" alt="phpRS" height="48"></picture></p>
 
+**English** · [Čeština](README.cs.md)
+
 # phpRS 3
 
-Redakční systém pro internetové časopisy a magazíny, napsaný od nuly pro PHP 8.4+ a MySQL 8 / MariaDB 10.6+.
-Hlásí se k odkazu českého [phpRS](https://phprs.net/) (Jiří Lukáš, 2001–2007), jehož vývoj skončil:
-přebírá jeho jednoduchost, zaměření na články a rubriky a české názvosloví v databázi.
+A publishing system for online magazines, newspapers and blogs, written from scratch for PHP 8.4+ and MySQL 8 / MariaDB 10.6+.
+It follows in the footsteps of the Czech [phpRS](https://phprs.net/) (Jiří Lukáš, 2001–2007), whose development ended:
+it keeps its simplicity, its focus on articles and sections, and its Czech naming in the database.
 
-**Není to nová verze starého phpRS a nejde na ni přejít.** Data ze starého phpRS 2 se nepřevádějí, staré adresy
-se nepřesměrovávají a žádná stará funkce se kvůli kompatibilitě nedrží.
+**It is not a new version of the old phpRS and you cannot upgrade to it.** Data from phpRS 2 is not converted, old addresses
+are not redirected and no old feature is kept for the sake of compatibility.
 
-Co je uvnitř: PDO a připravené dotazy všude, `password_hash`, CSRF ochrana, InnoDB s cizími klíči, utf8mb4,
-hezké adresy (`/clanek/titulek`), responzivní administrace i web, žádné globální proměnné, žádný framework.
+What's inside: PDO with prepared statements everywhere, `password_hash`, CSRF protection, InnoDB with foreign keys, utf8mb4,
+pretty URLs (`/clanek/headline`), a responsive administration and site, no global variables, no framework and no third-party libraries at runtime.
 
-## Instalace
+- Website and documentation: [phprs.eu](https://phprs.eu/en/) – manual in [English](https://phprs.eu/en/docs/), [Czech](https://phprs.eu/cs/dokumentace/) and [German](https://phprs.eu/de/dokumentation/)
+- Demo: [demo.phprs.eu](https://demo.phprs.eu)
+- Download: [Releases](https://github.com/phprs-cms/cms/releases)
+- Wiki: [github.com/phprs-cms/cms/wiki](https://github.com/phprs-cms/cms/wiki)
 
-1. Nahrajte obsah složky na hosting (FTP stačí, Composer ani příkazová řádka nejsou potřeba).
-2. Založte prázdnou databázi.
-3. Otevřete `https://vas-web.cz/install.php` a vyplňte formulář. Na přání nahraje i ukázkový magazín, který jde později jedním kliknutím smazat.
+## Installation
 
-Instalátor se po dokončení smaže sám. Podrobný postup: [příručka na phprs.eu](https://phprs.eu/cs/dokumentace/).
+1. Upload the contents of the package to your hosting (FTP is enough – no Composer and no command line needed).
+2. Create an empty database.
+3. Open `https://your-site.com/install.php` and fill in the form. If you like, it also loads a sample magazine (Czech, English or German) that you can later delete with one click.
 
-Apache používá přiložené soubory `.htaccess`. Nginx je nečte – použijte hotovou ukázku `system/nginx.priklad.conf`
-(zákazy přístupu, média bez spouštění skriptů, WebP, hezké adresy) a po nasazení ověřte, že `/config.php` a `/storage/log/chyby.log` vracejí 403.
+The installer deletes itself when it finishes. Step-by-step guide: [manual on phprs.eu](https://phprs.eu/en/docs/getting-started/installation/).
 
-## Vývoj
+Apache uses the bundled `.htaccess` files. Nginx does not read them – use the ready-made sample `system/nginx.priklad.conf`
+(access rules, media without script execution, WebP, pretty URLs) and after deployment check that `/config.php` and `/storage/log/chyby.log` return 403.
+
+## Development
 
 ```bash
 php -S localhost:8080 system/dev-router.php
 ```
 
-## Struktura
+## Structure
 
 ```
-index.php, admin.php, install.php   vstupní body
-config.php                          vytvoří instalátor
-image/                              CSS, JS a logo administrace
-layout/<název>/                     vzhled webu: base.php, blok.php, cla_*.php, style.css
-media/RRRR/MM/                      nahrané obrázky (galerie)
-storage/                            logy a cache, z webu nepřístupné
-system/src/Core/                    jádro: App, Db, Request, Response, Session, View, Auth, Settings
-system/src/Admin/Moduly/            moduly administrace - jeden modul = jedna třída
-system/src/Front/                   veřejná část webu
-system/views/                       šablony administrace, instalátoru a výchozí šablony webu
-system/sql/schema.sql               struktura databáze
+index.php, admin.php, install.php   entry points
+config.php                          created by the installer
+image/                              CSS, JS and logo of the administration
+layout/<name>/                      site templates: base.php, blok.php, cla_*.php, style.css
+media/YYYY/MM/                      uploaded images and attachments
+storage/                            logs, cache, backups; not reachable from the web
+system/src/Core/                    core: App, Db, Request, Response, Session, View, Auth, Settings
+system/src/Admin/Moduly/            administration modules – one module = one class
+system/src/Front/                   public part of the site
+system/views/                       templates of the administration, the installer and the default site views
+system/jazyky/                      dictionaries (the source language of the code is Czech; en, sk, de)
+system/sql/schema.sql               database structure
 ```
 
-Nový modul administrace: třída v `system/src/Admin/Moduly/` dědící z `Modul` (konstanty `IDENT`,
-`NAZEV`, metody `akceVypis()`, `akceEdit()`…), šablony ve `system/views/admin/<ident>/` a zápis do
-`Kernel::MODULY`.
+A new administration module: a class in `system/src/Admin/Moduly/` extending `Modul` (constants `IDENT`,
+`NAZEV`, methods `akceVypis()`, `akceEdit()`…), templates in `system/views/admin/<ident>/` and an entry in
+`Kernel::MODULY`. Identifiers and comments in the code are in Czech; user-facing texts go through `t()` and are translated in the dictionaries.
 
-### Šablony webu (layouty)
+### Site templates (layouts)
 
-| složka | název | vzhled |
+| folder | name | look |
 | --- | --- | --- |
-| `layout/classic-newspaper` | Classic Newspaper | seriózní deník – patkové titulky, tenké linky, otvírák, pravý sloupec |
-| `layout/modern-magazine` | Modern Magazine | výrazný magazín – černá lišta, hero článek, mřížka karet, pás bloků dole |
-| `layout/minimal` | Minimal | osobní magazín, blog, newsletterový web – jeden úzký sloupec, klidná typografie, čistý seznam článků |
+| `layout/classic-newspaper` | Classic Newspaper | a serious daily – serif headlines, thin rules, a lead story, a right-hand column |
+| `layout/modern-magazine` | Modern Magazine | a bold magazine – black bar, hero article, grid of cards, a strip of blocks at the bottom |
+| `layout/minimal` | Minimal | a personal magazine, blog or newsletter site – one narrow column, calm typography, a clean list of articles |
 
-Layout = `base.php` (stránka), `blok.php` (jeden blok), `cla_*.php` (šablony článku s režimy
-náhled / krátký / celý; `$poradi === 0` je první článek titulní strany), `style.css` a `info.php`
-(název a popis). Vybírá se při instalaci a ve Vzhled → Identita webu. Vlastní layout: zkopírujte některou složku pod
-jiným názvem a v `base.php` opravte odkaz na `style.css` na novou složku. Základní vzhled společných prvků (komentáře, anketa,
-hodnocení, typy bloků…) je v `image/web.css` s nulovou vahou – `style.css` šablony nese jen to, co se liší. Layout může přepsat i kteroukoli šablonu ze `system/views/front/` (výpis, systémové bloky, RSS).
-Layouty nepoužívají externí písma ani skripty (GDPR, rychlost).
+A layout is `base.php` (the page), `blok.php` (one block), `cla_*.php` (article templates with the modes
+preview / short / full; `$poradi === 0` is the first article on the front page), `style.css` and `info.php`
+(name and description). It is chosen during installation and in Appearance → Site identity. A custom layout: copy one of the folders under
+a new name and in `base.php` point the link to `style.css` at the new folder. The base look of shared elements (comments, poll,
+rating, block types…) lives in `image/web.css` with zero specificity – a template's `style.css` carries only what differs. A layout can also override any template from `system/views/front/` (listing, system blocks, RSS).
+Layouts use no external fonts or scripts (GDPR, speed). More in the manual: [Custom template](https://phprs.eu/en/docs/appearance/custom-template/).
 
+## Maintenance and security (for the publisher)
 
-## Údržba a bezpečnost (pro vydavatele)
-
-- **Žádné cizí knihovny za běhu** – není co hlídat kvůli zranitelnostem závislostí; Dependabot sleduje jen GitHub Actions.
-- **Každá změna:** `.github/workflows/kontrola.yml` – kouřový test `tools/test.sh` (čistá instalace + průchod webem
-  a administrací) na PHP 8.4 a 8.5, Semgrep (bezpečnostní pravidla), Gitleaks (klíče a hesla v repozitáři).
-  Běží i každé pondělí bez změn. Lokálně: `tools/test.sh` (potřebuje MySQL; databázi `phprs3_test` smaže a vytvoří).
-- **Každý den:** `.github/workflows/denni-kontrola.yml` ověří podpis kanálu aktualizací, pustí testy i na vývojové verzi PHP,
-  Semgrep, Gitleaks a bezpečnostní hlavičky webu i dema; při selhání založí issue.
-- **Vydání:** zvýšit `PHPRS_VERSION`, commit, tag. Balíček a `aktualizace.json` se sestavují a **podepisují jen lokálně**
-  (`php tools/vydani.php`, soukromý klíč nikdy neopouští počítač vydavatele); CI po pushnutí tagu založí jen koncept vydání.
-  Instalace berou aktualizace z `https://phprs.eu/aktualizace.json` a podpis ověřují proti `system/aktualizace.pub`.
-  Celý postup včetně výměny klíče: `docs/VYDAVANI.md`.
-- **Bezpečnostní oprava:** `php tools/vydani.php … --bezpecnostni`. Instalace se po novinkách dívají dvakrát denně,
-  bezpečnostní verzi si nainstalují samy (lze vypnout), správce dostane e-mail. Postup hlášení chyb: `SECURITY.md`.
+- **No third-party libraries at runtime** – there are no dependency vulnerabilities to track; Dependabot watches only GitHub Actions.
+- **Every change:** `.github/workflows/kontrola.yml` – the smoke test `tools/test.sh` (clean installation + a walk through the site
+  and the administration) on PHP 8.4 and 8.5, Semgrep (security rules), Gitleaks (keys and passwords in the repository).
+  It also runs every Monday without changes. Locally: `tools/test.sh` (needs MySQL; it drops and recreates the database `phprs3_test`).
+- **Every day:** `.github/workflows/denni-kontrola.yml` verifies the signature of the update channel, runs the tests on the development version of PHP too,
+  Semgrep, Gitleaks and the security headers of the website and the demo; on failure it opens an issue.
+- **Release:** bump `PHPRS_VERSION`, commit, tag. The package and `aktualizace.json` are built and **signed only locally**
+  (`php tools/vydani.php`, the private key never leaves the publisher's computer); after the tag is pushed, CI only creates a draft release.
+  Installations fetch updates from `https://phprs.eu/aktualizace.json` and verify the signature against `system/aktualizace.pub`.
+  The whole procedure including key rotation: `docs/VYDAVANI.md`.
+- **Security fix:** `php tools/vydani.php … --bezpecnostni`. Installations check for news twice a day,
+  install a security release by themselves (can be switched off) and the administrator gets an e-mail. How to report a vulnerability: [`SECURITY.md`](SECURITY.md).
 
 ## Licence
 
-GNU GPL verze 2 nebo novější – stejně jako původní phpRS. Text licence je v souboru `LICENSE`.
+GNU GPL version 2 or later – the same as the original phpRS. The licence text is in the file `LICENSE`.
+
+phpRS is free and has no paid edition. If it is useful to you, you can support its development through [GitHub Sponsors](https://github.com/sponsors/phprscms).

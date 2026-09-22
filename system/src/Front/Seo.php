@@ -286,12 +286,11 @@ final class Seo
         $s = $this->app->settings();
         $rezim = $s->get('cookies_rezim');
         $marketing = trim($s->get('kod_marketing'));
-        $html = '';
-        if ($marketing !== '') {
-            // kód čeká na souhlas: prohlížeč značku <template> nevykonává, lišta ji po souhlasu rozbalí
-            $html .= $rezim === 'zadna' ? $marketing : '<template data-souhlas="marketing">' . $marketing . '</template>';
-        }
-        if ($rezim !== 'vestavena' || (!$this->meriSCookies() && $marketing === '')) {
+        $html = $marketing === '' ? '' : self::cekaNaSouhlas($marketing, $rezim);
+        // na marketing se lišta ptá i kvůli kódům reklamních sítí z rozšíření Reklama – jinak by se nikdy nespustily
+        $maMarketing = $marketing !== '' || (\PhpRS\Core\Rozsireni::je($s, 'reklama')
+            && $this->app->db()->value("SELECT 1 FROM {reklama} WHERE aktivni = 1 AND typ = 'kod' LIMIT 1") !== null);
+        if ($rezim !== 'vestavena' || (!$this->meriSCookies() && !$maMarketing)) {
             return $html;
         }
         $view = new \PhpRS\Core\View([PHPRS_SYSTEM . '/views/front']);
@@ -300,9 +299,23 @@ final class Seo
             'text' => $s->get('cookies_text'),
             'zasady' => $s->get('cookies_zasady_url'),
             'analytika' => $this->meriSCookies(),
-            'marketing' => $marketing !== '',
+            'marketing' => $maMarketing,
             'evidence' => $s->bool('cookies_evidence') ? $this->app->url('souhlas') : '',
         ]);
+    }
+
+    /**
+     * Marketingový kód (vlastní i kód reklamní sítě) podle režimu cookies: bez lišty se vypíše rovnou; vestavěná lišta ho po souhlasu
+     * rozbalí ze značky <template>; u externí služby dostanou skripty značení, kterému rozumí Cookiebot a služby s ním kompatibilní
+     * (stejné jako u měřicích kódů) – spustí je až ona.
+     */
+    public static function cekaNaSouhlas(string $kod, string $rezim): string
+    {
+        return match ($rezim) {
+            'zadna' => $kod,
+            'externi' => (string) preg_replace('/<script(?![^>]*\btype\s*=)/i', '<script type="text/plain" data-cookieconsent="marketing"', $kod),
+            default => '<template data-souhlas="marketing">' . $kod . '</template>',
+        };
     }
 
     private function meriSCookies(): bool

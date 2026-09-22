@@ -4,6 +4,8 @@ Máte web ve WordPressu a chcete s ním přejít na phpRS? Import převede rubri
 
 Obojí najdete v administraci pod **Správa → Import a export**. Obrazovku vidí jen správce.
 
+![Správa → Import a export](../obrazky/import-z-wordpressu.webp)
+
 ## Než začnete
 
 - Ve WordPressu otevřete **Nástroje → Export**, zvolte **Veškerý obsah** a stáhněte soubor `.xml`.
@@ -12,7 +14,7 @@ Obojí najdete v administraci pod **Správa → Import a export**. Obrazovku vid
 
 ## Krok 1: soubor
 
-Soubor nahrajte formulářem. Většina hostingů ale dovolí nahrát jen pár megabajtů; obrazovka vám řekne, kolik je to u vás. Větší export zkopírujte přes FTP do složky `storage/import/` – objeví se v seznamu pod formulářem a vyberete ho tlačítkem **Zobrazit náhled**.
+Soubor nahrajte formulářem a klepněte na **Nahrát a zobrazit náhled**. Většina hostingů ale dovolí nahrát jen pár megabajtů; obrazovka vám řekne, kolik je to u vás. Větší export zkopírujte přes FTP do složky `storage/import/` – objeví se v seznamu pod formulářem a vyberete ho tlačítkem **Zobrazit náhled**.
 
 Přijme se jen skutečný export z WordPressu. Soubor se čte po kouscích, takže nevadí ani export o stovkách megabajtů; opravdu velký web (přes 1 GB) exportujte z WordPressu po částech, například po letech.
 
@@ -30,9 +32,10 @@ Náhled do databáze nic nezapisuje. Ukáže, kolik je v souboru příspěvků (
 Pod přehledem zvolíte:
 
 - **jazykovou verzi**, do které obsah patří (nabízí se jen na webu s více jazyky),
-- zda importovat **koncepty**, **stránky** a **schválené komentáře**,
-- zda vytvořit **přesměrování ze starých adres**,
-- rubriku pro příspěvky, které ve WordPressu žádnou neměly (jinak vznikne rubrika Nezařazené).
+- v řádku **Co importovat**, zda převést **koncepty a příspěvky čekající na schválení**, **stránky**, **schválené komentáře** a vytvořit **přesměrování ze starých adres na nové**,
+- v řádku **Příspěvky bez rubriky dát do** rubriku pro příspěvky, které ve WordPressu žádnou neměly (jinak vznikne rubrika Nezařazené).
+
+Import spustíte tlačítkem **Spustit import**.
 
 ## Krok 3: import
 
@@ -59,7 +62,7 @@ Ke každému článku a stránce vznikne přesměrování ze staré adresy (nap�
 
 ## Obrázky ze starého webu
 
-Po importu ukazují články pořád na obrázky starého webu. Na stránce s výsledkem proto klepněte na **Stáhnout obrázky ze starého webu**. Hlavní obrázky článků a obrázky v textech se stáhnou, zmenší, dostanou náhledy a uloží do **Médií** – stejně, jako byste je nahráli ručně – a odkazy v textech se přepíší. I tady se pracuje po dávkách a stránka pokračuje sama.
+Po importu ukazují články pořád na obrázky starého webu. Na stránce s výsledkem (kdykoli později se na ni vrátíte odkazem **Výsledek** u souboru na obrazovce **Import a export**) proto klepněte na **Stáhnout obrázky ze starého webu**. Hlavní obrázky článků a obrázky v textech se stáhnou, zmenší, dostanou náhledy a uloží do **Médií** – stejně, jako byste je nahráli ručně – a odkazy v textech se přepíší. I tady se pracuje po dávkách a stránka pokračuje sama.
 
 Z bezpečnostních důvodů se stahuje **jen z domény starého webu** uvedené v exportu, jen obrázky JPG, PNG, GIF a WebP do 15 MB. Obrázky z jiných domén (například ze sítě CDN nebo z cizích webů) zůstanou v textu, jak byly. Co se nepodařilo stáhnout, vypíše výsledek; tlačítkem **Zkusit stáhnout znovu** to zopakujete.
 

@@ -2,13 +2,15 @@
 
 Čtenáři se mohou na webu zaregistrovat. Účet jim dovolí ukládat si články na později, číst zamčené články a – pokud to nastavíte – komentovat. Účty čtenářů jsou oddělené od účtů redakce: čtenář se nikdy nedostane do administrace.
 
+![Čtenáři → Čtenáři](../obrazky/ctenari.webp)
+
 ## Zapnutí
 
-1. V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Čtenáři a zamčený obsah** a uložte.
+1. Otevřete **Správa → Rozšíření**, zaškrtněte **Čtenáři a zamčený obsah** a uložte.
 2. Přidejte na web blok **Účet čtenáře** (**Vzhled → Bloky a rozvržení**). Vypíše tlačítko **Přihlášení / Můj účet**. Bez bloku se čtenář k přihlášení dostane jen z výzvy u zamčeného článku, z odkazu **Uložit na později** pod článkem a přímo na adrese `/ctenar`.
 3. Ověřte, že web odesílá e-maily – registrace i přihlášení odkazem na nich stojí. Viz [Pošta](../provoz/posta.md).
 
-V administraci přibude sekce **Čtenáři → Čtenáři** a v Nastavení záložka **Čtenáři a platby**. Obojí vidí jen administrátor.
+V administraci přibude sekce **Čtenáři → Čtenáři**. Záložka **Nastavení → Čtenáři a platby** je vidět vždy; s vypnutým rozšířením jen upozorňuje, že se nastavení použije až po zapnutí. Obojí vidí jen administrátor.
 
 ## Registrace
 
@@ -26,9 +28,9 @@ Nové registrace zastavíte volbou **Povolit nové registrace** v **Nastavení �
 
 | Způsob | Jak funguje |
 |---|---|
-| **E-mail a heslo** | běžné přihlášení |
+| formulář **Přihlásit se** (**E-mail** a **Heslo**) | běžné přihlášení |
 | **Přihlásit se odkazem z e-mailu** | čtenář vyplní jen e-mail a dostane jednorázový odkaz; platí 20 minut |
-| **Zapomněli jste heslo?** | pošle odkaz pro nastavení nového hesla; platí 2 hodiny |
+| **Zapomněli jste heslo?** | čtenář vyplní nahoře e-mail, rozbalí tento řádek a klepne na **Poslat odkaz**; odkaz pro nastavení nového hesla platí 2 hodiny |
 
 Odkaz z e-mailu nepřihlásí hned – ukáže tlačítko **Přihlásit se**. Je to záměr: některé poštovní programy si odkazy otevírají předem a jednorázový odkaz by spotřebovaly.
 
@@ -42,10 +44,10 @@ Stránka `/ctenar` po přihlášení ukazuje:
 
 - e-mail a případně datum, do kdy platí předplatné (nebo tlačítko **Získat předplatné**),
 - se zapnutými [platbami přes Stripe](platby-stripe.md) oddíl **Předplatné**: tlačítka **Předplatit měsíčně** a **Předplatit ročně**, u platícího čtenáře **Spravovat předplatné**,
-- **Uložené články** – seznam s možností **Odebrat z uložených**,
+- **Uložené články** – seznam (nejvýše 100 posledních) s tlačítkem **×** pro odebrání,
 - změnu jména a hesla (**Změnit heslo** vyžaduje stávající heslo),
 - **Odhlásit se**,
-- **Smazat účet** – po zadání hesla smaže účet i všechny údaje o něm; nejde to vrátit. Čtenář s běžícím předplatným přes Stripe ho musí nejdřív zrušit (**Spravovat předplatné**), jinak by se mu platby strhávaly dál.
+- **Smazat účet** – čtenář řádek rozbalí, zadá heslo a klepne na **Smazat můj účet**; tím smaže účet i všechny údaje o něm; nejde to vrátit. Čtenář s běžícím předplatným přes Stripe ho musí nejdřív zrušit (**Spravovat předplatné**), jinak by se mu platby strhávaly dál.
 
 ### Uložené články
 
@@ -53,7 +55,7 @@ Pod každým článkem je odkaz **☆ Uložit na později**. Nepřihlášeného 
 
 ## Čtenáři v administraci
 
-Sekce **Čtenáři → Čtenáři** ukazuje nahoře tři počty: **Registrovaní**, **Předplatitelé** a **Zamčené články**. Pod nimi je hledání podle e-mailu nebo jména a tabulka posledních 300 účtů:
+Sekce **Čtenáři → Čtenáři** ukazuje nahoře čtyři počty: **Registrovaní**, **Předplatitelé**, **Platí přes Stripe** a **Zamčené články**. Pod nimi je hledání podle e-mailu nebo jména a tabulka posledních 300 účtů:
 
 | Sloupec | Obsah |
 |---|---|

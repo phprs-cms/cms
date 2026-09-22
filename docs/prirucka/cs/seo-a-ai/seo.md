@@ -2,6 +2,8 @@
 
 Většinu práce pro vyhledávače dělá systém sám: čitelné adresy, popisy, kanonické adresy, mapu webu, strukturovaná data i kanály. V **Nastavení → SEO a GEO** rozhodujete jen o tom hlavním. Tato stránka popisuje nastavení webu, volby u článku a přesměrování. Volby pro AI vyhledávače ze stejné záložky má vlastní stránka [AI vyhledávače](ai-vyhledavace.md).
 
+![Nastavení → SEO a GEO](../obrazky/nastaveni-seo.webp)
+
 ## Viditelnost webu
 
 | Pole | Význam | Výchozí |
@@ -23,7 +25,7 @@ Rozbalte **Ověření vlastnictví webu (Google Search Console, Bing)**:
 
 ## Co systém generuje
 
-Odkazy na všechny soubory jsou dole v oddílu **Pro pokročilé**.
+Odkazy na tyto soubory (kromě `/podcast.xml`) jsou na konci rozbalovacího oddílu **Pro pokročilé**.
 
 | Adresa | Obsah |
 |---|---|
@@ -67,7 +69,7 @@ Po zapnutí si systém při uložení nastavení vytvoří klíč a vystaví ho 
 
 ## Volby u článku
 
-Ve formuláři článku jsou tři pole pro vyhledávače:
+Ve formuláři článku jsou v rozbalovacím oddílu **Další nastavení** tři pole pro vyhledávače:
 
 | Pole | Význam |
 |---|---|
@@ -75,7 +77,7 @@ Ve formuláři článku jsou tři pole pro vyhledávače:
 | **Popis pro vyhledávače** | Nejvýše 320 znaků. Prázdné = začátek perexu. Návrh umí i [AI asistent](../psani/ai-asistent.md). |
 | **Skrýt před vyhledávači (noindex)** | Článek zůstane na webu, ale dostane značku `noindex`, vypadne z map webu a neoznamuje se (IndexNow, Web Push, webhook). Automatický newsletter ho nezařadí. |
 
-Kanonickou adresu, značky Open Graph pro sdílení a u jazykových verzí značky hreflang doplňuje systém sám. Popis a klíčová slova celého webu jsou v **Nastavení → Základní**.
+Kanonickou adresu, značky Open Graph pro sdílení a u jazykových verzí značky hreflang doplňuje systém sám. Popis a klíčová slova celého webu jsou v **Nastavení → Základní**: **Popis webu** v oddílu **Web**, **Klíčová slova webu** v rozbalovacím oddílu **Další možnosti**.
 
 ## Přesměrování
 
@@ -85,13 +87,13 @@ Nejčastější případ řeší systém sám: když změníte adresu vydaného 
 
 Ruční přesměrování:
 
-1. V oddílu **Přidat přesměrování** vyplňte **Stará adresa** – cestu na tomto webu, která už neexistuje, například `/stara-stranka.html`.
+1. Nahoře ve formuláři vyplňte **Stará adresa** – cestu na tomto webu, která už neexistuje, například `/stara-stranka.html`.
 2. Do **Přesměrovat na** zadejte cíl: cestu (`/clanek/nova-adresa`) nebo celou adresu `https://…`.
-3. Klepněte na **Přesměrovat**.
+3. Klepněte na **Přidat přesměrování**.
 
 Přesměrování se použije jen tehdy, když na staré adrese nic není. Existující stránku nepřebije. Tabulka ukazuje u každého záznamu, kolikrát bylo použito (sloupec **Použito**).
 
-Pod ní je přehled **Adresy, které čtenáři nenašli (404)** – 25 nejčastějších za posledních 60 dnů s počtem a datem. Odkaz u adresy předvyplní formulář, takže chybějící stránku přesměrujete na dvě klepnutí. **Vyprázdnit přehled** seznam smaže.
+Pod ní je přehled **Adresy, které čtenáři nenašli (404)** – 25 nejčastějších za posledních 60 dnů s počtem a datem. Odkaz **Přesměrovat** u adresy předvyplní formulář, takže chybějící stránku přesměrujete na dvě klepnutí. **Vyprázdnit přehled** seznam smaže.
 
 ## Související
 

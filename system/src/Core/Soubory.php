@@ -67,6 +67,6 @@ final class Soubory
 
     public static function velikost(int $bajtu): string
     {
-        return $bajtu >= 1048576 ? number_format($bajtu / 1048576, 1, ',', ' ') . ' MB' : max(1, (int) round($bajtu / 1024)) . ' kB';
+        return $bajtu >= 1048576 ? cislo($bajtu / 1048576) . ' MB' : max(1, (int) round($bajtu / 1024)) . ' kB';
     }
 }

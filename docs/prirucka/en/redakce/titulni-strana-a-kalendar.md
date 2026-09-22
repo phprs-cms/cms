@@ -4,12 +4,14 @@ This page describes the tools the editorial team uses to control what is at the 
 
 ## Front page
 
+![Front page](../obrazky/titulni-strana.webp)
+
 The home page of the site sorts articles from the newest. Pinned articles are above them, in the order set by the editorial team. Only someone who may publish decides about the front page; others do not see the **Front page** link.
 
 ### Arranging the front page
 
 1. Open **Content → Articles → Front page**.
-2. On the left is the column **At the top of the front page** with the pinned articles, on the right **Latest articles** – the last 30 published articles that are shown on the home page.
+2. On the left is the column **At the top of the front page** with the pinned articles, on the right **Latest articles** – the last 30 published articles that are shown on the home page. On a site with language versions the screen arranges only the default language; in the other languages pin articles with the option **Pin to the top (lead story)** directly on the article.
 3. You pin an article with the **Pin** button, or by dragging it into the left column. **Unpin** returns it among the others.
 4. You change the order of the pinned articles by dragging or with the arrows **↑** and **↓**.
 5. Click **Save the front page**. You check the result with the **View site** link.
@@ -29,6 +31,8 @@ How many articles fit on the home page is determined by an administrator in **Se
 
 ## Editorial calendar
 
+![Editorial calendar](../obrazky/redakcni-kalendar.webp)
+
 **Content → Articles → Editorial calendar** shows a monthly grid of articles by publish date.
 
 - Every article is listed in the calendar with its time and headline. Clicking it opens its editor.
@@ -42,7 +46,9 @@ The calendar is also useful for planning ahead: create a draft with a working he
 
 ## Article list and bulk actions
 
-The list shows 20 articles per page. You narrow it down with the status tabs (**All**, **Published**, **Scheduled**, **Drafts**, **For review**, **Approved**), the **Section:** field, the **Headline contains:** field and the option **Show only my articles**; confirm with the **Filter** button.
+![The article list with tabs by status](../obrazky/vypis-clanku.webp)
+
+The list shows 20 articles per page. You narrow it down with the status tabs (**All**, **Published**, **Scheduled**, **Drafts**, **For review**, **Approved**), the **Section:** field, on a site with language versions the **Language:** field, the **Headline contains:** field and the option **Show only my articles**; confirm with the **Filter** button.
 
 A bulk action:
 
@@ -57,7 +63,7 @@ A bulk action:
 | **lock for signed-in readers** | only signed-in readers can read the article |
 | **unlock for everyone** | removes the lock |
 
-Locking is offered only with the **Readers and locked content** extension turned on (**Extensions** in the main menu).
+Locking is offered only with the **Readers and locked content** extension turned on (**Administration → Extensions**).
 
 The **Delete selected** button deletes the articles after confirmation. Deletion cannot be undone. Whoever does not have the right to publish cannot change or delete published articles in bulk – the system skips them and states the number of articles actually changed in its message.
 
@@ -67,7 +73,7 @@ The **Delete selected** button deletes the articles after confirmation. Deletion
 
 ## Command palette
 
-The keyboard shortcut **Ctrl+K** (**⌘K** on a Mac) or the **Search…** field in the top right opens the command palette.
+The keyboard shortcut **Ctrl+K** (**⌘K** on a Mac) or the **Search…** field in the top right opens the command palette. When the cursor is in the article text, Ctrl+K inserts a link – open the palette with the **Search…** field then.
 
 - Type the name of an area (*sections*), an action (*new article*, *editorial calendar*, *front page*) or a part of an article headline.
 - Choose with the arrows **↑** **↓**; **Enter** opens, **Esc** closes.

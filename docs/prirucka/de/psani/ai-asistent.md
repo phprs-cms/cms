@@ -6,8 +6,8 @@ Der KI-Assistent ist ein optionaler Helfer im Artikeleditor. Er schlägt Titel, 
 
 Der Assistent ist nach der Installation ausgeschaltet. Eingeschaltet wird er vom Administrator:
 
-1. Öffnen Sie im Hauptmenü **Erweiterungen** und setzen Sie das Häkchen bei **KI-Assistent im Editor**.
-2. Fügen Sie weiter unten im Abschnitt **KI-Assistent – Schlüssel und Modell** in das Feld **Claude API-Schlüssel** Ihren eigenen Schlüssel ein. Sie erstellen ihn auf console.anthropic.com im Bereich API Keys.
+1. Öffnen Sie **Verwaltung → Erweiterungen** und setzen Sie das Häkchen bei **KI-Assistent im Editor**.
+2. Klappen Sie weiter unten den Abschnitt **KI-Assistent – Schlüssel und Modell** auf und fügen Sie in das Feld **Claude API-Schlüssel** Ihren eigenen Schlüssel ein. Sie erstellen ihn auf console.anthropic.com im Bereich API Keys.
 3. Wählen Sie im Feld **Modell** eine der drei Möglichkeiten: schnell und sparsam, ausgewogen (empfohlen) oder am gründlichsten.
 4. Klicken Sie auf **Einstellungen speichern**.
 
@@ -23,8 +23,8 @@ Bei den Beschriftungen der Felder im Artikelformular kommen Schaltflächen mit d
 | **Vorspann (Einleitung)** | **✦ Vorschlagen** | Varianten des Vorspanns |
 | **Artikeltext** | **✦ Korrektur** | eine Liste von Korrekturen zu Rechtschreibung, Tippfehlern, Zeichensetzung und Typografie |
 | **Schlagwörter** | **✦ Vorschlagen** | Schlagwörter, bevorzugt aus denen, die die Website schon hat |
-| **Kurz gefasst** | **✦ Vorschlagen** | drei bis fünf Punkte mit den wichtigsten Fakten |
-| **Beschreibung für Suchmaschinen** | **✦ Vorschlagen** | Varianten einer kurzen Beschreibung |
+| **Kurz gefasst** (in **Weitere Einstellungen**) | **✦ Vorschlagen** | drei bis fünf Punkte mit den wichtigsten Fakten |
+| **Beschreibung für Suchmaschinen** (in **Weitere Einstellungen**) | **✦ Vorschlagen** | Varianten einer kurzen Beschreibung |
 
 Der Assistent geht vom Artikeltext aus. Solange der Artikel zu kurz ist, bittet er Sie, zuerst ein Stück zu schreiben.
 

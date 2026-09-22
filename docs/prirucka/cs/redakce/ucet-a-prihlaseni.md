@@ -2,6 +2,8 @@
 
 Vlastní účet si každý spravuje sám na obrazovce **Můj účet**. Otevřete ji klepnutím na avatar s iniciálou vpravo nahoře. Vedle avataru je i přepínač světlého a tmavého režimu administrace.
 
+![Můj účet](../obrazky/muj-ucet.webp)
+
 ## Moje údaje
 
 | Pole | K čemu je |
@@ -76,7 +78,7 @@ Po 10 chybných pokusech v řadě se účet na 15 minut zamkne. Stejně se poč�
 
 ## Tokeny pro napojení na Claude
 
-Oddíl **Napojení na Claude** je vidět jen se zapnutým rozšířením **Napojení na Claude** (hlavní nabídka **Rozšíření**). Token dovolí Claudovi pracovat s webem vaším jménem a s vašimi právy. Nové články zakládá jako koncepty a všechny jeho zásahy jsou v Protokolu změn.
+Oddíl **Napojení na Claude** je vidět jen se zapnutým rozšířením **Napojení na Claude** (**Správa → Rozšíření**). Token dovolí Claudovi pracovat s webem vaším jménem a s vašimi právy. Nové články zakládá jako koncepty a všechny jeho zásahy jsou v Protokolu změn.
 
 1. Vyplňte **Název nového tokenu** (například *Claude na notebooku*) a klepněte na **Vytvořit token**.
 2. Token se zobrazí jen jednou, spolu s návodem k připojení. Zkopírujte si ho hned.

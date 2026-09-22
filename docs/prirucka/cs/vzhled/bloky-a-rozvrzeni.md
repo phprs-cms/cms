@@ -4,6 +4,8 @@ Blok je samostatný prvek stránky mimo hlavní obsah: seznam rubrik, nejčteně
 
 Přístup má administrátor a redaktor (pokud mu administrátor sekci neodebral, viz [Role a oprávnění](../redakce/role-a-opravneni.md)).
 
+![Vizuální editor bloků přímo na stránce webu](../obrazky/editor-bloku.webp)
+
 ## Otevření editoru
 
 V hlavní nabídce klepněte na **Vzhled → Bloky a rozvržení**. Otevře se hlavní stránka webu v režimu úprav: nahoře je lišta **Úprava bloků**, zóny jsou ohraničené a v každé je tlačítko **+ Přidat blok**.
@@ -56,7 +58,7 @@ Které zóny existují, určuje rozvržení stránky. Změníte ho tlačítky **
 | Vlastní | **Text** | Vlastní text, obrázek nebo vložený kód (video, mapa…). |
 | Vlastní | **Reklama** | Pozice, na které se střídají bannery z Reklamního systému. |
 
-Bloky **Novinky**, **Anketa**, **Newsletter**, **Oznámení**, **Účet čtenáře** a **Reklama** patří k rozšířením. V nabídce jsou, jen když je příslušné rozšíření v sekci **Rozšíření** zapnuté. Po vypnutí rozšíření blok z webu zmizí, jeho nastavení zůstane.
+Bloky **Novinky**, **Anketa**, **Newsletter**, **Oznámení**, **Účet čtenáře** a **Reklama** patří k rozšířením. V nabídce jsou, jen když je příslušné rozšíření ve **Správa → Rozšíření** zapnuté. Po vypnutí rozšíření blok z webu zmizí, jeho nastavení zůstane.
 
 ## Přesun, nastavení a smazání
 
@@ -71,7 +73,7 @@ Každý blok má **Nadpis** a volbu **Zobrazit nadpis na webu**. Další pole se
 |---|---|
 | Text | **Obsah** – malý editor |
 | Menu | **Odkazy** – dvojice text a adresa (`/o-nas` nebo `https://…`), další řádek přidá **+ další odkaz** |
-| Články z rubriky | **Rubrika** (nebo **Nejnovější ze všech rubrik**) a **Kolik položek** (1–20) |
+| Články z rubriky | **Rubrika** (nebo **Nejnovější ze všech rubrik**) a **Kolik položek** (1–20; vyšší číslo se uloží jako 20) |
 | Nejčtenější, Štítky, Archiv, Autoři | **Kolik položek** (1–50) |
 | Podpořte nás | **Výzva**, **Text tlačítka**, **Kam tlačítko vede** – viz [Podpora a příjmy](../ctenari-a-prijmy/podpora-a-prijmy.md) |
 | Reklama | **Reklamní pozice** – viz [Reklama](../ctenari-a-prijmy/reklama.md) |
@@ -112,7 +114,7 @@ Záložní cestou je formulářový přehled na adrese `admin.php?modul=bloky&sc
 
 - Přehled ukazuje schéma stránky se zónami. Přepínač **Rozvržení stránky:** je nahoře.
 - Bloky přesunete přetažením nebo šipkami; **Upravit** otevře formulář, **Smazat** blok odstraní, **+ přidat blok** založí nový v dané zóně.
-- Formulář má pole **Typ bloku**, **Nadpis bloku**, **Vlastní obsah (HTML)**, **Umístění**, **Vzhled bloku**, **Na kterých stránkách**, **Jen v rubrice**, **Jazyková verze** (jen na webu s více jazyky), **Zařízení** a **Zobrazit blok**. U bloku Podpořte nás přibudou pole **Text tlačítka** a **Kam tlačítko vede**. Vzhled tu má navíc pátou volbu **Bez nadpisu**, která odpovídá vypnutému **Zobrazit nadpis na webu**.
+- Formulář má pole **Typ bloku**, **Nadpis bloku**, **Vlastní obsah (HTML)** a podle typu bloku **Odkazy menu**, **Rubrika**, **Počet položek** nebo **Reklamní pozice**. V oddílu **Umístění a zobrazení** následují **Umístění**, **Vzhled bloku**, **Na kterých stránkách**, **Jen v rubrice**, **Jazyková verze** (jen na webu s více jazyky), **Zařízení** a **Zobrazit blok**. U bloku Podpořte nás přibudou pole **Text tlačítka** a **Kam tlačítko vede**. Vzhled tu má navíc pátou volbu **Bez nadpisu**, která odpovídá vypnutému **Zobrazit nadpis na webu**.
 - Zpět do vizuálního editoru vede **Otevřít vizuální editor**.
 
 ## Související

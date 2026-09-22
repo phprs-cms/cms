@@ -42,13 +42,13 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<label for="nazev"><?= e(t('Nadpis bloku')) ?></label>
 	<div><input class="textpole siroke" type="text" id="nazev" name="nazev" value="<?= e($blok['nazev']) ?>" maxlength="100" required><?= $chyba('nazev') ?></div>
 </div>
-<div class="radek" data-pro="">
+<div class="radek" data-pro=" pod">
 	<label for="obsah"><?= e(t('Vlastní obsah (HTML)')) ?></label>
 	<textarea class="textbox kod" id="obsah" name="obsah" rows="10"><?= e($blok['obsah']) ?></textarea>
 </div>
 <div class="radek" data-pro="men">
 	<label for="obsah-menu"><?= e(t('Odkazy menu')) ?></label>
-	<div><textarea class="textbox nizky" id="obsah-menu" name="obsah_menu" rows="6" placeholder="O nás | /o-nas&#10;Inzerce | /inzerce&#10;Facebook | https://facebook.com/…"><?= $blok['sys_funkce'] === 'men' ? e($blok['obsah']) : '' ?></textarea>
+	<div><textarea class="textbox nizky" id="obsah-menu" name="obsah_menu" rows="6" placeholder="<?= e(t('O nás | /o-nas')) ?>&#10;<?= e(t('Inzerce | /inzerce')) ?>&#10;Facebook | https://facebook.com/…"><?= $blok['sys_funkce'] === 'men' ? e($blok['obsah']) : '' ?></textarea>
 	<span class="napoveda"><?= e(t('Každý odkaz na vlastní řádek ve tvaru: text | adresa.')) ?></span></div>
 </div>
 <div class="radek" data-pro="cla">
@@ -133,5 +133,5 @@ $rubrikySelect = function (string $name, int $vybrana, string $prazdna) use ($ru
 	<div class="volby"><label><input type="checkbox" name="zobrazit" value="1"<?= $blok['zobrazit'] ? ' checked' : '' ?>> <?= e(t('Ano')) ?></label></div>
 </div>
 </fieldset>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($blok['idb'] ? 'Ulož' : 'Přidej')) ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($blok['idb'] ? 'Uložit' : 'Přidat')) ?>"></p>
 </form>

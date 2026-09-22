@@ -47,6 +47,18 @@ function cislo(float|int $cislo, int $desetinna = 1): string
     return number_format((float) $cislo, $desetinna, PhpRS\Core\Jazyk::kod() === 'en' ? '.' : ',', '');
 }
 
+/** Počet s oddělovačem tisíců v jazyce webu: 12 345 česky a slovensky, 12,345 anglicky, 12.345 německy. */
+function pocet(float|int $cislo, int $desetinna = 0): string
+{
+    [$carka, $tisice] = match (PhpRS\Core\Jazyk::kod()) {
+        'en' => ['.', ','],
+        'de' => [',', '.'],
+        default => [',', "\u{00A0}"],
+    };
+
+    return number_format((float) $cislo, $desetinna, $carka, $tisice);
+}
+
 /** České datum: 18. 9. 2026, volitelně s časem. */
 function datum(string|\DateTimeInterface|null $value, bool $withTime = false): string
 {

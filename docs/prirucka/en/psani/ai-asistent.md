@@ -6,8 +6,8 @@ The AI assistant is an optional helper in the article editor. It suggests headli
 
 The assistant is off after installation. An administrator turns it on:
 
-1. Open **Extensions** in the main menu and tick **AI assistant in the editor**.
-2. Further down, in the **AI assistant – key and model** panel, paste your own key into the **Claude API key** field. You create it at console.anthropic.com under API Keys.
+1. Open **Administration → Extensions** and tick **AI assistant in the editor**.
+2. Further down, expand the **AI assistant – key and model** section and paste your own key into the **Claude API key** field. You create it at console.anthropic.com under API Keys.
 3. In the **Model** field choose one of the three options: fast and economical, balanced (recommended), or most thorough.
 4. Click **Save settings**.
 
@@ -23,8 +23,8 @@ Buttons with the ✦ sign are added next to the field labels in the article form
 | **Lead paragraph** | **✦ Suggest** | variants of the standfirst |
 | **Article text** | **✦ Proofread** | a list of corrections of spelling, typos, punctuation and typography |
 | **Tags** | **✦ Suggest** | tags, preferably from those the site already has |
-| **In brief** | **✦ Suggest** | three to five points with the main facts |
-| **Search engine description** | **✦ Suggest** | variants of a short description |
+| **In brief** (in **More settings**) | **✦ Suggest** | three to five points with the main facts |
+| **Search engine description** (in **More settings**) | **✦ Suggest** | variants of a short description |
 
 The assistant works from the article text. While the article is too short, it asks you to write a bit first.
 

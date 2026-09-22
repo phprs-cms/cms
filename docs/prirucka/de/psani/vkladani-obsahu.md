@@ -27,7 +27,7 @@ Adressen anderer Dienste bleiben im Artikel so stehen, wie Sie sie geschrieben h
 
 ## Geladen wird erst nach dem Klick
 
-Der Leser sieht an der Stelle des Videos zuerst eine Schaltfläche – **Video abspielen**, **Audio abspielen** oder **Beitrag anzeigen von …** – und darunter den Namen des Dienstes, von dem der Inhalt geladen wird. Erst nach dem Klick wird der Inhalt tatsächlich vom fremden Dienst geladen.
+Der Leser sieht an der Stelle des Videos zuerst eine Schaltfläche – **Video abspielen**, **Audio abspielen** oder **Beitrag anzeigen von …** mit dem Namen des Netzwerks – und darunter die Domain, von der der Inhalt geladen wird. Erst nach dem Klick wird der Inhalt tatsächlich vom fremden Dienst geladen.
 
 Das hat zwei Gründe:
 

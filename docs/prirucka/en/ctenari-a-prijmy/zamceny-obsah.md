@@ -2,11 +2,13 @@
 
 You can reserve an article for signed-in readers or for subscribers. Others see the headline, the standfirst, the beginning of the text and a prompt. A reader gets a subscription in one of two ways: they pay for it themselves by card through the Stripe service and the site turns it on and extends it by itself (see [Payments with Stripe](platby-stripe.md)), or you accept the payment your own way and record the subscription for them by hand. Both ways can be used at the same time.
 
-Everything on this page requires the **Readers and locked content** extension (main menu **Extensions**). Registration and accounts are described on the page [Reader accounts](ucty-ctenaru.md).
+Everything on this page requires the **Readers and locked content** extension (**Administration → Extensions**). Registration and accounts are described on the page [Reader accounts](ucty-ctenaru.md).
+
+![Settings → Readers and payments](../obrazky/ctenari-a-platby.webp)
 
 ## Locking an article
 
-With the extension turned on, the article form has the field **Who can read**:
+With the extension turned on, the article form has, in the expandable **More settings** section, the field **Who can read**:
 
 | Option | Who reads the whole article |
 |---|---|
@@ -44,7 +46,7 @@ Open **Settings → Readers and payments**, section **Readers and locked content
 | **Where to get a subscription** | where the **Get a subscription** button leads, as long as payments through Stripe are not turned on | empty |
 | **Prompt text below the preview** | your own sentence in the prompt, at most 300 characters; empty = the default text | empty |
 
-The same section also contains the part **Payments with Stripe** – it is described on a [separate page](platby-stripe.md).
+The same tab has the **Payments with Stripe** section below it – it is described on a [separate page](platby-stripe.md).
 
 ## Where to get a subscription
 

@@ -216,7 +216,7 @@
 				radky.push(pole(T('Rubrika'), vyber('blok_rubrika', [[0, T('Nejnovější ze všech rubrik')]].concat(N.rubriky.map(function (r) { return [r.id, r.nazev]; })), data.split(':')[0])));
 			}
 			if (['cla', 'nej', 'sti', 'aut', 'arc'].indexOf(typ) !== -1) {
-				radky.push(pole(T('Kolik položek'), el('input', { type: 'number', name: 'blok_pocet', min: '1', max: '50', value: typ === 'cla' ? (data.split(':')[1] || 5) : (data || 5) })));
+				radky.push(pole(T('Kolik položek'), el('input', { type: 'number', name: 'blok_pocet', min: '1', max: typ === 'cla' ? '20' : '50', value: typ === 'cla' ? (data.split(':')[1] || 5) : (data || 5) })));
 			}
 			if (typ === 'pod') {
 				var taPod = el('textarea', { name: 'obsah', rows: '3' });

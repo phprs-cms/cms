@@ -2,6 +2,8 @@
 
 Sein eigenes Konto verwaltet jeder selbst auf dem Bildschirm **Mein Konto**. Sie öffnen ihn mit einem Klick auf den Avatar mit dem Anfangsbuchstaben oben rechts. Neben dem Avatar steht auch der Umschalter zwischen hellem und dunklem Modus der Administration.
 
+![Mein Konto](../obrazky/muj-ucet.webp)
+
 ## Meine Daten
 
 | Feld | Wozu es dient |
@@ -76,7 +78,7 @@ Nach 10 Fehlversuchen in Folge wird das Konto für 15 Minuten gesperrt. Genauso 
 
 ## Tokens für die Verbindung mit Claude
 
-Der Abschnitt **Verbindung mit Claude** ist nur mit eingeschalteter Erweiterung **Verbindung mit Claude** sichtbar (Hauptmenü **Erweiterungen**). Ein Token erlaubt Claude, in Ihrem Namen und mit Ihren Rechten mit der Website zu arbeiten. Neue Artikel legt er als Entwürfe an und alle seine Eingriffe stehen im Änderungsprotokoll.
+Der Abschnitt **Verbindung mit Claude** ist nur mit eingeschalteter Erweiterung **Verbindung mit Claude** sichtbar (**Verwaltung → Erweiterungen**). Ein Token erlaubt Claude, in Ihrem Namen und mit Ihren Rechten mit der Website zu arbeiten. Neue Artikel legt er als Entwürfe an und alle seine Eingriffe stehen im Änderungsprotokoll.
 
 1. Füllen Sie **Name des neuen Tokens** aus (zum Beispiel *Claude auf dem Notebook*) und klicken Sie auf **Token erstellen**.
 2. Das Token wird nur einmal angezeigt, zusammen mit einer Anleitung zur Verbindung. Kopieren Sie es sofort.

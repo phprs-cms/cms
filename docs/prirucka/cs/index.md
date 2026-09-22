@@ -12,7 +12,7 @@ a pokračuje kapitolami Vzhled až SEO a AI. **Vývojář** najde mapu kódu a p
 - **Psaní** – editor článku, obrázky, galerie a přílohy, vkládání videa a příspěvků ze sítí, typy obsahu, rubriky, štítky a seriály, plánování a revize, AI asistent.
 - **Redakce** – role a oprávnění, předávka a korektura, titulní strana a kalendář, komentáře, účet a přihlášení.
 - **Vzhled** – šablony webu, Identita webu, bloky a rozvržení, úprava textu přímo na webu a vlastní šablona.
-- **Čtenáři a příjmy** – účty čtenářů, zamčený obsah a předplatné, newsletter, oznámení v prohlížeči, reklama, podpora a přehled příjmů.
+- **Čtenáři a příjmy** – účty čtenářů, zamčený obsah a předplatné, platby přes Stripe, newsletter, oznámení v prohlížeči, reklama, podpora a přehled příjmů.
 - **Jazykové verze** – jazyky webu, přepínač a značky hreflang, překlad článků, rubrik, stránek a bloků.
 - **SEO a AI** – nastavení pro vyhledávače, AI vyhledávače, napojení na Claude, měření a soukromí.
 - **Provoz** – pošta, zálohy, úlohy na pozadí, Stav systému, nginx, bezpečnost a řešení potíží.
@@ -23,5 +23,9 @@ a pokračuje kapitolami Vzhled až SEO a AI. **Vývojář** najde mapu kódu a p
 Názvy obrazovek a tlačítek jsou **tučně** a odpovídají českému prostředí administrace. Cesta v administraci se zapisuje šipkami,
 například **Nastavení → Pošta**. Adresy a názvy souborů jsou `takto`.
 
-Příručka odpovídá poslední vydané verzi systému. Číslo své verze najdete v administraci dole pod **Přehledem**
-a v **Nastavení → Zálohy a aktualizace**.
+Příručka odpovídá poslední vydané verzi systému. Číslo své verze najdete v patičce každé stránky administrace
+a v **Nastavení → Zálohy a aktualizace** (řádek Nainstalovaná verze).
+
+Na obrazovkách administrace je vedle nadpisu tlačítko **Nápověda**. Otevře seznam stránek této příručky, které se dané obrazovky týkají.
+
+![Tlačítko Nápověda vedle nadpisu obrazovky nabízí stránky příručky k ní](obrazky/napoveda-k-obrazovce.webp)

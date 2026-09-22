@@ -41,7 +41,7 @@ Nový článek vzniká vždy jako koncept. Vydat ho Claude smí jen s účtem, k
 
 ## Zapnutí a token
 
-1. Administrátor v hlavní nabídce otevře **Rozšíření**, zaškrtne **Napojení na Claude** a uloží. Ve výchozím stavu je rozšíření vypnuté.
+1. Administrátor otevře **Správa → Rozšíření**, zaškrtne **Napojení na Claude** a uloží. Ve výchozím stavu je rozšíření vypnuté.
 2. Každý uživatel, který chce napojení používat, otevře **Můj účet**, oddíl **Napojení na Claude**.
 3. Vyplní **Název nového tokenu** – například „Claude na notebooku“ – a klepne na **Vytvořit token**.
 4. Token se zobrazí **jen jednou**. Zkopírujte si ho hned. V databázi je uložen jen jeho otisk, takže ho později nejde zobrazit – jen zrušit a vytvořit nový.

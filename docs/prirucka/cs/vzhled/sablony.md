@@ -29,7 +29,7 @@ Spolu se šablonou se nastaví rozvržení stránky, které k ní patří (viz t
 Beze změny zůstává:
 
 - všechen obsah – články, stránky, rubriky, média, komentáře,
-- bloky a jejich nastavení,
+- bloky a jejich nastavení (mění se jen zóna bloků ze zrušeného sloupce),
 - logo, ikona webu, hlavní barva, písma a tmavý režim z [Identity webu](identita-webu.md),
 - šablony článku (Dlouhé čtení, Fotoreportáž, Rozhovor) a typy obsahu – fungují ve všech třech šablonách,
 - adresy stránek, SEO, měření a cookie lišta.

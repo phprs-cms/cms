@@ -8,14 +8,14 @@ Der Leser schaltet mit einem Klick die Benachrichtigungen ein und sein Browser w
 |---|---|
 | Website auf **HTTPS** | Browser erlauben Benachrichtigungen nur gesicherten Websites. |
 | PHP-Erweiterungen **openssl** und **curl** | Benachrichtigungen werden mit dem Schlüssel der Website signiert und an die Dienste der Browser gesendet. Ohne sie schaltet sich die Funktion von selbst aus und der Block wird nicht angezeigt. |
-| Eingeschaltete Erweiterung **Benachrichtigungen im Browser** | Hauptmenü **Erweiterungen**. In der Standardeinstellung ist sie ausgeschaltet. |
+| Eingeschaltete Erweiterung **Benachrichtigungen im Browser** | **Verwaltung → Erweiterungen**. In der Standardeinstellung ist sie ausgeschaltet. |
 | Block **Benachrichtigungen** auf der Website | Die Schaltfläche, mit der der Leser die Benachrichtigungen einschaltet. |
 
 Sie geben keine Schlüssel ein. Das Schlüsselpaar zum Signieren (VAPID) erzeugt die Website bei der ersten Verwendung selbst.
 
 ## Einschalten
 
-1. Öffnen Sie im Hauptmenü **Erweiterungen**, haken Sie **Benachrichtigungen im Browser** an und speichern Sie.
+1. Öffnen Sie **Verwaltung → Erweiterungen**, haken Sie **Benachrichtigungen im Browser** an und speichern Sie.
 2. Öffnen Sie **Design → Blöcke und Layout** und fügen Sie in einer passenden Zone den Block **Benachrichtigungen** aus der Gruppe **Leser und Redaktion** hinzu.
 3. In den Einstellungen des Blocks können Sie die Überschrift ändern. Der Standardtext des Aufrufs lautet **Wir benachrichtigen Sie, sobald ein neuer Artikel erscheint.**
 4. Öffnen Sie die Website in einem gewöhnlichen Browserfenster und schalten Sie die Benachrichtigungen selbst ein. Nach der Veröffentlichung des nächsten Artikels prüfen Sie, dass sie ankommen.

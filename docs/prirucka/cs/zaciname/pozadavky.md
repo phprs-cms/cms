@@ -12,9 +12,9 @@ phpRS běží na běžném sdíleném hostingu. Nepotřebuje přístup přes SSH
 | Rozšíření PHP – doporučená | `exif` (správné otočení fotek z mobilu), `intl` (řazení podle češtiny), `curl` (oznamování novinek vyhledávačům), `zip` a `sodium` (aktualizace jedním kliknutím), `zlib` (komprimované zálohy) |
 | Webový server | Apache s povoleným `.htaccess`, nebo nginx (viz [Provoz → nginx](../provoz/nginx.md)) |
 | HTTPS | silně doporučeno; bez něj nefunguje Web Push ani napojení na Claude a přihlašovací údaje putují nešifrovaně |
-| Místo na disku | samotný systém zabere pod 3 MB; počítejte hlavně s fotkami |
+| Místo na disku | samotný systém zabere kolem 3 MB; počítejte hlavně s fotkami |
 
-Bez doporučených rozšíření se systém nainstaluje, jen některé funkce nebudou dostupné. Co přesně chybí, ukáže po instalaci **Nastavení → Stav systému**.
+Bez doporučených rozšíření se systém nainstaluje, jen některé funkce nebudou dostupné. Chybějící `exif`, `intl` a `curl` ukáže po instalaci **Nastavení → Stav systému**; chybějící `zip` nebo `sodium` ohlásí až pokus o aktualizaci a bez `zlib` vznikají zálohy jako nekomprimované soubory `.sql`.
 
 ## Co si připravit před instalací
 

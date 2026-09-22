@@ -2,6 +2,8 @@
 
 Alle hochgeladenen Dateien liegen an einem Ort: **Inhalt → Medien**. Zugriff auf die Medien hat jeder, der sich in der Administration anmeldet. Die Beschreibung ändern und eine Datei löschen darf aber nur, wer sie hochgeladen hat, und der Administrator.
 
+![Inhalt → Medien](../obrazky/media.webp)
+
 ## Hochladen
 
 Dateien laden Sie auf drei Wegen hoch:
@@ -57,7 +59,7 @@ Beide Angaben werden im Moment des Einfügens in den Artikel übernommen. Eine s
 
 1. Setzen Sie den Cursor an die Stelle, an die das Bild gehört.
 2. Klicken Sie in der Leiste auf **Bild**. Es öffnet sich das Fenster **Medien**.
-3. Wählen Sie oben **Alle Medien**, **In diesem Artikel**, **Nicht zugeordnet** oder einen der Ordner. Das Fenster zeigt die 60 neuesten Dateien der gewählten Auswahl – ein älteres Bild finden Sie am einfachsten über seinen Ordner.
+3. Wählen Sie oben **Alle Medien**, **In diesem Artikel**, **Nicht zugeordnet** oder einen der Ordner. Das Fenster lädt die 60 neuesten Dateien der gewählten Auswahl; weitere fügt die Schaltfläche **Weitere laden** unter dem Raster hinzu. Das Feld **Medien durchsuchen…** neben der Auswahl findet Dateien nach Titel, Bildunterschrift oder Dateinamen.
 4. Klicken Sie auf das Bild – es wird samt Bildunterschrift eingefügt.
 
 Der Leser vergrößert ein Bild im Artikel mit einem Klick.

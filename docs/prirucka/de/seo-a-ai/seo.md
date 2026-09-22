@@ -2,6 +2,8 @@
 
 Den größten Teil der Arbeit für Suchmaschinen erledigt das System selbst: lesbare Adressen, Beschreibungen, kanonische Adressen, Sitemap, strukturierte Daten und Feeds. Unter **Einstellungen → SEO und GEO** entscheiden Sie nur über das Wesentliche. Diese Seite beschreibt die Einstellungen der Website, die Optionen beim Artikel und Weiterleitungen. Die Optionen für KI-Suchmaschinen aus demselben Reiter haben eine eigene Seite: [KI-Suchmaschinen](ai-vyhledavace.md).
 
+![Einstellungen → SEO und GEO](../obrazky/nastaveni-seo.webp)
+
 ## Sichtbarkeit der Website
 
 | Feld | Bedeutung | Standard |
@@ -23,7 +25,7 @@ Klappen Sie **Bestätigung der Website-Inhaberschaft (Google Search Console, Bin
 
 ## Was das System erzeugt
 
-Links zu allen Dateien stehen unten im Abschnitt **Für Fortgeschrittene**.
+Links zu diesen Dateien (außer `/podcast.xml`) stehen am Ende des aufklappbaren Abschnitts **Für Fortgeschrittene**.
 
 | Adresse | Inhalt |
 |---|---|
@@ -67,7 +69,7 @@ Nach dem Einschalten erzeugt das System beim Speichern der Einstellungen einen S
 
 ## Optionen beim Artikel
 
-Im Artikelformular gibt es drei Felder für Suchmaschinen:
+Im Artikelformular gibt es im aufklappbaren Abschnitt **Weitere Einstellungen** drei Felder für Suchmaschinen:
 
 | Feld | Bedeutung |
 |---|---|
@@ -75,7 +77,7 @@ Im Artikelformular gibt es drei Felder für Suchmaschinen:
 | **Beschreibung für Suchmaschinen** | Höchstens 320 Zeichen. Leer = Anfang des Vorspanns. Einen Vorschlag macht auch der [KI-Assistent](../psani/ai-asistent.md). |
 | **Vor Suchmaschinen verbergen (noindex)** | Der Artikel bleibt auf der Website, bekommt aber das Tag `noindex`, fällt aus den Sitemaps und wird nicht gemeldet (IndexNow, Web Push, Webhook). Der automatische Newsletter nimmt ihn nicht auf. |
 
-Die kanonische Adresse, die Open-Graph-Tags für das Teilen und bei Sprachversionen die hreflang-Tags ergänzt das System selbst. Beschreibung und Schlüsselwörter der ganzen Website stehen unter **Einstellungen → Allgemein**.
+Die kanonische Adresse, die Open-Graph-Tags für das Teilen und bei Sprachversionen die hreflang-Tags ergänzt das System selbst. Beschreibung und Schlüsselwörter der ganzen Website stehen unter **Einstellungen → Allgemein**: **Beschreibung der Website** im Abschnitt **Website**, **Schlüsselwörter der Website** im aufklappbaren Abschnitt **Weitere Optionen**.
 
 ## Weiterleitungen
 
@@ -85,13 +87,13 @@ Den häufigsten Fall löst das System selbst: Wenn Sie die Adresse eines veröff
 
 Weiterleitung von Hand:
 
-1. Füllen Sie im Abschnitt **Weiterleitung hinzufügen** die **Alte Adresse** aus – einen Pfad auf dieser Website, der nicht mehr existiert, zum Beispiel `/stara-stranka.html`.
+1. Füllen Sie oben im Formular die **Alte Adresse** aus – einen Pfad auf dieser Website, der nicht mehr existiert, zum Beispiel `/stara-stranka.html`.
 2. Geben Sie in **Weiterleiten nach** das Ziel ein: einen Pfad (`/clanek/nova-adresa`) oder eine vollständige Adresse `https://…`.
-3. Klicken Sie auf **Weiterleiten**.
+3. Klicken Sie auf **Weiterleitung hinzufügen**.
 
 Eine Weiterleitung wird nur verwendet, wenn unter der alten Adresse nichts liegt. Eine bestehende Seite übersteuert sie nicht. Die Tabelle zeigt bei jedem Eintrag in der Spalte **Verwendet**, wie oft er benutzt wurde.
 
-Darunter steht die Übersicht **Adressen, die Leser nicht gefunden haben (404)** – die 25 häufigsten der letzten 60 Tage mit Anzahl und Datum. Der Link bei der Adresse füllt das Formular vor, eine fehlende Seite leiten Sie also mit zwei Klicks weiter. **Übersicht leeren** löscht die Liste.
+Darunter steht die Übersicht **Adressen, die Leser nicht gefunden haben (404)** – die 25 häufigsten der letzten 60 Tage mit Anzahl und Datum. Der Link **Weiterleiten** bei der Adresse füllt das Formular vor, eine fehlende Seite leiten Sie also mit zwei Klicks weiter. **Übersicht leeren** löscht die Liste.
 
 ## Siehe auch
 

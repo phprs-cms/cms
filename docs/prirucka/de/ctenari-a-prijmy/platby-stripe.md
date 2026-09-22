@@ -68,7 +68,7 @@ Füllen Sie unter **Einstellungen → Leser und Zahlungen** im Abschnitt **Zahlu
 | **Monatspreis**, **Jahrespreis** | die Preis-IDs `price_…`; leeres Feld = der Zeitraum wird nicht angeboten |
 | **Beschreibung des Monatspreises**, **Beschreibung des Jahrespreises** | Text an der Schaltfläche, zum Beispiel „4,90 € pro Monat“; freiwillig |
 
-Schlüssel und Geheimnis werden nach dem Speichern nicht mehr ausgegeben – im Feld sehen Sie nur die letzten vier Zeichen. Einen Wert, der nicht die Form eines Schlüssels, eines Geheimnisses oder einer Preis-ID hat, speichert die Website nicht und sagt es. Die Zahlungen sind eingeschaltet, sobald Schlüssel, Geheimnis und mindestens ein Preis ausgefüllt sind; das Etikett bei der Überschrift des Teils ändert sich in **eingeschaltet**.
+Schlüssel und Geheimnis werden nach dem Speichern nicht mehr ausgegeben – im Feld sehen Sie nur die letzten vier Zeichen. Einen Wert, der nicht die Form eines Schlüssels, eines Geheimnisses oder einer Preis-ID hat, speichert die Website nicht und sagt es. Die Zahlungen sind eingeschaltet, sobald Schlüssel, Geheimnis und mindestens ein Preis ausgefüllt sind; das Etikett bei der Überschrift des Teils ändert sich in **eingeschaltet**. Ausschalten lassen sich die Zahlungen, indem Sie beim Feld **Geheimer Schlüssel** das Häkchen bei **Gespeicherten Schlüssel entfernen** setzen und speichern.
 
 Die Beschreibung des Preises ist nur Text. Den tatsächlichen Betrag bestimmt der Preis in Stripe – wenn Sie ihn dort ändern, passen Sie auch die Beschreibung an.
 

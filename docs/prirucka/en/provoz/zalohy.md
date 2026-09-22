@@ -14,10 +14,10 @@ You can **download**, **restore** or delete each backup.
 
 ## Off-site backup copies
 
-A backup on the same server as the site will not help if you lose the hosting, if someone compromises it or if the disk fails. In the **Off-site backup copies** section, therefore, set where each new backup should upload itself:
+A backup on the same server as the site will not help if you lose the hosting, if someone compromises it or if the disk fails. In the **Database backups** section, therefore, expand **Off-site backup copies** and in the **Copy to** field choose where each new backup should upload itself:
 
-- **an FTP server** – another hosting or a home NAS; you enter the server, user, password and folder,
-- **S3 storage** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; you enter the endpoint, region, access key, secret key and the bucket with a folder.
+- **an FTP server** – another hosting or a home NAS; fill in **Server**, **User name / access key**, **Password / secret key** and **Folder / bucket**,
+- **S3 storage** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; the endpoint goes into the **Server** field, then **User name / access key**, **Password / secret key**, **Folder / bucket** (the bucket with a folder) and **Region (S3 only)**.
 
 Save the settings and click **Create backup now** – the copy uploads right away and you will see whether the connection works. The result of the last attempt is also shown in **System status**.
 

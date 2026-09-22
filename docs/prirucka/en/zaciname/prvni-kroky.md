@@ -2,6 +2,8 @@
 
 After your first sign-in, the **First steps** guide is waiting for you on the **Dashboard**. It has five items; each one leads straight to the right screen and is ticked off once completed. When you no longer need it, the **Hide** button makes it disappear.
 
+![The Dashboard with the First steps guide](../obrazky/prehled.webp)
+
 ## 1. Give your site a face
 
 **Appearance → Site identity.** Choose a template, upload a logo and a site icon, and pick the primary colour and the typefaces for headlines and text. You see the changes immediately in the preview.
@@ -14,11 +16,14 @@ Sections can have subsections. Their order in the navigation is set by the **Ord
 
 ## 3. Write your first article
 
-**Content → Articles → New article.** A headline, lead paragraph, text and section are enough. In the top right you choose the **Status**:
+**Content → Articles → New article.** A headline, lead paragraph, text and section are enough. In the right column, in the **Publishing** section, you choose the **Status**:
 
 - **Draft** – an article in progress, visible only to the newsroom,
-- **For review** – done, please check (this option is for an author who may not publish on their own),
+- **For review** – done, please check,
+- **Approved – waiting to be published** – checked, waiting for its time,
 - **Published** – the article is on the site; with a date in the future it is published automatically at that time.
+
+An author who may not publish on their own has only the first two options.
 
 You can delete the welcome article created by the installation. If you loaded the sample content during installation, delete all of it at once in **Settings → General → Sample content** – your own articles and sections stay.
 
@@ -28,7 +33,7 @@ You can delete the welcome article created by the installation. If you loaded th
 
 ## 5. Set the newsroom e-mail and mail delivery
 
-**Settings → Mail.** The site sends newsletter subscription confirmations, reader registrations, new passwords and notifications to the newsroom. The default sending through the hosting server works, but messages often end up in spam. A custom SMTP server is more reliable – see the chapter [Operations → Mail](../provoz/posta.md) for details.
+Check the newsroom e-mail in **Settings → General** (the **Newsroom e-mail** field), the sending method in **Settings → Mail**. The checklist item is ticked off when the newsroom e-mail is filled in and SMTP or the **Sender address** is set. The site sends newsletter subscription confirmations, reader registrations, new passwords and notifications to the newsroom. The default sending through the hosting server works, but messages often end up in spam. A custom SMTP server is more reliable – see the chapter [Operations → Mail](../provoz/posta.md) for details.
 
 ## What to do right afterwards
 
@@ -39,8 +44,10 @@ You can delete the welcome article created by the installation. If you loaded th
 
 ## Extensions
 
+![Administration → Extensions](../obrazky/rozsireni.webp)
+
 Many features are turned off after installation so that the administration stays uncluttered: news briefs, polls, newsletter, reader accounts and locked content, Web Push, language versions, the advertising system, the public API, the AI assistant and the Claude connection.
-You turn them on under **Extensions** in the main menu. Turning an extension off does not delete any data – when you turn it on again, everything is where it was.
+You turn them on in **Administration → Extensions**. Turning an extension off does not delete any data – when you turn it on again, everything is where it was.
 
 ## Quick control
 

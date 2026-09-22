@@ -35,7 +35,9 @@ Er braucht ein laufendes MySQL oder MariaDB und die Befehle `mysql` und `curl`. 
 4. er kopiert das Projekt in einen temporären Ordner, legt eine saubere Datenbank an und führt die Installation durch; er prüft, dass sich das Installationsprogramm danach selbst gelöscht hat,
 5. er geht die Website durch: Startseite, Artikel, Ressort, Suche, Feeds, Sitemaps, `robots.txt`, `llms.txt`, die bereinigte Version eines Artikels, die Seite 404 und dass `system/` und `config.php` von der Website aus nicht zugänglich sind,
 6. er probiert alle drei eingebauten Vorlagen und die Ersatzvorlage bei fehlendem Ordner aus,
-7. er meldet sich in der Administration an und geht ihre Bildschirme durch, einschließlich der Berechtigungen nach Ressort und der Bearbeitung eines Artikels direkt auf der Website.
+7. er meldet sich in der Administration an und geht ihre Bildschirme durch, einschließlich der Berechtigungen nach Ressort und der Bearbeitung eines Artikels direkt auf der Website,
+8. er geht den Import eines Beispielexports aus WordPress und den Export der Website durch,
+9. er geht die Zahlungen mit Stripe ohne Netzwerk durch: vor Ort signierte Webhooks und ein Scheinserver anstelle der API (Port in der Variable `STRIPE_PORT`, Standard 8098).
 
 Eine Antwort gilt auch dann als fehlerhaft, wenn sie den Text `Warning:`, `Notice:`, `Deprecated:` oder `Fatal error` enthält.
 

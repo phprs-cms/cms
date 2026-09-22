@@ -318,6 +318,18 @@ foreach (PhpRS\Core\Demo::JAZYKY as $kod) {
 }
 over('demo: obrázky se vejdou do 1 MB', array_sum(array_map(filesize(...), glob(PHPRS_ROOT . '/system/demo/img/*.jpg') ?: [])) < 1024 * 1024, true);
 
+/* ---------- čísla podle jazyka ---------- */
+over('pocet: česky mezera jako oddělovač tisíců', PhpRS\Core\Jazyk::docasne('cs', fn () => pocet(1234567)), "1\u{00A0}234\u{00A0}567");
+over('pocet: anglicky čárka a desetinná tečka', PhpRS\Core\Jazyk::docasne('en', fn () => pocet(12345.678, 2)), '12,345.68');
+over('pocet: německy tečka a desetinná čárka', PhpRS\Core\Jazyk::docasne('de', fn () => pocet(12345.5, 1)), '12.345,5');
+over('Soubory::velikost: anglicky desetinná tečka', PhpRS\Core\Jazyk::docasne('en', fn () => PhpRS\Core\Soubory::velikost(3 * 1048576 + 524288)), '3.5 MB');
+
+/* ---------- marketingové kódy a souhlas ---------- */
+over('Seo::cekaNaSouhlas: bez lišty beze změny', PhpRS\Front\Seo::cekaNaSouhlas('<script src="x.js"></script>', 'zadna'), '<script src="x.js"></script>');
+over('Seo::cekaNaSouhlas: vestavěná lišta balí do <template>', PhpRS\Front\Seo::cekaNaSouhlas('<ins></ins><script>a()</script>', 'vestavena'), '<template data-souhlas="marketing"><ins></ins><script>a()</script></template>');
+over('Seo::cekaNaSouhlas: externí služba dostane značené skripty', PhpRS\Front\Seo::cekaNaSouhlas('<ins></ins><SCRIPT async src="x.js"></script><script type="application/json">{}</script>', 'externi'),
+    '<ins></ins><script type="text/plain" data-cookieconsent="marketing" async src="x.js"></script><script type="application/json">{}</script>');
+
 /* ---------- nápověda: adresy příručky odpovídají osnově (docs/ nejsou v balíčku, test běží jen ve vývojové kopii) ---------- */
 if (is_file(PHPRS_ROOT . '/docs/prirucka/osnova.json')) {
     $osnova = json_decode((string) file_get_contents(PHPRS_ROOT . '/docs/prirucka/osnova.json'), true);

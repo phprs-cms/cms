@@ -111,12 +111,18 @@
 				+ '<label class="navigace galerie-vyfotit">' + T('Vyfotit') + '<input type="file" accept="image/*" capture="environment" hidden></label>'
 				+ '<button type="button" class="tl" data-vlozit hidden></button>' // „Vložit galerii (n)“ – jen při výběru více fotek
 				+ '<button type="button" class="navigace" data-zavri>' + T('Zavřít') + '</button></div>'
-				+ '<div class="galerie-okno-filtr"><select aria-label="' + T('Složka') + '"></select></div>'
+				+ '<div class="galerie-okno-filtr"><select aria-label="' + T('Složka') + '"></select>'
+				+ '<input class="textpole" type="search" placeholder="' + T('Hledat v médiích…') + '" aria-label="' + T('Hledat v médiích') + '"></div>'
 				+ '<p class="napoveda"></p><div class="galerie-mrizka"></div>' // text nápovědy se nastavuje při každém otevření;
 			document.body.appendChild(okno);
 			okno.querySelector('[data-zavri]').addEventListener('click', function () { okno.close(); });
 			okno.querySelector('[data-vlozit]').addEventListener('click', function () { okno.close(); okno.zpetne(okno.vybrane.slice()); });
 			okno.querySelector('select').addEventListener('change', function () { nacti(this.value); });
+			var cekani = null; // hledá se až po krátké pauze v psaní, ne po každém písmenu
+			okno.querySelector('input[type=search]').addEventListener('input', function () {
+				clearTimeout(cekani);
+				cekani = setTimeout(function () { nacti(okno.querySelector('select').value); }, 300);
+			});
 			Array.prototype.forEach.call(okno.querySelectorAll('input[type=file]'), function (vstup) { vstup.addEventListener('change', function () {
 				nahraj(this.files).then(function (nove) { nove.reverse().forEach(function (o) { pridej(o, true); }); });
 				this.value = '';
@@ -149,6 +155,8 @@
 		// filtr: "" = vše, "clanek" = obrázky tohoto článku, číslo = složka (0 = nezařazené)
 		function nacti(filtr) {
 			var dotaz = filtr === 'clanek' ? '&clanek=' + ID_CLANKU : (filtr !== '' ? '&sekce=' + filtr : '');
+			var hledat = okno.querySelector('input[type=search]').value.trim();
+			if (hledat !== '') { dotaz += '&hledat=' + encodeURIComponent(hledat); }
 			mrizka.textContent = T('Načítám…');
 			fetch(GALERIE + '&akce=seznam' + dotaz, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
 				var vyber = okno.querySelector('select');
@@ -158,7 +166,7 @@
 					o.value = v[0]; o.textContent = v[1]; o.selected = v[0] === filtr;
 					vyber.appendChild(o);
 				});
-				mrizka.textContent = j.obrazky.length ? '' : T('Tady zatím žádné obrázky nejsou.');
+				mrizka.textContent = j.obrazky.length ? '' : (hledat !== '' ? T('Hledanému textu nic neodpovídá.') : T('Tady zatím žádné obrázky nejsou.'));
 				j.obrazky.forEach(function (o) { pridej(o, false); });
 				dalsi(dotaz, 2, j.obrazky.length);
 			});

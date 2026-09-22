@@ -2,9 +2,11 @@
 
 The advertising system shows your own banners and ad network codes on the site. You add an ad once and the system rotates it in the chosen position, counts impressions and clicks, and watches the campaign dates and the impression limit. Every ad on the site is marked with the word “Advertisement”.
 
+![Readers → Advertising](../obrazky/reklama.webp)
+
 ## Turning it on
 
-In the main menu open **Extensions**, tick **Advertising system** and save. **Readers → Advertising** is added to the menu; an administrator and an editor have access.
+Open **Administration → Extensions**, tick **Advertising system** and save. **Readers → Advertising** is added to the menu; an administrator and an editor have access.
 
 > With the advertising system turned on, the cache of whole pages is not used. Ads rotate and are counted on every view, so a page cannot be served from memory. On ordinary hosting this does not matter; for a site with high traffic, take it into account.
 
@@ -12,9 +14,9 @@ In the main menu open **Extensions**, tick **Advertising system** and save. **Re
 
 | Position | Recommended shape | How it gets onto the site |
 |---|---|---|
-| **Column** | square, e.g. 300×250 | through the **Advertising** block |
-| **Header** | wide strip, e.g. 970×210 | through the **Advertising** block |
-| **Footer** | wide strip | through the **Advertising** block |
+| **In the sidebar** (**Column** in the block) | square, e.g. 300×250 | through the **Advertising** block |
+| **In the header** (**Header** in the block) | wide strip, e.g. 970×210 | through the **Advertising** block |
+| **In the footer** (**Footer** in the block) | wide strip | through the **Advertising** block |
 | **Below the article** | – | shown automatically below every article |
 
 You place the column, header and footer positions on the site like this:
@@ -29,10 +31,10 @@ The name of a position is only a guide. You can put a block with the Column posi
 
 1. In **Readers → Advertising** click **New ad**.
 2. Fill in the **Name** – it is only for you and is not shown on the site. For a banner it also serves as its alternative text.
-3. Choose the **Position**.
-4. In the field **What to show** select **Banner** or **Ad network code**, and fill in the fields according to the table below.
+3. In the **What to show** section choose the **Banner** or **Ad network code** tab, and fill in the fields according to the table below.
+4. In the **Where** section choose the position tab: **In the sidebar**, **Below the article**, **In the header** or **In the footer**.
 5. Expand **Scheduling, targeting and limits** as needed.
-6. Leave **ad is enabled** ticked and click **Save**.
+6. Click **Save**. The ad is on once saved; you can turn it off with the option **ad is enabled** (the **Status** row) in the expanded **Scheduling, targeting and limits** section.
 
 | Type | What you fill in | What is counted |
 |---|---|---|

@@ -8,14 +8,14 @@ With one click a reader turns on notifications, and their browser then alerts th
 |---|---|
 | A site on **HTTPS** | Browsers allow notifications only for secure sites. |
 | The PHP extensions **openssl** and **curl** | Notifications are signed with the site's key and sent to the browsers' services. Without them the feature turns itself off and the block is not shown. |
-| The **Browser notifications** extension turned on | Main menu **Extensions**. It is off by default. |
+| The **Browser notifications** extension turned on | **Administration → Extensions**. It is off by default. |
 | The **Notifications** block on the site | The button with which a reader turns notifications on. |
 
 You do not enter any keys. The site creates the pair of signing keys (VAPID) by itself on first use.
 
 ## Turning it on
 
-1. In the main menu open **Extensions**, tick **Browser notifications** and save.
+1. Open **Administration → Extensions**, tick **Browser notifications** and save.
 2. Open **Appearance → Blocks and layout** and add the **Notifications** block from the **Readers and newsroom** group to a suitable zone.
 3. In the block settings you can change the heading. The default prompt text is **We will let you know when a new article is published.**
 4. Open the site in an ordinary browser window and turn notifications on for yourself. After the next article is published, you can verify that they arrive.

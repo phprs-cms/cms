@@ -2,6 +2,8 @@
 
 **Einstellungen → Systemstatus** ist die erste Stelle, an der Sie nach der Installation, nach einem Umzug der Website und immer dann nachsehen, wenn sich etwas seltsam verhält. Jede Zeile hat den Status *in Ordnung*, *Warnung* oder *Fehler* und eine Erklärung, was zu tun ist.
 
+![Einstellungen → Systemstatus](../obrazky/stav-systemu.webp)
+
 ## Was geprüft wird
 
 | Gruppe | Zeilen |
@@ -17,13 +19,13 @@
 ## Weitere Teile der Seite
 
 - **E-Mail** – Versand einer Test-E-Mail an die Adresse der Redaktion.
-- **Fehlerprotokoll** – die letzten Fehler, die das System aufgezeichnet hat. Ein Besucher sieht bei einem Fehler nur eine allgemeine Entschuldigung; die Einzelheiten stehen hier und in der Datei `storage/log/chyby.log`. Das Protokoll lässt sich leeren.
+- **Fehlerprotokoll** – die letzten 40 Einträge zu Fehlern, die das System aufgezeichnet hat. Ein Besucher sieht bei einem Fehler nur eine allgemeine Entschuldigung; die Einzelheiten stehen hier und in der Datei `storage/log/chyby.log`. Die Schaltfläche **Protokoll leeren** löscht es.
 - **Hintergrundaufgaben (cron)** – die Adresse für den Cron, siehe [Hintergrundaufgaben](ulohy-na-pozadi.md).
 - **Monitoring** – die Adresse mit dem Status im JSON-Format.
 
 ## Monitoring
 
-Nach dem Erstellen eines Zugriffstokens ist der Status unter dieser Adresse erreichbar:
+Nach dem Erstellen eines Zugriffstokens (Schaltfläche **Token erstellen**) ist der Status unter dieser Adresse erreichbar:
 
 ```
 https://www.example.de/stav.json?token=…

@@ -14,10 +14,10 @@ Každou zálohu můžete **stáhnout**, **obnovit** nebo smazat.
 
 ## Kopie záloh mimo server
 
-Záloha na stejném serveru jako web nepomůže, když o hosting přijdete, když ho někdo napadne nebo když selže disk. V oddílu **Kopie záloh mimo server** proto nastavte, kam se má každá nová záloha sama nahrát:
+Záloha na stejném serveru jako web nepomůže, když o hosting přijdete, když ho někdo napadne nebo když selže disk. V oddílu **Zálohy databáze** proto rozbalte **Kopie záloh mimo server** a v poli **Kam kopírovat** zvolte, kam se má každá nová záloha sama nahrát:
 
-- **na FTP server** – jiný hosting nebo domácí NAS; zadává se server, uživatel, heslo a složka,
-- **do úložiště S3** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; zadává se koncový bod, oblast, přístupový klíč, tajný klíč a kbelík se složkou.
+- **na FTP server** – jiný hosting nebo domácí NAS; vyplňte **Server**, **Jméno / přístupový klíč**, **Heslo / tajný klíč** a **Složka / bucket**,
+- **do úložiště S3** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; do pole **Server** patří koncový bod, dále **Jméno / přístupový klíč**, **Heslo / tajný klíč**, **Složka / bucket** (kbelík se složkou) a **Region (jen S3)**.
 
 Nastavení uložte a klepněte na **Vytvořit zálohu teď** – kopie se nahraje hned a uvidíte, jestli spojení funguje. Výsledek posledního pokusu ukazuje i **Stav systému**.
 

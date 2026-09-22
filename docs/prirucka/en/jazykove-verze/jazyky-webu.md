@@ -4,6 +4,8 @@ phpRS can run a site in one language as well as a site with several language ver
 
 Four languages are available: Czech, Slovak, English and German.
 
+![Settings → General: site name and description for other language versions](../obrazky/nastaveni-zakladni.webp)
+
 ## Default language
 
 Every site has one default language. It is set in **Settings → General** in the **Site language** field; during installation the language in which you installed is taken over.
@@ -16,7 +18,7 @@ A site in a single language needs nothing more. The language of the administrati
 
 ## Other language versions
 
-1. In the main menu open **Extensions**, tick **Language versions of the site** and save.
+1. Open **Administration → Extensions**, tick **Language versions of the site** and save.
 2. In **Settings → General**, **Other language versions** appears below the **Site language** field. Tick the languages you want to add and save.
 3. Further down expand **Name and description in other language versions** and fill in the **Site name** and **Site description** for every version. An empty field means the same value as in the default language.
 4. For every version create at least one section in the given language – see [Translating content](preklad-obsahu.md). Without a section a version has nowhere to store articles.

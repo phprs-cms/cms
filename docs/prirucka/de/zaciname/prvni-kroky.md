@@ -2,6 +2,8 @@
 
 Nach der ersten Anmeldung erwartet Sie auf der **Übersicht** der Assistent **Erste Schritte**. Er hat fünf Punkte, jeder führt direkt auf den richtigen Bildschirm und wird nach der Erledigung abgehakt. Wenn Sie ihn nicht mehr brauchen, verschwindet er mit der Schaltfläche **Ausblenden**.
 
+![Die Übersicht mit dem Assistenten Erste Schritte](../obrazky/prehled.webp)
+
 ## 1. Geben Sie der Website ein Gesicht
 
 **Design → Website-Identität.** Wählen Sie eine Vorlage, laden Sie Logo und Website-Icon hoch, legen Sie die Hauptfarbe und die Schriften für Überschriften und Text fest. Änderungen sehen Sie sofort in der Vorschau.
@@ -14,11 +16,14 @@ Ressorts können Unterressorts haben. Die Reihenfolge in der Navigation bestimmt
 
 ## 3. Schreiben Sie den ersten Artikel
 
-**Inhalt → Artikel → Neuer Artikel.** Es genügen Titel, Vorspann, Text und Ressort. Oben rechts wählen Sie den **Status**:
+**Inhalt → Artikel → Neuer Artikel.** Es genügen Titel, Vorspann, Text und Ressort. In der rechten Spalte wählen Sie im Abschnitt **Veröffentlichung** den **Status**:
 
 - **Entwurf** – ein Artikel in Arbeit, nur die Redaktion sieht ihn,
-- **Zur Korrektur** – fertig, bitte prüfen (diese Option hat ein Autor, der nicht selbst veröffentlichen darf),
+- **Zur Korrektur** – fertig, bitte prüfen,
+- **Freigegeben – wartet auf Veröffentlichung** – geprüft, wartet auf seinen Zeitpunkt,
 - **Veröffentlicht** – der Artikel steht auf der Website; mit einem Datum in der Zukunft erscheint er von selbst zur angegebenen Zeit.
+
+Ein Autor, der nicht selbst veröffentlichen darf, hat nur die ersten beiden Optionen.
 
 Den Begrüßungsartikel aus der Installation können Sie löschen. Wenn Sie bei der Installation die Beispielinhalte geladen haben, löschen Sie sie auf einmal unter **Einstellungen → Allgemein → Beispielinhalte** – Ihre eigenen Artikel und Ressorts bleiben erhalten.
 
@@ -28,7 +33,7 @@ Den Begrüßungsartikel aus der Installation können Sie löschen. Wenn Sie bei 
 
 ## 5. Richten Sie die E-Mail-Adresse der Redaktion und den Versand ein
 
-**Einstellungen → E-Mail.** Die Website verschickt Bestätigungen des Newsletter-Abonnements, Registrierungen der Leser, neue Passwörter und Hinweise an die Redaktion. Der voreingestellte Versand über den Server des Hosters funktioniert, die Nachrichten landen aber oft im Spam. Zuverlässiger ist ein eigener SMTP-Server – ausführlich im Kapitel [Betrieb → E-Mail](../provoz/posta.md).
+Die E-Mail der Redaktion prüfen Sie unter **Einstellungen → Allgemein** (Feld **E-Mail der Redaktion**), die Art des Versands unter **Einstellungen → E-Mail**. Der Punkt des Assistenten wird abgehakt, wenn die E-Mail der Redaktion ausgefüllt und SMTP oder eine **Absenderadresse** eingerichtet ist. Die Website verschickt Bestätigungen des Newsletter-Abonnements, Registrierungen der Leser, neue Passwörter und Hinweise an die Redaktion. Der voreingestellte Versand über den Server des Hosters funktioniert, die Nachrichten landen aber oft im Spam. Zuverlässiger ist ein eigener SMTP-Server – ausführlich im Kapitel [Betrieb → E-Mail](../provoz/posta.md).
 
 ## Was Sie gleich danach erledigen
 
@@ -39,8 +44,10 @@ Den Begrüßungsartikel aus der Installation können Sie löschen. Wenn Sie bei 
 
 ## Erweiterungen
 
+![Verwaltung → Erweiterungen](../obrazky/rozsireni.webp)
+
 Viele Funktionen sind nach der Installation ausgeschaltet, damit die Administration übersichtlich bleibt: Kurzmeldungen, Umfragen, Newsletter, Leserkonten und gesperrter Inhalt, Web Push, Sprachversionen, Anzeigensystem, öffentliche API, KI-Assistent und die Verbindung mit Claude.
-Eingeschaltet werden sie unter **Erweiterungen** im Hauptmenü. Eine ausgeschaltete Erweiterung löscht keine Daten – nach dem Einschalten ist alles dort, wo es war.
+Eingeschaltet werden sie unter **Verwaltung → Erweiterungen**. Eine ausgeschaltete Erweiterung löscht keine Daten – nach dem Einschalten ist alles dort, wo es war.
 
 ## Schnelle Bedienung
 

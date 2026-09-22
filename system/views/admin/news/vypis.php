@@ -28,7 +28,7 @@
 	<label for="datum"><?= e(t('Datum')) ?></label>
 	<input class="textpole" type="datetime-local" id="datum" name="datum" value="<?= e(date('Y-m-d\TH:i', strtotime($novinka['datum']))) ?>">
 </div>
-<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($novinka['idn'] ? 'Ulož' : 'Přidej')) ?>"></p>
+<p class="tlacitka"><input class="tl" type="submit" value="<?= e(t($novinka['idn'] ? 'Uložit' : 'Přidat')) ?>"></p>
 </form>
 
 <?php if ($novinky !== []): ?>
@@ -45,7 +45,7 @@
 	<td><?= e($n['titulek']) ?></td>
 	<td><?= e(mb_strimwidth(strip_tags($n['informace']), 0, 120, '…')) ?></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $n['idn']])) ?>"><?= e(t('Upravit')) ?></a></td>
-	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $n['idn'] ?>" aria-label="Označit ke smazání: <?= e($n['titulek']) ?>"></td>
+	<td class="stred"><input type="checkbox" name="smaz[]" value="<?= (int) $n['idn'] ?>" aria-label="<?= e(t('Označit ke smazání: %s', $n['titulek'])) ?>"></td>
 </tr>
 <?php endforeach ?>
 </tbody>

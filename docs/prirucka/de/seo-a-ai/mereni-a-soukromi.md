@@ -4,9 +4,11 @@ Diese Seite beschreibt zwei Reiter der Einstellungen, die zusammenhängen: **Ein
 
 Die Grundidee: Was keine Cookies verwendet, läuft sofort und ohne Leiste. Was Cookies verwendet, wartet auf die Einwilligung.
 
+![Einstellungen → Datenschutz und Cookies](../obrazky/soukromi-a-cookies.webp)
+
 ## Integrierte Statistik
 
-Die Option **Integrierte Statistik** im Reiter Webanalyse ist nach der Installation eingeschaltet. Zu ihr gehören die Erweiterung **Statistik** (Hauptmenü **Erweiterungen**; Standard: eingeschaltet) und der Bildschirm **Leser → Statistik**.
+Die Option **Integrierte Statistik** im Reiter Webanalyse ist nach der Installation eingeschaltet. Zu ihr gehören die Erweiterung **Statistik** (**Verwaltung → Erweiterungen**; Standard: eingeschaltet) und der Bildschirm **Leser → Statistik**.
 
 Die Messung verwendet keine Cookies und speichert keine IP-Adressen, sie braucht also keine Einwilligung des Besuchers:
 
@@ -60,7 +62,7 @@ Der Besucher hat die Schaltflächen **Alle akzeptieren**, **Nur notwendige** und
 
 - **Notwendig – ohne sie funktioniert die Website nicht** (immer eingeschaltet),
 - **Statistik – anonyme Besuchermessung** (nur wenn Sie mit einem Werkzeug mit Cookies messen),
-- **Marketing – zielgerichtete Werbung** (nur wenn Sie Marketing-Codes haben),
+- **Marketing – zielgerichtete Werbung** (nur wenn Sie Marketing-Codes haben oder Werbung mit dem Code eines Werbenetzwerks eingeschaltet ist),
 
 und bestätigt sie mit der Schaltfläche **Auswahl speichern**. Die Auswahl wird für 6 Monate im Cookie `phprs_souhlas` gespeichert. Ändern kann er sie jederzeit über die Schaltfläche **Cookie-Einstellungen**, die auf der Website bleibt.
 
@@ -81,11 +83,11 @@ Die Schaltflächen der Leiste werden von selbst in die Sprache der Website über
 | **Marketing-Codes** | Meta Pixel, Sklik Retargeting, Google Ads… Sie werden erst nach der Einwilligung in Marketing ausgeführt. |
 | **Einwilligungen protokollieren** | Standard: eingeschaltet. Speichert Zeit, eine zufällige Kennung und die gewählten Kategorien – ohne IP-Adresse. Ein Nachweis für eine etwaige Prüfung. |
 
-Unter dem Formular steht die Zusammenfassung **Einwilligungen der letzten 30 Tage** nach Kategorien.
+Unter dem Abschnitt **Codes und Nachweise** erscheint – sobald eine Einwilligung eingeht – die Zeile **Einwilligungen der letzten 30 Tage:** mit den Zahlen nach Kategorien.
 
 Messskripte, die auf die Einwilligung warten, tragen auch Markierungen, die Cookiebot versteht. Im Modus **Externer Dienst** führt sie nach der Einwilligung also dessen Leiste aus. Prüfen Sie bei einem anderen Dienst, dass er die Skripte nach der Einwilligung wirklich freigibt.
 
-Auf die Einwilligung in Marketing warten auch die Codes der Werbenetzwerke aus dem [Anzeigensystem](../ctenari-a-prijmy/reklama.md).
+Auf die Einwilligung in Marketing warten auch die Codes der Werbenetzwerke aus dem [Anzeigensystem](../ctenari-a-prijmy/reklama.md) – die eingebaute Leiste fragt ihretwegen ebenfalls nach Marketing. Im Modus **Externer Dienst** erhalten Skripte in Marketing-Codes und in Codes der Werbenetzwerke die Markierung `type="text/plain" data-cookieconsent="marketing"`, die Cookiebot und dazu kompatible Dienste verstehen; ausgeführt werden sie erst von diesem Dienst.
 
 ## Welche Cookies das System selbst speichert
 

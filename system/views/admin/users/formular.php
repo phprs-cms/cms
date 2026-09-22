@@ -78,7 +78,7 @@ $role = [
 	<div class="volby">
 		<label><input type="checkbox" name="rucne" value="1"<?= $rucne ? ' checked' : '' ?>> <?= e(t('nastavit ručně (jinak podle role)')) ?></label><br>
 <?php foreach ($moduly as $ident => $nazev): ?>
-		<label style="margin-left:22px"><input type="checkbox" name="moduly[]" value="<?= e($ident) ?>"<?= in_array($ident, $maModuly, true) ? ' checked' : '' ?>> <?= e($nazev) ?></label><br>
+		<label style="margin-left:22px"><input type="checkbox" name="moduly[]" value="<?= e($ident) ?>"<?= in_array($ident, $maModuly, true) ? ' checked' : '' ?>> <?= e(t($nazev)) ?></label><br>
 <?php endforeach ?>
 		<span class="napoveda"><?= e(t('Autor má běžně Články, redaktor všechny obsahové sekce. Média mají všichni, administrátor má vše.')) ?></span>
 	</div>

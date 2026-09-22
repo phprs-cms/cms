@@ -29,7 +29,9 @@ Die Adresse können Sie auch im Browser öffnen – sie antwortet mit der Zeile 
 
 ## Was die Aufgaben genau tun
 
-- geplante Artikel veröffentlichen und die Benachrichtigungen dazu verschicken (E-Mail, Web Push, Webhooks),
-- den nächsten Teil eines laufenden Newsletter-Versands senden,
+- geplante Artikel veröffentlichen und die Benachrichtigungen dazu verschicken (Webhook, IndexNow für Suchmaschinen, Web Push),
+- die automatische Newsletter-Ausgabe anlegen und den nächsten Teil eines laufenden Newsletter-Versands sowie der Web-Push-Benachrichtigungen senden,
 - E-Mails erneut senden, die nicht zugestellt werden konnten,
-- die wöchentliche Sicherung der Datenbank erstellen und außerhalb des Servers hochladen, wenn das eingeschaltet ist.
+- in veröffentlichten Artikeln nach defekten Links suchen,
+- zweimal täglich nach Aktualisierungen sehen und Sicherheitsversionen selbst installieren (wenn das eingeschaltet ist),
+- die wöchentliche Sicherung der Datenbank erstellen und außerhalb des Servers hochladen, wenn das eingeschaltet ist. Die Sicherung entsteht beim Aufruf des Crons oder wenn ein Administrator die Administration betritt, nicht beim Besuch eines Lesers.

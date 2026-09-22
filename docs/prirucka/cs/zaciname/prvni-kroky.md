@@ -2,6 +2,8 @@
 
 Po prvním přihlášení vás na **Přehledu** čeká průvodce **První kroky**. Má pět bodů, každý vede rovnou na správnou obrazovku a po splnění se odškrtne. Až ho nebudete potřebovat, tlačítkem **Skrýt** zmizí.
 
+![Přehled s průvodcem První kroky](../obrazky/prehled.webp)
+
 ## 1. Dejte webu tvář
 
 **Vzhled → Identita webu.** Vyberte šablonu, nahrajte logo a ikonu webu, zvolte hlavní barvu a písma titulků a textu. Změny vidíte hned v náhledu.
@@ -14,11 +16,14 @@ Rubriky mohou mít podrubriky. Pořadí v navigaci určuje pole **Pořadí**.
 
 ## 3. Napište první článek
 
-**Obsah → Články → Nový článek.** Stačí titulek, perex, text a rubrika. Nahoře vpravo volíte **Stav**:
+**Obsah → Články → Nový článek.** Stačí titulek, perex, text a rubrika. V pravém sloupci v oddílu **Vydání** volíte **Stav**:
 
 - **Koncept** – rozepsaný článek, vidí ho jen redakce,
-- **Ke korektuře** – hotovo, prosím o kontrolu (tuto volbu má autor, který nesmí sám vydávat),
+- **Ke korektuře** – hotovo, prosím o kontrolu,
+- **Schváleno – čeká na vydání** – zkontrolováno, čeká na svůj čas,
 - **Vydaný** – článek je na webu; s datem v budoucnosti vyjde sám v daný čas.
+
+Autor, který nesmí sám vydávat, má jen první dvě volby.
 
 Uvítací článek z instalace můžete smazat. Pokud jste při instalaci nahráli ukázkový obsah, smažete ho celý najednou v **Nastavení → Základní → Ukázkový obsah** – vaše vlastní články a rubriky zůstanou.
 
@@ -28,7 +33,7 @@ Uvítací článek z instalace můžete smazat. Pokud jste při instalaci nahrá
 
 ## 5. Nastavte e-mail redakce a poštu
 
-**Nastavení → Pošta.** Web posílá potvrzení odběru newsletteru, registrace čtenářů, nová hesla a upozornění redakci. Výchozí odesílání přes server hostingu funguje, ale zprávy často končí ve spamu. Spolehlivější je vlastní SMTP – podrobně v kapitole [Provoz → Pošta](../provoz/posta.md).
+E-mail redakce zkontrolujte v **Nastavení → Základní** (pole **E-mail redakce**), způsob odesílání v **Nastavení → Pošta**. Bod průvodce se odškrtne, když je e-mail redakce vyplněný a je nastavené SMTP nebo **Adresa odesílatele**. Web posílá potvrzení odběru newsletteru, registrace čtenářů, nová hesla a upozornění redakci. Výchozí odesílání přes server hostingu funguje, ale zprávy často končí ve spamu. Spolehlivější je vlastní SMTP – podrobně v kapitole [Provoz → Pošta](../provoz/posta.md).
 
 ## Co udělat hned potom
 
@@ -39,8 +44,10 @@ Uvítací článek z instalace můžete smazat. Pokud jste při instalaci nahrá
 
 ## Rozšíření
 
+![Správa → Rozšíření](../obrazky/rozsireni.webp)
+
 Řada funkcí je po instalaci vypnutá, aby administrace zůstala přehledná: novinky, ankety, newsletter, účty čtenářů a zamčený obsah, Web Push, jazykové verze, reklamní systém, veřejné API, AI asistent a napojení na Claude.
-Zapínají se v položce **Rozšíření** hlavní nabídky. Vypnuté rozšíření nemaže data – po zapnutí je vše tam, kde bylo.
+Zapínají se ve **Správa → Rozšíření**. Vypnuté rozšíření nemaže data – po zapnutí je vše tam, kde bylo.
 
 ## Rychlé ovládání
 

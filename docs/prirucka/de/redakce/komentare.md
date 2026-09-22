@@ -1,6 +1,8 @@
 # Kommentare
 
-Kommentare unter Artikeln gehören zur Erweiterung **Kommentare und Bewertungen**, die nach der Installation eingeschaltet ist. Ein- und ausgeschaltet wird sie vom Administrator unter dem Punkt **Erweiterungen** des Hauptmenüs. Moderiert wird unter **Leser → Kommentare**; Zugriff haben Redakteur und Administrator.
+Kommentare unter Artikeln gehören zur Erweiterung **Kommentare und Bewertungen**, die nach der Installation eingeschaltet ist. Ein- und ausgeschaltet wird sie vom Administrator unter **Verwaltung → Erweiterungen**. Moderiert wird unter **Leser → Kommentare**; Zugriff haben Redakteur und Administrator.
+
+![Leser → Kommentare](../obrazky/komentare.webp)
 
 ## Wo Kommentare erlaubt werden
 

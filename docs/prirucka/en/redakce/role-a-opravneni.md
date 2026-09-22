@@ -2,6 +2,8 @@
 
 Every member of the editorial team has their own account. Accounts are created and managed by an administrator in **Administration → Users**. What someone sees and may do in the administration is determined by their role and a few additional options.
 
+![Editing a user: a summary of permissions at the top, roles as cards](../obrazky/uzivatel-opravneni.webp)
+
 ## Three roles
 
 | Role | What they do |
@@ -21,7 +23,7 @@ The main menu shows only the areas the user has access to. Everyone has the **Da
 | Sections, Tags and topics, Pages | – | yes | yes |
 | Comments, Statistics and other content extensions that are turned on | – | yes | yes |
 | Blocks and layout | – | yes | yes |
-| Site identity, Users, Redirects, Change log, Extensions, Settings, Readers | – | – | yes |
+| Site identity, Users, Redirects, Change log, Import and export, Extensions, Settings, Readers, Revenue | – | – | yes |
 
 An area that belongs to an extension that is turned off is not shown to anyone.
 
@@ -48,7 +50,7 @@ How an article travels from the author to publication is described in [Handover 
 
 ## Detailed settings
 
-The expandable **Detailed settings** panel in the user form refines what the role allows.
+The expandable **Detailed settings** panel in the user form refines what the role allows. Above the form of a saved account there is the sentence **What this user may do now:** – it sums up the role, publishing, sections and areas together. The user list shows the same sentence below the name.
 
 ### Access to areas
 

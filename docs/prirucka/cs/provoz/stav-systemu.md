@@ -2,6 +2,8 @@
 
 **Nastavení → Stav systému** je první místo, kam se podívat po instalaci, po přesunu webu a vždy, když se něco chová divně. Každý řádek má stav *v pořádku*, *varování* nebo *chyba* a vysvětlení, co s tím.
 
+![Nastavení → Stav systému](../obrazky/stav-systemu.webp)
+
 ## Co se kontroluje
 
 | Skupina | Řádky |
@@ -17,13 +19,13 @@
 ## Další části stránky
 
 - **Pošta** – odeslání zkušebního e-mailu na adresu redakce.
-- **Záznam chyb** – posledních několik chyb, které systém zachytil. Návštěvník při chybě vidí jen obecnou omluvu; podrobnosti jsou tady a v souboru `storage/log/chyby.log`. Záznam jde vyprázdnit.
+- **Záznam chyb** – posledních 40 záznamů o chybách, které systém zachytil. Návštěvník při chybě vidí jen obecnou omluvu; podrobnosti jsou tady a v souboru `storage/log/chyby.log`. Tlačítko **Vyprázdnit záznam** ho smaže.
 - **Úlohy na pozadí (cron)** – adresa pro cron, viz [Úlohy na pozadí](ulohy-na-pozadi.md).
 - **Monitoring** – adresa se stavem ve formátu JSON.
 
 ## Monitoring
 
-Po vytvoření přístupového tokenu je stav dostupný na adrese
+Po vytvoření přístupového tokenu (tlačítko **Vytvořit token**) je stav dostupný na adrese
 
 ```
 https://www.vasweb.cz/stav.json?token=…

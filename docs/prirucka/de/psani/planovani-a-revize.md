@@ -33,11 +33,11 @@ Ein geplanter Artikel erscheint zur angegebenen Zeit auch ohne weitere Einstellu
 
 ### Von der Startseite nehmen
 
-Das Feld **Von der Startseite nehmen** im Abschnitt **Weitere Einstellungen** ist optional. Nach dem angegebenen Datum verschwindet der Artikel von der Startseite; im Ressort und in der Suche bleibt er erhalten.
+Das Feld **Von der Startseite nehmen** im Abschnitt **Weitere Einstellungen** ist optional. Nach dem angegebenen Datum verschwindet der Artikel von der Startseite; im Ressort und in der Suche bleibt er erhalten. Das funktioniert, solange die Option **Artikel von der Startseite nehmen** (**Einstellungen → Allgemein → Weitere Optionen**) eingeschaltet ist.
 
 ## Aktualisiert
 
-Bei einem veröffentlichten Artikel steht im Abschnitt **Veröffentlichung** die Option **Als aktualisiert markieren (der Leser sieht „Aktualisiert“ mit dem heutigen Datum)**. Setzen Sie das Häkchen, wenn Sie den Artikel um eine wesentliche neue Information ergänzen, und speichern Sie. Der Leser sieht über dem Text **Aktualisiert** mit Datum und Uhrzeit.
+Bei einem veröffentlichten Artikel steht im Abschnitt **Veröffentlichung** in der Zeile **Startseite** die Option **Als aktualisiert markieren (der Leser sieht „Aktualisiert“ mit dem heutigen Datum)**. Setzen Sie das Häkchen, wenn Sie den Artikel um eine wesentliche neue Information ergänzen, und speichern Sie. Der Leser sieht über dem Text **Aktualisiert** mit Datum und Uhrzeit.
 
 Die Option gilt für ein Speichern. Lassen Sie sie bei der Korrektur eines Tippfehlers leer – das Datum der Aktualisierung ändert sich nicht.
 
@@ -45,7 +45,7 @@ Die Option gilt für ein Speichern. Lassen Sie sie bei der Korrektur eines Tippf
 
 Immer wenn Sie einen Artikel mit geändertem Titel, Vorspann oder Text speichern, wird die vorherige Fassung als Version gesichert. Aufbewahrt werden die letzten 20 Versionen. Änderungen anderer Felder (Ressort, Schlagwörter, Datum) erzeugen keine Version.
 
-Die Versionen finden Sie unten in der Spalte mit den Einstellungen im Abschnitt **Versionsverlauf**. Bei jeder stehen das Datum, der Name dessen, der die Änderung gespeichert hat, und der Link **was sich geändert hat**.
+Die Versionen finden Sie unten in der Spalte mit den Einstellungen: Klappen Sie **Versionsverlauf** auf (mit der Zahl der Versionen in Klammern; erscheint nach der ersten Änderung des Textes). Bei jeder stehen das Datum, an dem diese Fassung entstand, der Name dessen, der sie durch eine neuere ersetzt hat, und der Link **was sich geändert hat**.
 
 ### Versionsvergleich
 

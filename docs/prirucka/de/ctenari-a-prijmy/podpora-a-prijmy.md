@@ -4,6 +4,8 @@ Eine Website kann von Abonnements, von freiwilligen Beiträgen der Leser und von
 
 Freiwillige Beiträge nimmt phpRS nicht entgegen, verarbeitet sie nicht und sieht nicht, wer wie viel beigetragen hat. Der Block Unterstützen Sie uns ist ein Aufruf mit einer Schaltfläche, die den Leser dorthin führt, wo die Zahlung stattfindet. Anders ist es beim Abonnement: Das können die Leser mit Karte über den Dienst Stripe bezahlen und die Website schaltet es ihnen von selbst ein und verlängert es – siehe [Zahlungen mit Stripe](platby-stripe.md).
 
+![Leser → Einnahmen](../obrazky/prijmy.webp)
+
 ## Block Unterstützen Sie uns
 
 Der Block gibt einen kurzen Aufruf und eine Schaltfläche mit Herz aus. Er braucht keine Erweiterung.
@@ -37,7 +39,7 @@ Solange Sie das Feld **Wohin die Schaltfläche führt** nicht ausfüllen, zeigt 
 - In die rechte Spalte als ständige Erinnerung.
 - Mit dem Feld **Nur im Ressort** können Sie ihn auf ein Ressort beschränken, mit dem Feld **Seiten** etwa nur auf die Startseite.
 
-Bearbeiten Sie den Block im visuellen Editor. Die Formularliste der Blöcke bietet die Felder für die Schaltfläche nicht an – siehe [Blöcke und Layout](../vzhled/bloky-a-rozvrzeni.md).
+Bearbeiten Sie den Block im visuellen Editor. Die Formularliste der Blöcke bietet **Text der Schaltfläche**, **Wohin die Schaltfläche führt** und auch den Text des Aufrufs an – siehe [Blöcke und Layout](../vzhled/bloky-a-rozvrzeni.md).
 
 Auf einer mehrsprachigen Website halten Sie für jede Sprache einen eigenen Block und legen mit dem Feld **Sprachversion** fest, wo welcher angezeigt wird. Die Standardtexte werden von selbst übersetzt, Ihr eigener Aufruf nicht.
 
@@ -52,7 +54,7 @@ Auf einer mehrsprachigen Website halten Sie für jede Sprache einen eigenen Bloc
 | **Werbung** | Einblendungen der aktiven Anzeigen; darunter die Zahl der aktiven Anzeigen und der Klicks | **Werbung** |
 | **Newsletter** | bestätigte Empfänger | **Newsletter** |
 
-Bei einer ausgeschalteten Erweiterung führt der Link **In den Erweiterungen einschalten** in den Bereich **Erweiterungen**. Die Karte Freiwillige Unterstützung ist eingeschaltet, sobald auf der Website mindestens ein angezeigter Block Unterstützen Sie uns steht.
+Bei einer ausgeschalteten Erweiterung führt der Link **In den Erweiterungen einschalten** zu **Verwaltung → Erweiterungen**. Die Karte Freiwillige Unterstützung ist eingeschaltet, sobald auf der Website mindestens ein angezeigter Block Unterstützen Sie uns steht.
 
 Die Karte Abonnement weist mit der Meldung **Es ist nicht ausgefüllt, wo Leser ein Abonnement erhalten.** darauf hin, wenn die Adresse unter **Einstellungen → Leser und Zahlungen** fehlt und auch die Zahlungen mit Stripe nicht eingeschaltet sind. Ohne sie sieht der Leser bei einem gesperrten Artikel die Schaltfläche **Abonnement abschließen** nicht. Das Vorgehen steht auf der Seite [Gesperrte Inhalte und Abonnement](zamceny-obsah.md).
 

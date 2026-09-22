@@ -8,14 +8,14 @@
 |---|---|
 | Web na **HTTPS** | Prohlížeče povolují oznámení jen zabezpečeným webům. |
 | PHP rozšíření **openssl** a **curl** | Oznámení se podepisují klíčem webu a posílají službám prohlížečů. Bez nich se funkce sama vypne a blok se nezobrazí. |
-| Zapnuté rozšíření **Oznámení v prohlížeči** | Hlavní nabídka **Rozšíření**. Ve výchozím stavu je vypnuté. |
+| Zapnuté rozšíření **Oznámení v prohlížeči** | **Správa → Rozšíření**. Ve výchozím stavu je vypnuté. |
 | Blok **Oznámení** na webu | Tlačítko, kterým čtenář oznámení zapne. |
 
 Žádné klíče nezadáváte. Pár klíčů pro podepisování (VAPID) si web vytvoří sám při prvním použití.
 
 ## Zapnutí
 
-1. V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Oznámení v prohlížeči** a uložte.
+1. Otevřete **Správa → Rozšíření**, zaškrtněte **Oznámení v prohlížeči** a uložte.
 2. Otevřete **Vzhled → Bloky a rozvržení** a do vhodné zóny přidejte blok **Oznámení** ze skupiny **Čtenáři a redakce**.
 3. V nastavení bloku můžete změnit nadpis. Výchozí text výzvy je **Dáme vám vědět, když vyjde nový článek.**
 4. Otevřete web v běžném okně prohlížeče a oznámení si sami zapněte. Po vydání dalšího článku ověříte, že chodí.

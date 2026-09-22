@@ -2,6 +2,8 @@
 
 Die Website verschickt Bestätigungen des Newsletter-Abonnements und der Leserregistrierung, Links zum Festlegen des Passworts, Newsletter, Hinweise auf Kommentare und Hinweise an die Redaktion. Alles wird unter **Einstellungen → E-Mail** eingerichtet.
 
+![Einstellungen → E-Mail](../obrazky/posta.webp)
+
 ## Versandart
 
 | Art | Wann sie sich eignet |
@@ -13,15 +15,18 @@ Die Website verschickt Bestätigungen des Newsletter-Abonnements und der Leserre
 
 Die Daten finden Sie beim Anbieter des Postfachs – beim Hosting, bei Google Workspace oder bei einem Dienst für Massenversand (Brevo, Mailgun, Amazon SES…).
 
-- **SMTP-Server** – zum Beispiel `smtp.example.de`.
+Füllen Sie im Abschnitt **SMTP-Server** aus:
+
+- **Serveradresse** – zum Beispiel `smtp.example.de`.
 - **Sicherheit** – **STARTTLS, Port 587** ist am häufigsten; **SSL/TLS, Port 465** bei älteren Diensten. Die Option „keine“ verwenden Sie nur für einen Server im eigenen Netz.
-- **Benutzer** und **Passwort** – bei Gmail und ähnlichen Anbietern geben Sie ein „App-Passwort“ ein, nicht das Passwort des Kontos. Das Passwort wird nur auf Ihrer Website gespeichert und nie wieder im Formular ausgegeben; ein leeres Feld bedeutet „unverändert“.
+- **Port** – Standard 587. Die Wahl der Sicherheit ändert ihn nicht von selbst: Bei **SSL/TLS** überschreiben Sie ihn mit 465.
+- **Benutzername** (meist die vollständige E-Mail-Adresse des Postfachs) und **Passwort** – bei Gmail und ähnlichen Anbietern geben Sie ein „App-Passwort“ ein, nicht das Passwort des Kontos. Das Passwort wird nur auf Ihrer Website gespeichert und nie wieder im Formular ausgegeben; ein leeres Feld bedeutet „unverändert“.
 
 Klicken Sie nach dem Speichern auf **Test-E-Mail an die Adresse der Redaktion senden**. Der Test verwendet die gespeicherten Werte, also zuerst speichern, dann testen.
 
 ## Absender und Antworten
 
-Im Abschnitt **Absender und Antworten** legen Sie die Adresse fest, die bei den Nachrichten als Absender steht (leeres Feld = E-Mail der Redaktion), und die Adresse für Antworten.
+Klappen Sie **Absender und Antworten** auf: **Absenderadresse** ist die Adresse, die bei den Nachrichten als Absender steht (leeres Feld = E-Mail der Redaktion), **Antworten senden an** ist die Adresse für Antworten.
 Die Absenderadresse sollte zu einer Domain gehören, von der Ihr SMTP-Server senden darf – sonst landen die Nachrichten im Spam oder der Empfänger lehnt sie ab.
 
 ## Damit E-Mails nicht im Spam landen

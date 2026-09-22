@@ -12,9 +12,9 @@ phpRS runs on ordinary shared hosting. It needs no SSH access, Composer, Node.js
 | PHP extensions – recommended | `exif` (correct rotation of photos from phones), `intl` (language-aware sorting), `curl` (notifying search engines about new content), `zip` and `sodium` (one-click updates), `zlib` (compressed backups) |
 | Web server | Apache with `.htaccess` enabled, or nginx (see [Operations → nginx](../provoz/nginx.md)) |
 | HTTPS | strongly recommended; without it Web Push and the Claude connection do not work, and sign-in details travel unencrypted |
-| Disk space | the system itself takes under 3 MB; plan mainly for photos |
+| Disk space | the system itself takes about 3 MB; plan mainly for photos |
 
-Without the recommended extensions the system installs, but some features will not be available. After installation, **Settings → System status** shows exactly what is missing.
+Without the recommended extensions the system installs, but some features will not be available. Missing `exif`, `intl` and `curl` are shown after installation by **Settings → System status**; missing `zip` or `sodium` is reported only when you try to update, and without `zlib` backups are created as uncompressed `.sql` files.
 
 ## What to prepare before installation
 

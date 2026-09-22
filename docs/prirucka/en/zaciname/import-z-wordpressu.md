@@ -4,6 +4,8 @@ Do you have a site in WordPress and want to move it to phpRS? The import convert
 
 You find both in the administration under **Administration → Import and export**. Only an administrator sees the screen.
 
+![Administration → Import and export](../obrazky/import-z-wordpressu.webp)
+
 ## Before you start
 
 - In WordPress open **Tools → Export**, choose **All content** and download the `.xml` file.
@@ -12,7 +14,7 @@ You find both in the administration under **Administration → Import and export
 
 ## Step 1: the file
 
-Upload the file with the form. Most hosting providers, however, allow uploads of only a few megabytes; the screen tells you how much it is in your case. Copy a larger export over FTP into the `storage/import/` folder – it appears in the list below the form and you select it with the **Show preview** button.
+Upload the file with the form and click **Upload and show preview**. Most hosting providers, however, allow uploads of only a few megabytes; the screen tells you how much it is in your case. Copy a larger export over FTP into the `storage/import/` folder – it appears in the list below the form and you select it with the **Show preview** button.
 
 Only a genuine WordPress export is accepted. The file is read in pieces, so even an export of hundreds of megabytes is no problem; export a really large site (over 1 GB) from WordPress in parts, for example by year.
 
@@ -30,9 +32,10 @@ The preview writes nothing to the database. It shows how many posts (published, 
 Below the overview you choose:
 
 - the **language version** the content belongs to (offered only on a site with several languages),
-- whether to import **drafts**, **pages** and **approved comments**,
-- whether to create **redirects from old addresses**,
-- the section for posts that had none in WordPress (otherwise the section Uncategorized is created).
+- in the **What to import** row, whether to convert **drafts and posts pending review**, **pages**, **approved comments** and create **redirects from old addresses to new ones**,
+- in the **Put posts without a category into** row, the section for posts that had none in WordPress (otherwise the section Uncategorized is created).
+
+You start the import with the **Start import** button.
 
 ## Step 3: the import
 
@@ -59,7 +62,7 @@ For every article and page a redirect is created from the old address (for examp
 
 ## Images from the old site
 
-After the import the articles still point to the images of the old site. Therefore click **Download images from the old site** on the page with the result. The featured images of articles and the images in the texts are downloaded, scaled down, given thumbnails and saved to **Media** – the same as if you had uploaded them by hand – and the links in the texts are rewritten. Here too the work goes in batches and the page continues by itself.
+After the import the articles still point to the images of the old site. Therefore click **Download images from the old site** on the page with the result (you can return to it any time later with the **Result** link next to the file on the **Import and export** screen). The featured images of articles and the images in the texts are downloaded, scaled down, given thumbnails and saved to **Media** – the same as if you had uploaded them by hand – and the links in the texts are rewritten. Here too the work goes in batches and the page continues by itself.
 
 For security reasons images are downloaded **only from the domain of the old site** stated in the export, only JPG, PNG, GIF and WebP images up to 15 MB. Images from other domains (for example from a CDN or from third-party sites) stay in the text as they were. The result lists what could not be downloaded; you repeat it with the **Try downloading again** button.
 

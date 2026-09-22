@@ -2,6 +2,8 @@
 
 All uploaded files are in one place: **Content → Media**. Everyone who signs in to the administration has access to Media. However, only the person who uploaded a file, and an administrator, may change its description or delete it.
 
+![Content → Media](../obrazky/media.webp)
+
 ## Uploading
 
 You can upload files in three ways:
@@ -57,7 +59,7 @@ Both values are carried into the article at the moment of insertion. A later cha
 
 1. Place the cursor where the image belongs.
 2. Click **image** in the toolbar. The **Media** window opens.
-3. At the top choose **All media**, **In this article**, **Unsorted** or one of the folders. The window shows the 60 newest files of the chosen selection – the easiest way to find an older image is through its folder.
+3. At the top choose **All media**, **In this article**, **Unsorted** or one of the folders. The window loads the 60 newest files of the chosen selection; the **Load more** button below the grid adds more. The **Search media…** field next to the selection finds files by title, caption or file name.
 4. Click the image – it is inserted together with its caption.
 
 Readers enlarge an image in an article by clicking it.

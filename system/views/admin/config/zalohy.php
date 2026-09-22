@@ -54,7 +54,7 @@ $pole('zaloha_region', 'Region (jen S3)', 'text', 'Například eu-central-1. U C
 <?php if ($vzdalenaStav !== ''): [$kdy, $jak] = explode('|', $vzdalenaStav, 2) + [1 => '']; ?>
 <p class="hlaska<?= $jak === 'ok' ? ' hlaska-ok' : ' hlaska-chyba' ?>"><?= e($jak === 'ok' ? t('Poslední kopie byla nahrána %s.', $kdy) : t('Poslední pokus %s selhal: %s', $kdy, $jak)) ?></p>
 <?php endif ?>
-<p class="napoveda"><?= e(t('Nastavení uložte a pak klepněte na „Vytvořit zálohu“ – kopie se nahraje hned a uvidíte, jestli spojení funguje.')) ?></p>
+<p class="napoveda"><?= e(t('Nastavení uložte a pak klepněte na „Vytvořit zálohu teď“ – kopie se nahraje hned a uvidíte, jestli spojení funguje.')) ?></p>
 </details>
 <?php $pole('zalohy_auto', 'Automatická záloha jednou týdně', 'ano', 'Vytvoří se při přihlášení administrátora, když je poslední záloha starší než týden. Uchovává se posledních 10 záloh.'); ?>
 <p><button class="tl" type="submit" formaction="<?= e($modul->url('zalohuj')) ?>"><?= e(t('Vytvořit zálohu teď')) ?></button></p>
@@ -67,7 +67,7 @@ $pole('zaloha_region', 'Region (jen S3)', 'text', 'Například eu-central-1. U C
 <tr>
 	<td><?= e($z['soubor']) ?></td>
 	<td class="cislo"><?= e(date('j. n. Y H:i', $z['cas'])) ?></td>
-	<td class="cislo"><?= number_format($z['velikost'] / 1024, 0, ',', ' ') ?> kB</td>
+	<td class="cislo"><?= pocet($z['velikost'] / 1024) ?> kB</td>
 	<td class="akce"><a href="<?= e($modul->url('stahni_zalohu', ['soubor' => $z['soubor']])) ?>"><?= e(t('Stáhnout')) ?></a> · <button class="navigace" type="submit" formaction="<?= e($modul->url('obnov_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Obnovit databázi z této zálohy? Všechno, co na webu přibylo po jejím vytvoření (články, komentáře, nastavení), se ztratí. Současný stav se předtím uloží do nové zálohy.')) ?>"><?= e(t('Obnovit')) ?></button> · <button class="navigace nebezpecne" type="submit" formaction="<?= e($modul->url('smaz_zalohu')) ?>" name="soubor" value="<?= e($z['soubor']) ?>" data-potvrdit="<?= e(t('Smazat zálohu?')) ?>"><?= e(t('Smazat')) ?></button></td>
 </tr>
 <?php endforeach ?>

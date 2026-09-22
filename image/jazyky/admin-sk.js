@@ -159,5 +159,8 @@ window.PHPRS_PREKLAD = {
 	"Patička": "Pätička",
 	"+ Přidat blok": "+ Pridať blok",
 	"Složka": "Priečinok",
-	"Načíst další": "Načítať ďalšie"
+	"Načíst další": "Načítať ďalšie",
+	"Hledat v médiích…": "Hľadať v médiách…",
+	"Hledat v médiích": "Hľadať v médiách",
+	"Hledanému textu nic neodpovídá.": "Hľadanému textu nič nezodpovedá."
 };

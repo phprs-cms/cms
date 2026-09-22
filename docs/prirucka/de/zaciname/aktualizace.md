@@ -2,6 +2,8 @@
 
 phpRS kann sich selbst aktualisieren. Jedes Paket ist vom Herausgeber signiert, und das System installiert nur ein Paket, dessen Signatur stimmt – ein gefälschtes oder beschädigtes Paket lehnt es ab.
 
+![Einstellungen → Sicherungen und Aktualisierungen](../obrazky/aktualizace-a-zalohy.webp)
+
 ## Wie es funktioniert
 
 - Das System fragt zweimal täglich unter der Adresse `https://phprs.eu/aktualizace.json` nach, ob eine neue Version erschienen ist. Dabei sendet es nichts außer der Nummer seiner Version im Header der Anfrage.
@@ -10,7 +12,7 @@ phpRS kann sich selbst aktualisieren. Jedes Paket ist vom Herausgeber signiert, 
 
 ## Aktualisierung mit einer Schaltfläche
 
-**Einstellungen → Sicherungen und Aktualisierungen.** Wenn eine neue Version verfügbar ist, sehen Sie ihre Nummer, die Liste der Änderungen und die Schaltfläche zur Installation. Nach der Bestätigung:
+**Einstellungen → Sicherungen und Aktualisierungen.** Wenn eine neue Version verfügbar ist, sehen Sie ihre Nummer, die Liste der Änderungen und die Schaltfläche **Auf … aktualisieren** mit der Nummer der Version. Nach der Bestätigung:
 
 1. wird eine Sicherung der Datenbank erstellt,
 2. wird das Paket heruntergeladen und seine Prüfsumme und Signatur werden geprüft,

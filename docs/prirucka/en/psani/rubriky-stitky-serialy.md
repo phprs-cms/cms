@@ -2,6 +2,8 @@
 
 The content of the site is organised in three ways. A **section** is a fixed classification – every article has exactly one. **Tags** describe what the article is about, and an article can have several. A **series** links parts that follow on from each other.
 
+![Content → Sections](../obrazky/rubriky.webp)
+
 ## Sections
 
 You manage sections in **Content → Sections**. An article cannot be saved without a section, so create the first section before the first article.
@@ -58,7 +60,7 @@ A tag can also be added to several articles at once – with the bulk action **a
 
 A series is a group of articles that belong together: the parts of a report, a regular column, a travelogue in instalments.
 
-1. In the article form find the **Series** field in the **Classification** panel.
+1. In the article form expand **More settings**; the first field is **Series**.
 2. Choose an existing series, or type a name into the field **…or the name of a new series**. The new series is created when the article is saved.
 3. For further parts, just choose the series from the menu.
 

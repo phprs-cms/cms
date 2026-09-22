@@ -4,6 +4,8 @@ phpRS umí web v jednom jazyce i web s několika jazykovými verzemi vedle sebe.
 
 K dispozici jsou čtyři jazyky: čeština, slovenština, angličtina a němčina.
 
+![Nastavení → Základní: název a popis webu pro další jazykové verze](../obrazky/nastaveni-zakladni.webp)
+
 ## Výchozí jazyk
 
 Každý web má jeden výchozí jazyk. Nastavuje se v **Nastavení → Základní** v poli **Jazyk webu**; při instalaci se převezme jazyk, ve kterém jste instalovali.
@@ -16,7 +18,7 @@ Web v jediném jazyce nic dalšího nepotřebuje. Jazyk administrace s jazykem w
 
 ## Další jazykové verze
 
-1. V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Jazykové verze webu** a uložte.
+1. Otevřete **Správa → Rozšíření**, zaškrtněte **Jazykové verze webu** a uložte.
 2. V **Nastavení → Základní** se pod polem **Jazyk webu** objeví **Další jazykové verze**. Zaškrtněte jazyky, které chcete přidat, a uložte.
 3. Níže rozbalte **Název a popis v dalších jazykových verzích** a vyplňte **Název webu** a **Popis webu** pro každou verzi. Prázdné pole znamená stejnou hodnotu jako ve výchozím jazyce.
 4. Pro každou verzi založte aspoň jednu rubriku v daném jazyce – viz [Překlad obsahu](preklad-obsahu.md). Bez rubriky nemá verze kam ukládat články.

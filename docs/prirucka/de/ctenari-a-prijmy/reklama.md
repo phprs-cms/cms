@@ -2,9 +2,11 @@
 
 Das Anzeigensystem zeigt auf der Website eigene Banner und Codes von Werbenetzwerken. Eine Anzeige fügen Sie einmal hinzu und das System wechselt sie an der gewählten Position durch, zählt Einblendungen und Klicks, überwacht die Laufzeit der Kampagne und das Limit der Einblendungen. Jede Anzeige ist auf der Website mit dem Wort „Anzeige“ gekennzeichnet.
 
+![Leser → Werbung](../obrazky/reklama.webp)
+
 ## Einschalten
 
-Öffnen Sie im Hauptmenü **Erweiterungen**, haken Sie **Anzeigensystem** an und speichern Sie. Im Menü kommt **Leser → Werbung** hinzu; Zugriff haben Administrator und Redakteur.
+Öffnen Sie **Verwaltung → Erweiterungen**, haken Sie **Anzeigensystem** an und speichern Sie. Im Menü kommt **Leser → Werbung** hinzu; Zugriff haben Administrator und Redakteur.
 
 > Mit eingeschaltetem Anzeigensystem wird der Cache ganzer Seiten nicht verwendet. Anzeigen wechseln und werden bei jeder Einblendung gezählt, die Seite lässt sich also nicht aus dem Speicher ausliefern. Auf einem gewöhnlichen Hosting stört das nicht; bei einer Website mit hohen Besucherzahlen rechnen Sie damit.
 
@@ -12,9 +14,9 @@ Das Anzeigensystem zeigt auf der Website eigene Banner und Codes von Werbenetzwe
 
 | Position | Empfohlene Form | Wie sie auf die Website kommt |
 |---|---|---|
-| **Spalte** | Quadrat, z. B. 300×250 | mit dem Block **Werbung** |
-| **Kopfzeile** | breiter Streifen, z. B. 970×210 | mit dem Block **Werbung** |
-| **Fußzeile** | breiter Streifen | mit dem Block **Werbung** |
+| **In der Seitenleiste** (im Block **Spalte**) | Quadrat, z. B. 300×250 | mit dem Block **Werbung** |
+| **In der Kopfzeile** (im Block **Kopfzeile**) | breiter Streifen, z. B. 970×210 | mit dem Block **Werbung** |
+| **In der Fußzeile** (im Block **Fußzeile**) | breiter Streifen | mit dem Block **Werbung** |
 | **Unter dem Artikel** | – | wird automatisch unter jedem Artikel angezeigt |
 
 Die Positionen in der Spalte, der Kopfzeile und der Fußzeile platzieren Sie so auf der Website:
@@ -29,10 +31,10 @@ Der Name der Position ist nur ein Anhaltspunkt. Einen Block mit der Position Spa
 
 1. Klicken Sie unter **Leser → Werbung** auf **Neue Anzeige**.
 2. Füllen Sie den **Namen** aus – er ist nur für Sie, auf der Website erscheint er nicht. Bei einem Banner dient er auch als dessen Alternativtext.
-3. Wählen Sie die **Position**.
-4. Wählen Sie im Feld **Was angezeigt werden soll** entweder **Banner** oder **Code des Werbenetzwerks** und füllen Sie die Felder nach der Tabelle unten aus.
+3. Wählen Sie im Abschnitt **Was angezeigt werden soll** die Karte **Banner** oder **Code des Werbenetzwerks** und füllen Sie die Felder nach der Tabelle unten aus.
+4. Wählen Sie im Abschnitt **Wo** die Karte der Position: **In der Seitenleiste**, **Unter dem Artikel**, **In der Kopfzeile** oder **In der Fußzeile**.
 5. Klappen Sie bei Bedarf **Planung, Targeting und Limits** auf.
-6. Lassen Sie **Anzeige ist aktiv** angehakt und klicken Sie auf **Speichern**.
+6. Klicken Sie auf **Speichern**. Nach dem Speichern ist die Anzeige aktiv; ausschalten lässt sie sich mit der Option **Anzeige ist aktiv** (Zeile **Status**) im aufgeklappten Abschnitt **Planung, Targeting und Limits**.
 
 | Typ | Was Sie ausfüllen | Was gezählt wird |
 |---|---|---|

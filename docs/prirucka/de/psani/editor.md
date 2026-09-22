@@ -4,9 +4,11 @@ Einen Artikel schreiben Sie unter **Inhalt → Artikel → Neuer Artikel**. Link
 
 Zum Speichern genügen **Titel** und **Ressort**. Ohne Ressort lässt sich ein Artikel nicht speichern.
 
+![Der Artikeleditor: Artikelvorlage oben, Veröffentlichung und Einordnung rechts](../obrazky/editor-clanku.webp)
+
 ## Titel, Vorspann und Text
 
-- **Titel** – höchstens 255 Zeichen. Die Prüfung unter dem Formular weist darauf hin, wenn er mehr als 110 Zeichen hat oder in Großbuchstaben geschrieben ist.
+- **Titel** – höchstens 255 Zeichen. Der Abschnitt **Barrierefreiheitsprüfung** in der Spalte mit den Einstellungen weist darauf hin, wenn er mehr als 110 Zeichen hat oder in Großbuchstaben geschrieben ist.
 - **Vorspann (Einleitung)** – der einleitende Absatz. Er erscheint in den Artikellisten und am Anfang des Artikels, wiederholen Sie ihn deshalb nicht im Text. Der Vorspann hat eine verkürzte Werkzeugleiste.
 - **Artikeltext** – der eigentliche Inhalt mit der vollständigen Werkzeugleiste.
 
@@ -17,7 +19,7 @@ Zum Speichern genügen **Titel** und **Ressort**. Ohne Ressort lässt sich ein A
 | **¶** | Absatz |
 | **H2**, **H3** | Zwischenüberschrift und kleinere Zwischenüberschrift |
 | **B**, **I** | fett (Strg+B) und kursiv (Strg+I) |
-| **Link** | fügt einen Link ein oder bearbeitet ihn |
+| **Link** | fügt einen Link ein oder bearbeitet ihn (Strg+K) |
 | **• Liste**, **1. Liste** | Aufzählung und nummerierte Liste |
 | **„Zitat“** | Zitat |
 | **Bild** | fügt ein Bild oder einen Anhang aus den Medien ein |
@@ -88,6 +90,13 @@ Wenn alles in Ordnung ist, erscheint *✓ Die Bilder haben Beschreibungen, Über
 - **Vorschau** – öffnet den gespeicherten Artikel in der Website-Vorlage in einem neuen Fenster. Das funktioniert auch bei einem Entwurf, aber nur für in der Administration Angemeldete. Sie zeigt die zuletzt gespeicherte Version, nicht den Zwischenstand. Kommentare und Bewertungen werden in der Vorschau nicht angezeigt.
 
 Die Status eines Artikels und die geplante Veröffentlichung beschreibt die Seite [Planung und Versionen](planovani-a-revize.md).
+
+## Weitere Felder des Formulars
+
+- **Mitautoren und externer Autor** (aufklappbare Zeile im Abschnitt **Einordnung**) – weitere Mitglieder der Redaktion oder ein Gast bzw. eine Agentur ohne Konto. Ein externer Autor wird auf der Website anstelle des Autors aus der Redaktion genannt.
+- **Adresse des Artikels** (in **Weitere Einstellungen**) – der Teil der Adresse nach `/clanek/`. Sie entsteht aus dem Titel; wenn Sie sie bei einem veröffentlichten Artikel ändern, wird die alte Adresse von selbst auf die neue weitergeleitet.
+- **Schlüsselwörter** (in **Weitere Einstellungen**) – helfen der Suche auf der Website.
+- **Quelle** (in **Weitere Einstellungen**) – bei übernommenen Texten.
 
 ## Siehe auch
 

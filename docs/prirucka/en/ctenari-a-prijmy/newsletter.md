@@ -2,9 +2,11 @@
 
 A newsletter is an e-mail with a selection of articles that you send to subscribers who have signed up. You put it together by hand, or let it go out automatically. Everything runs on your site, without a third-party mailing service.
 
+![Readers → Newsletter](../obrazky/newsletter.webp)
+
 ## Turning it on
 
-1. In the main menu open **Extensions**, tick **Newsletter** and save.
+1. Open **Administration → Extensions**, tick **Newsletter** and save.
 2. In **Settings → General** fill in the **Newsroom e-mail** – the newsletter is sent from it. Without it the Newsletter screen reports **First fill in the Newsroom e-mail in Settings – the newsletter is sent from it.**
 3. Add the **Newsletter** block to the site (**Appearance → Blocks and layout**). It is the sign-up form for readers.
 4. Set up sending through SMTP. Bulk messages sent by the server's mail function often end up in spam. See [Mail](../provoz/posta.md).
@@ -36,7 +38,7 @@ The e-mail contains the introduction and, for every article, the headline, the s
 
 ### Sending progress
 
-Sending goes in batches of 40 recipients. After confirmation the **Newsletter delivery** page opens with the running status – sent and remaining. **Keep it open**; it refreshes by itself until everyone has been served. At the end it reports **Done.**
+Sending goes in batches of 40 recipients. After confirmation the **Newsletter delivery** page opens with the running status – sent and remaining. Keep the page open; it refreshes by itself until everyone has been served – if it does not refresh, click **Continue**. At the end it reports **Done.**
 
 If you close the page earlier, the sending stops. Nothing is lost or sent twice: in the **Sent issues** table click **continue sending** next to the issue.
 

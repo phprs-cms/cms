@@ -4,6 +4,8 @@ A block is a self-contained element of the page outside the main content: a list
 
 An administrator and an editor have access (unless the administrator has taken the area away from the editor, see [Roles and permissions](../redakce/role-a-opravneni.md)).
 
+![The visual block editor right on the site](../obrazky/editor-bloku.webp)
+
 ## Opening the editor
 
 In the main menu click **Appearance → Blocks and layout**. The home page of the site opens in editing mode: the **Editing blocks** bar is at the top, the zones are outlined and each has a **+ Add block** button.
@@ -56,7 +58,7 @@ Which zones exist is determined by the page layout. You change it with the **3 c
 | Custom | **Text** | Your own text, an image or embedded code (video, map…). |
 | Custom | **Advertising** | A position where banners from the Advertising system rotate. |
 
-The blocks **News briefs**, **Poll**, **Newsletter**, **Notifications**, **Reader account** and **Advertising** belong to extensions. They are on offer only when the respective extension is turned on in the **Extensions** area. After an extension is turned off, the block disappears from the site; its settings remain.
+The blocks **News briefs**, **Poll**, **Newsletter**, **Notifications**, **Reader account** and **Advertising** belong to extensions. They are on offer only when the respective extension is turned on in **Administration → Extensions**. After an extension is turned off, the block disappears from the site; its settings remain.
 
 ## Moving, settings and deleting
 
@@ -71,7 +73,7 @@ Every block has a **Heading** and the option **Show the heading on the site**. T
 |---|---|
 | Text | **Content** – a small editor |
 | Menu | **Links** – pairs of text and address (`/o-nas` or `https://…`); **+ another link** adds another row |
-| Articles from a section | **Section** (or **Latest from all sections**) and **Number of items** (1–20) |
+| Articles from a section | **Section** (or **Latest from all sections**) and **Number of items** (1–20; a higher number is saved as 20) |
 | Most read, Tags, Archive, Authors | **Number of items** (1–50) |
 | Support us | **Call to action**, **Button text**, **Where the button leads** – see [Support and revenue](../ctenari-a-prijmy/podpora-a-prijmy.md) |
 | Advertising | **Ad position** – see [Advertising](../ctenari-a-prijmy/reklama.md) |
@@ -112,7 +114,7 @@ The fallback route is a form-based overview at the address `admin.php?modul=blok
 
 - The overview shows a diagram of the page with its zones. The **Page layout:** switch is at the top.
 - You move blocks by dragging or with the arrows; **Edit** opens the form, **Delete** removes the block, **+ add block** creates a new one in the given zone.
-- The form has the fields **Block type**, **Block heading**, **Custom content (HTML)**, **Placement**, **Block appearance**, **On which pages**, **Only in section**, **Language version** (only on a site with several languages), **Devices** and **Show block**. The Support us block adds the fields **Button text** and **Where the button leads**. Here the appearance has an extra fifth option, **No heading**, which corresponds to **Show the heading on the site** being turned off.
+- The form has the fields **Block type**, **Block heading**, **Custom content (HTML)** and, depending on the block type, **Menu links**, **Section**, **Number of items** or **Ad position**. The **Placement and display** section follows with **Placement**, **Block appearance**, **On which pages**, **Only in section**, **Language version** (only on a site with several languages), **Devices** and **Show block**. The Support us block adds the fields **Button text** and **Where the button leads**. Here the appearance has an extra fifth option, **No heading**, which corresponds to **Show the heading on the site** being turned off.
 - **Open visual editor** leads back to the visual editor.
 
 ## Related

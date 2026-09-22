@@ -4,6 +4,8 @@ Ein Block ist ein eigenständiges Element der Seite außerhalb des Hauptinhalts:
 
 Zugriff haben der Administrator und der Redakteur (sofern ihm der Administrator den Bereich nicht weggenommen hat, siehe [Rollen und Berechtigungen](../redakce/role-a-opravneni.md)).
 
+![Der visuelle Blockeditor direkt auf der Website](../obrazky/editor-bloku.webp)
+
 ## Editor öffnen
 
 Klicken Sie im Hauptmenü auf **Design → Blöcke und Layout**. Es öffnet sich die Startseite der Website im Bearbeitungsmodus: Oben steht die Leiste **Blöcke bearbeiten**, die Zonen sind umrandet und in jeder ist die Schaltfläche **+ Block hinzufügen**.
@@ -56,7 +58,7 @@ Welche Zonen es gibt, bestimmt das Seitenlayout. Sie ändern es mit den Schaltfl
 | Eigener Inhalt | **Text** | Eigener Text, ein Bild oder eingebetteter Code (Video, Karte…). |
 | Eigener Inhalt | **Werbung** | Position, an der die Banner aus dem Anzeigensystem wechseln. |
 
-Die Blöcke **Kurzmeldungen**, **Umfrage**, **Newsletter**, **Benachrichtigungen**, **Leserkonto** und **Werbung** gehören zu Erweiterungen. Im Angebot stehen sie nur, wenn die jeweilige Erweiterung im Bereich **Erweiterungen** eingeschaltet ist. Nach dem Ausschalten der Erweiterung verschwindet der Block von der Website, seine Einstellungen bleiben erhalten.
+Die Blöcke **Kurzmeldungen**, **Umfrage**, **Newsletter**, **Benachrichtigungen**, **Leserkonto** und **Werbung** gehören zu Erweiterungen. Im Angebot stehen sie nur, wenn die jeweilige Erweiterung unter **Verwaltung → Erweiterungen** eingeschaltet ist. Nach dem Ausschalten der Erweiterung verschwindet der Block von der Website, seine Einstellungen bleiben erhalten.
 
 ## Verschieben, Einstellen und Löschen
 
@@ -71,7 +73,7 @@ Jeder Block hat eine **Überschrift** und die Option **Überschrift auf der Webs
 |---|---|
 | Text | **Inhalt** – ein kleiner Editor |
 | Menü | **Links** – Paare aus Text und Adresse (`/o-nas` oder `https://…`), eine weitere Zeile fügt **+ weiterer Link** hinzu |
-| Artikel aus einem Ressort | **Ressort** (oder **Neueste aus allen Ressorts**) und **Anzahl der Einträge** (1–20) |
+| Artikel aus einem Ressort | **Ressort** (oder **Neueste aus allen Ressorts**) und **Anzahl der Einträge** (1–20; eine höhere Zahl wird als 20 gespeichert) |
 | Meistgelesen, Schlagwörter, Archiv, Autoren | **Anzahl der Einträge** (1–50) |
 | Unterstützen Sie uns | **Aufruf**, **Text der Schaltfläche**, **Wohin die Schaltfläche führt** – siehe [Unterstützung und Einnahmen](../ctenari-a-prijmy/podpora-a-prijmy.md) |
 | Werbung | **Anzeigenposition** – siehe [Werbung](../ctenari-a-prijmy/reklama.md) |
@@ -112,7 +114,7 @@ Der Ersatzweg ist eine Formularübersicht unter der Adresse `admin.php?modul=blo
 
 - Die Übersicht zeigt das Schema der Seite mit den Zonen. Der Umschalter **Seitenlayout:** steht oben.
 - Blöcke verschieben Sie durch Ziehen oder mit den Pfeilen; **Bearbeiten** öffnet das Formular, **Löschen** entfernt den Block, **+ Block hinzufügen** legt in der jeweiligen Zone einen neuen an.
-- Das Formular hat die Felder **Blocktyp**, **Überschrift des Blocks**, **Eigener Inhalt (HTML)**, **Platzierung**, **Aussehen des Blocks**, **Auf welchen Seiten**, **Nur im Ressort**, **Sprachversion** (nur auf einer Website mit mehreren Sprachen), **Geräte** und **Block anzeigen**. Beim Block Unterstützen Sie uns kommen die Felder **Text der Schaltfläche** und **Wohin die Schaltfläche führt** hinzu. Das Aussehen hat hier zusätzlich eine fünfte Option **Ohne Überschrift**, die dem ausgeschalteten **Überschrift auf der Website anzeigen** entspricht.
+- Das Formular hat die Felder **Blocktyp**, **Überschrift des Blocks**, **Eigener Inhalt (HTML)** und je nach Blocktyp **Menü-Links**, **Ressort**, **Anzahl der Einträge** oder **Anzeigenposition**. Im Abschnitt **Platzierung und Anzeige** folgen **Platzierung**, **Aussehen des Blocks**, **Auf welchen Seiten**, **Nur im Ressort**, **Sprachversion** (nur auf einer Website mit mehreren Sprachen), **Geräte** und **Block anzeigen**. Beim Block Unterstützen Sie uns kommen die Felder **Text der Schaltfläche** und **Wohin die Schaltfläche führt** hinzu. Das Aussehen hat hier zusätzlich eine fünfte Option **Ohne Überschrift**, die dem ausgeschalteten **Überschrift auf der Website anzeigen** entspricht.
 - Zurück in den visuellen Editor führt **Visuellen Editor öffnen**.
 
 ## Siehe auch

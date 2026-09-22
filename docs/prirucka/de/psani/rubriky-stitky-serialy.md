@@ -2,6 +2,8 @@
 
 Die Inhalte der Website werden auf drei Arten geordnet. Das **Ressort** ist die feste Einordnung – jeder Artikel hat genau eines. **Schlagwörter** beschreiben, wovon ein Artikel handelt, und er kann mehrere haben. Eine **Serie** verbindet Teile, die aufeinander aufbauen.
 
+![Inhalt → Ressorts](../obrazky/rubriky.webp)
+
 ## Ressorts
 
 Ressorts verwalten Sie unter **Inhalt → Ressorts**. Ohne Ressort lässt sich ein Artikel nicht speichern, legen Sie das erste Ressort deshalb vor dem ersten Artikel an.
@@ -58,7 +60,7 @@ Ein Schlagwort lässt sich auch mehreren Artikeln auf einmal hinzufügen – mit
 
 Eine Serie ist eine Gruppe von Artikeln, die zusammengehören: Teile einer Reportage, eine regelmäßige Kolumne, ein Reisebericht in Fortsetzungen.
 
-1. Suchen Sie im Artikelformular im Abschnitt **Einordnung** das Feld **Serie**.
+1. Klappen Sie im Artikelformular **Weitere Einstellungen** auf; das erste Feld ist **Serie**.
 2. Wählen Sie eine vorhandene Serie oder schreiben Sie den Namen in das Feld **…oder Name einer neuen Serie**. Die neue Serie wird beim Speichern des Artikels angelegt.
 3. Bei weiteren Teilen wählen Sie die Serie nur noch aus der Liste.
 

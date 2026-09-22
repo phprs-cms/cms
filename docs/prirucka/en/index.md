@@ -12,7 +12,7 @@ and continues with the chapters Appearance to SEO and AI. **A developer** will f
 - **Writing** – the article editor, images, galleries and attachments, embedding video and social media posts, content types, sections, tags and series, scheduling and revisions, the AI assistant.
 - **Newsroom** – roles and permissions, handover and review, the front page and the calendar, comments, account and sign-in.
 - **Appearance** – site templates, Site identity, blocks and layout, editing text right on the site and a custom template.
-- **Readers and revenue** – reader accounts, locked content and subscriptions, newsletter, browser notifications, advertising, support and the revenue overview.
+- **Readers and revenue** – reader accounts, locked content and subscriptions, payments with Stripe, newsletter, browser notifications, advertising, support and the revenue overview.
 - **Language versions** – site languages, the switcher and hreflang tags, translating articles, sections, pages and blocks.
 - **SEO and AI** – settings for search engines, AI search engines, the Claude connection, analytics and privacy.
 - **Operations** – mail, backups, background jobs, System status, nginx, security and troubleshooting.
@@ -23,5 +23,9 @@ and continues with the chapters Appearance to SEO and AI. **A developer** will f
 Names of screens and buttons are in **bold** and match the English administration interface. A path in the administration is written with arrows,
 for example **Settings → Mail**. Addresses and file names look `like this`.
 
-The manual describes the latest released version of the system. You will find your version number in the administration at the bottom of the **Dashboard**
-and in **Settings → Backups and updates**.
+The manual describes the latest released version of the system. You will find your version number in the footer of every administration page
+and in **Settings → Backups and updates** (the Installed version row).
+
+On administration screens there is a **Help** button next to the heading. It opens a list of the pages of this manual that relate to that screen.
+
+![The Help button next to the screen title lists the manual pages for that screen](obrazky/napoveda-k-obrazovce.webp)

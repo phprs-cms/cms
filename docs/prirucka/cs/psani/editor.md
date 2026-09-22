@@ -4,9 +4,11 @@
 
 K uložení stačí **Titulek** a **Rubrika**. Bez rubriky článek uložit nejde.
 
+![Editor článku: šablona článku nahoře, vydání a zařazení vpravo](../obrazky/editor-clanku.webp)
+
 ## Titulek, perex a text
 
-- **Titulek** – nejvýše 255 znaků. Kontrola pod formulářem upozorní, když má přes 110 znaků nebo je psaný verzálkami.
+- **Titulek** – nejvýše 255 znaků. Oddíl **Kontrola přístupnosti** ve sloupci nastavení upozorní, když má přes 110 znaků nebo je psaný verzálkami.
 - **Perex (úvod)** – úvodní odstavec. Zobrazuje se ve výpisech i na začátku článku, v textu ho proto neopakujte. Perex má zkrácenou lištu nástrojů.
 - **Text článku** – vlastní obsah s úplnou lištou nástrojů.
 
@@ -17,7 +19,7 @@ K uložení stačí **Titulek** a **Rubrika**. Bez rubriky článek uložit nejd
 | **¶** | odstavec |
 | **H2**, **H3** | mezititulek a menší mezititulek |
 | **B**, **I** | tučně (Ctrl+B) a kurzíva (Ctrl+I) |
-| **odkaz** | vloží nebo upraví odkaz |
+| **odkaz** | vloží nebo upraví odkaz (Ctrl+K) |
 | **• seznam**, **1. seznam** | odrážkový a číslovaný seznam |
 | **„citace“** | citace |
 | **obrázek** | vloží obrázek nebo přílohu z Médií |
@@ -88,6 +90,13 @@ Když je vše v pořádku, zobrazí se *✓ Obrázky mají popisy, nadpisy i odk
 - **Náhled** – otevře uložený článek v šabloně webu v novém okně. Funguje i u konceptu, ale jen přihlášeným do administrace. Ukazuje naposledy uloženou verzi, ne rozepsaný text. Komentáře a hodnocení se v náhledu nezobrazují.
 
 Stavy článku a plánované vydání popisuje stránka [Plánování a revize](planovani-a-revize.md).
+
+## Další pole formuláře
+
+- **Spoluautoři a externí autor** (rozbalovací řádek v oddílu **Zařazení**) – další členové redakce, nebo host či agentura bez účtu. Externí autor se na webu uvede místo autora z redakce.
+- **Adresa článku** (v **Další nastavení**) – část adresy za `/clanek/`. Vytvoří se z titulku; když ji u vydaného článku změníte, stará adresa se sama přesměruje na novou.
+- **Klíčová slova** (v **Další nastavení**) – pomáhají hledání na webu.
+- **Zdroj** (v **Další nastavení**) – u převzatých textů.
 
 ## Související
 

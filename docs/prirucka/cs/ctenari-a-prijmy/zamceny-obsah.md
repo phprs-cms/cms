@@ -2,11 +2,13 @@
 
 Článek můžete vyhradit přihlášeným čtenářům nebo předplatitelům. Ostatní uvidí titulek, perex, začátek textu a výzvu. Předplatné čtenář získá jedním ze dvou způsobů: zaplatí si ho sám kartou přes službu Stripe a web mu ho sám zapne i prodlužuje (viz [Platby přes Stripe](platby-stripe.md)), nebo platbu přijmete po svém a předplatné mu zapíšete ručně. Oba způsoby jdou používat zároveň.
 
-Všechno na této stránce vyžaduje rozšíření **Čtenáři a zamčený obsah** (hlavní nabídka **Rozšíření**). Registraci a účty popisuje stránka [Účty čtenářů](ucty-ctenaru.md).
+Všechno na této stránce vyžaduje rozšíření **Čtenáři a zamčený obsah** (**Správa → Rozšíření**). Registraci a účty popisuje stránka [Účty čtenářů](ucty-ctenaru.md).
+
+![Nastavení → Čtenáři a platby](../obrazky/ctenari-a-platby.webp)
 
 ## Zamčení článku
 
-Ve formuláři článku je se zapnutým rozšířením pole **Kdo smí číst**:
+Ve formuláři článku je se zapnutým rozšířením v rozbalovacím oddílu **Další nastavení** pole **Kdo smí číst**:
 
 | Volba | Kdo čte celý článek |
 |---|---|
@@ -44,7 +46,7 @@ Otevřete **Nastavení → Čtenáři a platby**, oddíl **Čtenáři a zamčen�
 | **Kde získat předplatné** | kam vede tlačítko **Získat předplatné**, dokud nejsou zapnuté platby přes Stripe | prázdné |
 | **Text výzvy pod ukázkou** | vlastní věta ve výzvě, nejvýše 300 znaků; prázdné = výchozí text | prázdné |
 
-V témže oddílu je i část **Platby přes Stripe** – popisuje ji [samostatná stránka](platby-stripe.md).
+Na téže záložce je pod ním oddíl **Platby přes Stripe** – popisuje ji [samostatná stránka](platby-stripe.md).
 
 ## Kde získat předplatné
 

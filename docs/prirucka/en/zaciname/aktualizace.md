@@ -2,6 +2,8 @@
 
 phpRS can update itself. Every package is signed by the publisher and the system installs only a package whose signature matches – it rejects a forged or damaged one.
 
+![Settings → Backups and updates](../obrazky/aktualizace-a-zalohy.webp)
+
 ## How it works
 
 - Twice a day the system asks at `https://phprs.eu/aktualizace.json` whether a new version has been released. It sends nothing but its own version number in the request header.
@@ -10,7 +12,7 @@ phpRS can update itself. Every package is signed by the publisher and the system
 
 ## One-button update
 
-**Settings → Backups and updates.** When a new version is available, you see its number, the list of changes and a button to install it. After you confirm:
+**Settings → Backups and updates.** When a new version is available, you see its number, the list of changes and the **Update to** button with the version number. After you confirm:
 
 1. a database backup is created,
 2. the package is downloaded and its checksum and signature are verified,

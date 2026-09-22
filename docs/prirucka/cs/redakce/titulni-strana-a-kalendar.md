@@ -4,12 +4,14 @@ Tato stránka popisuje nástroje, kterými redakce řídí, co je na webu nahoř
 
 ## Titulní strana
 
+![Titulní strana](../obrazky/titulni-strana.webp)
+
 Hlavní stránka webu řadí články od nejnovějšího. Připnuté články jsou nad nimi v pořadí, které určí redakce. O titulní straně rozhoduje jen ten, kdo smí vydávat; ostatní odkaz **Titulní strana** nevidí.
 
 ### Skládání titulní strany
 
 1. Otevřete **Obsah → Články → Titulní strana**.
-2. Vlevo je sloupec **Nahoře na titulní straně** s připnutými články, vpravo **Nejnovější články** – posledních 30 vydaných článků, které se na hlavní stránce zobrazují.
+2. Vlevo je sloupec **Nahoře na titulní straně** s připnutými články, vpravo **Nejnovější články** – posledních 30 vydaných článků, které se na hlavní stránce zobrazují. Na webu s jazykovými verzemi skládá obrazovka jen výchozí jazyk; v ostatních jazycích připínejte volbou **Připnout nahoru (otvírák)** přímo u článku.
 3. Článek připnete tlačítkem **Připnout**, nebo ho přetáhnete do levého sloupce. **Odepnout** ho vrátí mezi ostatní.
 4. Pořadí připnutých změníte přetažením nebo šipkami **↑** a **↓**.
 5. Klepněte na **Uložit titulní stranu**. Odkazem **Zobrazit web** si výsledek zkontrolujete.
@@ -29,6 +31,8 @@ Kolik článků se na hlavní stránku vejde, určuje administrátor v **Nastave
 
 ## Redakční kalendář
 
+![Redakční kalendář](../obrazky/redakcni-kalendar.webp)
+
 **Obsah → Články → Redakční kalendář** ukazuje měsíční mřížku článků podle data vydání.
 
 - Každý článek je v kalendáři uveden časem a titulkem. Klepnutím otevřete jeho editor.
@@ -42,7 +46,9 @@ Kalendář se hodí i na plánování dopředu: založte koncept s pracovním ti
 
 ## Výpis článků a hromadné akce
 
-Výpis ukazuje 20 článků na stránku. Zúžíte ho záložkami stavu (**Všechny**, **Vydané**, **Naplánované**, **Koncepty**, **Ke korektuře**, **Schválené**), polem **Rubrika:**, polem **Titulek obsahuje:** a volbou **Zobrazit pouze mé články**; potvrďte tlačítkem **Filtrovat**.
+![Výpis článků se záložkami podle stavu](../obrazky/vypis-clanku.webp)
+
+Výpis ukazuje 20 článků na stránku. Zúžíte ho záložkami stavu (**Všechny**, **Vydané**, **Naplánované**, **Koncepty**, **Ke korektuře**, **Schválené**), polem **Rubrika:**, na webu s jazykovými verzemi polem **Jazyk:**, polem **Titulek obsahuje:** a volbou **Zobrazit pouze mé články**; potvrďte tlačítkem **Filtrovat**.
 
 Hromadná akce:
 
@@ -57,7 +63,7 @@ Hromadná akce:
 | **zamknout pro přihlášené čtenáře** | článek si přečtou jen přihlášení čtenáři |
 | **odemknout pro všechny** | zruší zamčení |
 
-Zamykání se nabízí jen se zapnutým rozšířením **Čtenáři a zamčený obsah** (hlavní nabídka **Rozšíření**).
+Zamykání se nabízí jen se zapnutým rozšířením **Čtenáři a zamčený obsah** (**Správa → Rozšíření**).
 
 Tlačítko **Smazat označené** články po potvrzení smaže. Smazání je nevratné. Kdo nemá právo vydávat, vydané články hromadně měnit ani mazat nemůže – systém je přeskočí a v hlášení uvede počet skutečně upravených.
 
@@ -67,7 +73,7 @@ Tlačítko **Smazat označené** články po potvrzení smaže. Smazání je nev
 
 ## Paleta příkazů
 
-Klávesová zkratka **Ctrl+K** (na Macu **⌘K**) nebo pole **Hledat…** vpravo nahoře otevře paletu příkazů.
+Klávesová zkratka **Ctrl+K** (na Macu **⌘K**) nebo pole **Hledat…** vpravo nahoře otevře paletu příkazů. Když je kurzor v textu článku, vkládá Ctrl+K odkaz – paletu tehdy otevřete polem **Hledat…**.
 
 - Napište název sekce (*rubriky*), akce (*nový článek*, *redakční kalendář*, *titulní strana*) nebo část titulku článku.
 - Šipkami **↑** **↓** vyberte, **Enter** otevře, **Esc** zavře.

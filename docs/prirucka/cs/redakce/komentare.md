@@ -1,6 +1,8 @@
 # Komentáře
 
-Komentáře pod články jsou součástí rozšíření **Komentáře a hodnocení**, které je po instalaci zapnuté. Vypíná a zapíná ho administrátor v položce **Rozšíření** hlavní nabídky. Moderuje se v **Čtenáři → Komentáře**; přístup má redaktor a administrátor.
+Komentáře pod články jsou součástí rozšíření **Komentáře a hodnocení**, které je po instalaci zapnuté. Vypíná a zapíná ho administrátor ve **Správa → Rozšíření**. Moderuje se v **Čtenáři → Komentáře**; přístup má redaktor a administrátor.
+
+![Čtenáři → Komentáře](../obrazky/komentare.webp)
 
 ## Kde se komentáře povolují
 

@@ -35,7 +35,9 @@ Potřebuje běžící MySQL nebo MariaDB a příkazy `mysql` a `curl`. Postup te
 4. zkopíruje projekt do dočasné složky, založí čistou databázi a provede instalaci; ověří, že se instalátor po sobě smazal,
 5. projde web: hlavní stránku, článek, rubriku, hledání, kanály, mapy webu, `robots.txt`, `llms.txt`, čistou verzi článku, stránku 404 a to, že `system/` a `config.php` nejsou z webu přístupné,
 6. vyzkouší všechny tři vestavěné šablony i náhradní šablonu při chybějící složce,
-7. přihlásí se do administrace a projde její obrazovky včetně oprávnění podle rubriky a úpravy článku přímo na webu.
+7. přihlásí se do administrace a projde její obrazovky včetně oprávnění podle rubriky a úpravy článku přímo na webu,
+8. projde import ukázkového exportu z WordPressu a export webu,
+9. projde platby přes Stripe bez sítě: webhooky podepsané na místě a falešný server místo API (port v proměnné `STRIPE_PORT`, výchozí 8098).
 
 Odpověď se považuje za chybnou, i když obsahuje text `Warning:`, `Notice:`, `Deprecated:` nebo `Fatal error`.
 

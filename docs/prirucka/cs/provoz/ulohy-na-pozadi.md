@@ -29,7 +29,9 @@ Adresu si můžete otevřít i v prohlížeči – odpoví řádkem `OK`, časem
 
 ## Co přesně úlohy dělají
 
-- vydají naplánované články a rozešlou k nim oznámení (e-mail, Web Push, webhooky),
-- odešlou další dávku rozesílaného newsletteru,
+- vydají naplánované články a rozešlou k nim oznámení (webhook, IndexNow pro vyhledávače, Web Push),
+- založí automatické vydání newsletteru a odešlou další dávku rozesílaného newsletteru i oznámení Web Push,
 - zkusí znovu odeslat poštu, která se nepodařila doručit,
-- vytvoří týdenní zálohu databáze a nahrají ji mimo server, pokud je to zapnuté.
+- hledají nefunkční odkazy ve vydaných článcích,
+- dvakrát denně zkontrolují aktualizace a bezpečnostní vydání nainstalují sama (pokud je to zapnuté),
+- vytvoří týdenní zálohu databáze a nahrají ji mimo server, pokud je to zapnuté. Záloha vzniká při volání cronu nebo při vstupu administrátora do administrace, ne při návštěvě čtenáře.

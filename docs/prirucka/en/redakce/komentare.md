@@ -1,6 +1,8 @@
 # Comments
 
-Comments below articles are part of the **Comments and ratings** extension, which is turned on after installation. An administrator turns it off and on under **Extensions** in the main menu. Moderation takes place in **Readers → Comments**; an editor and an administrator have access.
+Comments below articles are part of the **Comments and ratings** extension, which is turned on after installation. An administrator turns it off and on under **Administration → Extensions**. Moderation takes place in **Readers → Comments**; an editor and an administrator have access.
+
+![Readers → Comments](../obrazky/komentare.webp)
 
 ## Where comments are allowed
 

@@ -83,7 +83,7 @@ Strukturovaná data (autor, vydavatel, data, drobečková navigace) doplňuje sy
 
 ## Veřejné API
 
-Pro strojové čtení obsahu vlastní aplikací slouží rozšíření **Veřejné API** (hlavní nabídka **Rozšíření**; výchozí: vypnuto). Je to čtecí JSON API na adresách `/api/clanky`, `/api/clanky/<adresa>` a `/api/rubriky`. Zamčené články vrací s ukázkou a příznakem `zamceno`.
+Pro strojové čtení obsahu vlastní aplikací slouží rozšíření **Veřejné API** (**Správa → Rozšíření**; výchozí: vypnuto). Je to čtecí JSON API na adresách `/api/clanky`, `/api/clanky/<adresa>` a `/api/rubriky`. Zamčené články vrací s ukázkou a příznakem `zamceno`.
 
 ## Související
 

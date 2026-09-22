@@ -44,6 +44,14 @@ final class Clanky extends Modul
             $where[] = 'c.tema = ?';
             $params[] = $tema;
         }
+        // jazyková verze: výchozí jazyk webu je v sloupci uložený jako ''
+        $s = $this->app->settings();
+        $jazykyWebu = ($dalsi = \PhpRS\Core\Jazyk::dalsi($s)) === [] ? [] : [\PhpRS\Core\Jazyk::vychozi($s), ...$dalsi];
+        $jazyk = in_array($this->request->get('jazyk'), $jazykyWebu, true) ? $this->request->get('jazyk') : '';
+        if ($jazyk !== '') {
+            $where[] = 'c.jazyk = ?';
+            $params[] = \PhpRS\Core\Jazyk::sloupec($s, $jazyk);
+        }
         if (($hledat = $this->request->get('hledat')) !== '') {
             $where[] = 'c.titulek LIKE ?';
             $params[] = '%' . addcslashes($hledat, '%_\\') . '%';
@@ -81,7 +89,8 @@ final class Clanky extends Modul
             'strana' => $strana,
             'stran' => max(1, (int) ceil($celkem / self::NA_STRANKU)),
             'rubriky' => $this->nabidkaRubrik(),
-            'filtr' => ['tema' => $tema, 'hledat' => $hledat, 'moje' => $this->request->get('moje'), 'stav' => isset($podminkyStavu[$stav]) ? $stav : ''],
+            'filtr' => ['tema' => $tema, 'jazyk' => $jazyk, 'hledat' => $hledat, 'moje' => $this->request->get('moje'), 'stav' => isset($podminkyStavu[$stav]) ? $stav : ''],
+            'jazykyWebu' => $jazykyWebu,
             'smiVydavat' => $auth->smiVydavat(),
             'ctenari' => \PhpRS\Core\Rozsireni::je($this->app->settings(), 'ctenari'),
         ]);

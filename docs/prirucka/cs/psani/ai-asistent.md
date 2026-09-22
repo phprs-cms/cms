@@ -6,8 +6,8 @@ AI asistent je volitelný pomocník v editoru článku. Navrhuje titulky, perex,
 
 Asistent je po instalaci vypnutý. Zapíná ho administrátor:
 
-1. V hlavní nabídce otevřete **Rozšíření** a zaškrtněte **AI asistent v editoru**.
-2. Níže v oddílu **AI asistent – klíč a model** vložte do pole **Klíč Claude API** vlastní klíč. Vytvoříte ho na console.anthropic.com v části API Keys.
+1. Otevřete **Správa → Rozšíření** a zaškrtněte **AI asistent v editoru**.
+2. Níže rozbalte oddíl **AI asistent – klíč a model** a vložte do pole **Klíč Claude API** vlastní klíč. Vytvoříte ho na console.anthropic.com v části API Keys.
 3. V poli **Model** zvolte jednu ze tří možností: rychlý a úsporný, vyvážený (doporučeno), nebo nejpečlivější.
 4. Klepněte na **Uložit nastavení**.
 
@@ -23,8 +23,8 @@ U popisků polí ve formuláři článku přibudou tlačítka se znakem ✦:
 | **Perex (úvod)** | **✦ Navrhnout** | varianty perexu |
 | **Text článku** | **✦ Korektura** | seznam oprav pravopisu, překlepů, interpunkce a typografie |
 | **Štítky** | **✦ Navrhnout** | štítky, přednostně z těch, které už web má |
-| **Ve zkratce** | **✦ Navrhnout** | tři až pět bodů s hlavními fakty |
-| **Popis pro vyhledávače** | **✦ Navrhnout** | varianty krátkého popisu |
+| **Ve zkratce** (v **Další nastavení**) | **✦ Navrhnout** | tři až pět bodů s hlavními fakty |
+| **Popis pro vyhledávače** (v **Další nastavení**) | **✦ Navrhnout** | varianty krátkého popisu |
 
 Asistent vychází z textu článku. Dokud je článek příliš krátký, požádá vás, abyste nejdřív kus napsali.
 

@@ -12,9 +12,9 @@ phpRS läuft auf gewöhnlichem Shared Hosting. Es braucht weder SSH-Zugang noch 
 | PHP-Erweiterungen – empfohlen | `exif` (richtige Drehung von Handyfotos), `intl` (Sortierung nach den Regeln der Sprache), `curl` (Benachrichtigung der Suchmaschinen über neue Inhalte), `zip` und `sodium` (Aktualisierung mit einem Klick), `zlib` (komprimierte Sicherungen) |
 | Webserver | Apache mit aktiviertem `.htaccess` oder nginx (siehe [Betrieb → nginx](../provoz/nginx.md)) |
 | HTTPS | dringend empfohlen; ohne HTTPS funktionieren weder Web Push noch die Verbindung mit Claude, und die Anmeldedaten werden unverschlüsselt übertragen |
-| Speicherplatz | das System selbst belegt weniger als 3 MB; rechnen Sie vor allem mit den Fotos |
+| Speicherplatz | das System selbst belegt etwa 3 MB; rechnen Sie vor allem mit den Fotos |
 
-Ohne die empfohlenen Erweiterungen lässt sich das System installieren, nur stehen einige Funktionen nicht zur Verfügung. Was genau fehlt, zeigt nach der Installation **Einstellungen → Systemstatus**.
+Ohne die empfohlenen Erweiterungen lässt sich das System installieren, nur stehen einige Funktionen nicht zur Verfügung. Fehlende `exif`, `intl` und `curl` zeigt nach der Installation **Einstellungen → Systemstatus**; fehlende `zip` oder `sodium` meldet erst ein Aktualisierungsversuch, und ohne `zlib` entstehen Sicherungen als unkomprimierte `.sql`-Dateien.
 
 ## Was Sie vor der Installation vorbereiten
 

@@ -14,10 +14,10 @@ Jede Sicherung können Sie **herunterladen**, **wiederherstellen** oder löschen
 
 ## Sicherungskopien außerhalb des Servers
 
-Eine Sicherung auf demselben Server wie die Website hilft nicht, wenn Sie das Hosting verlieren, wenn jemand es angreift oder wenn die Festplatte ausfällt. Legen Sie deshalb im Abschnitt **Sicherungskopien außerhalb des Servers** fest, wohin jede neue Sicherung von selbst hochgeladen werden soll:
+Eine Sicherung auf demselben Server wie die Website hilft nicht, wenn Sie das Hosting verlieren, wenn jemand es angreift oder wenn die Festplatte ausfällt. Klappen Sie deshalb im Abschnitt **Datenbanksicherungen** den Teil **Sicherungskopien außerhalb des Servers** auf und wählen Sie im Feld **Kopieren nach**, wohin jede neue Sicherung von selbst hochgeladen werden soll:
 
-- **auf einen FTP-Server** – ein anderes Hosting oder ein NAS zu Hause; einzugeben sind Server, Benutzer, Passwort und Ordner,
-- **in einen S3-Speicher** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; einzugeben sind Endpunkt, Region, Zugriffsschlüssel, geheimer Schlüssel und Bucket mit Ordner.
+- **auf einen FTP-Server** – ein anderes Hosting oder ein NAS zu Hause; füllen Sie **Server**, **Benutzername / Zugriffsschlüssel**, **Passwort / geheimer Schlüssel** und **Ordner / Bucket** aus,
+- **in einen S3-Speicher** – Amazon S3, Backblaze B2, Wasabi, Cloudflare R2; in das Feld **Server** gehört der Endpunkt, dazu **Benutzername / Zugriffsschlüssel**, **Passwort / geheimer Schlüssel**, **Ordner / Bucket** (Bucket mit Ordner) und **Region (nur S3)**.
 
 Speichern Sie die Einstellungen und klicken Sie auf **Sicherung jetzt erstellen** – die Kopie wird sofort hochgeladen, und Sie sehen, ob die Verbindung funktioniert. Das Ergebnis des letzten Versuchs zeigt auch der **Systemstatus**.
 

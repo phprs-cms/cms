@@ -43,7 +43,7 @@ Die Schaltfläche **phpRS 3 installieren** legt die Tabellen in der Datenbank un
 
 1. Das Installationsprogramm **löscht sich nach Abschluss selbst**. Erlauben das die Rechte auf dem Server nicht, weist es darauf hin – löschen Sie die Datei `install.php` dann von Hand; solange sie dort liegt, erinnert der Systemstatus daran.
 2. Melden Sie sich unter der Adresse `https://www.example.de/admin.php` an.
-3. Schalten Sie die **Zwei-Faktor-Anmeldung** ein: Klicken Sie oben rechts auf Ihren Avatar → **Mein Konto**.
+3. Schalten Sie die **Zwei-Faktor-Anmeldung** ein: Ein Klick auf Ihren Avatar oben rechts öffnet **Mein Konto**, Abschnitt **Zwei-Faktor-Anmeldung**.
 4. Fahren Sie mit dem Kapitel [Erste Schritte](prvni-kroky.md) fort.
 
 ## Wenn die Installation nicht gelingt

@@ -33,11 +33,11 @@ Naplánovaný článek se v daný čas zobrazí i bez dalšího nastavení. Na v
 
 ### Stažení z hlavní stránky
 
-Pole **Stáhnout z hlavní stránky** v oddílu **Další nastavení** je nepovinné. Po zadaném datu článek zmizí z hlavní stránky; v rubrice a ve vyhledávání zůstane.
+Pole **Stáhnout z hlavní stránky** v oddílu **Další nastavení** je nepovinné. Po zadaném datu článek zmizí z hlavní stránky; v rubrice a ve vyhledávání zůstane. Funguje, dokud je zapnutá volba **Stahovat články z hlavní stránky** (**Nastavení → Základní → Další možnosti**).
 
 ## Aktualizováno
 
-U vydaného článku je v oddílu **Vydání** volba **Označit jako aktualizovaný (čtenář uvidí „Aktualizováno“ s dnešním datem)**. Zaškrtněte ji, když do článku doplníte podstatnou novou informaci, a uložte. Čtenář nad textem uvidí **Aktualizováno** s datem a časem.
+U vydaného článku je v oddílu **Vydání**, v řádku **Hlavní stránka**, volba **Označit jako aktualizovaný (čtenář uvidí „Aktualizováno“ s dnešním datem)**. Zaškrtněte ji, když do článku doplníte podstatnou novou informaci, a uložte. Čtenář nad textem uvidí **Aktualizováno** s datem a časem.
 
 Volba platí pro jedno uložení. Při opravě překlepu ji nechte prázdnou – datum aktualizace se nezmění.
 
@@ -45,7 +45,7 @@ Volba platí pro jedno uložení. Při opravě překlepu ji nechte prázdnou –
 
 Kdykoli uložíte článek se změněným titulkem, perexem nebo textem, předchozí znění se uloží jako verze. Uchovává se posledních 20 verzí. Změny ostatních polí (rubrika, štítky, datum) verzi nevytvářejí.
 
-Verze najdete dole ve sloupci nastavení v oddílu **Historie verzí**. U každé je datum, jméno toho, kdo změnu uložil, a odkaz **co se změnilo**.
+Verze najdete dole ve sloupci nastavení: rozbalte **Historie verzí** (s počtem verzí v závorce; objeví se po první změně textu). U každé je datum, kdy toto znění vzniklo, jméno toho, kdo ho nahradil novějším, a odkaz **co se změnilo**.
 
 ### Porovnání verzí
 

@@ -2,6 +2,8 @@
 
 Web posílá potvrzení odběru newsletteru a registrace čtenářů, odkazy pro nastavení hesla, newslettery, upozornění na komentáře a redakční upozornění. Všechno se nastavuje v **Nastavení → Pošta**.
 
+![Nastavení → Pošta](../obrazky/posta.webp)
+
 ## Způsob odesílání
 
 | Způsob | Kdy ho použít |
@@ -13,15 +15,18 @@ Web posílá potvrzení odběru newsletteru a registrace čtenářů, odkazy pro
 
 Údaje najdete u poskytovatele schránky – u hostingu, Google Workspace, Seznamu nebo u služby pro hromadnou poštu (Brevo, Mailgun, Amazon SES…).
 
-- **SMTP server** – například `smtp.vasedomena.cz`.
+V oddílu **SMTP server** vyplňte:
+
+- **Adresa serveru** – například `smtp.vasedomena.cz`.
 - **Zabezpečení** – **STARTTLS, port 587** je nejběžnější; **SSL/TLS, port 465** u starších služeb. Volbu „žádné“ použijte jen pro server ve vlastní síti.
-- **Uživatel** a **Heslo** – u Gmailu a Seznamu zadejte „heslo pro aplikace“, ne heslo k účtu. Heslo se ukládá jen na vašem webu a do formuláře se už nikdy nevypíše; prázdné pole znamená „beze změny“.
+- **Port** – výchozí 587. Volba zabezpečení ho sama nezmění: při **SSL/TLS** ho přepište na 465.
+- **Přihlašovací jméno** (obvykle celá e-mailová adresa schránky) a **Heslo** – u Gmailu a Seznamu zadejte „heslo pro aplikace“, ne heslo k účtu. Heslo se ukládá jen na vašem webu a do formuláře se už nikdy nevypíše; prázdné pole znamená „beze změny“.
 
 Po uložení klepněte na **Odeslat zkušební e-mail na adresu redakce**. Zkouška používá uložené hodnoty, takže nejdřív ukládejte, potom zkoušejte.
 
 ## Odesílatel a odpovědi
 
-V oddílu **Odesílatel a odpovědi** nastavíte adresu, která bude u zpráv jako odesílatel (prázdné pole = e-mail redakce), a adresu pro odpovědi.
+Rozbalte **Odesílatel a odpovědi**: **Adresa odesílatele** je adresa, která bude u zpráv jako odesílatel (prázdné pole = e-mail redakce), **Odpovědi posílat na** je adresa pro odpovědi.
 Adresa odesílatele by měla patřit doméně, ze které smí váš SMTP server posílat – jinak zprávy skončí ve spamu nebo je příjemce odmítne.
 
 ## Aby pošta nekončila ve spamu

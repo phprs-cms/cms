@@ -33,11 +33,11 @@ A scheduled article is displayed at the given time without any further setup. Pu
 
 ### Removing from the home page
 
-The field **Remove from the home page on** in the **More settings** panel is optional. After the given date the article disappears from the home page; it stays in its section and in search.
+The field **Remove from the home page on** in the **More settings** panel is optional. After the given date the article disappears from the home page; it stays in its section and in search. It works as long as the option **Remove articles from the home page** is on (**Settings → General → More options**).
 
 ## Updated
 
-For a published article the **Publishing** panel has the option **Mark as updated (readers see “Updated” with today's date)**. Tick it when you add substantial new information to the article, and save. Above the text the reader sees **Updated** with the date and time.
+For a published article the **Publishing** panel has, in the **Home page** row, the option **Mark as updated (readers see “Updated” with today's date)**. Tick it when you add substantial new information to the article, and save. Above the text the reader sees **Updated** with the date and time.
 
 The option applies to one save. When you fix a typo, leave it empty – the update date does not change.
 
@@ -45,7 +45,7 @@ The option applies to one save. When you fix a typo, leave it empty – the upda
 
 Whenever you save an article with a changed headline, standfirst or text, the previous wording is saved as a version. The last 20 versions are kept. Changes to other fields (section, tags, date) do not create a version.
 
-You find the versions at the bottom of the settings column in the **Version history** panel. Each one has a date, the name of the person who saved the change and a **what changed** link.
+You find the versions at the bottom of the settings column: expand **Version history** (with the number of versions in brackets; it appears after the first change of the text). Each one has the date when that wording was created, the name of the person who replaced it with a newer one and a **what changed** link.
 
 ### Comparing versions
 

@@ -2,6 +2,8 @@
 
 **Settings → System status** is the first place to look after installation, after moving the site and whenever something behaves strangely. Every row has a status – *OK*, *warning* or *error* – and an explanation of what to do about it.
 
+![Settings → System status](../obrazky/stav-systemu.webp)
+
 ## What is checked
 
 | Group | Rows |
@@ -17,13 +19,13 @@ An **error** means that a part of the system does not work. A **warning** is a r
 ## Other parts of the page
 
 - **Mail** – sends a test e-mail to the newsroom address.
-- **Error log** – the last few errors the system caught. When an error occurs, a visitor sees only a general apology; the details are here and in the file `storage/log/chyby.log`. The log can be cleared.
+- **Error log** – the last 40 error records the system caught. When an error occurs, a visitor sees only a general apology; the details are here and in the file `storage/log/chyby.log`. The **Clear the log** button deletes it.
 - **Background jobs (cron)** – the address for cron, see [Background jobs](ulohy-na-pozadi.md).
 - **Monitoring** – an address with the status in JSON format.
 
 ## Monitoring
 
-After you create an access token, the status is available at
+After you create an access token (the **Create token** button), the status is available at
 
 ```
 https://www.example.com/stav.json?token=…

@@ -45,7 +45,7 @@ final class Reklama
         if ($r['typ'] === 'kod') {
             $s = $this->app->settings();
             // kód reklamní sítě čeká na souhlas s marketingem stejně jako ostatní marketingové kódy
-            $obsah = $s->get('cookies_rezim') === 'zadna' ? (string) $r['kod'] : '<template data-souhlas="marketing">' . $r['kod'] . '</template>';
+            $obsah = Seo::cekaNaSouhlas((string) $r['kod'], $s->get('cookies_rezim'));
         } else {
             $src = preg_match('#^(https?:)?/#', $r['obrazek']) ? $r['obrazek'] : $this->app->url($r['obrazek']);
             $obsah = '<a href="' . e($this->app->url('r/' . (int) $r['idr'])) . '" rel="sponsored noopener" target="_blank"><img src="' . e($src) . '" alt="' . e($r['nazev']) . '" loading="lazy"></a>';

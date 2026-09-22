@@ -2,6 +2,8 @@
 
 phpRS se umí aktualizovat sám. Každý balíček je podepsaný vydavatelem a systém nainstaluje jen ten, jehož podpis sedí – podvržený nebo poškozený balíček odmítne.
 
+![Nastavení → Zálohy a aktualizace](../obrazky/aktualizace-a-zalohy.webp)
+
 ## Jak to funguje
 
 - Systém se dvakrát denně zeptá na adrese `https://phprs.eu/aktualizace.json`, jestli vyšla nová verze. Neposílá přitom nic než číslo své verze v hlavičce požadavku.
@@ -10,7 +12,7 @@ phpRS se umí aktualizovat sám. Každý balíček je podepsaný vydavatelem a s
 
 ## Aktualizace jedním tlačítkem
 
-**Nastavení → Zálohy a aktualizace.** Když je k dispozici nová verze, uvidíte její číslo, seznam změn a tlačítko k instalaci. Po potvrzení:
+**Nastavení → Zálohy a aktualizace.** Když je k dispozici nová verze, uvidíte její číslo, seznam změn a tlačítko **Aktualizovat na** s číslem verze. Po potvrzení:
 
 1. vytvoří se záloha databáze,
 2. balíček se stáhne a ověří se jeho otisk a podpis,

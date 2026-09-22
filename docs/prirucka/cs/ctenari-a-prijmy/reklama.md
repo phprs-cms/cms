@@ -2,9 +2,11 @@
 
 Reklamní systém zobrazuje na webu vlastní bannery a kódy reklamních sítí. Reklamu přidáte jednou a systém ji střídá na zvolené pozici, počítá zobrazení i prokliky, hlídá termín kampaně a limit zobrazení. Každá reklama je na webu označena slovem „Reklama“.
 
+![Čtenáři → Reklama](../obrazky/reklama.webp)
+
 ## Zapnutí
 
-V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Reklamní systém** a uložte. V nabídce přibude **Čtenáři → Reklama**; přístup má administrátor a redaktor.
+Otevřete **Správa → Rozšíření**, zaškrtněte **Reklamní systém** a uložte. V nabídce přibude **Čtenáři → Reklama**; přístup má administrátor a redaktor.
 
 > Se zapnutým reklamním systémem se nepoužívá cache celých stránek. Reklamy se střídají a počítají při každém zobrazení, takže stránku nelze podávat z paměti. Na běžném hostingu to nevadí; u webu s vysokou návštěvností s tím počítejte.
 
@@ -12,9 +14,9 @@ V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Reklamní systém
 
 | Pozice | Doporučený tvar | Jak se dostane na web |
 |---|---|---|
-| **Sloupec** | čtverec, např. 300×250 | blokem **Reklama** |
-| **Hlavička** | široký pruh, např. 970×210 | blokem **Reklama** |
-| **Patička** | široký pruh | blokem **Reklama** |
+| **Ve sloupci** (v bloku **Sloupec**) | čtverec, např. 300×250 | blokem **Reklama** |
+| **V hlavičce** (v bloku **Hlavička**) | široký pruh, např. 970×210 | blokem **Reklama** |
+| **V patičce** (v bloku **Patička**) | široký pruh | blokem **Reklama** |
 | **Pod článkem** | – | zobrazuje se automaticky pod každým článkem |
 
 Pozice ve sloupci, hlavičce a patičce umístíte na web takto:
@@ -29,10 +31,10 @@ Název pozice je jen vodítko. Blok s pozicí Sloupec můžete dát do kterékol
 
 1. V **Čtenáři → Reklama** klepněte na **Nová reklama**.
 2. Vyplňte **Název** – je jen pro vás, na webu se neukazuje. U banneru slouží i jako jeho alternativní text.
-3. Zvolte **Pozici**.
-4. V poli **Co se má zobrazit** vyberte **Banner**, nebo **Kód reklamní sítě**, a vyplňte pole podle tabulky níže.
+3. V oddílu **Co se má zobrazit** zvolte kartu **Banner**, nebo **Kód reklamní sítě**, a vyplňte pole podle tabulky níže.
+4. V oddílu **Kde** zvolte kartu pozice: **Ve sloupci**, **Pod článkem**, **V hlavičce** nebo **V patičce**.
 5. Podle potřeby rozbalte **Plánování, cílení a limity**.
-6. Nechte zaškrtnuté **reklama je zapnutá** a klepněte na **Uložit**.
+6. Klepněte na **Uložit**. Reklama je po uložení zapnutá; vypnout ji jde volbou **reklama je zapnutá** (řádek **Stav**) v rozbaleném oddílu **Plánování, cílení a limity**.
 
 | Typ | Co vyplníte | Co se počítá |
 |---|---|---|

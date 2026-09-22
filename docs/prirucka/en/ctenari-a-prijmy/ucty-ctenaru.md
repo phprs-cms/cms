@@ -2,13 +2,15 @@
 
 Readers can register on the site. An account lets them save articles for later, read locked articles and – if you set it so – comment. Reader accounts are separate from the accounts of the editorial team: a reader never gets into the administration.
 
+![Readers → Readers](../obrazky/ctenari.webp)
+
 ## Turning it on
 
-1. In the main menu open **Extensions**, tick **Readers and locked content** and save.
+1. Open **Administration → Extensions**, tick **Readers and locked content** and save.
 2. Add the **Reader account** block to the site (**Appearance → Blocks and layout**). It outputs the **Sign in / My account** button. Without the block a reader gets to the sign-in only from the prompt on a locked article, from the **Save for later** link below an article and directly at the address `/ctenar`.
 3. Check that the site sends e-mails – both registration and sign-in by link depend on them. See [Mail](../provoz/posta.md).
 
-In the administration the **Readers → Readers** area is added, and in Settings the **Readers and payments** tab. Only an administrator sees both.
+In the administration the **Readers → Readers** area is added. The **Settings → Readers and payments** tab is always visible; with the extension turned off it only notes that the settings will apply once the extension is turned on. Only an administrator sees both.
 
 ## Registration
 
@@ -26,9 +28,9 @@ A reader has three options:
 
 | Method | How it works |
 |---|---|
-| **E-mail and password** | the usual sign-in |
+| the **Sign in** form (**E-mail** and **Password**) | the usual sign-in |
 | **Sign in with an e-mail link** | the reader fills in only the e-mail and receives a single-use link; valid for 20 minutes |
-| **Forgot your password?** | sends a link for setting a new password; valid for 2 hours |
+| **Forgot your password?** | the reader fills in the e-mail above, expands this row and clicks **Send link**; the link for setting a new password is valid for 2 hours |
 
 The link from the e-mail does not sign the reader in immediately – it shows a **Sign in** button. This is intentional: some mail programs open links in advance and would use up the single-use link.
 
@@ -42,10 +44,10 @@ After signing in, the `/ctenar` page shows:
 
 - the e-mail and, where applicable, the date until which the subscription is valid (or the **Get a subscription** button),
 - with [payments through Stripe](platby-stripe.md) turned on, the **Subscription** section: the buttons **Subscribe monthly** and **Subscribe yearly**, and for a paying reader **Manage subscription**,
-- **Saved articles** – a list with the option **Remove from saved**,
+- **Saved articles** – a list (at most the 100 most recent) with the **×** button for removing,
 - changing the name and the password (**Change password** requires the current password),
 - **Sign out**,
-- **Delete account** – after the password is entered, it deletes the account and all data about it; this cannot be undone. A reader with a running subscription through Stripe must cancel it first (**Manage subscription**), otherwise payments would keep being taken from them.
+- **Delete account** – the reader expands the row, enters the password and clicks **Delete my account**; this deletes the account and all data about it; this cannot be undone. A reader with a running subscription through Stripe must cancel it first (**Manage subscription**), otherwise payments would keep being taken from them.
 
 ### Saved articles
 
@@ -53,7 +55,7 @@ Below every article there is the link **☆ Save for later**. It takes a reader 
 
 ## Readers in the administration
 
-The **Readers → Readers** area shows three counts at the top: **Registered**, **Paying subscribers** and **Locked articles**. Below them there is a search by e-mail or name and a table of the last 300 accounts:
+The **Readers → Readers** area shows four counts at the top: **Registered**, **Paying subscribers**, **Paying via Stripe** and **Locked articles**. Below them there is a search by e-mail or name and a table of the last 300 accounts:
 
 | Column | Content |
 |---|---|

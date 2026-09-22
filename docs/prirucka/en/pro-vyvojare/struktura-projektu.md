@@ -45,7 +45,7 @@ Pretty addresses on Apache are provided by `.htaccess`. For nginx there is a rea
 | `layout/` | site templates; the built-in `classic-newspaper`, `modern-magazine`, `minimal` |
 | `image/` | the CSS and JavaScript of the administration, the editor and the visual block editor, and the shared `web.css` and `web.js` for the site; the administration font in `image/pisma/` |
 | `media/` | uploaded files, sorted into `YYYY/MM/` folders |
-| `storage/` | cache, logs, backups; not accessible from the web |
+| `storage/` | cache, logs, backups and site exports (`zalohy/`), WordPress import files (`import/`); not accessible from the web |
 | `tools/` | tests, the dictionary tool, the release script |
 | `docs/` | this manual (`docs/prirucka/`) and the release procedure |
 

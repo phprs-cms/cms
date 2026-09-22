@@ -39,7 +39,7 @@ Podrobnosti:
 - E-mail o vydání obsahuje adresu článku na webu. U článku naplánovaného do budoucna obsahuje čas, kdy vyjde.
 - E-maily o korektuře a o vrácení obsahují odkaz přímo do editoru článku.
 - Každý dostane zprávu v jazyce, který má nastavený pro administraci.
-- Upozornění se odesílá při uložení formuláře článku. Tlačítko **Vydat** ve výpisu článků vydá článek bez e-mailu autorovi.
+- Upozornění se odesílá při uložení formuláře článku i po klepnutí na **Vydat** ve výpisu článků – autor dostane stejný e-mail (pokud nevydává sám).
 - Přepnutí do stavu **Schváleno – čeká na vydání** se e-mailem neoznamuje.
 - Zablokovaným účtům a účtům bez vyplněného e-mailu nechodí nic.
 
@@ -52,7 +52,7 @@ Upozornění si každý řídí sám: **Můj účet → Upozornění e-mailem �
 ## Kde vidím, co na mě čeká
 
 - **Přehled → Čeká na vás** – články ke korektuře, schválené a naplánované, s autorem a datem. Autor tu vidí jen své články.
-- Počty **Ke korektuře**, **Koncepty** a **Naplánované** na Přehledu.
+- Počty **Ke korektuře**, **Koncepty** (včetně schválených, které čekají na vydání) a **Naplánované** na Přehledu.
 - **Obsah → Články** – záložky **Ke korektuře** a **Schválené**. Volba **Zobrazit pouze mé články** výpis zúží na vaše texty.
 - [Redakční kalendář](titulni-strana-a-kalendar.md) – přehled podle data vydání.
 

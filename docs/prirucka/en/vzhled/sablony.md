@@ -29,7 +29,7 @@ Together with the template, the page layout that belongs to it is set (see the t
 What stays unchanged:
 
 - all content – articles, pages, sections, media, comments,
-- the blocks and their settings,
+- the blocks and their settings (only the block zone of a removed column changes),
 - the logo, site icon, main colour, fonts and dark mode from [Site identity](identita-webu.md),
 - article templates (Long read, Photo story, Interview) and content types – they work in all three templates,
 - page addresses, SEO, analytics and the cookie banner.

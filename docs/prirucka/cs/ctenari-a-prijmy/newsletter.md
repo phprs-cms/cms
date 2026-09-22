@@ -2,9 +2,11 @@
 
 Newsletter je e-mail s výběrem článků, který posíláte přihlášeným odběratelům. Sestavíte ho ručně, nebo ho necháte odcházet automaticky. Všechno běží na vašem webu, bez cizí rozesílací služby.
 
+![Čtenáři → Newsletter](../obrazky/newsletter.webp)
+
 ## Zapnutí
 
-1. V hlavní nabídce otevřete **Rozšíření**, zaškrtněte **Newsletter** a uložte.
+1. Otevřete **Správa → Rozšíření**, zaškrtněte **Newsletter** a uložte.
 2. V **Nastavení → Základní** vyplňte **E-mail redakce** – z něj newsletter odchází. Bez něj obrazovka Newsletter hlásí **Nejprve vyplňte E-mail redakce v Nastavení – z něj newsletter odchází.**
 3. Přidejte na web blok **Newsletter** (**Vzhled → Bloky a rozvržení**). Je to přihlašovací formulář pro čtenáře.
 4. Nastavte odesílání přes SMTP. Hromadné zprávy posílané funkcí serveru často končí ve spamu. Viz [Pošta](../provoz/posta.md).
@@ -36,7 +38,7 @@ E-mail obsahuje úvodní slovo a u každého článku titulek, perex a odkaz **�
 
 ### Průběh rozesílky
 
-Rozesílá se po dávkách 40 příjemců. Po potvrzení se otevře stránka **Rozesílka newsletteru** s průběžným stavem – odesláno a zbývá. **Nechte ji otevřenou**, sama se obnovuje, dokud nejsou obslouženi všichni. Na konci ohlásí **Hotovo.**
+Rozesílá se po dávkách 40 příjemců. Po potvrzení se otevře stránka **Rozesílka newsletteru** s průběžným stavem – odesláno a zbývá. Nechte stránku otevřenou, sama se obnovuje, dokud nejsou obslouženi všichni; kdyby se neobnovila, klepněte na **Pokračovat**. Na konci ohlásí **Hotovo.**
 
 Když stránku zavřete dřív, rozesílka se zastaví. Nic se neztratí ani nepošle dvakrát: v tabulce **Odeslaná vydání** klepněte u vydání na **pokračovat v rozesílce**.
 

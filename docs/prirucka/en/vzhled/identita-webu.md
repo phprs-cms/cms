@@ -4,6 +4,8 @@ The **Appearance → Site identity** screen brings together what sets your site 
 
 The form has the sections **Template**, **Logo**, **Color**, **Dark mode**, **Font** and **Preview**. Everything is saved at once with the **Save** button; the **View site** link next to it opens the site in a new window. Choosing a template is described on the page [Site templates](sablony.md).
 
+![Appearance → Site identity](../obrazky/identita-webu.webp)
+
 ## Logo and icon
 
 | Field | What it is for |

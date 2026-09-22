@@ -2,6 +2,8 @@
 
 Everyone manages their own account on the **My account** screen. You open it by clicking the avatar with your initial in the top right corner. Next to the avatar there is also the switch between the light and dark mode of the administration.
 
+![My account](../obrazky/muj-ucet.webp)
+
 ## My details
 
 | Field | What it is for |
@@ -76,7 +78,7 @@ After 10 failed attempts in a row the account is locked for 15 minutes. Wrong se
 
 ## Tokens for the Claude connection
 
-The **Claude connection** panel is visible only with the **Claude connection** extension turned on (**Extensions** in the main menu). A token allows Claude to work with the site in your name and with your permissions. It creates new articles as drafts, and all its actions are in the Change log.
+The **Claude connection** panel is visible only with the **Claude connection** extension turned on (**Administration → Extensions**). A token allows Claude to work with the site in your name and with your permissions. It creates new articles as drafts, and all its actions are in the Change log.
 
 1. Fill in the **Name of the new token** (for example *Claude on the laptop*) and click **Create token**.
 2. The token is displayed only once, together with instructions for connecting. Copy it straight away.

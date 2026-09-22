@@ -68,7 +68,7 @@ V **Nastavení → Čtenáři a platby** v oddílu **Platby přes Stripe** vypl�
 | **Měsíční cena**, **Roční cena** | čísla cen `price_…`; prázdné pole = období se nenabízí |
 | **Popis měsíční ceny**, **Popis roční ceny** | text u tlačítka, například „99 Kč měsíčně“; nepovinné |
 
-Klíč a tajemství se po uložení už nevypisují – v poli vidíte jen poslední čtyři znaky. Hodnotu, která nemá tvar klíče, tajemství nebo čísla ceny, web neuloží a řekne to. Platby jsou zapnuté, jakmile je vyplněný klíč, tajemství a aspoň jedna cena; štítek u nadpisu oddílu se změní na **zapnuté**.
+Klíč a tajemství se po uložení už nevypisují – v poli vidíte jen poslední čtyři znaky. Hodnotu, která nemá tvar klíče, tajemství nebo čísla ceny, web neuloží a řekne to. Platby jsou zapnuté, jakmile je vyplněný klíč, tajemství a aspoň jedna cena; štítek u nadpisu oddílu se změní na **zapnuté**. Platby vypnete zaškrtnutím **Odebrat uložený klíč** u pole **Tajný klíč** a uložením.
 
 Popis ceny je jen text. Skutečnou částku určuje cena ve Stripe – když ji tam změníte, upravte i popis.
 

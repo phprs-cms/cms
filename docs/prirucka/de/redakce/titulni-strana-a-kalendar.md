@@ -4,12 +4,14 @@ Diese Seite beschreibt die Werkzeuge, mit denen die Redaktion steuert, was auf d
 
 ## Titelseite
 
+![Titelseite](../obrazky/titulni-strana.webp)
+
 Die Startseite der Website ordnet die Artikel vom neuesten an. Angeheftete Artikel stehen darüber in der Reihenfolge, die die Redaktion festlegt. Über die Titelseite entscheidet nur, wer veröffentlichen darf; die anderen sehen den Link **Titelseite** nicht.
 
 ### Die Titelseite zusammenstellen
 
 1. Öffnen Sie **Inhalt → Artikel → Titelseite**.
-2. Links steht die Spalte **Oben auf der Titelseite** mit den angehefteten Artikeln, rechts **Neueste Artikel** – die letzten 30 veröffentlichten Artikel, die auf der Startseite angezeigt werden.
+2. Links steht die Spalte **Oben auf der Titelseite** mit den angehefteten Artikeln, rechts **Neueste Artikel** – die letzten 30 veröffentlichten Artikel, die auf der Startseite angezeigt werden. Auf einer Website mit Sprachversionen stellt der Bildschirm nur die Standardsprache zusammen; in den übrigen Sprachen heften Sie mit der Option **Oben anheften (Aufmacher)** direkt am Artikel an.
 3. Einen Artikel heften Sie mit der Schaltfläche **Anheften** an oder ziehen ihn in die linke Spalte. **Lösen** stellt ihn zurück zu den übrigen.
 4. Die Reihenfolge der angehefteten Artikel ändern Sie per Ziehen oder mit den Pfeilen **↑** und **↓**.
 5. Klicken Sie auf **Titelseite speichern**. Über den Link **Website anzeigen** prüfen Sie das Ergebnis.
@@ -29,6 +31,8 @@ Wie viele Artikel auf die Startseite passen, bestimmt der Administrator unter **
 
 ## Redaktionskalender
 
+![Redaktionskalender](../obrazky/redakcni-kalendar.webp)
+
 **Inhalt → Artikel → Redaktionskalender** zeigt ein Monatsraster der Artikel nach Veröffentlichungsdatum.
 
 - Jeder Artikel steht im Kalender mit Uhrzeit und Titel. Mit einem Klick öffnen Sie seinen Editor.
@@ -42,7 +46,9 @@ Der Kalender eignet sich auch für die Vorausplanung: Legen Sie einen Entwurf mi
 
 ## Artikelliste und Sammelaktionen
 
-Die Liste zeigt 20 Artikel pro Seite. Sie grenzen sie ein mit den Reitern für den Status (**Alle**, **Veröffentlicht**, **Geplant**, **Entwürfe**, **Zur Korrektur**, **Freigegeben**), dem Feld **Ressort:**, dem Feld **Titel enthält:** und der Option **Nur meine Artikel anzeigen**; bestätigen Sie mit der Schaltfläche **Filtern**.
+![Die Artikelliste mit Reitern nach Status](../obrazky/vypis-clanku.webp)
+
+Die Liste zeigt 20 Artikel pro Seite. Sie grenzen sie ein mit den Reitern für den Status (**Alle**, **Veröffentlicht**, **Geplant**, **Entwürfe**, **Zur Korrektur**, **Freigegeben**), dem Feld **Ressort:**, auf einer Website mit Sprachversionen dem Feld **Sprache:**, dem Feld **Titel enthält:** und der Option **Nur meine Artikel anzeigen**; bestätigen Sie mit der Schaltfläche **Filtern**.
 
 Eine Sammelaktion:
 
@@ -57,7 +63,7 @@ Eine Sammelaktion:
 | **für angemeldete Leser sperren** | den Artikel lesen nur angemeldete Leser |
 | **für alle freigeben** | hebt die Sperre auf |
 
-Das Sperren wird nur mit eingeschalteter Erweiterung **Leser und gesperrter Inhalt** angeboten (Hauptmenü **Erweiterungen**).
+Das Sperren wird nur mit eingeschalteter Erweiterung **Leser und gesperrter Inhalt** angeboten (**Verwaltung → Erweiterungen**).
 
 Die Schaltfläche **Ausgewählte löschen** löscht die Artikel nach einer Bestätigung. Das Löschen lässt sich nicht rückgängig machen. Wer das Recht zum Veröffentlichen nicht hat, kann veröffentlichte Artikel per Sammelaktion weder ändern noch löschen – das System überspringt sie und nennt in der Meldung die Zahl der tatsächlich geänderten.
 
@@ -67,7 +73,7 @@ Die Schaltfläche **Ausgewählte löschen** löscht die Artikel nach einer Best�
 
 ## Befehlspalette
 
-Das Tastenkürzel **Strg+K** (auf dem Mac **⌘K**) oder das Feld **Suchen…** oben rechts öffnet die Befehlspalette.
+Das Tastenkürzel **Strg+K** (auf dem Mac **⌘K**) oder das Feld **Suchen…** oben rechts öffnet die Befehlspalette. Steht der Cursor im Artikeltext, fügt Strg+K einen Link ein – die Palette öffnen Sie dann über das Feld **Suchen…**.
 
 - Tippen Sie den Namen eines Bereichs (*Ressorts*), einer Aktion (*Neuer Artikel*, *Redaktionskalender*, *Titelseite*) oder einen Teil eines Artikeltitels.
 - Wählen Sie mit den Pfeilen **↑** **↓** aus, **Enter** öffnet, **Esc** schließt.

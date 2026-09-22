@@ -39,7 +39,7 @@ Details:
 - The e-mail about publication contains the address of the article on the site. For an article scheduled for the future it contains the time when it will be published.
 - The e-mails about review and return contain a link straight into the article editor.
 - Everyone gets the message in the language they have set for the administration.
-- The notification is sent when the article form is saved. The **Publish** button in the article list publishes the article without an e-mail to the author.
+- The notification is sent when the article form is saved and also after clicking **Publish** in the article list – the author gets the same e-mail (unless they publish themselves).
 - Switching to the status **Approved – waiting to be published** is not announced by e-mail.
 - Blocked accounts and accounts without an e-mail address get nothing.
 
@@ -52,7 +52,7 @@ Everyone controls notifications for themselves: **My account → E-mail notifica
 ## Where you see what is waiting for you
 
 - **Dashboard → Waiting for you** – articles for review, approved and scheduled, with the author and date. An author sees only their own articles here.
-- The counts **For review**, **Drafts** and **Scheduled** on the Dashboard.
+- The counts **For review**, **Drafts** (including approved ones waiting to be published) and **Scheduled** on the Dashboard.
 - **Content → Articles** – the tabs **For review** and **Approved**. The option **Show only my articles** narrows the list down to your texts.
 - [Editorial calendar](titulni-strana-a-kalendar.md) – an overview by publish date.
 

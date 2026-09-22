@@ -29,7 +29,9 @@ You can also open the address in a browser – it responds with the line `OK`, t
 
 ## What exactly the jobs do
 
-- publish scheduled articles and send their notifications (e-mail, Web Push, webhooks),
-- send the next batch of a newsletter that is being delivered,
+- publish scheduled articles and send their notifications (webhook, IndexNow for search engines, Web Push),
+- create the automatic newsletter issue and send the next batch of a newsletter or Web Push notifications being delivered,
 - retry sending mail that could not be delivered,
-- create the weekly database backup and upload it off-site, if that is turned on.
+- look for broken links in published articles,
+- twice a day check for updates and install security releases by themselves (if that is turned on),
+- create the weekly database backup and upload it off-site, if that is turned on. The backup is created when cron is called or when an administrator enters the administration, not when a reader visits the site.

@@ -4,6 +4,8 @@ A site can live on subscriptions, on voluntary contributions from readers and on
 
 phpRS neither accepts nor processes voluntary contributions and does not see who contributed how much. The Support us block is an appeal with a button that takes the reader to where the payment takes place. Subscriptions are different: readers can pay for them by card through the Stripe service and the site turns them on and extends them by itself – see [Payments with Stripe](platby-stripe.md).
 
+![Readers → Revenue](../obrazky/prijmy.webp)
+
 ## The Support us block
 
 The block outputs a short appeal and a button with a heart. It needs no extension.
@@ -37,7 +39,7 @@ Until you fill in the **Where the button leads** field, the block shows only the
 - In the right column as a permanent reminder.
 - With the **Only in section** field you can restrict it to a section, with the **Pages** field for instance to the home page only.
 
-Edit the block in the visual editor. The form-based list of blocks does not offer the fields for the button – see [Blocks and layout](../vzhled/bloky-a-rozvrzeni.md).
+Edit the block in the visual editor. The form-based list of blocks offers **Button text**, **Where the button leads** and the call-to-action text – see [Blocks and layout](../vzhled/bloky-a-rozvrzeni.md).
 
 On a multilingual site have a separate block for every language and use the **Language version** field to determine where each one is shown. The default texts are translated by themselves; your own appeal is not.
 
@@ -52,7 +54,7 @@ On a multilingual site have a separate block for every language and use the **La
 | **Advertising** | impressions of active ads; below it the number of active ads and clicks | **Advertising** |
 | **Newsletter** | confirmed subscribers | **Newsletter** |
 
-For an extension that is turned off, the link **Turn on in Extensions** leads to the **Extensions** area. The Voluntary support card is on as soon as there is at least one shown Support us block on the site.
+For an extension that is turned off, the link **Turn on in Extensions** leads to **Administration → Extensions**. The Voluntary support card is on as soon as there is at least one shown Support us block on the site.
 
 The Subscription card points out with the message **The place where readers get a subscription is not filled in.** when the address in **Settings → Readers and payments** is missing and payments through Stripe are not turned on either. Without it a reader does not see the **Get a subscription** button on a locked article. The procedure is on the page [Locked content and subscriptions](zamceny-obsah.md).
 

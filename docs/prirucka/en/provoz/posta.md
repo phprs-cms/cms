@@ -2,6 +2,8 @@
 
 The site sends newsletter subscription and reader registration confirmations, links for setting a password, newsletters, comment notifications and newsroom notifications. Everything is set in **Settings → Mail**.
 
+![Settings → Mail](../obrazky/posta.webp)
+
 ## Sending method
 
 | Method | When to use it |
@@ -13,15 +15,18 @@ The site sends newsletter subscription and reader registration confirmations, li
 
 You get the details from your mailbox provider – your hosting, Google Workspace, another e-mail provider or a bulk mail service (Brevo, Mailgun, Amazon SES…).
 
-- **SMTP server** – for example `smtp.example.com`.
+In the **SMTP server** section fill in:
+
+- **Server address** – for example `smtp.example.com`.
 - **Security** – **STARTTLS, port 587** is the most common; **SSL/TLS, port 465** with older services. Use the “none” option only for a server on your own network.
-- **User** and **Password** – with Gmail and similar providers enter an “app password”, not your account password. The password is stored only on your site and is never displayed in the form again; an empty field means “no change”.
+- **Port** – default 587. The security option does not change it by itself: with **SSL/TLS** overwrite it with 465.
+- **User name** (usually the full e-mail address of the mailbox) and **Password** – with Gmail and similar providers enter an “app password”, not your account password. The password is stored only on your site and is never displayed in the form again; an empty field means “no change”.
 
 After saving, click **Send a test e-mail to the newsroom address**. The test uses the saved values, so save first and test afterwards.
 
 ## Sender and replies
 
-In the **Sender and replies** section you set the address shown as the sender of messages (an empty field = the newsroom e-mail) and the reply-to address.
+Expand **Sender and replies**: **Sender address** is the address shown as the sender of messages (an empty field = the newsroom e-mail), **Send replies to** is the address for replies.
 The sender address should belong to a domain your SMTP server is allowed to send from – otherwise messages end up in spam or the recipient rejects them.
 
 ## Keeping mail out of spam

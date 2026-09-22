@@ -2,11 +2,13 @@
 
 Einen Artikel können Sie angemeldeten Lesern oder Abonnenten vorbehalten. Die anderen sehen Titel, Vorspann, den Anfang des Textes und eine Aufforderung. Ein Abonnement bekommt der Leser auf einem von zwei Wegen: Er bezahlt es selbst mit Karte über den Dienst Stripe und die Website schaltet es ihm von selbst ein und verlängert es (siehe [Zahlungen mit Stripe](platby-stripe.md)), oder Sie nehmen die Zahlung auf Ihre Weise entgegen und tragen ihm das Abonnement von Hand ein. Beide Wege lassen sich gleichzeitig nutzen.
 
-Alles auf dieser Seite erfordert die Erweiterung **Leser und gesperrter Inhalt** (Hauptmenü **Erweiterungen**). Registrierung und Konten beschreibt die Seite [Leserkonten](ucty-ctenaru.md).
+Alles auf dieser Seite erfordert die Erweiterung **Leser und gesperrter Inhalt** (**Verwaltung → Erweiterungen**). Registrierung und Konten beschreibt die Seite [Leserkonten](ucty-ctenaru.md).
+
+![Einstellungen → Leser und Zahlungen](../obrazky/ctenari-a-platby.webp)
 
 ## Artikel sperren
 
-Im Artikelformular gibt es bei eingeschalteter Erweiterung das Feld **Wer lesen darf**:
+Im Artikelformular gibt es bei eingeschalteter Erweiterung im aufklappbaren Abschnitt **Weitere Einstellungen** das Feld **Wer lesen darf**:
 
 | Option | Wer den ganzen Artikel liest |
 |---|---|
@@ -44,7 +46,7 @@ Nach der Anmeldung kehrt der Leser zu dem Artikel zurück, von dem er gekommen i
 | **Wo man ein Abonnement bekommt** | wohin die Schaltfläche **Abonnement abschließen** führt, solange die Zahlungen mit Stripe nicht eingeschaltet sind | leer |
 | **Text der Aufforderung unter der Vorschau** | ein eigener Satz in der Aufforderung, höchstens 300 Zeichen; leer = Standardtext | leer |
 
-Im selben Abschnitt befindet sich auch der Teil **Zahlungen mit Stripe** – ihn beschreibt eine [eigene Seite](platby-stripe.md).
+Auf demselben Reiter steht darunter der Abschnitt **Zahlungen mit Stripe** – ihn beschreibt eine [eigene Seite](platby-stripe.md).
 
 ## Wo man ein Abonnement bekommt
 

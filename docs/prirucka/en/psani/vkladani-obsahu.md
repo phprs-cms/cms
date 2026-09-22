@@ -27,7 +27,7 @@ Addresses of other services stay in the article as you wrote them.
 
 ## Loaded only after a click
 
-In place of the video the reader first sees a button – **Play video**, **Play audio** or **Show the post from …** – and below it the name of the service the content is loaded from. The content from the external service is really loaded only after the click.
+In place of the video the reader first sees a button – **Play video**, **Play audio** or **Show the post from …** with the name of the network – and below it the domain the content is loaded from. The content from the external service is really loaded only after the click.
 
 There are two reasons for this:
 

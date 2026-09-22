@@ -4,9 +4,11 @@ You write an article in **Content → Articles → New article**. The headline, 
 
 To save, you only need a **Headline** and a **Section**. An article cannot be saved without a section.
 
+![The article editor: article template at the top, publishing and classification on the right](../obrazky/editor-clanku.webp)
+
 ## Headline, standfirst and text
 
-- **Headline** – at most 255 characters. The check below the form warns you when it is longer than 110 characters or written in capitals.
+- **Headline** – at most 255 characters. The **Accessibility check** section in the settings column warns you when it is longer than 110 characters or written in capitals.
 - **Lead paragraph** – the standfirst, the opening paragraph. It is shown in listings and at the beginning of the article, so do not repeat it in the text. The standfirst has a shortened toolbar.
 - **Article text** – the content itself, with the full toolbar.
 
@@ -17,7 +19,7 @@ To save, you only need a **Headline** and a **Section**. An article cannot be sa
 | **¶** | paragraph |
 | **H2**, **H3** | subheading and smaller subheading |
 | **B**, **I** | bold (Ctrl+B) and italics (Ctrl+I) |
-| **link** | inserts or edits a link |
+| **link** | inserts or edits a link (Ctrl+K) |
 | **• list**, **1. list** | bulleted and numbered list |
 | **“quote”** | quotation |
 | **image** | inserts an image or attachment from Media |
@@ -88,6 +90,13 @@ When everything is fine, you see *✓ Images have descriptions; headings and lin
 - **Preview** – opens the saved article in the site template in a new window. It works for a draft too, but only for people signed in to the administration. It shows the last saved version, not unsaved work. Comments and ratings are not shown in the preview.
 
 Article statuses and scheduled publishing are described on the page [Scheduling and revisions](planovani-a-revize.md).
+
+## Other form fields
+
+- **Co-authors and external author** (an expandable row in the **Classification** section) – other members of the newsroom, or a guest or agency without an account. An external author is credited on the site instead of the author from the newsroom.
+- **Article URL** (in **More settings**) – the part of the address after `/clanek/`. It is created from the headline; if you change it for a published article, the old address redirects to the new one by itself.
+- **Keywords** (in **More settings**) – help the search on the site.
+- **Source** (in **More settings**) – for texts taken from elsewhere.
 
 ## Related
 

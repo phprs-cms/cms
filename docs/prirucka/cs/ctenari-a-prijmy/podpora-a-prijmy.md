@@ -4,6 +4,8 @@ Web může žít z předplatného, z dobrovolných příspěvků čtenářů a z
 
 Dobrovolné příspěvky phpRS nepřijímá ani nezpracovává a nevidí, kdo kolik přispěl. Blok Podpořte nás je výzva s tlačítkem, které čtenáře zavede tam, kde platba proběhne. Jinak je to u předplatného: to si čtenáři mohou platit kartou přes službu Stripe a web jim ho sám zapíná a prodlužuje – viz [Platby přes Stripe](platby-stripe.md).
 
+![Čtenáři → Příjmy](../obrazky/prijmy.webp)
+
 ## Blok Podpořte nás
 
 Blok vypíše krátkou výzvu a tlačítko se srdcem. Nepotřebuje žádné rozšíření.
@@ -37,7 +39,7 @@ Dokud pole **Kam tlačítko vede** nevyplníte, blok ukáže jen text výzvy bez
 - Do pravého sloupce jako stálou připomínku.
 - Polem **Jen v rubrice** ho můžete omezit na rubriku, polem **Stránky** třeba jen na hlavní stránku.
 
-Blok upravujte ve vizuálním editoru. Formulářový seznam bloků pole pro tlačítko nenabízí – viz [Bloky a rozvržení](../vzhled/bloky-a-rozvrzeni.md).
+Blok upravujte ve vizuálním editoru. Formulářový seznam bloků nabízí **Text tlačítka**, **Kam tlačítko vede** i text výzvy – viz [Bloky a rozvržení](../vzhled/bloky-a-rozvrzeni.md).
 
 Na vícejazyčném webu mějte blok pro každý jazyk zvlášť a polem **Jazyková verze** určete, kde se který zobrazí. Výchozí texty se překládají samy, vaše vlastní výzva ne.
 
@@ -52,7 +54,7 @@ Na vícejazyčném webu mějte blok pro každý jazyk zvlášť a polem **Jazyko
 | **Reklama** | zobrazení aktivních reklam; pod tím počet aktivních reklam a prokliků | **Reklama** |
 | **Newsletter** | potvrzených odběratelů | **Newsletter** |
 
-U vypnutého rozšíření vede odkaz **Zapnout v Rozšířeních** do sekce **Rozšíření**. Karta Dobrovolná podpora je zapnutá, jakmile je na webu aspoň jeden zobrazený blok Podpořte nás.
+U vypnutého rozšíření vede odkaz **Zapnout v Rozšířeních** do **Správa → Rozšíření**. Karta Dobrovolná podpora je zapnutá, jakmile je na webu aspoň jeden zobrazený blok Podpořte nás.
 
 Karta Předplatné upozorní hlášením **Není vyplněno, kde čtenář předplatné získá.**, když chybí adresa v **Nastavení → Čtenáři a platby** a nejsou zapnuté ani platby přes Stripe. Bez ní čtenář u zamčeného článku nevidí tlačítko **Získat předplatné**. Postup je na stránce [Zamčený obsah a předplatné](zamceny-obsah.md).
 

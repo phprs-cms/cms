@@ -2,6 +2,8 @@
 
 Všechny nahrané soubory jsou na jednom místě: **Obsah → Média**. Přístup do Médií má každý, kdo se přihlásí do administrace. Popis a smazání souboru ale smí měnit jen ten, kdo ho nahrál, a administrátor.
 
+![Obsah → Média](../obrazky/media.webp)
+
 ## Nahrávání
 
 Soubory nahrajete třemi způsoby:
@@ -57,7 +59,7 @@ Oba údaje se do článku přenesou ve chvíli vložení. Pozdější změna v M
 
 1. Postavte kurzor na místo, kam obrázek patří.
 2. Klepněte v liště na **obrázek**. Otevře se okno **Média**.
-3. Nahoře zvolte **Všechna média**, **V tomto článku**, **Nezařazené** nebo některou složku. Okno ukazuje 60 nejnovějších souborů zvoleného výběru – starší obrázek najdete nejsnáz přes jeho složku.
+3. Nahoře zvolte **Všechna média**, **V tomto článku**, **Nezařazené** nebo některou složku. Okno načte 60 nejnovějších souborů zvoleného výběru; další přidá tlačítko **Načíst další** pod mřížkou. Pole **Hledat v médiích…** vedle výběru najde soubory podle názvu, popisku nebo jména souboru.
 4. Klepněte na obrázek – vloží se i s popiskem.
 
 Čtenář si obrázek v článku klepnutím zvětší.

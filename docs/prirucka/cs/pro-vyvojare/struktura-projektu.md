@@ -45,7 +45,7 @@ Hezké adresy na Apache zajišťuje `.htaccess`. Pro nginx je v `system/nginx.pr
 | `layout/` | šablony vzhledu webu; vestavěné `classic-newspaper`, `modern-magazine`, `minimal` |
 | `image/` | CSS a JavaScript administrace, editoru, vizuálního editoru bloků a společné `web.css` a `web.js` pro web; písmo administrace v `image/pisma/` |
 | `media/` | nahrané soubory, řazené do složek `RRRR/MM/` |
-| `storage/` | cache, logy, zálohy; z webu nepřístupné |
+| `storage/` | cache, logy, zálohy a exporty webu (`zalohy/`), soubory importu z WordPressu (`import/`); z webu nepřístupné |
 | `tools/` | testy, nástroj na slovníky, skript pro vydání |
 | `docs/` | tato příručka (`docs/prirucka/`) a postup vydávání |
 

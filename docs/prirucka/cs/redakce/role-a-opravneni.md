@@ -2,6 +2,8 @@
 
 Každý člen redakce má vlastní účet. Účty zakládá a spravuje administrátor v **Správa → Uživatelé**. Co kdo v administraci vidí a smí, určuje jeho role a několik doplňujících voleb.
 
+![Úprava uživatele: shrnutí oprávnění nahoře, role jako karty](../obrazky/uzivatel-opravneni.webp)
+
 ## Tři role
 
 | Role | Co dělá |
@@ -21,7 +23,7 @@ Hlavní nabídka ukazuje jen sekce, do kterých má uživatel přístup. **Přeh
 | Rubriky, Štítky a témata, Stránky | – | ano | ano |
 | Komentáře, Statistika a další zapnutá obsahová rozšíření | – | ano | ano |
 | Bloky a rozvržení | – | ano | ano |
-| Identita webu, Uživatelé, Přesměrování, Protokol změn, Rozšíření, Nastavení, Čtenáři | – | – | ano |
+| Identita webu, Uživatelé, Přesměrování, Protokol změn, Import a export, Rozšíření, Nastavení, Čtenáři, Příjmy | – | – | ano |
 
 Sekce, která patří k vypnutému rozšíření, se neukazuje nikomu.
 
@@ -48,7 +50,7 @@ Jak článek od autora doputuje k vydání, popisuje [Předávka a korektura](pr
 
 ## Podrobné nastavení
 
-Rozbalovací oddíl **Podrobné nastavení** ve formuláři uživatele upřesňuje, co role dovoluje.
+Rozbalovací oddíl **Podrobné nastavení** ve formuláři uživatele upřesňuje, co role dovoluje. Nad formulářem uloženého účtu je věta **Co teď smí:** – shrnuje roli, vydávání, rubriky a sekce dohromady. Stejnou větu ukazuje výpis uživatelů pod jménem.
 
 ### Přístup do sekcí
 

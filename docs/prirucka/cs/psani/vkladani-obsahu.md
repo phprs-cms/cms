@@ -27,7 +27,7 @@ Adresy jiných služeb zůstanou v článku tak, jak jste je napsali.
 
 ## Načte se až po kliknutí
 
-Čtenář na místě videa nejdřív uvidí tlačítko – **Přehrát video**, **Přehrát zvuk** nebo **Zobrazit příspěvek ze sítě** – a pod ním název služby, ze které se obsah načte. Teprve po kliknutí se obsah z cizí služby opravdu načte.
+Čtenář na místě videa nejdřív uvidí tlačítko – **Přehrát video**, **Přehrát zvuk** nebo **Zobrazit příspěvek ze sítě** s názvem sítě – a pod ním doménu, ze které se obsah načte. Teprve po kliknutí se obsah z cizí služby opravdu načte.
 
 Má to dva důvody:
 

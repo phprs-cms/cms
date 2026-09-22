@@ -39,7 +39,7 @@ Einzelheiten:
 - Die E-Mail über die Veröffentlichung enthält die Adresse des Artikels auf der Website. Bei einem für die Zukunft geplanten Artikel enthält sie die Zeit, zu der er erscheint.
 - Die E-Mails über Korrektur und Rückgabe enthalten einen Link direkt in den Artikeleditor.
 - Jeder erhält die Nachricht in der Sprache, die er für die Administration eingestellt hat.
-- Die Benachrichtigung wird beim Speichern des Artikelformulars verschickt. Die Schaltfläche **Veröffentlichen** in der Artikelliste veröffentlicht den Artikel ohne E-Mail an den Autor.
+- Die Benachrichtigung wird beim Speichern des Artikelformulars verschickt und auch nach einem Klick auf **Veröffentlichen** in der Artikelliste – der Autor erhält dieselbe E-Mail (sofern er nicht selbst veröffentlicht).
 - Der Wechsel in den Status **Freigegeben – wartet auf Veröffentlichung** wird nicht per E-Mail gemeldet.
 - Gesperrte Konten und Konten ohne E-Mail-Adresse erhalten nichts.
 
@@ -52,7 +52,7 @@ Die Benachrichtigungen steuert jeder selbst: **Mein Konto → E-Mail-Benachricht
 ## Wo ich sehe, was auf mich wartet
 
 - **Übersicht → Wartet auf Sie** – Artikel zur Korrektur, freigegebene und geplante, mit Autor und Datum. Ein Autor sieht hier nur seine Artikel.
-- Die Zahlen **Zur Korrektur**, **Entwürfe** und **Geplant** auf der Übersicht.
+- Die Zahlen **Zur Korrektur**, **Entwürfe** (einschließlich freigegebener, die auf die Veröffentlichung warten) und **Geplant** auf der Übersicht.
 - **Inhalt → Artikel** – die Reiter **Zur Korrektur** und **Freigegeben**. Die Option **Nur meine Artikel anzeigen** beschränkt die Liste auf Ihre Texte.
 - [Redaktionskalender](titulni-strana-a-kalendar.md) – Übersicht nach Veröffentlichungsdatum.
 

@@ -4,6 +4,8 @@ phpRS kann eine Website in einer Sprache betreiben und ebenso eine Website mit m
 
 Zur Verfügung stehen vier Sprachen: Tschechisch, Slowakisch, Englisch und Deutsch.
 
+![Einstellungen → Allgemein: Name und Beschreibung der Website für weitere Sprachversionen](../obrazky/nastaveni-zakladni.webp)
+
 ## Standardsprache
 
 Jede Website hat eine Standardsprache. Sie wird unter **Einstellungen → Allgemein** im Feld **Sprache der Website** eingestellt; bei der Installation wird die Sprache übernommen, in der Sie installiert haben.
@@ -16,7 +18,7 @@ Eine Website in einer einzigen Sprache braucht nichts weiter. Die Sprache der Ad
 
 ## Weitere Sprachversionen
 
-1. Öffnen Sie im Hauptmenü **Erweiterungen**, haken Sie **Sprachversionen der Website** an und speichern Sie.
+1. Öffnen Sie **Verwaltung → Erweiterungen**, haken Sie **Sprachversionen der Website** an und speichern Sie.
 2. Unter **Einstellungen → Allgemein** erscheint unter dem Feld **Sprache der Website** die Option **Weitere Sprachversionen**. Haken Sie die Sprachen an, die Sie hinzufügen möchten, und speichern Sie.
 3. Klappen Sie weiter unten **Name und Beschreibung in weiteren Sprachversionen** auf und füllen Sie **Name der Website** und **Beschreibung der Website** für jede Version aus. Ein leeres Feld bedeutet denselben Wert wie in der Standardsprache.
 4. Legen Sie für jede Version mindestens ein Ressort in der jeweiligen Sprache an – siehe [Inhalte übersetzen](preklad-obsahu.md). Ohne Ressort hat die Version keinen Ort, an dem Artikel gespeichert werden können.

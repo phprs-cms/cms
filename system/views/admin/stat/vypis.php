@@ -21,9 +21,9 @@ $zobrazeni = array_sum(array_column($graf, 'zobrazeni'));
 <?php endforeach ?>
 </nav>
 <div class="dlazdice">
-	<div class="dlazdice-polozka"><strong><?= number_format($navstev, 0, ',', ' ') ?></strong><span><?= e(t('Návštěvy')) ?></span></div>
-	<div class="dlazdice-polozka"><strong><?= number_format($zobrazeni, 0, ',', ' ') ?></strong><span><?= e(t('Zobrazené stránky')) ?></span></div>
-	<div class="dlazdice-polozka"><strong><?= $navstev > 0 ? number_format($zobrazeni / $navstev, 1, ',', ' ') : '0' ?></strong><span><?= e(t('Stránek na návštěvu')) ?></span></div>
+	<div class="dlazdice-polozka"><strong><?= pocet($navstev) ?></strong><span><?= e(t('Návštěvy')) ?></span></div>
+	<div class="dlazdice-polozka"><strong><?= pocet($zobrazeni) ?></strong><span><?= e(t('Zobrazené stránky')) ?></span></div>
+	<div class="dlazdice-polozka"><strong><?= $navstev > 0 ? pocet($zobrazeni / $navstev, 1) : '0' ?></strong><span><?= e(t('Stránek na návštěvu')) ?></span></div>
 </div>
 <h3><?= e(t('Zobrazení a návštěvy po dnech')) ?></h3>
 <div class="graf" role="img" aria-label="<?= e(t('Sloupcový graf zobrazení stránek po dnech')) ?>">
@@ -39,7 +39,7 @@ $zobrazeni = array_sum(array_column($graf, 'zobrazeni'));
 <?php if ($clanky === []): ?><p><?= e(t('Zatím žádná data.')) ?></p><?php else: ?>
 <div class="tab-obal"><table class="vypis"><tbody>
 <?php foreach ($clanky as $c): ?>
-<tr><td><a href="<?= e($app->url('admin.php?modul=clanky&akce=edit&id=' . (int) $c['idc'])) ?>"><?= e($c['titulek']) ?></a></td><td class="cislo"><?= number_format((int) $c['pocet'], 0, ',', ' ') ?>×</td></tr>
+<tr><td><a href="<?= e($app->url('admin.php?modul=clanky&akce=edit&id=' . (int) $c['idc'])) ?>"><?= e($c['titulek']) ?></a></td><td class="cislo"><?= pocet((int) $c['pocet']) ?>×</td></tr>
 <?php endforeach ?>
 </tbody></table></div>
 <?php endif ?>
@@ -49,7 +49,7 @@ $zobrazeni = array_sum(array_column($graf, 'zobrazeni'));
 <?php if ($zdroje === []): ?><p><?= e(t('Zatím žádná data.')) ?></p><?php else: ?>
 <div class="tab-obal"><table class="vypis"><tbody>
 <?php foreach ($zdroje as $z): ?>
-<tr><td><?= e($z['zdroj']) ?></td><td class="cislo"><?= number_format((int) $z['pocet'], 0, ',', ' ') ?>×</td></tr>
+<tr><td><?= e($z['zdroj']) ?></td><td class="cislo"><?= pocet((int) $z['pocet']) ?>×</td></tr>
 <?php endforeach ?>
 </tbody></table></div>
 <?php endif ?>

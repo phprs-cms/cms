@@ -4,6 +4,8 @@ Der Bildschirm **Design → Website-Identität** fasst zusammen, wodurch sich Ih
 
 Das Formular hat die Abschnitte **Vorlage**, **Logo**, **Farbe**, **Dunkelmodus**, **Schrift** und **Vorschau**. Alles wird auf einmal mit der Schaltfläche **Speichern** gespeichert; der Link **Website anzeigen** daneben öffnet die Website in einem neuen Fenster. Die Auswahl der Vorlage beschreibt die Seite [Website-Vorlagen](sablony.md).
 
+![Design → Website-Identität](../obrazky/identita-webu.webp)
+
 ## Logo und Icon
 
 | Feld | Wozu es dient |

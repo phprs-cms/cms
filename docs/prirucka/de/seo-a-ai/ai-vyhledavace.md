@@ -83,7 +83,7 @@ Die strukturierten Daten (Autor, Herausgeber, Datumsangaben, Brotkrumen-Navigati
 
 ## Öffentliche API
 
-Für das maschinelle Lesen der Inhalte durch eine eigene Anwendung dient die Erweiterung **Öffentliche API** (Hauptmenü **Erweiterungen**; Standard: ausgeschaltet). Es ist eine lesende JSON-API unter den Adressen `/api/clanky`, `/api/clanky/<adresa>` und `/api/rubriky`. Gesperrte Artikel gibt sie mit Vorschau und dem Kennzeichen `zamceno` zurück.
+Für das maschinelle Lesen der Inhalte durch eine eigene Anwendung dient die Erweiterung **Öffentliche API** (**Verwaltung → Erweiterungen**; Standard: ausgeschaltet). Es ist eine lesende JSON-API unter den Adressen `/api/clanky`, `/api/clanky/<adresa>` und `/api/rubriky`. Gesperrte Artikel gibt sie mit Vorschau und dem Kennzeichen `zamceno` zurück.
 
 ## Siehe auch
 

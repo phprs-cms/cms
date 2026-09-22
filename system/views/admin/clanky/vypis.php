@@ -8,7 +8,8 @@
  * @var int $strana
  * @var int $stran
  * @var list<array<string, mixed>> $rubriky
- * @var array{tema:int, hledat:string, moje:string, stav:string} $filtr
+ * @var array{tema:int, jazyk:string, hledat:string, moje:string, stav:string} $filtr
+ * @var list<string> $jazykyWebu  jazykové verze webu (prázdné = web má jen jeden jazyk)
  * @var bool $smiVydavat
  */
 $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['strana' => $s]);
@@ -35,6 +36,16 @@ $strankaUrl = fn (int $s): string => $modul->url('', array_filter($filtr) + ['st
 <?php endforeach ?>
 		</select>
 	</label>
+<?php if ($jazykyWebu !== []): ?>
+	<label><?= e(t('Jazyk:')) ?>
+		<select name="jazyk">
+			<option value=""><?= e(t('všechny')) ?></option>
+<?php foreach ($jazykyWebu as $kod): ?>
+			<option value="<?= e($kod) ?>"<?= $filtr['jazyk'] === $kod ? ' selected' : '' ?>><?= e(\PhpRS\Core\Jazyk::DOSTUPNE[$kod][0]) ?></option>
+<?php endforeach ?>
+		</select>
+	</label>
+<?php endif ?>
 	<label><?= e(t('Titulek obsahuje:')) ?> <input class="textpole" type="search" name="hledat" value="<?= e($filtr['hledat']) ?>" size="20"></label>
 	<label><input type="checkbox" name="moje" value="1"<?= $filtr['moje'] === '1' ? ' checked' : '' ?>> <?= e(t('Zobrazit pouze mé články')) ?></label>
 	<input class="tl" type="submit" value="<?= e(t('Filtrovat')) ?>">

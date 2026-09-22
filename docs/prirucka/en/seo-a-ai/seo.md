@@ -2,6 +2,8 @@
 
 The system does most of the work for search engines by itself: readable addresses, descriptions, canonical addresses, the sitemap, structured data and feeds. In **Settings → SEO and GEO** you decide only about the main things. This page describes the site settings, the options for an article and redirects. The options for AI search engines from the same tab have their own page, [AI search engines](ai-vyhledavace.md).
 
+![Settings → SEO and GEO](../obrazky/nastaveni-seo.webp)
+
 ## Site visibility
 
 | Field | Meaning | Default |
@@ -23,7 +25,7 @@ Expand **Site ownership verification (Google Search Console, Bing)**:
 
 ## What the system generates
 
-Links to all the files are at the bottom in the **Advanced** section.
+Links to these files (except `/podcast.xml`) are at the end of the expandable **Advanced** section.
 
 | Address | Content |
 |---|---|
@@ -67,7 +69,7 @@ After it is turned on, the system creates a key when the settings are saved and 
 
 ## Options for an article
 
-The article form has three fields for search engines:
+The article form has, in the expandable **More settings** section, three fields for search engines:
 
 | Field | Meaning |
 |---|---|
@@ -75,7 +77,7 @@ The article form has three fields for search engines:
 | **Search engine description** | At most 320 characters. Empty = the beginning of the standfirst. The [AI assistant](../psani/ai-asistent.md) can suggest one too. |
 | **Hide from search engines (noindex)** | The article stays on the site but gets the `noindex` tag, drops out of the sitemaps and is not announced (IndexNow, Web Push, webhook). The automatic newsletter does not include it. |
 
-The canonical address, the Open Graph tags for sharing and, for language versions, the hreflang tags are added by the system by itself. The description and keywords of the whole site are in **Settings → General**.
+The canonical address, the Open Graph tags for sharing and, for language versions, the hreflang tags are added by the system by itself. The description and keywords of the whole site are in **Settings → General**: **Site description** in the **Website** section, **Site keywords** in the expandable **More options** section.
 
 ## Redirects
 
@@ -85,13 +87,13 @@ The most common case is handled by the system by itself: when you change the add
 
 A manual redirect:
 
-1. In the **Add redirect** section fill in the **Old address** – a path on this site that no longer exists, for example `/stara-stranka.html`.
+1. At the top of the form fill in the **Old address** – a path on this site that no longer exists, for example `/stara-stranka.html`.
 2. In **Redirect to** enter the target: a path (`/clanek/nova-adresa`) or a whole address `https://…`.
-3. Click **Redirect**.
+3. Click **Add redirect**.
 
 A redirect is used only when there is nothing at the old address. It does not override an existing page. For every record the table shows how many times it was **Used**.
 
-Below it is the overview **Addresses readers could not find (404)** – the 25 most frequent ones in the last 60 days with a count and a date. The link next to an address pre-fills the form, so you redirect a missing page in two clicks. **Clear the list** deletes the list.
+Below it is the overview **Addresses readers could not find (404)** – the 25 most frequent ones in the last 60 days with a count and a date. The **Redirect** link next to an address pre-fills the form, so you redirect a missing page in two clicks. **Clear the list** deletes the list.
 
 ## Related
 

@@ -35,7 +35,9 @@ It needs a running MySQL or MariaDB and the `mysql` and `curl` commands. The tes
 4. copies the project into a temporary folder, creates a clean database and performs an installation; verifies that the installer has deleted itself afterwards,
 5. walks through the site: the home page, an article, a section, the search, feeds, sitemaps, `robots.txt`, `llms.txt`, the clean version of an article, the 404 page and the fact that `system/` and `config.php` are not accessible from the web,
 6. tries all three built-in templates and the fallback template when a folder is missing,
-7. signs in to the administration and walks through its screens, including permissions by section and editing an article right on the site.
+7. signs in to the administration and walks through its screens, including permissions by section and editing an article right on the site,
+8. walks through the import of a sample WordPress export and the site export,
+9. walks through Stripe payments without a network: webhooks signed on the spot and a fake server instead of the API (port in the `STRIPE_PORT` variable, default 8098).
 
 A response is also considered faulty when it contains the text `Warning:`, `Notice:`, `Deprecated:` or `Fatal error`.
 

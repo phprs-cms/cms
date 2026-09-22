@@ -8,7 +8,7 @@ A site consists of three things: **files**, the **database** and the **address s
 2. **Files.** Copy the whole site folder to the new hosting, including `config.php`, the folders `media/` and `storage/` and all hidden `.htaccess` files.
 3. **Database.** Create an empty database on the new hosting and import the backup into it – through phpMyAdmin (it can load a `.sql.gz` file directly) or with the hosting tool.
 4. **`config.php`.** Rewrite the database details in it to match the new hosting: `host`, `port`, `name`, `user`, `password`. Do not change the table prefix.
-5. **Site address.** If the domain changes, sign in to the administration and enter the new address including `https://` in **Settings → Basic → Site address**. Links in e-mails, RSS, the sitemap and notifications are built from this setting – not from the address in the browser.
+5. **Site address.** If the domain changes, sign in to the administration and enter the new address including `https://` in **Settings → General → Site address**. Links in e-mails, RSS, the sitemap and notifications are built from this setting – not from the address in the browser.
 6. **Cache.** Delete the contents of the `storage/cache/` folder; it will be created again.
 7. **Check.** Go through **Settings → System status** – it shows missing PHP extensions, write permissions and the HTTPS status in the new location.
 

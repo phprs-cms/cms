@@ -171,5 +171,8 @@ window.PHPRS_PREKLAD = {
 	"Patička": "Footer",
 	"+ Přidat blok": "+ Add block",
 	"Složka": "Folder",
-	"Načíst další": "Load more"
+	"Načíst další": "Load more",
+	"Hledat v médiích…": "Search media…",
+	"Hledat v médiích": "Search media",
+	"Hledanému textu nic neodpovídá.": "Nothing matches your search."
 };

@@ -2,9 +2,11 @@
 
 Der Newsletter ist eine E-Mail mit einer Auswahl von Artikeln, die Sie an angemeldete Empfänger senden. Sie stellen ihn von Hand zusammen oder lassen ihn automatisch versenden. Alles läuft auf Ihrer Website, ohne fremden Versanddienst.
 
+![Leser → Newsletter](../obrazky/newsletter.webp)
+
 ## Einschalten
 
-1. Öffnen Sie im Hauptmenü **Erweiterungen**, haken Sie **Newsletter** an und speichern Sie.
+1. Öffnen Sie **Verwaltung → Erweiterungen**, haken Sie **Newsletter** an und speichern Sie.
 2. Füllen Sie unter **Einstellungen → Allgemein** die **E-Mail der Redaktion** aus – von ihr wird der Newsletter versendet. Ohne sie meldet der Bildschirm Newsletter **Füllen Sie zuerst die E-Mail der Redaktion in den Einstellungen aus – von dieser Adresse wird der Newsletter versendet.**
 3. Fügen Sie der Website den Block **Newsletter** hinzu (**Design → Blöcke und Layout**). Das ist das Anmeldeformular für die Leser.
 4. Richten Sie den Versand über SMTP ein. Massennachrichten, die mit der Funktion des Servers gesendet werden, landen oft im Spam. Siehe [E-Mail](../provoz/posta.md).
@@ -36,7 +38,7 @@ Die E-Mail enthält die Einleitung und zu jedem Artikel Titel, Vorspann und den 
 
 ### Ablauf des Versands
 
-Versendet wird in Stapeln zu 40 Empfängern. Nach der Bestätigung öffnet sich die Seite **Newsletter-Versand** mit dem laufenden Stand – gesendet und verbleibend. **Lassen Sie sie geöffnet**, sie aktualisiert sich von selbst, bis alle bedient sind. Am Ende meldet sie **Fertig.**
+Versendet wird in Stapeln zu 40 Empfängern. Nach der Bestätigung öffnet sich die Seite **Newsletter-Versand** mit dem laufenden Stand – gesendet und verbleibend. Lassen Sie die Seite geöffnet, sie aktualisiert sich von selbst, bis alle bedient sind; sollte sie sich nicht aktualisieren, klicken Sie auf **Weiter**. Am Ende meldet sie **Fertig.**
 
 Wenn Sie die Seite früher schließen, hält der Versand an. Nichts geht verloren und nichts wird doppelt gesendet: Klicken Sie in der Tabelle **Versendete Ausgaben** bei der Ausgabe auf **Versand fortsetzen**.
 

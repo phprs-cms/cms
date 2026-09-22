@@ -45,7 +45,7 @@ Sprechende Adressen auf Apache stellt `.htaccess` sicher. Für nginx gibt es in 
 | `layout/` | Design-Vorlagen der Website; eingebaut sind `classic-newspaper`, `modern-magazine`, `minimal` |
 | `image/` | CSS und JavaScript der Administration, des Editors, des visuellen Blockeditors sowie die gemeinsamen `web.css` und `web.js` für die Website; die Schrift der Administration in `image/pisma/` |
 | `media/` | hochgeladene Dateien, in Ordner `RRRR/MM/` einsortiert |
-| `storage/` | Cache, Logs, Sicherungen; von der Website aus nicht zugänglich |
+| `storage/` | Cache, Logs, Sicherungen und Exporte der Website (`zalohy/`), Dateien des Imports aus WordPress (`import/`); von der Website aus nicht zugänglich |
 | `tools/` | Tests, Werkzeug für die Wörterbücher, Skript für das Release |
 | `docs/` | dieses Handbuch (`docs/prirucka/`) und der Ablauf eines Release |
 

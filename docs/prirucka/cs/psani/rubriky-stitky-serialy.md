@@ -2,6 +2,8 @@
 
 Obsah webu se třídí třemi způsoby. **Rubrika** je pevné zařazení – každý článek má právě jednu. **Štítky** popisují, o čem článek je, a může jich mít víc. **Seriál** spojuje díly, které na sebe navazují.
 
+![Obsah → Rubriky](../obrazky/rubriky.webp)
+
 ## Rubriky
 
 Rubriky spravujete v **Obsah → Rubriky**. Bez rubriky článek uložit nejde, první rubriku proto založte dřív než první článek.
@@ -58,7 +60,7 @@ Překlepy a dvojí psaní (`Územní plán` a `uzemni plan`) napravíte sloučen
 
 Seriál je skupina článků, které k sobě patří: díly reportáže, pravidelný sloupek, cestopis na pokračování.
 
-1. Ve formuláři článku najděte v oddílu **Zařazení** pole **Seriál**.
+1. Ve formuláři článku rozbalte **Další nastavení**; první pole je **Seriál**.
 2. Vyberte existující seriál, nebo napište název do pole **…nebo název nového seriálu**. Nový seriál se založí uložením článku.
 3. U dalších dílů už seriál jen vyberte z nabídky.
 

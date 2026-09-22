@@ -4,9 +4,11 @@ Tato stránka popisuje dvě záložky nastavení, které spolu souvisejí: **Nas
 
 Základní představa: co cookies nepoužívá, běží hned a bez lišty. Co cookies používá, čeká na souhlas.
 
+![Nastavení → Soukromí a cookies](../obrazky/soukromi-a-cookies.webp)
+
 ## Vestavěná statistika
 
-Volba **Vestavěná statistika** v záložce Měření je po instalaci zapnutá. Patří k ní rozšíření **Statistika** (hlavní nabídka **Rozšíření**; výchozí: zapnuto) a obrazovka **Čtenáři → Statistika**.
+Volba **Vestavěná statistika** v záložce Měření je po instalaci zapnutá. Patří k ní rozšíření **Statistika** (**Správa → Rozšíření**; výchozí: zapnuto) a obrazovka **Čtenáři → Statistika**.
 
 Měření nepoužívá cookies a neukládá IP adresy, takže nepotřebuje souhlas návštěvníka:
 
@@ -60,7 +62,7 @@ Návštěvník má tlačítka **Přijmout vše**, **Jen nezbytné** a **Nastaven
 
 - **Nezbytné – bez nich web nefunguje** (vždy zapnuté),
 - **Analytické – anonymní měření návštěvnosti** (jen když měříte nástrojem s cookies),
-- **Marketingové – cílení reklamy** (jen když máte marketingové kódy),
+- **Marketingové – cílení reklamy** (jen když máte marketingové kódy nebo zapnutou reklamu s kódem reklamní sítě),
 
 a potvrdí je tlačítkem **Uložit výběr**. Volba se uloží do cookie `phprs_souhlas` na 6 měsíců. Změnit ji může kdykoli tlačítkem **Nastavení cookies**, které na webu zůstává.
 
@@ -81,11 +83,11 @@ Tlačítka lišty se překládají do jazyka webu sama; text lišty je jeden pro
 | **Marketingové kódy** | Meta Pixel, Sklik retargeting, Google Ads… Spustí se až po souhlasu s marketingem. |
 | **Evidovat souhlasy** | Výchozí: zapnuto. Ukládá čas, náhodný identifikátor a zvolené kategorie – bez IP adresy. Doklad pro případnou kontrolu. |
 
-Pod formulářem je souhrn **Souhlasy za posledních 30 dní** podle kategorií.
+Pod oddílem **Kódy a evidence** se – jakmile nějaký souhlas přijde – ukáže řádek **Souhlasy za posledních 30 dní:** s počty podle kategorií.
 
 Měřicí skripty čekající na souhlas nesou i značky, kterým rozumí Cookiebot. V režimu **Externí služba** je tedy po souhlasu spustí jeho lišta. U jiné služby ověřte, že skripty po souhlasu opravdu povolí.
 
-Na souhlas s marketingem čekají také kódy reklamních sítí z [Reklamního systému](../ctenari-a-prijmy/reklama.md).
+Na souhlas s marketingem čekají také kódy reklamních sítí z [Reklamního systému](../ctenari-a-prijmy/reklama.md) – vestavěná lišta se na marketing zeptá i kvůli nim. V režimu **Externí služba** dostanou skripty v marketingových kódech a kódech reklamních sítí značení `type="text/plain" data-cookieconsent="marketing"`, kterému rozumí Cookiebot a služby s ním kompatibilní; spustí je až ona.
 
 ## Které cookies ukládá sám systém
 

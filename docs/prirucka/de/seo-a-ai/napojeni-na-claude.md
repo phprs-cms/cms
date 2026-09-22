@@ -41,7 +41,7 @@ Ein neuer Artikel entsteht immer als Entwurf. Veröffentlichen darf ihn Claude n
 
 ## Einschalten und Token
 
-1. Der Administrator öffnet im Hauptmenü **Erweiterungen**, hakt **Verbindung mit Claude** an und speichert. In der Standardeinstellung ist die Erweiterung ausgeschaltet.
+1. Der Administrator öffnet **Verwaltung → Erweiterungen**, hakt **Verbindung mit Claude** an und speichert. In der Standardeinstellung ist die Erweiterung ausgeschaltet.
 2. Jeder Benutzer, der die Verbindung verwenden möchte, öffnet **Mein Konto**, Abschnitt **Verbindung mit Claude**.
 3. Er füllt **Name des neuen Tokens** aus – zum Beispiel „Claude auf dem Notebook“ – und klickt auf **Token erstellen**.
 4. Das Token wird **nur einmal** angezeigt. Kopieren Sie es sofort. In der Datenbank ist nur sein Hash gespeichert, es lässt sich später also nicht anzeigen – nur widerrufen und ein neues erstellen.

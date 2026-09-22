@@ -68,7 +68,7 @@ In **Settings → Readers and payments**, in the **Payments with Stripe** sectio
 | **Monthly price**, **Yearly price** | the price IDs `price_…`; an empty field = the period is not offered |
 | **Monthly price label**, **Yearly price label** | the text next to the button, for example “€5 a month”; optional |
 
-After saving, the key and the secret are no longer output – in the field you see only the last four characters. The site does not save a value that does not have the form of a key, a secret or a price ID, and says so. Payments are on as soon as the key, the secret and at least one price are filled in; the label next to the section heading changes to **on**.
+After saving, the key and the secret are no longer output – in the field you see only the last four characters. The site does not save a value that does not have the form of a key, a secret or a price ID, and says so. Payments are on as soon as the key, the secret and at least one price are filled in; the label next to the section heading changes to **on**. You turn payments off by ticking **Remove saved key** at the **Secret key** field and saving.
 
 The price label is only text. The real amount is determined by the price in Stripe – when you change it there, adjust the label too.
 

@@ -28,9 +28,9 @@ use PhpRS\Admin\Moduly\Reklama;
 	<td><a href="<?= e($modul->url('edit', ['id' => $r['idr']])) ?>"><?= e($r['nazev']) ?></a><br><small><?= e(t($r['typ'] === 'kod' ? 'reklamní kód' : 'banner')) ?></small></td>
 	<td><?= e(explode(' (', t(Reklama::POZICE[$r['pozice']] ?? $r['pozice']))[0]) ?></td>
 	<td class="cislo"><?= $r['platna_od'] ? e(datum($r['platna_od'])) : '…' ?> – <?= $r['platna_do'] ? e(datum($r['platna_do'])) : '…' ?></td>
-	<td class="cislo"><?= number_format((int) $r['zobrazeni'], 0, ',', ' ') ?><?= $r['max_zobrazeni'] !== null ? ' / ' . number_format((int) $r['max_zobrazeni'], 0, ',', ' ') : '' ?></td>
-	<td class="cislo"><?= $r['typ'] === 'kod' ? '–' : number_format((int) $r['kliky'], 0, ',', ' ') ?></td>
-	<td class="cislo"><?= $r['typ'] === 'kod' || $r['zobrazeni'] == 0 ? '–' : number_format($r['kliky'] / $r['zobrazeni'] * 100, 2, ',', ' ') . ' %' ?></td>
+	<td class="cislo"><?= pocet((int) $r['zobrazeni']) ?><?= $r['max_zobrazeni'] !== null ? ' / ' . pocet((int) $r['max_zobrazeni']) : '' ?></td>
+	<td class="cislo"><?= $r['typ'] === 'kod' ? '–' : pocet((int) $r['kliky']) ?></td>
+	<td class="cislo"><?= $r['typ'] === 'kod' || $r['zobrazeni'] == 0 ? '–' : pocet($r['kliky'] / $r['zobrazeni'] * 100, 2) . ' %' ?></td>
 	<td><span class="stitek stitek-<?= $bezi ? 'vydano' : 'koncept' ?>"><?= e(t($bezi ? 'běží' : 'neběží')) ?></span></td>
 	<td class="akce"><a href="<?= e($modul->url('edit', ['id' => $r['idr']])) ?>"><?= e(t('Upravit')) ?></a> ·
 		<form class="vradku" method="post" action="<?= e($modul->url('prepni')) ?>"><?= $csrf ?><input type="hidden" name="idr" value="<?= (int) $r['idr'] ?>"><button class="navigace" type="submit"><?= e(t($r['aktivni'] ? 'Vypnout' : 'Zapnout')) ?></button></form> ·

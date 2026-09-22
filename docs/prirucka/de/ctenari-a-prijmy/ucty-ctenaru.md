@@ -2,13 +2,15 @@
 
 Leser können sich auf der Website registrieren. Mit einem Konto können sie Artikel für später speichern, gesperrte Artikel lesen und – wenn Sie es so einstellen – kommentieren. Leserkonten sind von den Konten der Redaktion getrennt: Ein Leser gelangt nie in die Administration.
 
+![Leser → Leser](../obrazky/ctenari.webp)
+
 ## Einschalten
 
-1. Öffnen Sie im Hauptmenü **Erweiterungen**, haken Sie **Leser und gesperrter Inhalt** an und speichern Sie.
+1. Öffnen Sie **Verwaltung → Erweiterungen**, haken Sie **Leser und gesperrter Inhalt** an und speichern Sie.
 2. Fügen Sie der Website den Block **Leserkonto** hinzu (**Design → Blöcke und Layout**). Er gibt die Schaltfläche **Anmelden / Mein Konto** aus. Ohne den Block gelangt der Leser zur Anmeldung nur über die Aufforderung bei einem gesperrten Artikel, über den Link **Für später speichern** unter dem Artikel und direkt unter der Adresse `/ctenar`.
 3. Prüfen Sie, dass die Website E-Mails versendet – Registrierung und Anmeldung per Link beruhen darauf. Siehe [E-Mail](../provoz/posta.md).
 
-In der Administration kommt der Bereich **Leser → Leser** hinzu und in den Einstellungen der Reiter **Leser und Zahlungen**. Beides sieht nur der Administrator.
+In der Administration kommt der Bereich **Leser → Leser** hinzu. Der Reiter **Einstellungen → Leser und Zahlungen** ist immer sichtbar; bei ausgeschalteter Erweiterung weist er nur darauf hin, dass die Einstellungen erst nach dem Einschalten wirken. Beides sieht nur der Administrator.
 
 ## Registrierung
 
@@ -26,9 +28,9 @@ Der Leser hat drei Möglichkeiten:
 
 | Weg | Wie er funktioniert |
 |---|---|
-| **E-Mail und Passwort** | gewöhnliche Anmeldung |
+| Formular **Anmelden** (**E-Mail** und **Passwort**) | gewöhnliche Anmeldung |
 | **Mit einem Link per E-Mail anmelden** | der Leser füllt nur die E-Mail aus und erhält einen einmaligen Link; er gilt 20 Minuten |
-| **Passwort vergessen?** | sendet einen Link zum Festlegen eines neuen Passworts; er gilt 2 Stunden |
+| **Passwort vergessen?** | der Leser füllt oben die E-Mail aus, klappt diese Zeile auf und klickt auf **Link senden**; der Link zum Festlegen eines neuen Passworts gilt 2 Stunden |
 
 Der Link aus der E-Mail meldet nicht sofort an – er zeigt die Schaltfläche **Anmelden**. Das ist Absicht: Manche E-Mail-Programme öffnen Links vorab und würden den einmaligen Link verbrauchen.
 
@@ -42,10 +44,10 @@ Die Seite `/ctenar` zeigt nach der Anmeldung:
 
 - die E-Mail und gegebenenfalls das Datum, bis zu dem das Abonnement gilt (oder die Schaltfläche **Abonnement abschließen**),
 - mit eingeschalteten [Zahlungen mit Stripe](platby-stripe.md) den Abschnitt **Abonnement**: die Schaltflächen **Monatlich abonnieren** und **Jährlich abonnieren**, bei einem zahlenden Leser **Abonnement verwalten**,
-- **Gespeicherte Artikel** – eine Liste mit der Möglichkeit **Aus Gespeicherten entfernen**,
+- **Gespeicherte Artikel** – eine Liste (höchstens die letzten 100) mit der Schaltfläche **×** zum Entfernen,
 - die Änderung von Name und Passwort (**Passwort ändern** verlangt das bisherige Passwort),
 - **Abmelden**,
-- **Konto löschen** – löscht nach Eingabe des Passworts das Konto und alle Daten dazu; das lässt sich nicht rückgängig machen. Ein Leser mit laufendem Abonnement über Stripe muss es zuerst kündigen (**Abonnement verwalten**), sonst würden ihm die Zahlungen weiter abgebucht.
+- **Konto löschen** – der Leser klappt die Zeile auf, gibt sein Passwort ein und klickt auf **Mein Konto löschen**; damit löscht er das Konto und alle Daten dazu; das lässt sich nicht rückgängig machen. Ein Leser mit laufendem Abonnement über Stripe muss es zuerst kündigen (**Abonnement verwalten**), sonst würden ihm die Zahlungen weiter abgebucht.
 
 ### Gespeicherte Artikel
 
@@ -53,7 +55,7 @@ Unter jedem Artikel steht der Link **☆ Für später speichern**. Einen nicht a
 
 ## Leser in der Administration
 
-Der Bereich **Leser → Leser** zeigt oben drei Zahlen: **Registrierte**, **Abonnenten** und **Gesperrte Artikel**. Darunter stehen die Suche nach E-Mail oder Name und eine Tabelle der letzten 300 Konten:
+Der Bereich **Leser → Leser** zeigt oben vier Zahlen: **Registrierte**, **Abonnenten**, **Zahlen über Stripe** und **Gesperrte Artikel**. Darunter stehen die Suche nach E-Mail oder Name und eine Tabelle der letzten 300 Konten:
 
 | Spalte | Inhalt |
 |---|---|

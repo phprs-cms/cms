@@ -36,7 +36,7 @@ $skupina = '';
 </fieldset>
 <fieldset>
 <legend><?= e(t('Úlohy na pozadí (cron)')) ?></legend>
-<p><?= e(t('Naplánované články, oznámení a zálohy se spouštějí při návštěvách webu. Web s menší návštěvností je zpřesní, když tuto adresu zavoláte každých 5 minut cronem hostingu:')) ?></p>
+<p><?= e(t('Naplánované články, oznámení a rozesílky se spouštějí při návštěvách webu. Web s menší návštěvností je zpřesní, když tuto adresu zavoláte každých 5 minut cronem hostingu:')) ?></p>
 <?php if ($ulohyToken !== ''): ?>
 <p><code>*/5 * * * * curl -s "<?= e($adresaWebu) ?>ulohy?token=<?= e($ulohyToken) ?>" &gt; /dev/null</code></p>
 <?php endif ?>

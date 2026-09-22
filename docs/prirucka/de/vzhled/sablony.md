@@ -29,7 +29,7 @@ Zusammen mit der Vorlage wird das Seitenlayout eingestellt, das zu ihr gehört (
 Unverändert bleiben:
 
 - der gesamte Inhalt – Artikel, Seiten, Ressorts, Medien, Kommentare,
-- die Blöcke und ihre Einstellungen,
+- die Blöcke und ihre Einstellungen (es ändert sich nur die Zone von Blöcken aus einer aufgehobenen Spalte),
 - Logo, Website-Icon, Hauptfarbe, Schriften und Dunkelmodus aus der [Website-Identität](identita-webu.md),
 - die Artikelvorlagen (Longread, Fotoreportage, Interview) und die Inhaltstypen – sie funktionieren in allen drei Vorlagen,
 - die Adressen der Seiten, SEO, Webanalyse und Cookie-Leiste.

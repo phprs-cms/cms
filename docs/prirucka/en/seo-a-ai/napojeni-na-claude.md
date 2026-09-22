@@ -41,7 +41,7 @@ A new article is always created as a draft. Claude may publish it only with an a
 
 ## Turning it on and the token
 
-1. An administrator opens **Extensions** in the main menu, ticks **Claude connection** and saves. The extension is off by default.
+1. An administrator opens **Administration → Extensions**, ticks **Claude connection** and saves. The extension is off by default.
 2. Every user who wants to use the connection opens **My account**, the section **Claude connection**.
 3. They fill in the **Name of the new token** – for example “Claude on my laptop” – and click **Create token**.
 4. The token is shown **only once**. Copy it straight away. Only its hash is stored in the database, so it cannot be displayed later – only revoked and a new one created.

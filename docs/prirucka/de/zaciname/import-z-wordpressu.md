@@ -4,6 +4,8 @@ Sie haben eine Website in WordPress und möchten damit zu phpRS wechseln? Der Im
 
 Beides finden Sie in der Administration unter **Verwaltung → Import und Export**. Den Bildschirm sieht nur der Administrator.
 
+![Verwaltung → Import und Export](../obrazky/import-z-wordpressu.webp)
+
 ## Bevor Sie beginnen
 
 - Öffnen Sie in WordPress **Werkzeuge → Daten exportieren**, wählen Sie **Alle Inhalte** und laden Sie die `.xml`-Datei herunter.
@@ -12,7 +14,7 @@ Beides finden Sie in der Administration unter **Verwaltung → Import und Export
 
 ## Schritt 1: Datei
 
-Die Datei laden Sie über das Formular hoch. Die meisten Hostings erlauben aber nur das Hochladen von ein paar Megabyte; der Bildschirm sagt Ihnen, wie viel es bei Ihnen ist. Einen größeren Export kopieren Sie per FTP in den Ordner `storage/import/` – er erscheint in der Liste unter dem Formular und Sie wählen ihn mit der Schaltfläche **Vorschau anzeigen** aus.
+Laden Sie die Datei über das Formular hoch und klicken Sie auf **Hochladen und Vorschau anzeigen**. Die meisten Hostings erlauben aber nur das Hochladen von ein paar Megabyte; der Bildschirm sagt Ihnen, wie viel es bei Ihnen ist. Einen größeren Export kopieren Sie per FTP in den Ordner `storage/import/` – er erscheint in der Liste unter dem Formular und Sie wählen ihn mit der Schaltfläche **Vorschau anzeigen** aus.
 
 Angenommen wird nur ein echter Export aus WordPress. Die Datei wird stückweise gelesen, auch ein Export von Hunderten Megabyte stört also nicht; eine wirklich große Website (über 1 GB) exportieren Sie aus WordPress in Teilen, zum Beispiel nach Jahren.
 
@@ -30,9 +32,10 @@ Die Vorschau schreibt nichts in die Datenbank. Sie zeigt, wie viele Beiträge (v
 Unter der Übersicht wählen Sie:
 
 - die **Sprachversion**, zu der der Inhalt gehört (wird nur auf einer Website mit mehreren Sprachen angeboten),
-- ob **Entwürfe**, **Seiten** und **freigegebene Kommentare** importiert werden,
-- ob **Weiterleitungen von alten Adressen** angelegt werden,
-- das Ressort für Beiträge, die in WordPress keines hatten (sonst entsteht das Ressort Nicht zugeordnet).
+- in der Zeile **Was importiert werden soll**, ob **Entwürfe und Beiträge, die auf Freigabe warten**, **Seiten** und **freigegebene Kommentare** übernommen und **Weiterleitungen von alten Adressen auf neue** angelegt werden,
+- in der Zeile **Beiträge ohne Kategorie einordnen in** das Ressort für Beiträge, die in WordPress keines hatten (sonst entsteht das Ressort Nicht zugeordnet).
+
+Den Import starten Sie mit der Schaltfläche **Import starten**.
 
 ## Schritt 3: Import
 
@@ -59,7 +62,7 @@ Zu jedem Artikel und jeder Seite entsteht eine Weiterleitung von der alten Adres
 
 ## Bilder von der alten Website
 
-Nach dem Import verweisen die Artikel weiterhin auf die Bilder der alten Website. Klicken Sie deshalb auf der Seite mit dem Ergebnis auf **Bilder von der alten Website herunterladen**. Die Hauptbilder der Artikel und die Bilder in den Texten werden heruntergeladen, verkleinert, bekommen Vorschaubilder und werden in den **Medien** gespeichert – genauso, als hätten Sie sie von Hand hochgeladen – und die Links in den Texten werden umgeschrieben. Auch hier wird in Stapeln gearbeitet und die Seite macht von selbst weiter.
+Nach dem Import verweisen die Artikel weiterhin auf die Bilder der alten Website. Klicken Sie deshalb auf der Seite mit dem Ergebnis (zu der Sie jederzeit später über den Link **Ergebnis** bei der Datei auf dem Bildschirm **Import und Export** zurückkehren) auf **Bilder von der alten Website herunterladen**. Die Hauptbilder der Artikel und die Bilder in den Texten werden heruntergeladen, verkleinert, bekommen Vorschaubilder und werden in den **Medien** gespeichert – genauso, als hätten Sie sie von Hand hochgeladen – und die Links in den Texten werden umgeschrieben. Auch hier wird in Stapeln gearbeitet und die Seite macht von selbst weiter.
 
 Aus Sicherheitsgründen wird **nur von der Domain der alten Website** heruntergeladen, die im Export angegeben ist, nur Bilder JPG, PNG, GIF und WebP bis 15 MB. Bilder von anderen Domains (zum Beispiel aus einem CDN oder von fremden Websites) bleiben im Text, wie sie waren. Was sich nicht herunterladen ließ, führt das Ergebnis auf; mit der Schaltfläche **Erneut herunterladen** wiederholen Sie es.
 

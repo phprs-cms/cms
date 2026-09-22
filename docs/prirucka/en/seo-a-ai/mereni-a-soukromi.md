@@ -4,9 +4,11 @@ This page describes two settings tabs that are related: **Settings → Analytics
 
 The basic idea: what does not use cookies runs straight away and without a banner. What uses cookies waits for consent.
 
+![Settings → Privacy and cookies](../obrazky/soukromi-a-cookies.webp)
+
 ## Built-in statistics
 
-The option **Built-in statistics** in the Analytics tab is turned on after installation. The **Statistics** extension (main menu **Extensions**; default: on) and the **Readers → Statistics** screen belong to it.
+The option **Built-in statistics** in the Analytics tab is turned on after installation. The **Statistics** extension (**Administration → Extensions**; default: on) and the **Readers → Statistics** screen belong to it.
 
 The measurement uses no cookies and stores no IP addresses, so it does not need the visitor's consent:
 
@@ -60,7 +62,7 @@ The visitor has the buttons **Accept all**, **Only necessary** and **Settings**.
 
 - **Necessary – the site does not work without them** (always on),
 - **Analytics – anonymous traffic measurement** (only when you measure with a tool that uses cookies),
-- **Marketing – ad targeting** (only when you have marketing codes),
+- **Marketing – ad targeting** (only when you have marketing codes or advertising with an ad network code turned on),
 
 and confirm them with the **Save selection** button. The choice is stored in the `phprs_souhlas` cookie for 6 months. They can change it at any time with the **Cookie settings** button, which stays on the site.
 
@@ -81,11 +83,11 @@ The banner buttons are translated into the language of the site by themselves; t
 | **Marketing codes** | Meta Pixel, Sklik retargeting, Google Ads… They run only after consent to marketing. |
 | **Log consents** | Default: on. It stores the time, a random identifier and the chosen categories – without the IP address. Evidence for a possible inspection. |
 
-Below the form there is the summary **Consents in the last 30 days** by category.
+Below the **Codes and records** section – as soon as any consent comes in – the row **Consents in the last 30 days:** appears with counts by category.
 
 Measurement scripts waiting for consent also carry the marks that Cookiebot understands. In the **External service** mode its banner therefore runs them after consent. With another service, verify that it really enables the scripts after consent.
 
-Ad network codes from the [Advertising system](../ctenari-a-prijmy/reklama.md) also wait for consent to marketing.
+Ad network codes from the [Advertising system](../ctenari-a-prijmy/reklama.md) also wait for consent to marketing – the built-in banner asks about marketing because of them too. In the **External service** mode, scripts in marketing codes and ad network codes get the marking `type="text/plain" data-cookieconsent="marketing"`, which Cookiebot and services compatible with it understand; they are run only by that service.
 
 ## Which cookies the system itself stores
 

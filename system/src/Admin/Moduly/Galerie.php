@@ -179,9 +179,9 @@ final class Galerie extends Modul
     }
 
     /**
-     * Filtr výpisu z adresy: sekce (číslo složky, 0 = nezařazené), clanek (idc), nepouzite=1.
+     * Filtr výpisu z adresy: sekce (číslo složky, 0 = nezařazené), clanek (idc), nepouzite=1, hledat (název, popisek nebo jméno souboru).
      *
-     * @return array{0: string, 1: list<int>, 2: array{sekce: ?int, clanek: int, nepouzite: bool}}
+     * @return array{0: string, 1: list<int|string>, 2: array{sekce: ?int, clanek: int, nepouzite: bool}}
      */
     private function filtr(): array
     {
@@ -198,6 +198,12 @@ final class Galerie extends Modul
         if ($clanek > 0) {
             $where[] = 'EXISTS (SELECT 1 FROM {imggal_pouziti} p WHERE p.ido = o.ido AND p.idc = ?)';
             $params[] = $clanek;
+        }
+        $hledat = mb_substr(trim($this->request->get('hledat')), 0, 100);
+        if ($hledat !== '') {
+            $where[] = '(o.nazev LIKE ? OR o.popis LIKE ? OR o.obr_poloha LIKE ?)';
+            $vzor = '%' . addcslashes($hledat, '%_\\') . '%';
+            array_push($params, $vzor, $vzor, $vzor);
         }
         $nepouzite = $this->request->get('nepouzite') === '1';
         if ($nepouzite) {

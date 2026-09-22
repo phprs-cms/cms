@@ -2,6 +2,8 @@
 
 Jedes Mitglied der Redaktion hat ein eigenes Konto. Konten legt der Administrator unter **Verwaltung → Benutzer** an und verwaltet sie dort. Was jemand in der Administration sieht und darf, bestimmen seine Rolle und einige ergänzende Optionen.
 
+![Benutzer bearbeiten: Zusammenfassung der Rechte oben, Rollen als Karten](../obrazky/uzivatel-opravneni.webp)
+
 ## Drei Rollen
 
 | Rolle | Was sie tut |
@@ -21,7 +23,7 @@ Das Hauptmenü zeigt nur die Bereiche, auf die der Benutzer Zugriff hat. **Über
 | Ressorts, Schlagwörter und Themenseiten, Seiten | – | ja | ja |
 | Kommentare, Statistik und weitere eingeschaltete Inhaltserweiterungen | – | ja | ja |
 | Blöcke und Layout | – | ja | ja |
-| Website-Identität, Benutzer, Weiterleitungen, Änderungsprotokoll, Erweiterungen, Einstellungen, Leser | – | – | ja |
+| Website-Identität, Benutzer, Weiterleitungen, Änderungsprotokoll, Import und Export, Erweiterungen, Einstellungen, Leser, Einnahmen | – | – | ja |
 
 Ein Bereich, der zu einer ausgeschalteten Erweiterung gehört, wird niemandem angezeigt.
 
@@ -48,7 +50,7 @@ Wie ein Artikel vom Autor zur Veröffentlichung gelangt, beschreibt [Übergabe u
 
 ## Detaillierte Einstellungen
 
-Der aufklappbare Abschnitt **Detaillierte Einstellungen** im Benutzerformular legt genauer fest, was die Rolle erlaubt.
+Der aufklappbare Abschnitt **Detaillierte Einstellungen** im Benutzerformular legt genauer fest, was die Rolle erlaubt. Über dem Formular eines gespeicherten Kontos steht der Satz **Was dieser Benutzer jetzt darf:** – er fasst Rolle, Veröffentlichen, Ressorts und Bereiche zusammen. Denselben Satz zeigt die Benutzerliste unter dem Namen.
 
 ### Zugriff auf Bereiche
 

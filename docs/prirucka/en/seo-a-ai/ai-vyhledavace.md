@@ -83,7 +83,7 @@ Structured data (author, publisher, dates, breadcrumb navigation) are added by t
 
 ## Public API
 
-The **Public API** extension (main menu **Extensions**; default: off) serves for machine reading of content by your own application. It is a read-only JSON API at the addresses `/api/clanky`, `/api/clanky/<address>` and `/api/rubriky`. It returns locked articles with the preview and the flag `zamceno`.
+The **Public API** extension (**Administration → Extensions**; default: off) serves for machine reading of content by your own application. It is a read-only JSON API at the addresses `/api/clanky`, `/api/clanky/<address>` and `/api/rubriky`. It returns locked articles with the preview and the flag `zamceno`.
 
 ## Related
 

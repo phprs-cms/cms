@@ -4,6 +4,8 @@ Obrazovka **Vzhled → Identita webu** sdružuje to, čím se váš web liší o
 
 Formulář má oddíly **Šablona**, **Logo**, **Barva**, **Tmavý režim**, **Písmo** a **Ukázka**. Všechno se uloží najednou tlačítkem **Uložit**; odkaz **Zobrazit web** vedle něj otevře web v novém okně. Výběr šablony popisuje stránka [Šablony webu](sablony.md).
 
+![Vzhled → Identita webu](../obrazky/identita-webu.webp)
+
 ## Logo a ikona
 
 | Pole | K čemu je |

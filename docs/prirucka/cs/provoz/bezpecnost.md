@@ -4,9 +4,9 @@ phpRS je ve výchozím stavu nastavený bezpečně. Tahle stránka shrnuje, co u
 
 ## Pět věcí po instalaci
 
-1. **Smažte `install.php`.** Dokud na serveru leží, Stav systému na něj upozorňuje.
+1. **Ověřte, že je `install.php` pryč.** Instalátor se po dokončení maže sám; když to server nedovolil, smažte soubor ručně – Stav systému na něj upozorňuje v řádku **Instalátor**.
 2. **Zapněte HTTPS** a přesměrování z `http://`. Certifikát (Let's Encrypt) dnes nabízí každý hosting zdarma. Přes HTTPS systém posílá i hlavičku HSTS.
-3. **Zapněte dvoufázové přihlášení** všem administrátorům: avatar vpravo nahoře → **Můj účet**. Stačí libovolná ověřovací aplikace (Google Authenticator, 1Password, Aegis…). Osm **záložních kódů** se zobrazí jen jednou – uložte si je mimo telefon.
+3. **Zapněte dvoufázové přihlášení** všem administrátorům: klepnutím na avatar vpravo nahoře se otevře **Můj účet**, oddíl **Dvoufázové přihlášení**. **Přihlašovací klíče** (otisk prstu, Face ID) se nabídnou až po jeho zapnutí. Stačí libovolná ověřovací aplikace (Google Authenticator, 1Password, Aegis…). Osm **záložních kódů** se zobrazí jen jednou – uložte si je mimo telefon.
    Kdo nechce při každém přihlášení opisovat kód, přidá si tamtéž **přihlašovací klíč**: otisk prstu, Face ID, Windows Hello nebo bezpečnostní klíč. Klíč je vázaný na doménu webu, takže ho podvržená stránka nezíská; kód z aplikace a záložní kódy zůstávají jako záloha pro případ, že zařízení nemáte u sebe. Po přestěhování webu na jinou doménu je potřeba klíče přidat znovu.
 4. **Nastavte zálohy mimo server** – viz [Zálohy a obnova](zalohy.md).
 5. **Nechte zapnuté automatické bezpečnostní aktualizace** – viz [Aktualizace](../zaciname/aktualizace.md).
@@ -15,7 +15,7 @@ phpRS je ve výchozím stavu nastavený bezpečně. Tahle stránka shrnuje, co u
 
 - Každý člověk má **vlastní účet**. Sdílené účty znemožní dohledat, kdo co změnil.
 - Dávejte **nejmenší potřebná práva**: redaktorovi jen moduly, které používá, případně jen jeho rubriky. Administrátorů mějte co nejméně.
-- Odcházejícímu kolegovi účet **zablokujte** (Uživatelé) – jeho články zůstanou podepsané.
+- Odcházejícímu kolegovi účet **zablokujte** (**Správa → Uživatelé** → účet → **Podrobné nastavení** → **Zablokovat účet**) – jeho články zůstanou podepsané.
 - Heslo má nejméně 10 znaků. Po změně hesla se účet odhlásí na všech ostatních zařízeních.
 
 ## Co systém hlídá sám
@@ -26,7 +26,7 @@ phpRS je ve výchozím stavu nastavený bezpečně. Tahle stránka shrnuje, co u
 - **Nahrané soubory** se ve složce `media/` nikdy nespouštějí; povolené jsou jen bezpečné typy.
 - **Aktualizace** se instalují jen s platným podpisem vydavatele.
 - **Neporušenost jádra:** Stav systému porovnává soubory s podepsaným seznamem vydání a hlásí změněné, chybějící i přidané soubory.
-- **Protokol** v administraci zaznamenává přihlášení a důležité změny.
+- **Správa → Protokol změn** zaznamenává přihlášení a důležité změny.
 - **Komentáře a formuláře** chrání antispam bez cizích služeb a bez sledování čtenářů.
 
 ## Napojení na Claude a API
@@ -35,7 +35,7 @@ Tokeny pro napojení (MCP) a API vytvářejte **pro každý účel zvlášť** a
 
 ## Podezření na napadení
 
-1. V **Stavu systému** zkontrolujte řádek **Soubory jádra** a **Protokol** v administraci.
+1. V **Stavu systému** zkontrolujte řádek **Soubory jádra** a projděte **Správa → Protokol změn**.
 2. Změňte hesla všech administrátorů, heslo k databázi a k FTP. Vytvořte nové tokeny pro cron, monitoring, API a napojení.
 3. Přepište soubory systému čistým balíčkem stejné verze (postup ruční aktualizace). Neznámé soubory smažte – hlavně v `media/` a `layout/`.
 4. Pokud si nejste jistí rozsahem, obnovte databázi ze zálohy vytvořené před napadením.
